@@ -18,7 +18,7 @@ function AddtionalInfo() {
              // sending  info to next screen
             localStorage.setItem("additionalInfo", JSON.stringify(inputs));
             await addAdditionalData(inputs);
-  
+            navigate("/additionalinfo");
             toast("Additional Info Saved Successfully !!!");
           }
           const additionalInfo_CollectionRef = collection(db, "Basic_Info");
@@ -63,6 +63,15 @@ function AddtionalInfo() {
 
   useEffect(() => {
     let info1 = localStorage.getItem("additionalInfo");
+
+    if(info1 === "undefined" || info1 === null){
+      info1 = JSON.stringify({
+        note1: "",
+        note2: "",
+        note3: "",
+        note4: ""
+      });
+    }
           setInputs(JSON.parse(info1));
   },[]);
     return (
@@ -153,7 +162,8 @@ function AddtionalInfo() {
 
             <div className="flex justify-evenly">
                     <div className='rounded-md flex justify-between w-full mx-auto'>
-                          <button type='submit' className='bg-[#444] px-4 py-2 rounded-md text-white w-full'>Save</button>
+                          <button type='button' onClick={() => navigate('/additionalinfo')} className='px-4 py-2 rounded-md text-black w-3/12 border-[1.4px] border-black'>Cancel</button>
+                          <button type='submit' className='bg-[#444] px-4 py-2 rounded-md text-white w-3/12'>Update</button>
                     </div>
                   </div>
               </div>

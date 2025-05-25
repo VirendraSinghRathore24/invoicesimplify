@@ -12,7 +12,8 @@ import {
   sendEmailVerification,
 } from "firebase/auth";
 import { addDoc, collection, getDocs } from "firebase/firestore";
-import AddtionalInfo from "../businessInfo/AddtionalInfo";
+import AddtionalInfo from "../additionalInfo/EditAddtionalInfo";
+import Loader from "../Loader";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -20,12 +21,13 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = () => {
     navigate("/login");
   };
   const handleOnClick = () => {
-    navigate("/createinvoice");
+    navigate("/");
   };
 
   const updateUserProfile = (auth) => {
@@ -49,41 +51,70 @@ const Signup = () => {
       // ...
     });
   };
+  const checkIfUserExists = async (email) => {
+    const loginCollectionRef = collection(db, "Login_Info");
+    const data = await getDocs(loginCollectionRef);
+    const filteredData = data.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+
+    const userExists = filteredData.some((user) => user.code === email);
+    return userExists;
+  };
+
   const createUserWithUsernameAndPassword = async (e) => {
     try {
       e.preventDefault();
+      setLoading(true);
+      const userExists = await checkIfUserExists(email);
+
+      if (userExists) {
+        alert("User already exists. Please login.");
+        setLoading(false);
+        return;
+      }
+
+      
       const auth = getAuth();
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           // Signed up
           const user = userCredential.user;
+          const code = auth?.currentUser?.email;
+          const userName = auth?.currentUser?.displayName;
 
-          navigate("/createinvoice");
-
+          initializeDB(code, userName);
           updateUserProfile(auth);
 
           // not adding as of now for verification
           //sendEmailForVerify(auth);
-
-          const code = auth?.currentUser?.email;
-          const userName = auth?.currentUser?.displayName;
-
           localStorage.setItem("auth", "Logged In");
           localStorage.setItem("user", code);
           localStorage.setItem("userName", userName);
+          localStorage.setItem("invoiceNumber", 1);
+        
+          setLoading(false);
+          navigate("/createinvoice");
 
           // ...
         })
         .catch((error) => {
           if (error.code === "auth/email-already-in-use") {
             alert(email + " already in use, Please login!!!");
-          } else {
+          } 
             if (error.code === "auth/weak-password") {
-              alert("Password should be alteast 6 character long !!!");
+              alert("Password should be at least 6 characters long !!!");
             }
+          else{
+            alert("Error : " + error.code);
           }
+          setLoading(false);
         });
-    } catch (err) {}
+    } catch (err) {
+      console.error(err);
+      setLoading(false);
+    }
   };
 
   const login_CollectionRef = collection(db, "Login_Info");
@@ -101,33 +132,8 @@ const Signup = () => {
 
       if (result === undefined) {
         // 2. it is new user
-        const orgCode = Math.random().toString(36).slice(2);
-
-        await addDoc(login_CollectionRef, {
-          orgCode: orgCode,
-          code: code,
-          userName: userName,
-          invoiceNumber: 1,
-          type: "poshak"
-        });
-
-        // also create db for business, tax and additional info
-        await addDoc(basicInfo_CollectionRef, {
-          businessInfo: null,
-          taxInfo: null,
-          additionalInfo: null,
-          loggedInUser: code,
-        });
-
-        // initialize inventory info
-        await addDoc(inventoryInfo_CollectionRef, {
-            orgCode: orgCode,
-            loggedInUser: code,
-            inventory: []
-          });
-
-      } else {
-        return;
+        
+        await initializeDB(code, userName);
       }
       // check orgCode with DB
 
@@ -140,6 +146,33 @@ const Signup = () => {
       console.log(err);
     }
   };
+
+  const initializeDB = async(code, userName) => {
+    const orgCode = Math.random().toString(36).slice(2);
+
+    await addDoc(login_CollectionRef, {
+      orgCode: orgCode,
+      code: code,
+      userName: userName,
+      invoiceNumber: 1,
+      type: "poshak"
+    });
+
+    // also create db for business, tax and additional info
+    await addDoc(basicInfo_CollectionRef, {
+      businessInfo: null,
+      taxInfo: null,
+      additionalInfo: null,
+      loggedInUser: code,
+    });
+
+    // initialize inventory info
+    await addDoc(inventoryInfo_CollectionRef, {
+        orgCode: orgCode,
+        loggedInUser: code,
+        inventory: []
+      });
+  }
 
   const getExistingUser = async (loggedInUser) => {
     const loginCollectionRef = collection(db, "Login_Info");
@@ -273,6 +306,7 @@ const Signup = () => {
           </button>
         </div>
       </form>
+      {loading && <Loader/>}
     </div>
   );
 };

@@ -52,7 +52,7 @@ const InventoryModal = ({ handleCloseItem, setItem }) => {
         )[0];
     
         // get items list
-        const existingItems = inventoryInfo.inventory;
+        const existingItems = inventoryInfo.inventory.sort((a, b) => a.itemName.localeCompare(b.itemName));
         setPosts(existingItems);
   }
 

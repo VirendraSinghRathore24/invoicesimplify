@@ -1,103 +1,126 @@
+import React, { useEffect, useState } from "react";
 
-import React, { useEffect, useState } from 'react'
-
-import { MdDelete } from "react-icons/md";
-import Home from './EditBusinessInfo';
-import AddBusinessInfo from '../additionalInfo/AddBusinessInfo';
-import { Edit } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-
+import AddBusinessInfo from "./AddBusinessInfo";
+import { useNavigate } from "react-router-dom";
+import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
+import { db } from "../../config/firebase";
 
 const BusinessInfo = () => {
+  const [posts, setPosts] = useState([]);
+  const navigate = useNavigate();
 
-    const [posts, setPosts] = useState([]);
-    const [allCategory, setAllCategory] = useState([]);
-    const [searchText, setSearchText] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [addedInfo, setAddedInfo] = useState(false);
-
-    const navigate = useNavigate();
-
-    const getCategory = async () => {
-        
-    } 
-    const handleDelete = async(id) => {
-        // TODO - use DB as well to delete
-        localStorage.removeItem("businessInfo");
-        setAddedInfo(false);
-
+  const handleDelete = async () => {
+    console.log(posts);
+    const isDeleted = await deleteBusinessInfo();
+    if (isDeleted) {
+      localStorage.removeItem("businessInfo");
+      setPosts(null);
+      
     }
+  };
+  const basicInfo_CollectionRef = collection(db, "Basic_Info");
+  const deleteBusinessInfo = async () => {
+    try {
+      var res = window.confirm("Delete the item?");
+      if (res) {
+        const data = await getDocs(basicInfo_CollectionRef);
+        const filteredData = data.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
 
-    const handleSearch = (e) => {
-        
+        const loggedInUser = localStorage.getItem("user");
+        const basicInfo = filteredData.filter(
+          (x) => x.loggedInUser === loggedInUser
+        )[0];
+
+        const codeDoc = doc(db, "Basic_Info", basicInfo.id);
+        await updateDoc(codeDoc, {
+          businessInfo: null,
+        });
+        return true;
+      }
+    } catch (er) {
+      console.log(er);
+      return false;
     }
+  };
 
-    useEffect(()=> {
-       // getCategory();
-       let info1 = localStorage.getItem("businessInfo");
+  useEffect(() => {
+    const info = localStorage.getItem("businessInfo");
 
-       if(!info1){
-         setAddedInfo(false);
-       }
-       else{
-        setPosts(JSON.parse(info1));
-        setAddedInfo(true);
-       }
-
-    },[addedInfo]);
+    if (info === "undefined" || info === "null") {
+      setPosts(null);
+    } else {
+      const data = JSON.parse(info);
+      setPosts(data);
+    }
+  }, []);
 
   return (
     <div>
-       <div className="flex flex-col w-full mx-auto font-bold text-2xl bg-gray-200 py-4 px-2 rounded-md">Business Information</div>
-    <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4">
-      {addedInfo && 
-      <table className="min-w-full text-sm text-left text-gray-700">
-        <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
-          <tr>
-            <th className="px-4 py-3 border-r">Title</th>
-            <th className="px-4 py-3 border-r">SubTitle1</th>
-            <th className="px-4 py-3 border-r">Address</th>
-            <th className="px-4 py-3 border-r">Phone1</th>
-            <th className="px-4 py-3 border-r">Phone2</th>
-            <th className="px-4 py-3 border-r">Email</th>
-            <th className="px-4 py-3 border-r">Status</th>
-            <th className="px-4 py-3">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-         
-            <tr
-              
-              className='border-t bg-white'
-            >
-              <td className="px-4 py-3 border-r">{posts?.name}</td>
-              <td className="px-4 py-3 border-r">{posts?.subTitle1}</td>
-              <td className="px-4 py-3 border-r">{posts?.address1}, {posts?.address2} - {posts?.address3}</td>
-              <td className="px-4 py-3 border-r">{posts?.phonePrimary}</td>
-              <td className="px-4 py-3 border-r">{posts?.phoneSecondary}</td>
-              <td className="px-4 py-3 border-r">{posts?.email}</td>
-              <td className="px-4 py-3">
-                <button onClick={() => navigate('/editbusinessinfo')} className="text-blue-600 hover:text-red-800 font-semibold text-sm">Edit</button>
-              </td>
-              <td className="px-4 py-3">
-                <button
-                  
-                  className="text-red-600 hover:text-red-800 font-semibold text-sm"
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-        </tbody>
-      </table>}
+      <div className="flex flex-col w-full mx-auto font-bold text-2xl bg-gray-200 py-4 px-2 rounded-md">
+        Business Information
+      </div>
+      <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4">
+        {posts && (
+          <table className="min-w-full text-sm text-left text-gray-700">
+            <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
+              <tr>
+                <th className="px-4 py-3 border-r">Title</th>
+                <th className="px-4 py-3 border-r">SubTitle1</th>
+                <th className="px-4 py-3 border-r">Address</th>
+                <th className="px-4 py-3 border-r">Phone1</th>
+                <th className="px-4 py-3 border-r">Phone2</th>
+                <th className="px-4 py-3 border-r">Email</th>
+                <th className="px-4 py-3 border-r">Edit</th>
+                <th className="px-4 py-3">Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-t bg-white">
+                <td className="px-4 py-3 border-r">{posts?.name}</td>
+                <td className="px-4 py-3 border-r">{posts?.subTitle1}</td>
+                <td className="px-4 py-3 border-r">
+                  {posts?.address1}, {posts?.address2} - {posts?.address3}
+                </td>
+                <td className="px-4 py-3 border-r">{posts?.phonePrimary}</td>
+                <td className="px-4 py-3 border-r">{posts?.phoneSecondary}</td>
+                <td className="px-4 py-3 border-r">{posts?.email}</td>
+                <td className="px-4 py-3">
+                  <button
+                    onClick={() => navigate("/editbusinessinfo")}
+                    className="text-blue-600 hover:text-red-800 font-semibold text-sm"
+                  >
+                    Edit
+                  </button>
+                </td>
+                <td className="px-4 py-3">
+                  <button
+                    onClick={() => handleDelete()}
+                    className="text-red-600 hover:text-red-800 font-semibold text-sm"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        )}
 
-      {!addedInfo && (
-            <AddBusinessInfo setAddedInfo={setAddedInfo}/>
-          )}
+        {!posts && (
+          <div className="flex h-screen items-center justify-center ">
+            <div onClick={() => navigate("/addbusinessinfo")}>
+              <button className="border-2 bg-[#444] text-white fond-bold text-lg py-4 px-8 rounded-md cursor-pointer">
+                {" "}
+                + Add Business Info
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
-    </div>
+  );
+};
 
-  )
-}
-
-export default BusinessInfo
+export default BusinessInfo;

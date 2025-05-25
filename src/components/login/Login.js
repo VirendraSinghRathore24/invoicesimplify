@@ -12,6 +12,7 @@ import {
 } from "firebase/auth";
 
 import { getAccountData, getPersonalData } from "../DatabaseHelper";
+import Loader from "../Loader";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -24,25 +25,54 @@ const Login = () => {
     navigate("/signup");
   };
   const handleOnClick = () => {
-    navigate("/createinvoice");
+    navigate("/");
   };
 
-  const signInWithUsernameAndPassword = (e) => {
+  // get all data and add to local storage
+    const getAllData = async (loggedInUser) => { 
+        const basicInfo_CollectionRef = collection(db, "Basic_Info");
+        const data = await getDocs(basicInfo_CollectionRef);
+        const filteredData = data.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
+    
+        const basicInfo = filteredData.filter((x) => x.loggedInUser === loggedInUser)[0];
+    
+        localStorage.setItem("businessInfo", JSON.stringify(basicInfo?.businessInfo));
+        localStorage.setItem("taxInfo", JSON.stringify(basicInfo?.taxInfo));
+        localStorage.setItem("additionalInfo", JSON.stringify(basicInfo?.additionalInfo));
+     }
+
+  const signInWithUsernameAndPassword = async(e) => {
     try{
       e.preventDefault();
+      setLoading(true);
       const auth = getAuth();
       signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
+        .then(async(userCredential) => {
           // Signed in
           const user = userCredential.user;
-          navigate("/createinvoice");
-  
+          
           const code = auth?.currentUser?.email;
           const userName = auth?.currentUser?.displayName;
     
           localStorage.setItem("auth", "Logged In");
           localStorage.setItem("user", code);
           localStorage.setItem("userName", userName);
+
+          // get all data and add to local storage
+          await getAllData(code);
+
+          const info = localStorage.getItem("businessInfo");
+
+          if(info === "undefined"){
+            navigate("/businessinfo");
+          }else{
+            navigate("/createinvoice");
+          }
+
+          setLoading(false);
           // // ...
         })
         .catch((error) => {
@@ -52,11 +82,12 @@ const Login = () => {
           if(errorCode === 'auth/invalid-credential'){
             alert('username or password is invalid !!!');
            }
+           setLoading(false);
            return;
         });
     }
     catch(err){
-       
+        setLoading(false);
     }
     
   };
@@ -74,10 +105,16 @@ const Login = () => {
       localStorage.setItem("user", code);
       localStorage.setItem("userName", userName);
 
-      //getPersonalData1(code);
-      //getAccountData1(code);
+      // get all data and add to local storage
+      await getAllData();
 
-      navigate("/createinvoice");
+      const info = localStorage.getItem("businessInfo");
+
+      if(!info){
+        navigate("/businessinfo");
+      }else{
+        navigate("/createinvoice");
+      }
 
       setLoading(false);
     } catch (err) {
@@ -85,47 +122,8 @@ const Login = () => {
     }
   };
 
-  const getPersonalData1 = async (loggedInUser) => {
-    const data = await getPersonalData(loggedInUser);
-    const personalInfo = data[0].personalInfo;
-
-    FillLocalStorageForPersonal(personalInfo);
-  };
-
-  const FillLocalStorageForPersonal = (personalInfo) => {
-    localStorage.setItem("name", personalInfo.name);
-    localStorage.setItem("email", personalInfo.email);
-    localStorage.setItem("address1", personalInfo.address1);
-    localStorage.setItem("address2", personalInfo.address2);
-    localStorage.setItem("address3", personalInfo.address3);
-    localStorage.setItem("phone", personalInfo.phone);
-  };
-
-  const getAccountData1 = async (loggedInUser) => {
-    const data = await getAccountData(loggedInUser);
-    const accountInfo = data[0].accountInfo;
-
-    FillLocalStorageForAccount(accountInfo);
-  };
-
-  const FillLocalStorageForAccount = (accountInfo) => {
-    localStorage.setItem("accountName", accountInfo.accountName);
-    localStorage.setItem("bankName", accountInfo.bankName);
-    localStorage.setItem("accountNumber", accountInfo.accountNumber);
-    localStorage.setItem("accountType", accountInfo.accountType);
-    localStorage.setItem("ifsc", accountInfo.ifsc);
-    localStorage.setItem("branch", accountInfo.branch);
-    localStorage.setItem("pan", accountInfo.pan);
-   // localStorage.setItem("upiId", accountInfo.upiId);
-    //localStorage.setItem("upiType", accountInfo.upiType);
-  };
 
   useEffect(() => {
-
-    const loggedInUser = localStorage.getItem("user");
-    if(loggedInUser){
-        navigate('/createinvoice');
-    }
 
     window.scroll(0,0);
   },[])
@@ -211,6 +209,7 @@ const Login = () => {
           </button>
         </div>
       </form>
+      {loading && <Loader/>}
     </div>
   );
 };

@@ -1,8 +1,10 @@
 
+import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react'
 
 import { MdDelete } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
+import { db } from '../../config/firebase';
 
 
 const AdditionalInformation = () => {
@@ -13,13 +15,50 @@ const AdditionalInformation = () => {
     const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
-    const handleDelete = async(id) => {
-        
-    }
+   const handleDelete = async () => {
+       console.log(posts);
+       const isDeleted = await deleteBusinessInfo();
+       if (isDeleted) {
+         localStorage.removeItem("additionalInfo");
+         setPosts(null);
+         
+       }
+     };
+     const basicInfo_CollectionRef = collection(db, "Basic_Info");
+     const deleteBusinessInfo = async () => {
+       try {
+         var res = window.confirm("Delete the item?");
+         if (res) {
+           const data = await getDocs(basicInfo_CollectionRef);
+           const filteredData = data.docs.map((doc) => ({
+             ...doc.data(),
+             id: doc.id,
+           }));
+   
+           const loggedInUser = localStorage.getItem("user");
+           const basicInfo = filteredData.filter(
+             (x) => x.loggedInUser === loggedInUser
+           )[0];
+   
+           const codeDoc = doc(db, "Basic_Info", basicInfo.id);
+           await updateDoc(codeDoc, {
+             additionalInfo: null,
+           });
+           return true;
+         }
+       } catch (er) {
+         console.log(er);
+         return false;
+       }
+     };
 
     useEffect(()=> {
         let info3 = localStorage.getItem("additionalInfo");
-        setPosts(JSON.parse(info3));
+        if(info3 === "undefined" || info3 === "null"){
+            setPosts([]);
+        }else{
+            setPosts(JSON.parse(info3));
+        }
 
     },[]);
 
@@ -29,7 +68,7 @@ const AdditionalInformation = () => {
 <div>
 
     <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4">
-      {
+      { posts &&
       <table className="min-w-full text-sm text-left text-gray-700">
         <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
           <tr>
@@ -56,7 +95,7 @@ const AdditionalInformation = () => {
               </td>
               <td className="px-4 py-3">
                 <button
-                  
+                  onClick={() => handleDelete()}
                   className="text-red-600 hover:text-red-800 font-semibold text-sm"
                 >
                   Delete
@@ -66,9 +105,16 @@ const AdditionalInformation = () => {
         </tbody>
       </table>}
 
-      {/* {!addedInfo && (
-            <AddBusinessInfo setAddedInfo={setAddedInfo}/>
-          )} */}
+      {!posts && (
+          <div className="flex h-screen items-center justify-center ">
+            <div onClick={() => navigate("/addadditionalinfo")}>
+              <button className="border-2 bg-[#444] text-white fond-bold text-lg py-4 px-8 rounded-md cursor-pointer">
+                {" "}
+                + Add Additional Info
+              </button>
+            </div>
+          </div>
+        )}
     </div>
     </div>
    

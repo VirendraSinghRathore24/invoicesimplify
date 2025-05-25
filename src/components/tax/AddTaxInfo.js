@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { db } from '../../config/firebase';
 
-function Tax() {
+function AddTaxInfo() {
   const location = useLocation();  
   const [inputs, setInputs] = useState({});
 
@@ -33,7 +33,10 @@ function Tax() {
             )[0];
             
             // update business info 
-            await updateTaxInfo(basicInfo.id, inputs)
+            await updateTaxInfo(basicInfo.id, inputs);
+
+            localStorage.setItem("taxInfo", JSON.stringify(inputs));
+            navigate("/taxinfo");
           }catch(err){
               console.log(err);
           }
@@ -62,12 +65,19 @@ function Tax() {
 
    useEffect(() => {
           let info1 = localStorage.getItem("taxInfo");
+          if(info1 === "undefined"){
+            info1 = JSON.stringify({
+              gstNumber: "",
+              cgstAmount: "",
+              sgstAmount: ""
+            });
+          }
           setInputs(JSON.parse(info1));
         },[]);
 
     return (
         <div>
-          <div className="flex flex-col w-full mx-auto font-bold text-2xl bg-gray-200 py-4 px-2 rounded-md">Edit Tax & GST Information</div>
+          <div className="flex flex-col w-full mx-auto font-bold text-2xl bg-gray-200 py-4 px-2 rounded-md">Add Tax & GST Information</div>
        
         <div className='flex flex-col w-5/12 m-auto p-4 mt-10 shadow-lg border-2 p-5 bg-white gap-y-4 rounded-md'>
             
@@ -132,7 +142,8 @@ function Tax() {
              
               <div className="flex justify-evenly">
                     <div className='rounded-md flex justify-between w-full mx-auto'>
-                          <button type='submit' className='bg-[#444] px-4 py-2 rounded-md text-white w-full'>Save</button>
+                    <button type='button' onClick={() => navigate('/taxinfo')} className='px-4 py-2 rounded-md text-black w-3/12 border-[1.4px] border-black'>Cancel</button>
+                          <button type='submit' className='bg-[#444] px-4 py-2 rounded-md text-white w-3/12'>Save</button>
                     </div>
                 </div>
               
@@ -146,4 +157,4 @@ function Tax() {
     )
 }
 
-export default Tax;
+export default AddTaxInfo;

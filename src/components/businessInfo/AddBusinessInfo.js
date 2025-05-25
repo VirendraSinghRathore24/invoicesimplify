@@ -1,100 +1,116 @@
-import { addDoc, collection, doc, getDocs, updateDoc } from 'firebase/firestore';
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { db } from '../../config/firebase';
-import { toast } from 'react-toastify';
+import {
+  addDoc,
+  collection,
+  doc,
+  getDocs,
+  updateDoc,
+} from "firebase/firestore";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { db } from "../../config/firebase";
+import { toast } from "react-toastify";
 
-function EditBusinessInfo() {
- 
-    const navigate = useNavigate();
-    const [inputs, setInputs] = useState({});
-    const [infoExists, setInfoExists] = useState(true);
-    const [saving, setSaving] = useState(false);
+function AddBusinessInfo() {
+  const navigate = useNavigate();
+  const [inputs, setInputs] = useState({});
+  const loggedInUser = localStorage.getItem("user");
+  const [saving, setSaving] = useState(false);
 
-
-    const delay = async (ms) => {
-      return new Promise((resolve) => 
-          setTimeout(resolve, ms));
+  const handleChange = (event) => {
+    const name = event.target.name;
+    const value = event.target.value;
+    setInputs((values) => ({ ...values, [name]: value }));
   };
 
-    const handleChange = (event) => {
-        const name = event.target.name;
-        const value = event.target.value;
-        setInputs(values => ({...values, [name]: value}))
-      }
+  const handlePhoneChange = (event) => {
+    const { name, value } = event.target;
+    if (/^\d{0,10}$/.test(value)) {
+      // Allow only numeric values up to 10 digits
+      setInputs((values) => ({ ...values, [name]: value }));
+      localStorage.setItem(name, value);
+    }
+  };
 
-      const handlePhoneChange = (event) => {
-        const { name, value } = event.target;
-        if (/^\d{0,10}$/.test(value)) { // Allow only numeric values up to 10 digits
-          setInputs((values) => ({ ...values, [name]: value }));
-          localStorage.setItem(name, value);
-        }
-      };
-    
-      const handleSubmit = async(event) => {
-              event.preventDefault();
-              
-              // Add to local storage
-              localStorage.setItem("businessInfo", JSON.stringify(inputs));
-              await addBusinessData(inputs);
-            }
-            const basicInfo_CollectionRef = collection(db, "Basic_Info");
-            const addBusinessData = async (inputs) => {
-              try{
-                // get doc id
-                const data = await getDocs(basicInfo_CollectionRef);
-                const filteredData = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-              
-                const loggedInUser = localStorage.getItem("user");
-                const basicInfo = filteredData.filter(
-                  (x) => x.loggedInUser === loggedInUser
-                )[0];
-                
-                // update business info 
-                await updateBusinessInfo(basicInfo.id, inputs);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-                navigate('/businessinfo');
-              }catch(err){
-                  console.log(err);
-              }
-              
-            };
-      
-            const updateBusinessInfo = async (id, businessInfo) => {
-                try {
-                  const codeDoc = doc(db, "Basic_Info", id);
-                  await updateDoc(codeDoc, {
-                    businessInfo: businessInfo,
-                  });
-                  setSaving(true);
-                  await delay(2000);
-                  setSaving(false);
-                  toast('Business Info Updated Successfully !!!');
-                } catch (er) {
-                  console.log(er);
-                }
-              };
+    // Add to local storage
+    localStorage.setItem("businessInfo", JSON.stringify(inputs));
+    await addBusinessData(inputs);
+   
+    toast("Business Info Saved Successfully !!!");
+  };
+  const basicInfo_CollectionRef = collection(db, "Basic_Info");
+  const addBusinessData = async (inputs) => {
+    try {
+      // get doc id
+      const data = await getDocs(basicInfo_CollectionRef);
+      const filteredData = data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
 
-      useEffect(() => {
-        let info1 = localStorage.getItem("businessInfo");
+      const basicInfo = filteredData.filter(
+        (x) => x.loggedInUser === loggedInUser
+      )[0];
 
-        if(!info1) {
-            setInfoExists(false);
-        }
-        else{
-            setInputs(JSON.parse(info1));
-            setInfoExists(true);
-        }
+      // update business info
+      await updateBusinessInfo(basicInfo.id, inputs);
+      navigate("/businessInfo");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const delay = async (ms) => {
+    return new Promise((resolve) => 
+        setTimeout(resolve, ms));
+};
+     const updateBusinessInfo = async (id, businessInfo) => {
+                  try {
+                    const codeDoc = doc(db, "Basic_Info", id);
+                    await updateDoc(codeDoc, {
+                      businessInfo: businessInfo,
+                    });
+                    setSaving(true);
+                    await delay(2000);
+                    setSaving(false);
+                   
+                  } catch (er) {
+                    console.log(er);
+                  }
+                };
+
+  const getInvoiceInfo = async () => {
+    const data = await getDocs(basicInfo_CollectionRef);
+    const filteredData = data.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+
+    const basicInfo = filteredData.filter(
+      (x) => x.loggedInUser === loggedInUser
+    );
+
+    if (basicInfo?.length > 0) {
+      localStorage.setItem(
+        "businessInfo",
+        JSON.stringify(basicInfo[0].businessInfo)
+      );
+    }
+
+    return basicInfo;
+  };
+
+  useEffect(() => {
+    getInvoiceInfo();
+  }, []);
+
+  return (
+    <div className="h-screen">
+      <div className="flex flex-col w-full mx-auto font-bold text-2xl bg-gray-200 py-4 px-2 rounded-md">Add Business Information</div>
         
-      },[]);
-
-    return (
-        <div >
-          <div className="flex flex-col w-full mx-auto font-bold text-2xl bg-gray-200 py-4 px-2 rounded-md">Edit Business Information</div>
         <div className='flex flex-col w-full m-auto px-4 py-4 shadow-lg border-2 p-5 bg-white gap-y-4 rounded-md mt-2'>
-          
-
-            <form onSubmit={handleSubmit} className="w-full mx-auto flex flex-col md:flex-row justify-between">
+        <form onSubmit={handleSubmit} className="w-full mx-auto flex flex-col md:flex-row justify-between">
             <div className="flex flex-col gap-y-4 w-full md:w-7/12 mx-auto">
               
 
@@ -300,7 +316,7 @@ function EditBusinessInfo() {
                 </div>
               ) : (
                 <div className='text-center w-full mx-auto'>
-                    Update
+                    Save
                 </div>
               )}
             </span>
@@ -311,9 +327,10 @@ function EditBusinessInfo() {
 
             </div>
             </form>
-        </div>
-        </div>
-    )
+            </div>
+   
+    </div>
+  );
 }
 
-export default EditBusinessInfo;
+export default AddBusinessInfo;

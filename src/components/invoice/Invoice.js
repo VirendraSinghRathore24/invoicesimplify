@@ -4,6 +4,7 @@ import { FaRegEdit } from "react-icons/fa";
 import { BsWhatsapp } from "react-icons/bs";
 import { Printer } from "lucide-react";
 import { Download } from "lucide-react";
+
 import {
   addDoc,
   collection,
@@ -13,7 +14,6 @@ import {
 } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import { useReactToPrint } from "react-to-print";
-//import { PDFExport } from "@progress/kendo-react-pdf";
 
 function Invoice() {
   const [businessInfo, setBusinessInfo] = useState({});
@@ -25,6 +25,7 @@ function Invoice() {
   const [taxCalculatedInfo, setTaxCalculatedInfo] = useState({});
   const [rows, setRows] = useState({});
   const printRef = useRef(null);
+  const pdfExportComponent = React.useRef(null);
 
   const navigate = useNavigate();
   const handleNext = () => {
@@ -34,9 +35,8 @@ function Invoice() {
     navigate(-1);
   };
 
-  const pdfExportComponent = React.useRef(null);
   let date = "";
-  if (invoiceInfo.date) {
+  if (invoiceInfo?.date) {
     var today = new Date(invoiceInfo.date);
     const months = [
       "Jan",
@@ -57,7 +57,7 @@ function Invoice() {
   }
 
   let expectedDate = "";
-  if (invoiceInfo.expectedDate) {
+  if (invoiceInfo?.expectedDate) {
     var today = new Date(invoiceInfo.expectedDate);
     const months = [
       "Jan",
@@ -77,14 +77,14 @@ function Invoice() {
     expectedDate = month + " " + today.getDate() + ", " + today.getFullYear();
   }
 
-  const fileName = customerInfo.custname;
+  const fileName = customerInfo?.custname;
   const loggedInUser = localStorage.getItem("user");
   const invoiceInfo_CollectionRef = collection(db, "Invoice_Info");
   const handleDownload = async () => {
-
-    // if (pdfExportComponent.current) {
-    //   pdfExportComponent.current.save();
-    // }
+    //await sendToWhatsapp();
+    if (pdfExportComponent.current) {
+      pdfExportComponent.current.save();
+    }
 
     await addDoc(invoiceInfo_CollectionRef, {
       invoiceInfo: invoiceInfo,
@@ -100,6 +100,22 @@ function Invoice() {
 
     await updateInvoiceNumber();
   };
+
+
+  const sendToWhatsapp = async () => {
+    const html = document.getElementById('invoice').innerHTML;
+    const phoneNumber = '919999999999'; // without '+'
+  
+    const response = await fetch('http://localhost:5001/send-pdf-whatsapp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ html, phone: phoneNumber }),
+    });
+  
+    const data = await response.json();
+    alert(data.message || 'Sent!');
+  };
+
   const login_CollectionRef = collection(db, "Login_Info");
   const updateInvoiceNumber = async () => {
     const data = await getDocs(login_CollectionRef);
@@ -123,16 +139,19 @@ function Invoice() {
     contentRef: printRef,
   });
 
-
   useEffect(() => {
     let info1 = localStorage.getItem("businessInfo");
     setBusinessInfo(JSON.parse(info1));
 
     let info2 = localStorage.getItem("taxInfo");
-    setTaxInfo(JSON.parse(info2));
+    if(info2 !== "undefined" ){
+      setTaxInfo(JSON.parse(info2));
+    }
 
     let info3 = localStorage.getItem("additionalInfo");
+    if(info3 !== "undefined"){
     setAdditionalInfo(JSON.parse(info3));
+    }
 
     let info4 = localStorage.getItem("customerInfo");
     setCustomerInfo(JSON.parse(info4));
@@ -193,39 +212,39 @@ function Invoice() {
           </button>
         </div>
       </div>
-
-      <div className="w-full md:w-8/12 mx-auto  border-[1.7px] mt-4 rounded-md p-4 ">
+     
+      <div id="invoice" className="w-full md:w-8/12 mx-auto  border-[1.7px] mt-4 rounded-md p-4 ">
       <div ref={printRef} className="p-4">
         <div className="flex justify-between">
           <div>
             <img src="../images/matadi1.jpeg" className="h-20 w-20" />
           </div>
           <div className="text-center">
-            <div className="text-3xl font-bold">{businessInfo.name}</div>
+            <div className="text-3xl font-bold">{businessInfo?.name}</div>
             {/* <div className='text-3xl font-bold'>बाईसाराज पौशाक पैलेस</div> */}
-            <div className="text-lg font-medium">{businessInfo.subTitle1}</div>
+            <div className="text-lg font-medium">{businessInfo?.subTitle1}</div>
           </div>
 
           <div className="flex flex-col font-semibold">
-            <div>M: {businessInfo.phonePrimary}</div>
-            <div className="ml-6">{businessInfo.phoneSecondary}</div>
+            {businessInfo?.phonePrimary && <div>M: {businessInfo.phonePrimary}</div>}
+            <div className="ml-6">{businessInfo?.phoneSecondary}</div>
           </div>
         </div>
-        <div className="text-sm font-medium text-center">
+        {taxInfo?.gstNumber && <div className="text-sm font-medium text-center">
           GSTIN: {taxInfo.gstNumber}
-        </div>
+        </div>}
         <hr className="w-full mt-4 border-[1.1px]"></hr>
-        <div className="py-2 text-center">
+        {businessInfo?.address1 && <div className="py-2 text-center">
           {businessInfo.address1}, {businessInfo.address2} -{" "}
           {businessInfo.address3}
-        </div>
+        </div>}
         <hr className="w-full mt-1 border-[1.1px]"></hr>
         <div className="flex justify-between">
           <div className="w-8/12 mx-auto text-left font-semibold py-2">
             <div className="mb-2">To:</div>
 
-            <div>{customerInfo.customerName}</div>
-            <div>{customerInfo.customerPhone}</div>
+            <div>{customerInfo?.customerName}</div>
+            <div>{customerInfo?.customerPhone}</div>
           </div>
 
           <div className=" w-4/12 mx-auto flex flex-col gap-y-3 font-bold py-2">
@@ -292,7 +311,7 @@ function Invoice() {
             {taxInfo?.cgstAmount && (
               <div className="w-full flex justify-end gap-x-10 mt-2">
                 <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-sm font-semibold rounded-md uppercase">
-                  CGST {taxInfo.cgstAmount}%
+                  CGST {taxInfo?.cgstAmount}%
                 </div>
                 <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-sm font-semibold rounded-md">
                   ₹ {taxCalculatedInfo?.cgst}
@@ -324,7 +343,7 @@ function Invoice() {
               </div>
             </div>
             <div className="border-b-2 border-dashed py-1"></div>
-            {amountInfo.advance > 0 && (
+            {amountInfo?.advance > 0 && (
               <div className="w-full flex justify-end gap-x-10 mt-2">
                 <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-sm font-bold rounded-md uppercase">
                   Advance
@@ -335,7 +354,7 @@ function Invoice() {
               </div>
             )}
             <div className="border-b-2 border-dashed py-1"></div>
-            {taxCalculatedInfo.balance && (
+            {taxCalculatedInfo?.balance && (
               <div className="w-full flex justify-end gap-x-10 mt-2">
                 <div className="w-11/12 flex justify-end mx-auto mt-1 px-2 text-sm font-bold rounded-md uppercase">
                   Balance
@@ -360,21 +379,21 @@ function Invoice() {
                       <div>1. Subject to Jaipur Jurisdiction.</div>
                       <div>2. Goods once sold will not be taken back.</div>
                       <div>3. E. & E.O.</div> */}
-              <div>{additionalInfo.note1}</div>
-              <div>{additionalInfo.note2}</div>
-              <div>{additionalInfo.note3}</div>
-              <div>{additionalInfo.note4}</div>
+              <div>{additionalInfo?.note1}</div>
+              <div>{additionalInfo?.note2}</div>
+              <div>{additionalInfo?.note3}</div>
+              <div>{additionalInfo?.note4}</div>
             </div>
             <div className="text-sm text-blue-700 font-bold">
               <div className="">NO CHANGE</div>
               <div>NO REFUND</div>
               <div>NO CANCEL</div>
               <div className="text-sm text-black mt-4">
-                For: {businessInfo.name}
+                For: {businessInfo?.name}
               </div>
             </div>
           </div>
-          {invoiceInfo.expectedDate && (
+          {invoiceInfo?.expectedDate && (
             <div className="text-sm font-semibold text-blue-700 text-center">
               Expected Delivery Date : {expectedDate}
             </div>
@@ -382,6 +401,8 @@ function Invoice() {
         </div>
       </div>
     </div>
+
+
 
     </div>
   );

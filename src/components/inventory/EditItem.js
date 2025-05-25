@@ -5,10 +5,10 @@ import { db } from "../../config/firebase";
 import { X } from "lucide-react";
 import { toast } from "react-toastify";
 
-function AddItem({handleCloseItem, setItemAdded}) {
+function EditItem({handleCloseEditModal, setItemAdded, editPost}) {
 
 const location = useLocation();
-  const [inputs, setInputs] = useState({});
+  const [inputs, setInputs] = useState(editPost);
   const [showList, setShowList] = useState(false);
   const [posts, setPosts] = useState([]);
 
@@ -26,37 +26,39 @@ const location = useLocation();
     await updateInventoryItems(inputs);
 
     setItemAdded(true);
-    handleCloseItem();
+    handleCloseEditModal();
 
-    toast('Item added successfully!!!');
+    toast('Item updated successfully!!!');
 
     // sending  info to next screen
     //localStorage.setItem("inventory", JSON.stringify(data));
   };
 
-  const updateInventoryItems = async (item) => {
+  const updateInventoryItems = async () => {
     const data = await getDocs(inventoryInfo_CollectionRef);
-    const filteredData = data.docs.map((doc) => ({
-      ...doc.data(),
-      id: doc.id,
-    }));
-
-    const loggedInUser = localStorage.getItem("user");
-    const inventoryInfo = filteredData.filter(
-      (x) => x.loggedInUser === loggedInUser
-    )[0];
-
-    // get items list
-    const existingItems = inventoryInfo.inventory;
-    const newItem = {
-      itemName: inputs.itemName,
-    };
-    const inventoryData = [...existingItems, newItem];
+       const filteredData = data.docs.map((doc) => ({
+         ...doc.data(),
+         id: doc.id,
+       }));
+   
+       const loggedInUser = localStorage.getItem("user");
+       const inventoryInfo = filteredData.filter(
+         (x) => x.loggedInUser === loggedInUser
+       )[0];
 
     // update inventory info
+    
+    const existingItems = inventoryInfo.inventory;
+
+    // Find the item to update
+    const updatedItems = existingItems.map((item) =>
+      item.id === inventoryInfo.id ? { ...item, ...inputs } : item
+    );
+
+    // Update the inventory in Firestore
     const codeDoc = doc(db, "Inventory_Info", inventoryInfo.id);
     await updateDoc(codeDoc, {
-      inventory: inventoryData,
+      inventory: updatedItems,
     });
   };
 
@@ -94,8 +96,8 @@ const location = useLocation();
     <div className=" w-full mx-auto fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center ">
       <div className="overflow-auto mt-6 bg-white p-4 text-black rounded-xl">
       <div className="flex justify-between py-2">
-          <div className=" text-lg font-bold">Add Item </div>
-          <button onClick={handleCloseItem}>
+          <div className=" text-lg font-bold">Edit Item </div>
+          <button onClick={handleCloseEditModal}>
             <X size={30} />
           </button>
         </div>
@@ -127,12 +129,12 @@ const location = useLocation();
 
               <div className="flex justify-evenly">
                 <div className="rounded-md flex justify-between w-full mx-auto">
-                 <button type='button' onClick={handleCloseItem} className='px-4 py-2 rounded-md text-black w-3/12 border-[1.4px] border-black'>Cancel</button>
+                 <button type='button' onClick={handleCloseEditModal} className='px-4 py-2 rounded-md text-black w-3/12 border-[1.4px] border-black'>Cancel</button>
                   <button
                     type="submit"
                     className="bg-[#444] px-4 py-2 rounded-md text-white w-3/12"
                   >
-                    Save
+                    Update
                   </button>
                 </div>
               </div>
@@ -144,4 +146,4 @@ const location = useLocation();
   );
 }
 
-export default AddItem;
+export default EditItem;

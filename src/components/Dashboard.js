@@ -186,7 +186,8 @@ const Dashboard = () => {
       (x) => x.loggedInUser === loggedInUser
     );
 
-    setData(invoiceInfo);
+    const invoiceInfo1 = invoiceInfo.sort((a, b) => b.invoiceInfo.invoiceNumber - a.invoiceInfo.invoiceNumber);
+    setData(invoiceInfo1);
   };
 
   useEffect(() => {
@@ -244,7 +245,7 @@ const Dashboard = () => {
               key={user.id}
               className={`border-t ${
                 index % 2 === 0 ? "bg-white" : "bg-gray-50"
-              }`}
+              } hover:bg-gray-200`}
             >
               <td className="px-4 py-3 border-r">{index+1}</td>
               <td className="px-4 py-3 border-r">{user.invoiceInfo.invoiceNumber}</td>

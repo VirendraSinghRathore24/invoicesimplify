@@ -3,12 +3,17 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { db } from "../../config/firebase";
 import AddItem from "./AddItem";
+import { Edit } from "lucide-react";
+import EditItem from "./EditItem";
 
-function AddInventory() {
+function Inventory() {
   const location = useLocation();
   const [inputs, setInputs] = useState({});
   const [showList, setShowList] = useState(false);
   const [posts, setPosts] = useState([]);
+  const [itemAdded, setItemAdded] = useState(false);
+  const [editPost, setEditPost] = useState(null);
+  
 
   const navigate = useNavigate();
   const inventoryInfo_CollectionRef = collection(db, "Inventory_Info");
@@ -16,6 +21,11 @@ function AddInventory() {
   const [openItem, setOpenItem] = useState(false);  
     const handleCloseItem = () => {
       setOpenItem(false);
+    }
+
+    const [openEditModal, setOpenEditModal] = useState(false);  
+    const handleCloseEditModal = () => {
+      setOpenEditModal(false);
     }
 
   const handleSubmit = async (event) => {
@@ -88,12 +98,18 @@ function AddInventory() {
     )[0];
 
     // get items list
-    const existingItems = inventoryInfo.inventory;
+    const existingItems = inventoryInfo.inventory.sort((a, b) => a.itemName.localeCompare(b.itemName));
 
     if(existingItems.length > 0){
       setShowList(true);
       setPosts(inventoryInfo.inventory);
     }
+  }
+
+  const handleEdit = (post) => {
+    setEditPost(post);
+    setOpenEditModal(true);
+    
   }
 
   useEffect(() => {
@@ -102,17 +118,30 @@ function AddInventory() {
 
     let info1 = localStorage.getItem("inventory");
     setInputs(JSON.parse(info1));
-  }, []);
+  }, [itemAdded]);
 
   return (
     <div>
        <div className="flex flex-col w-full mx-auto font-bold text-2xl bg-gray-200 py-4 px-2 rounded-md">Add Inventory</div>
         
    
-    <div className="flex flex-col w-5/12 m-auto p-4 mt-10 ">
-      <button onClick={() => setOpenItem(true)} className="w-3/12 border-1 px-4 py-2 bg-[#444] text-white font-bold rounded-md hover:bg-amber-800"> +  Add Item</button>
+    <div className="flex flex-col w-full m-auto p-4">
+      
       {showList ? (
-        <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-2">
+        <div>
+          <div className="flex justify-end">
+      <button onClick={() => setOpenItem(true)} className="w-2/12 border-1 px-4 py-2 bg-[#444] text-white font-bold rounded-md hover:bg-amber-800"> +  Add Item</button>
+      </div>
+        <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4">
+          
+         <div className="p-4">
+        <input
+          type="text"
+          placeholder="Search..."
+          
+          className="p-2 border border-gray-300 rounded-md mb-4 w-full"
+        />
+      </div>
         <table className="min-w-full text-sm text-left text-gray-700">
           <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
             <tr>
@@ -125,13 +154,16 @@ function AddInventory() {
           <tbody>
             {
               posts && posts.length > 0 && posts.map((post, index) => (
-                <tr className="border-t bg-white">
+                <tr key={index}
+                className={`border-t ${
+                  index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                } hover:bg-gray-200`}>
               <td className="px-4 py-3 border-r">{index + 1}.</td>
               <td className="px-4 py-3 border-r">{post?.itemName}</td>
 
               <td className="px-4 py-3 cursor-pointer">
                 <button
-                  onClick={() => navigate("/editbusinessinfo")}
+                  onClick={() => handleEdit(post)}
                   className="text-blue-600 hover:text-red-800 font-semibold text-sm"
                 >
                   Edit
@@ -149,57 +181,35 @@ function AddInventory() {
           </tbody>
         </table>
         </div>
-      ) : (
-        <div>
-          <div className="text-xl font-semibold text-center">Add Item</div>
-
-          <form
-            onSubmit={handleSubmit}
-            className="w-full mx-auto flex flex-col md:flex-row justify-between mt-10"
-          >
-            <div className="flex flex-col gap-y-4 w-full md:w-7/12 mx-auto">
-              <div className="flex justify-evenly">
-                <div className="w-4/12 mx-auto text-xs font-medium leading-5 text-gray-700 mt-2">
-                  Item Name
-                </div>
-                <div className="w-8/12 mx-auto">
-                  <input
-                    className="form-input w-full block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
-                    name="itemName"
-                    required
-                    placeholder="Enter Item Name"
-                    value={inputs?.itemName || ""}
-                    onChange={(e) => {
-                      localStorage.setItem("itemName", e.target.value);
-                      handleChange(e);
-                    }}
-                  />
-                </div>
-              </div>
-
-              <div className="flex justify-evenly">
-                <div className="rounded-md flex justify-between w-full mx-auto">
-                  <button
-                    type="submit"
-                    className="bg-[#444] px-4 py-2 rounded-md text-white w-full"
-                  >
-                    Save
-                  </button>
-                </div>
-              </div>
-            </div>
-          </form>
         </div>
+
+      ) : (
+                  <div className="flex h-screen items-center justify-center ">
+            <div onClick={() => setOpenItem(true)}>
+              <button className="border-2 bg-[#444] text-white fond-bold text-lg py-4 px-8 rounded-md cursor-pointer">
+                {" "}
+                + Add Inventory
+              </button>
+            </div>
+          </div>
+
       )}
       {openItem && (
             <AddItem
               handleCloseItem={handleCloseItem}
-              
+              setItemAdded={setItemAdded}
             ></AddItem>
+          )}
+          {openEditModal && (
+            <EditItem
+              handleCloseEditModal={handleCloseEditModal}
+              setItemAdded={setItemAdded}
+              editPost={editPost}
+            ></EditItem>
           )}
     </div>
     </div>
   );
 }
 
-export default AddInventory;
+export default Inventory;
