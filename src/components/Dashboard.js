@@ -6,130 +6,27 @@ import Loader from "./Loader";
 
 const Dashboard = () => {
   const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const [amount, setAmount] = useState(0);
+
   const navigate = useNavigate();
-
-  // const [data, setData] = useState([
-  //   {
-  //     id: 1,
-  //     name: "Virendra Singh",
-  //     invoice: 22,
-  //     address: "40605, Nikoo Homes 1, Bhartiya City, Bangalore - 560087",
-  //     email: "alice@example.com",
-  //     phone: "8095528525",
-  //     role: "Admin",
-  //     department: "IT",
-  //     status: "Fully Paid",
-  //     joined: "2023-01-01",
-  //     amount: 5400,
-  //     paid: 5400,
-  //     balance: 0,
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "Sanju Shekhawat",
-  //     invoice: 23,
-  //     address: "LIC, Nikoo Homes 1, Bhartiya City, Bangalore - 560087",
-  //     email: "bob@example.com",
-  //     phone: "9087765434",
-  //     role: "Editor",
-  //     department: "HR",
-  //     status: "Partially Paid",
-  //     joined: "2022-10-15",
-  //     amount: 5000,
-  //     paid: 2400,
-  //     balance: 2000,
-  //   },
-  //   {
-  //     id: 3,
-  //     invoice: 24,
-  //     name: "Rudransh Rathore",
-  //     address: "40605, Nikoo Homes 1, Bhartiya City, Bangalore - 560087",
-  //     email: "alice@example.com",
-  //     phone: "7789065478",
-  //     role: "Admin",
-  //     department: "IT",
-  //     status: "Not Paid",
-  //     joined: "2023-01-01",
-  //     amount: 5400,
-  //     paid: 0,
-  //     balance: 5400,
-  //   },
-  //   {
-  //     id: 4,
-  //     invoice: 42,
-  //     name: "Soniya Sharma",
-  //     address: "40605, Nikoo Homes 1, Bhartiya City, Bangalore - 560087",
-  //     email: "bob@example.com",
-  //     phone: "9876543210",
-  //     role: "Editor",
-  //     department: "HR",
-  //     status: "Partially Paid",
-  //     joined: "2022-10-15",
-  //     amount: 6400,
-  //     paid: 2400,
-  //     balance: 2000,
-  //   },
-  //   {
-  //     id: 5,
-  //     name: "Sonam Singh",
-  //     invoice: 28,
-  //     address: "40605, Nikoo Homes 1, Bhartiya City, Bangalore - 560087",
-  //     email: "alice@example.com",
-  //     phone: "7898789909",
-  //     role: "Admin",
-  //     department: "IT",
-  //     status: "Partially Paid",
-  //     joined: "2023-01-01",
-  //     amount: 5000,
-  //     paid: 2400,
-  //     balance: 2000,
-  //   },
-  //   {
-  //     id: 6,
-  //     name: "Amit Rathore",
-  //     invoice: 20,
-  //     address: "40605, Nikoo Homes 1, Bhartiya City, Bangalore - 560087",
-  //     email: "bob@example.com",
-  //     phone: "9876789087",
-  //     role: "Editor",
-  //     department: "HR",
-  //     status: "Fully Paid",
-  //     joined: "2022-10-15",
-  //     amount: 7500,
-  //     paid: 7500,
-  //     balance: 0,
-  //   },
-
-  //   {
-  //     id: 7,
-  //     name: "Prachi Gupta",
-  //     invoice: 12,
-  //     address: "40605, Nikoo Homes 1, Bhartiya City, Bangalore - 560087",
-  //     email: "bob@example.com",
-  //     phone: "8890990087",
-  //     role: "Editor",
-  //     department: "HR",
-  //     status: "Fully Paid",
-  //     joined: "2022-10-15",
-  //     amount: 7500,
-  //     paid: 7500,
-  //     balance: 0,
-  //   },
-
-  //   // Add more entries as needed
-  // ]);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
 
-  const handleDelete = async(id) => {
+  const handleDelete = async(user) => {
     if (window.confirm("Are you sure you want to delete this entry?")) {
-      setData(data.filter((item) => item.id !== id));
+      setData(data.filter((item) => item.id !== user.id));
 
-      const invDoc = doc(db, "Invoice_Info", id);
+      const invDoc = doc(db, "Invoice_Info", user.id);
       await deleteDoc(invDoc);
+
+      const totalAmount = amount - user?.amountInfo?.amount;
+      setAmount(totalAmount);
+
+      await getInvoiceInfo();
     }
   };
 
@@ -143,6 +40,13 @@ const Dashboard = () => {
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
+
+    const result = data.filter((item) => item.customerInfo.customerName.toLowerCase().includes(e.target.value.toLowerCase()) ||
+      item.customerInfo.customerPhone.toLowerCase().includes(e.target.value.toLowerCase()) ||
+      item.invoiceInfo.invoiceNumber.toString().toLowerCase().includes(e.target.value.toLowerCase())
+    );
+    setFilteredData(result);
+   
   };
 
   const handleSort = (key) => {
@@ -175,6 +79,7 @@ const Dashboard = () => {
 
   const invoiceInfo_CollectionRef = collection(db, "Invoice_Info");
   const getInvoiceInfo = async () => {
+    setLoading(true);
     const data = await getDocs(invoiceInfo_CollectionRef);
     const filteredData = data.docs.map((doc) => ({
       ...doc.data(),
@@ -186,21 +91,61 @@ const Dashboard = () => {
       (x) => x.loggedInUser === loggedInUser
     );
 
+    const totalAmount = invoiceInfo.reduce((acc, item) => {
+      const amount = Math.round(item.amountInfo.amount + item.taxCalculatedInfo.cgst + item.taxCalculatedInfo.sgst);
+      return acc + amount;
+    }, 0);
+
+    setAmount(totalAmount);
+
     const invoiceInfo1 = invoiceInfo.sort((a, b) => b.invoiceInfo.invoiceNumber - a.invoiceInfo.invoiceNumber);
     setData(invoiceInfo1);
+    setFilteredData(invoiceInfo1);
+    setLoading(false);
   };
 
+  const handleLogin = () => {
+    const user = localStorage.getItem("user");
+
+    if(!user || user === "undefined" || user === "null"){
+      navigate("/login");
+    } 
+}
+
   useEffect(() => {
-    setLoading(true);
+    handleLogin();
+    
     getInvoiceInfo();
-    setLoading(false);
+    
   }, []);
 
   return (
     <div>
       <div className="flex flex-col w-full mx-auto font-bold text-2xl bg-gray-200 py-4 px-2 rounded-md">Dashboard</div>
+     
+      <div className="flex justify-between py-4 gap-x-2">
+        <div className="flex flex-col gap-y-4 font-bold text-xl shadow-lg border-2 p-5 bg-amber-50 gap-y-4 rounded-md h-32 w-3/12">
+          <div className="">Balance</div>
+          <div className="text-2xl">₹ 2400</div>
+        </div>
+        
+        <div className="flex flex-col gap-y-4 font-bold text-xl shadow-lg border-2 p-5 bg-red-50 gap-y-4 rounded-md h-32 w-3/12">
+          <div className="">Amount</div>
+          <div className="text-2xl">₹ {amount}</div>
+        </div>
+
+        <div className="flex flex-col gap-y-4 font-bold text-xl shadow-lg border-2 p-5 bg-blue-50 gap-y-4 rounded-md h-32 w-3/12">
+          <div className="">Paid</div>
+          <div className="text-2xl">₹ 4300</div>
+        </div>
+
+        <div className="flex flex-col gap-y-4 font-bold text-xl shadow-lg border-2 p-5 bg-green-50 gap-y-4 rounded-md h-32 w-3/12">
+          <div className="">Invoices</div>
+          <div className="text-2xl">{sortedData ? sortedData.length : 0}</div>
+        </div>
+      </div>
     
-    <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4">
+    <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4 shadow-lg border-2 bg-white gap-y-4 rounded-md">
       <div className="p-4">
         <input
           type="text"
@@ -240,14 +185,14 @@ const Dashboard = () => {
           </tr>
         </thead>
         <tbody>
-          {sortedData.map((user, index) => (
+          {filteredData.map((user, index) => (
             <tr
               key={user.id}
               className={`border-t ${
                 index % 2 === 0 ? "bg-white" : "bg-gray-50"
               } hover:bg-gray-200`}
             >
-              <td className="px-4 py-3 border-r">{index+1}</td>
+              <td className="px-4 py-3 border-r">{index+1}.</td>
               <td className="px-4 py-3 border-r">{user.invoiceInfo.invoiceNumber}</td>
               <td className="px-4 py-3 border-r">{user.customerInfo.customerName}</td>
               <td className="px-4 py-3 border-r">{user.customerInfo.customerPhone}</td>
@@ -273,7 +218,7 @@ const Dashboard = () => {
               </td>
               <td className="px-4 py-3">
                 <button
-                  onClick={() => handleDelete(user.id)}
+                  onClick={() => handleDelete(user)}
                   className="text-red-600 hover:text-red-800 font-semibold text-sm"
                 >
                   Delete
@@ -281,7 +226,7 @@ const Dashboard = () => {
               </td>
             </tr>
           ))}
-          {sortedData.length === 0 && (
+          {filteredData.length === 0 && (
             <tr>
               <td colSpan="9" className="text-center px-4 py-6 text-gray-500">
                 No data available.

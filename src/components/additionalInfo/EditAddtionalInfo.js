@@ -61,7 +61,16 @@ function AddtionalInfo() {
     navigate(-1);
   }
 
+  const handleLogin = () => {
+    const user = localStorage.getItem("user");
+
+    if(!user || user === "undefined" || user === "null"){
+      navigate("/login");
+    } 
+}
+
   useEffect(() => {
+    handleLogin();
     let info1 = localStorage.getItem("additionalInfo");
 
     if(info1 === "undefined" || info1 === null){

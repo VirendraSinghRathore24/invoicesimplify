@@ -52,7 +52,15 @@ const AdditionalInformation = () => {
        }
      };
 
+     const handleLogin = () => {
+      const user = localStorage.getItem("user");
+  
+      if(!user || user === "undefined" || user === "null"){
+        navigate("/login");
+      } 
+  }
     useEffect(()=> {
+      handleLogin();
         let info3 = localStorage.getItem("additionalInfo");
         if(info3 === "undefined" || info3 === "null"){
             setPosts([]);

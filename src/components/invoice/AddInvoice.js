@@ -352,15 +352,15 @@ const AddInvoice = () => {
   const handleResetInvoice = () => {
     var res = window.confirm("Reset will delete all data. Continue?");
     if(!res) return;
-    
+
 
     setCustomerName("");
     setCustomerPhone("");
     setExpectedDate("");
     setAdvance("");
-
+  
     setDate(new Date().toISOString().slice(0, 10));
-    setAmount("");
+    setAmount(0);
     setSignature(null);
     setSign(false);
 
@@ -614,6 +614,17 @@ const AddInvoice = () => {
       localStorage.setItem("advance", value);
     }
   };
+
+  const handleLogin = () => {
+    const user = localStorage.getItem("user");
+
+    if(!user || user === "undefined" || user === "null"){
+      navigate("/login");
+    } 
+}
+useEffect(() => { 
+  handleLogin();
+},[]);
 
   return (
     <div>

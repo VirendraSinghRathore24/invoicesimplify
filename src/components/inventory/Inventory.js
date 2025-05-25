@@ -111,8 +111,16 @@ function Inventory() {
     setOpenEditModal(true);
     
   }
+  const handleLogin = () => {
+    const user = localStorage.getItem("user");
+
+    if(!user || user === "undefined" || user === "null"){
+      navigate("/login");
+    } 
+}
 
   useEffect(() => {
+    handleLogin();
     // call db to check the items length
     checkIfListExists();
 
@@ -130,7 +138,7 @@ function Inventory() {
       {showList ? (
         <div>
           <div className="flex justify-end">
-      <button onClick={() => setOpenItem(true)} className="w-2/12 border-1 px-4 py-2 bg-[#444] text-white font-bold rounded-md hover:bg-amber-800"> +  Add Item</button>
+      <button onClick={() => setOpenItem(true)} className="border-1 px-4 py-2 bg-[#444] text-white font-bold rounded-md hover:bg-amber-800"> +  Add Item</button>
       </div>
         <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4">
           

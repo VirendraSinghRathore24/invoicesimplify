@@ -26,6 +26,7 @@ import Inventory from './components/inventory/Inventory';
 function App() {
   const location = useLocation();
   const showSidebar = !['/','/login', '/signup'].includes(location.pathname);
+
   return (
     <div className="flex h-screen">
      
@@ -35,22 +36,32 @@ function App() {
       <div className="flex-1 p-6 overflow-y-auto">
       <Routes>
         <Route path="/" element={<Home/>}/> 
+
+        // Login and Signup routes
         <Route path="/login" element={<Login/>}/> 
         <Route path="/logout" element={<Logout/>}/> 
         <Route path="/signup" element={<Signup/>}/> 
+
+        // Business Info
+        <Route path="/businessinfo" element={<BusinessInfo/>}/>
         <Route path="/editbusinessinfo" element={<EditBusinessInfo/>}/>
         <Route path="/addbusinessinfo" element={<AddBusinessInfo/>}/>
+
+        // Tax Info
         <Route path="/edittaxinfo" element={<EditTaxInfo/>}/>
         <Route path="/taxinfo" element={<TaxInfo/>}/>
         <Route path="/addtaxinfo" element={<AddTaxInfo/>}/>
+
+        // Additional Info
         <Route path="/editadditionalinfo" element={<AddtionalInfo/>}/>
         <Route path="/addadditionalinfo" element={<AddAddtionalInfo/>}/>
         <Route path="/additionalinfo" element={<AdditionalInformation/>}/>
 
+        // Invoice
         <Route path="/createinvoice" element={<AddInvoice/>}/>
         <Route path="/viewinvoice" element={<ViewInvoice/>}/>
         <Route path="/invoice" element={<Invoice/>}/>
-        <Route path="/businessinfo" element={<BusinessInfo/>}/>
+        
         <Route path="/dashboard" element={<Dashboard/>}/>
         <Route path="/inventory" element={<Inventory/>}/>
       </Routes>

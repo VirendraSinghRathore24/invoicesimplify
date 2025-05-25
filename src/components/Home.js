@@ -1,11 +1,23 @@
 import React from "react";
 import HeaderHome from "./HeaderHome";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 // import Footer from "./Footer";
 // import Testimonials from "./Testimonials";
 // import { LogIn, BookText, ScanEye, Download, Printer, LayoutDashboard } from 'lucide-react';
 
+
 const Home = () => {
+    const navigate = useNavigate();
+    const handleCreateInvoice = () => {
+        const user = localStorage.getItem("user");
+    
+        if(user && user !== "undefined" && user !== "null"){
+          navigate("/createinvoice");
+        }
+        else{
+          navigate("/login");
+        }
+    }
   return (
     <div className="quicksand-med w-full mx-auto">
       <HeaderHome /> 
@@ -20,12 +32,12 @@ const Home = () => {
             <div className=" m-4 rounded-md text-md md:text-lg text-center items-center">
             
             <div className=" text-white mt-12">
-              <NavLink
+              <button
                 className="bg-[#FF5721] text-md text-white py-4 px-4 font-semibold rounded-md text-richblack-700 hover:bg-white hover:text-[#FF5721] hover:border-2 hover:border-[#FF5721] cursor-pointer uppercase tracking-wide"
-                to={"/login"}
+                onClick={handleCreateInvoice}
               >
                 Try It Free !
-              </NavLink>
+              </button>
             </div>
             <div className="text-gray-500 text-sm mt-4">We are using secure connection</div>
            

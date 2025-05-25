@@ -12,7 +12,14 @@ function HeaderHome() {
   //     loggedInUser = '';
   // }
  const handleCreateInvoice = () => {
-  navigate('/login');
+    const user = localStorage.getItem("user");
+
+    if(user && user !== "undefined" && user !== "null"){
+      navigate("/createinvoice");
+    }
+    else{
+      navigate("/login");
+    }
  }
 
   return (

@@ -22,8 +22,12 @@ const Sidebar = () => {
 const navigate = useNavigate();
   
  const handleLogout = () => {
-   localStorage.clear();
-   navigate('/login');
+   const res = window.confirm("Are you sure you want to logout?");
+
+   if(res){
+    localStorage.clear();
+    navigate('/login');
+   }
  }
 
   return (

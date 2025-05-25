@@ -4,10 +4,13 @@ import React, { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../config/firebase";
+import { useNavigate } from "react-router-dom";
 
 
 const InventoryModal = ({ handleCloseItem, setItem }) => {
   const [posts, setPosts] = useState([{ code: "", symbol: "" }]);
+
+  const navigate = useNavigate();
 
   const getItemList = async () => {
 
@@ -18,6 +21,7 @@ const InventoryModal = ({ handleCloseItem, setItem }) => {
         {name : 'Gotta and Jari Poshak'},
         {name : 'Amazing Poshak'},
         {name : 'Jaipuri Poshak'},
+        {name : 'Aari Jarsdoshi Poshak Jaipur and Jodhpur'},,
         {name : 'Aari Jarsdoshi Poshak Jaipur and Jodhpur'},,
         {name : 'Aari Jarsdoshi Poshak Jaipur and Jodhpur'},,
         {name : 'Aari Jarsdoshi Poshak Jaipur and Jodhpur'},,
@@ -56,9 +60,31 @@ const InventoryModal = ({ handleCloseItem, setItem }) => {
         setPosts(existingItems);
   }
 
+  const handleLogin = () => {
+    const user = localStorage.getItem("user");
+
+    if(!user || user === "undefined" || user === "null"){
+      navigate("/login");
+    } 
+}
   useEffect(() => {
+    handleLogin();
     getInventoryList();
   }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        handleCloseItem();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [handleCloseItem]);
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center ">

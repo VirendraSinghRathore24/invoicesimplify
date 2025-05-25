@@ -94,9 +94,10 @@ const Login = () => {
 
   const signInWithGoogle = async () => {
     try {
-      setLoading(true);
-
+      
       await signInWithPopup(auth, googleProvider);
+
+      setLoading(true);
 
       const code = auth?.currentUser?.email;
       const userName = auth?.currentUser?.displayName;
@@ -124,7 +125,7 @@ const Login = () => {
 
 
   useEffect(() => {
-
+    
     window.scroll(0,0);
   },[])
 

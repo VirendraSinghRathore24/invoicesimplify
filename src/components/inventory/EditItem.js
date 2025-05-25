@@ -92,6 +92,18 @@ const location = useLocation();
     }
   }
 
+  const handleLogin = () => {
+    const user = localStorage.getItem("user");
+
+    if(!user || user === "undefined" || user === "null"){
+      navigate("/login");
+    } 
+}
+  useEffect(() => {
+    handleLogin();
+
+  },[]);
+
   return (
     <div className=" w-full mx-auto fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center ">
       <div className="overflow-auto mt-6 bg-white p-4 text-black rounded-xl">

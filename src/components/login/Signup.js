@@ -123,6 +123,7 @@ const Signup = () => {
   const signInWithGoogle = async () => {
     try {
       await signInWithPopup(auth, googleProvider);
+      setLoading(true);
       const code = auth?.currentUser?.email;
       const userName = auth?.currentUser?.displayName;
 
@@ -142,8 +143,10 @@ const Signup = () => {
       localStorage.setItem("userName", userName);
       localStorage.setItem("invoiceNumber", 1);
       navigate("/createinvoice");
+      setLoading(false);
     } catch (err) {
       console.log(err);
+      setLoading(false);
     }
   };
 

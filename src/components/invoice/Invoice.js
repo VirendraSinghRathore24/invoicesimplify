@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { use, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaRegEdit } from "react-icons/fa";
 import { BsWhatsapp } from "react-icons/bs";
@@ -168,6 +168,20 @@ function Invoice() {
     let info8 = localStorage.getItem("rows");
     setRows(JSON.parse(info8));
   }, []);
+
+  const handleLogin = () => {
+    const user = localStorage.getItem("user");
+
+    if(!user || user === "undefined" || user === "null"){
+      navigate("/login");
+    } 
+}
+
+useEffect(() => {
+  handleLogin();
+}
+, []);
+
   return (
     <div className="my-5">
       <div className="flex justify-between w-8/12 mx-auto">
