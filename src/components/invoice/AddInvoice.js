@@ -104,9 +104,9 @@ const AddInvoice = () => {
   const [rows, setRows] = useState([
     { desc: "", rate: "", qty: "", amount: 0 },
   ]);
-  const handleInputChange = (e, index) => {
+  const handleInputChange = (name, value, index) => {
     const values = [...rows];
-    const { name, value } = e.target;
+    //const { name, value } = e.target;
 
     if (name === "desc") {
       values[index].desc = value;
@@ -570,12 +570,18 @@ const AddInvoice = () => {
     getLocalStorageUpiInfo();
   }, [name, accountName, inv_name, upiType]);
 
+  const[selectedIndex, setSelectedIndex] = useState(0);
   const [openItem, setOpenItem] = useState(false);
-  const handleSearch = () => {
+  const handleSearch = (index) => {
+    setSelectedIndex(index);
     setOpenItem(true);
+
+    
   };
 
   const handleCloseItem = () => {
+    const it = localStorage.getItem("selectedItem");
+    handleInputChange("desc", it, selectedIndex);
     setOpenItem(false);
   };
 
@@ -819,11 +825,11 @@ useEffect(() => {
                               placeholder="Search..."
                               className="w-full py-2 pr-10 pl-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                               name="desc"
-                              value={row.desc}
-                              onChange={(e) => handleInputChange(e, index)}
+                              value={row.desc || rows[index].desc}
+                              onChange={(e) => handleInputChange(e.target.name, e.target.value, index)}
                             />
                             <button
-                              onClick={handleSearch}
+                              onClick={() => handleSearch(index)}
                               className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-blue-600"
                             >
                               <FontAwesomeIcon icon={faSearch} />
@@ -837,7 +843,7 @@ useEffect(() => {
                             name="rate"
                             placeholder="Price"
                             value={row.rate}
-                            onChange={(e) => handleInputChange(e, index)}
+                            onChange={(e) => handleInputChange(e.target.name, e.target.value, index)}
                           />
                         </td>
                         <td className="w-[10%] ">
@@ -847,7 +853,7 @@ useEffect(() => {
                             name="quantity"
                             placeholder="Quantity"
                             value={row.qty}
-                            onChange={(e) => handleInputChange(e, index)}
+                            onChange={(e) => handleInputChange(e.target.name, e.target.value, index)}
                           />
                         </td>
                         <td className="w-[20%] text-center">
@@ -883,7 +889,7 @@ useEffect(() => {
                               name="desc"
                               placeholder="Description"
                               value={row.desc}
-                              onChange={(e) => handleInputChange(e, index)}
+                              onChange={(e) => handleInputChange(e.target.name, e.target.value, index)}
                             />
                           </td>
                           <div className="w-full mx-auto flex gap-x-2">
@@ -894,7 +900,7 @@ useEffect(() => {
                                 name="rate"
                                 placeholder="Price"
                                 value={row.rate}
-                                onChange={(e) => handleInputChange(e, index)}
+                                onChange={(e) => handleInputChange(e.target.name, e.target.value, index)}
                               />
                             </td>
                             <td className="w-[20%] ">
@@ -904,7 +910,7 @@ useEffect(() => {
                                 name="quantity"
                                 placeholder="Quantity"
                                 value={row.qty}
-                                onChange={(e) => handleInputChange(e, index)}
+                                onChange={(e) => handleInputChange(e.target.name, e.target.value, index)}
                               />
                             </td>
                             <td className="w-[30%] text-center">

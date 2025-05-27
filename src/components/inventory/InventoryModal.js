@@ -37,8 +37,8 @@ const InventoryModal = ({ handleCloseItem, setItem }) => {
   };
 
   const handleSelect = (post) => {
-    setItem(post.name);
-
+    setItem(post.itemName);
+    localStorage.setItem("selectedItem", post.itemName);
     handleCloseItem();
   }
 

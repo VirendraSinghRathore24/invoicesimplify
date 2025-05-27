@@ -184,48 +184,58 @@ const Dashboard = () => {
             ))}
           </tr>
         </thead>
-        <tbody>
-          {filteredData.map((user, index) => (
-            <tr
-              key={user.id}
-              className={`border-t ${
-                index % 2 === 0 ? "bg-white" : "bg-gray-50"
-              } hover:bg-gray-200`}
-            >
-              <td className="px-4 py-3 border-r">{index+1}.</td>
-              <td className="px-4 py-3 border-r">{user.invoiceInfo.invoiceNumber}</td>
-              <td className="px-4 py-3 border-r">{user.customerInfo.customerName}</td>
-              <td className="px-4 py-3 border-r">{user.customerInfo.customerPhone}</td>
-              <td className="px-4 py-3 border-r">{user.invoiceInfo.date}</td>
-              <td className="px-4 py-3 border-r text-right">{Math.round(user.amountInfo.amount + user.taxCalculatedInfo.cgst + user.taxCalculatedInfo.sgst)}</td>
-              <td className="px-4 py-3 border-r text-right">{user.amountInfo.advance}</td>
-              <td className="px-4 py-3 border-r text-right">{user.taxCalculatedInfo.balance}</td>
-              <td className="px-4 py-3 border-r">
-                <span
-                  className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                    (user.amountInfo.amount - user.amountInfo.advance) === 0
-                      ? "bg-green-100 text-green-700"
-                      : "bg-red-300 text-red-700"
-                  }`}
-                >
-                  {user.taxCalculatedInfo.balance === 0 ? 'Paid' : 'Due'}
-                </span>
-              </td>
-              <td className="px-4 py-3 border-r ">
-                <button onClick={() => handleView(user.id)} className="text-blue-600 hover:text-blue-800 font-semibold text-sm">
-                  View
-                </button>
-              </td>
-              <td className="px-4 py-3">
-                <button
-                  onClick={() => handleDelete(user)}
-                  className="text-red-600 hover:text-red-800 font-semibold text-sm"
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
+        <tbody >
+          {filteredData.map((user, index) => {
+            const formatDate = (dateString) => {
+              const date = new Date(dateString);
+              const day = String(date.getDate()).padStart(2, '0');
+              const month = String(date.getMonth() + 1).padStart(2, '0');
+              const year = date.getFullYear();
+              return `${day}-${month}-${year}`;
+            };
+
+            return (
+              <tr
+                key={user.id}
+                className={`border-t ${
+                  index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                } hover:bg-gray-200`}
+              >
+                <td className="px-4 py-3 border-r">{index+1}.</td>
+                <td className="px-4 py-3 border-r">{user.invoiceInfo.invoiceNumber}</td>
+                <td className="px-4 py-3 border-r">{user.customerInfo.customerName}</td>
+                <td className="px-4 py-3 border-r">{user.customerInfo.customerPhone}</td>
+                <td className="px-4 py-3 border-r">{formatDate(user.invoiceInfo.date)}</td>
+                <td className="px-4 py-3 border-r text-right">{Math.round(user.amountInfo.amount + user.taxCalculatedInfo.cgst + user.taxCalculatedInfo.sgst)}</td>
+                <td className="px-4 py-3 border-r text-right">{user.amountInfo.advance}</td>
+                <td className="px-4 py-3 border-r text-right">{user.taxCalculatedInfo.balance}</td>
+                <td className="px-4 py-3 border-r">
+                  <span
+                    className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                      (user.amountInfo.amount - user.amountInfo.advance) === 0
+                        ? "bg-green-100 text-green-700"
+                        : "bg-red-300 text-red-700"
+                    }`}
+                  >
+                    {user.taxCalculatedInfo.balance === 0 ? 'Paid' : 'Due'}
+                  </span>
+                </td>
+                <td className="px-4 py-3 border-r ">
+                  <button onClick={() => handleView(user.id)} className="text-blue-600 hover:text-blue-800 font-semibold text-sm">
+                    View
+                  </button>
+                </td>
+                <td className="px-4 py-3">
+                  <button
+                    onClick={() => handleDelete(user)}
+                    className="text-red-600 hover:text-red-800 font-semibold text-sm"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            );
+          })}
           {filteredData.length === 0 && (
             <tr>
               <td colSpan="9" className="text-center px-4 py-6 text-gray-500">
