@@ -224,13 +224,13 @@ function ViewInvoice() {
                         ₹ {invoiceInfo?.amountInfo?.amount}
                       </div>
                     </div>}
-                    {invoiceInfo?.taxInfo?.sgstAmount && <div className='border-b-2 border-dashed py-1'></div>}
+                    {invoiceInfo?.taxInfo?.cgstAmount && <div className='border-b-2 border-dashed py-1'></div>}
                   {invoiceInfo?.taxInfo?.cgstAmount &&<div className="w-full flex justify-end gap-x-10">
                       <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-sm font-semibold rounded-md uppercase ">
-                        CGST {invoiceInfo.taxInfo.cgstAmount}%
+                        CGST {invoiceInfo?.taxInfo?.cgstAmount}%
                       </div>
                       <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-sm font-semibold rounded-md">
-                        ₹ {Math.round(invoiceInfo.taxCalculatedInfo?.cgstAmount)}
+                        ₹ {Math.round(invoiceInfo?.taxCalculatedInfo?.cgst)}
                       </div>
                     </div>}
                     {invoiceInfo?.taxInfo?.cgstAmount && <div className='border-b-2 border-dashed py-1'></div>}

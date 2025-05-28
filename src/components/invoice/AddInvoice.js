@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 // import Header from "./Header";
 //import { getInvoiceNumber, getUserSettings } from "./DatabaseHelper";
-import { X } from "lucide-react";
+import { Trash2, X } from "lucide-react";
 import { FaRegEdit } from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
@@ -102,7 +102,7 @@ const AddInvoice = () => {
 
   // item details
   const [rows, setRows] = useState([
-    { desc: "", rate: "", qty: "", amount: 0 },
+    { desc: "", rate: "", qty: 1, amount: 0 },
   ]);
   const handleInputChange = (name, value, index) => {
     const values = [...rows];
@@ -133,7 +133,7 @@ const AddInvoice = () => {
     const val = JSON.parse(localStorage.getItem("rows"));
 
     if (val === null) {
-      setRows([{ desc: "", rate: "", qty: "", amount: 0 }]);
+      setRows([{ desc: "", rate: "", qty: 1, amount: 0 }]);
     } else {
       setRows(val);
     }
@@ -159,7 +159,7 @@ const AddInvoice = () => {
 
   const handleAddRow = () => {
     if (rows?.length < 50) {
-      setRows([...rows, { desc: "", rate: "", qty: "", amount: 0 }]);
+      setRows([...rows, { desc: "", rate: "", qty: 1, amount: 0 }]);
       AddTotal();
     }
   };
@@ -168,7 +168,7 @@ const AddInvoice = () => {
     localStorage.removeItem("rows");
     //if (rows.length > 0) return;
     //setRows([...rows, { desc: "", rate: "", qty: "", amount: 0 }]);
-    setRows([{ desc: "", rate: "", qty: "", amount: 0 }]);
+    setRows([{ desc: "", rate: "", qty: 1, amount: 0 }]);
     AddTotal();
   };
 
@@ -191,16 +191,19 @@ const AddInvoice = () => {
   const handleCreateInvoice = async () => {
     if (!customerName?.trim()) {
       alert("Customer name is required.");
+      document.querySelector('input[name="custname"]').focus();
       return;
     }
 
     if (!customerPhone?.trim()) {
       alert("Customer phone is required.");
+      document.querySelector('input[name="custphone"]').focus();
       return;
     }
 
     if (customerPhone?.trim().length !== 10) {
       alert("Customer phone number is not valid.");
+      document.querySelector('input[name="custphone"]').focus();
       return;
     }
 
@@ -352,8 +355,7 @@ const AddInvoice = () => {
   const handleResetInvoice = () => {
     var res = window.confirm("Reset will delete all data. Continue?");
     if(!res) return;
-
-
+    
     setCustomerName("");
     setCustomerPhone("");
     setExpectedDate("");
@@ -582,6 +584,8 @@ const AddInvoice = () => {
   const handleCloseItem = () => {
     const it = localStorage.getItem("selectedItem");
     handleInputChange("desc", it, selectedIndex);
+    const price = localStorage.getItem("selectedItemPrice");
+    handleInputChange("rate", price, selectedIndex);
     setOpenItem(false);
   };
 
@@ -643,7 +647,7 @@ useEffect(() => {
         </>
       )}
       <div>
-        <div className="flex justify-between mx-auto font-bold text-md bg-gray-200 py-4 px-2 rounded-md">
+        <div className="flex justify-between mx-auto font-bold text-md bg-gray-200 py-4 px-2 rounded-md fixed w-[81.5%]">
           <div className="text-2xl">Create Invoice</div>
           <div className="flex gap-x-4">
             <button
@@ -661,7 +665,7 @@ useEffect(() => {
           </div>
         </div>
         <div className="flex flex-col w-full gap-y-3 mx-auto ">
-          <div className="flex justify-between gap-x-2 w-full mx-auto mt-4">
+          <div className="flex justify-between gap-x-2 w-full mx-auto mt-20">
             <div className="flex flex-col w-6/12 mx-auto justify-start items-left mt-4 shadow-lg border-2 p-5 bg-white gap-y-4 rounded-md">
               <div className="flex flex-col justify-start items-left gap-y-4 ">
                 <div className="flex ">
@@ -701,6 +705,7 @@ useEffect(() => {
                   <input
                     className="p-[5px] pl-[10px] border border-[#ccc] rounded-r w-[120px] text-sm text-left"
                     type="text"
+                    name="custphone"
                     value={customerPhone}
                     onChange={handleCustomerPhoneChange}
                     maxLength={10}
@@ -778,16 +783,7 @@ useEffect(() => {
           </div>
 
           <div className="w-full mx-auto shadow-lg border-2 p-4 bg-white gap-y-4 rounded-md">
-            <div className="flex justify-between mb-4">
-              <div className="text-xl text-gray-600 font-medium">Items</div>
-              <button
-                className="border-2 px-2 py-1 rounded-md bg-gray-700 text-white font-bold mt-2"
-                onClick={handleAddRow}
-              >
-                +
-              </button>
-            </div>
-
+          
             <div className="overflow-hidden ">
               <table className="w-full mx-auto text-center text-sm font-light">
                 <thead className="text-[12px] md:text-md uppercase max-md:hidden">
@@ -802,28 +798,21 @@ useEffect(() => {
                   </tr>
                 </thead>
 
-                <tbody className="max-md:hidden">
+                <tbody className="max-md:hidden ">
                   {rows &&
                     rows.length > 0 &&
                     rows.map((row, index) => (
+                      <div>
                       <tr className="flex justify-between text-[12px] md:text-md w-full mt-4">
                         <td className="w-[10%] text-center mt-2">
                           {index + 1}.
                         </td>
                         <td className="w-[30%] text-left">
-                          {/* <input
-                          className=" w-full block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
-                          required
-                          name="desc"
-                          placeholder="Description"
-                          value={row.desc}
-                          onChange={(e) => handleInputChange(e, index)}
-                        /> */}
                           <div className="relative w-full max-w-md">
                             <input
                               type="text"
-                              placeholder="Search..."
-                              className="w-full py-2 pr-10 pl-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="Item Description"
+                              className="w-full py-2 pr-10 pl-4 border border-gray-300 rounded-md "
                               name="desc"
                               value={row.desc || rows[index].desc}
                               onChange={(e) => handleInputChange(e.target.name, e.target.value, index)}
@@ -842,7 +831,7 @@ useEffect(() => {
                             required
                             name="rate"
                             placeholder="Price"
-                            value={row.rate}
+                            value={row.rate || rows[index].rate}
                             onChange={(e) => handleInputChange(e.target.name, e.target.value, index)}
                           />
                         </td>
@@ -864,18 +853,24 @@ useEffect(() => {
                         <td className="w-[10%]">
                           <div>
                             {rows.length > 1 && (
-                              <button
-                                className="border-2 px-2 py-1 rounded-md bg-gray-700 text-white font-bold mt-2 "
+                              
+                              <Trash2
+                                color="red"
+                                className="cursor-pointer text-red-500 hover:text-red-700"
+                                size={20}
                                 onClick={(e) => handleDeleteRow(index, e)}
-                              >
-                                x
-                              </button>
+                              />
+                                
                             )}
                           </div>
                         </td>
+                        
                       </tr>
+                      <div className="border-b-2 border-dashed py-2"></div>
+                      </div>
                     ))}
                 </tbody>
+               
                 <tbody className="md:hidden">
                   {rows &&
                     rows.length > 0 &&
@@ -943,8 +938,17 @@ useEffect(() => {
                 </tbody>
               </table>
             </div>
-
-            <hr className="w-full mt-4"></hr>
+            {/* <hr className="w-full mt-4"></hr> */}
+            <div className="flex justify-start">
+              
+              <button
+                className="border-2 px-3 py-1 rounded-md bg-gray-700 text-2xl text-white font-bold mt-2"
+                onClick={handleAddRow}
+              >
+                +
+              </button>
+            </div>
+            <hr className="w-full mt-2"></hr>
 
             <div className="w-full flex justify-end gap-x-10 mt-2">
               <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-sm font-bold rounded-md uppercase">

@@ -155,6 +155,7 @@ function Inventory() {
             <tr>
               <th className="px-4 py-3 border-r">S.No.</th>
               <th className="px-4 py-3 border-r">Item Name</th>
+              <th className="px-4 py-3 border-r">Price</th>
               <th className="px-4 py-3 border-r">Edit</th>
               <th className="px-4 py-3">Delete</th>
             </tr>
@@ -168,7 +169,7 @@ function Inventory() {
                 } hover:bg-gray-200`}>
               <td className="px-4 py-3 border-r">{index + 1}.</td>
               <td className="px-4 py-3 border-r">{post?.itemName}</td>
-
+              <td className="px-4 py-3 border-r">{post?.itemPrice}</td>
               <td className="px-4 py-3 cursor-pointer">
                 <button
                   onClick={() => handleEdit(post)}

@@ -15,8 +15,6 @@ const location = useLocation();
   const navigate = useNavigate();
   const inventoryInfo_CollectionRef = collection(db, "Inventory_Info");
 
-  
-
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -50,6 +48,7 @@ const location = useLocation();
     const existingItems = inventoryInfo.inventory;
     const newItem = {
       itemName: inputs.itemName,
+      itemPrice: inputs.itemPrice,
     };
     const inventoryData = [...existingItems, newItem];
 
@@ -129,6 +128,20 @@ useEffect(() => {
                     value={inputs?.itemName || ""}
                     onChange={(e) => {
                       localStorage.setItem("itemName", e.target.value);
+                      handleChange(e);
+                    }}
+                  />
+                </div>
+
+                <div className="w-full mx-auto">
+                  <input
+                    className="form-input w-[400px] block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
+                    name="itemPrice"
+                    required
+                    placeholder="Enter Item Price"
+                    value={inputs?.itemPrice || ""}
+                    onChange={(e) => {
+                      localStorage.setItem("itemPrice", e.target.value);
                       handleChange(e);
                     }}
                   />

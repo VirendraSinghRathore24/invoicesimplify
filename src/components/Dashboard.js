@@ -10,6 +10,8 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
 
   const [amount, setAmount] = useState(0);
+  const [balance, setBalance] = useState(0);
+  const [paid, setPaid] = useState(0);
 
   const navigate = useNavigate();
 
@@ -98,6 +100,20 @@ const Dashboard = () => {
 
     setAmount(totalAmount);
 
+    const totalBalance = invoiceInfo.reduce((acc, item) => {
+      const balance = Math.round(item.taxCalculatedInfo.balance);
+      return acc + balance;
+    }, 0);
+
+    setBalance(totalBalance);
+
+    const totalPaid = invoiceInfo.reduce((acc, item) => {
+      const paid = Math.round(item.amountInfo.advance);
+      return acc + paid;
+    }, 0);
+
+    setPaid(totalPaid);
+
     const invoiceInfo1 = invoiceInfo.sort((a, b) => b.invoiceInfo.invoiceNumber - a.invoiceInfo.invoiceNumber);
     setData(invoiceInfo1);
     setFilteredData(invoiceInfo1);
@@ -126,7 +142,7 @@ const Dashboard = () => {
       <div className="flex justify-between py-4 gap-x-2">
         <div className="flex flex-col gap-y-4 font-bold text-xl shadow-lg border-2 p-5 bg-amber-50 gap-y-4 rounded-md h-32 w-3/12">
           <div className="">Balance</div>
-          <div className="text-2xl">₹ 2400</div>
+          <div className="text-2xl">₹ {balance}</div>
         </div>
         
         <div className="flex flex-col gap-y-4 font-bold text-xl shadow-lg border-2 p-5 bg-red-50 gap-y-4 rounded-md h-32 w-3/12">
@@ -136,7 +152,7 @@ const Dashboard = () => {
 
         <div className="flex flex-col gap-y-4 font-bold text-xl shadow-lg border-2 p-5 bg-blue-50 gap-y-4 rounded-md h-32 w-3/12">
           <div className="">Paid</div>
-          <div className="text-2xl">₹ 4300</div>
+          <div className="text-2xl">₹ {paid}</div>
         </div>
 
         <div className="flex flex-col gap-y-4 font-bold text-xl shadow-lg border-2 p-5 bg-green-50 gap-y-4 rounded-md h-32 w-3/12">
@@ -184,6 +200,7 @@ const Dashboard = () => {
             ))}
           </tr>
         </thead>
+        
         <tbody >
           {filteredData.map((user, index) => {
             const formatDate = (dateString) => {
