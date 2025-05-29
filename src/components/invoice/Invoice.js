@@ -98,9 +98,19 @@ function Invoice() {
       loggedInUser: loggedInUser,
     });
 
+    clearLocalStorage();
+    alert("Invoice Download successfully!");
     await updateInvoiceNumber();
+
   };
 
+  const clearLocalStorage = () => {
+    localStorage.removeItem("custname");
+    localStorage.removeItem("custphone");
+    localStorage.removeItem("expectedDate");
+    localStorage.removeItem("advance");
+    localStorage.removeItem("rows");
+  }
 
   const sendToWhatsapp = async () => {
     const html = document.getElementById('invoice').innerHTML;

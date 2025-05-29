@@ -111,7 +111,8 @@ const navigate = useNavigate();
           isOpen={openSubMenu === 'settings'}
           onClick={() => toggleSubMenu('settings')}
         >
-          <SubMenuItem text="Delete Account" />
+          <SubMenuItem text="Delete Account"/>
+          <SubMenuItem text="Archived Invoices" to="/archiveddashboard" active={location.pathname === '/archiveddashboard'}/>
         </SidebarItem>
 
         <SidebarItem

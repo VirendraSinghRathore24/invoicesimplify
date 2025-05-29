@@ -95,7 +95,7 @@ const Signup = () => {
           localStorage.setItem("invoiceNumber", 1);
         
           setLoading(false);
-          navigate("/createinvoice");
+          navigate("/businessinfo");
 
           // ...
         })
@@ -142,7 +142,7 @@ const Signup = () => {
       localStorage.setItem("user", code);
       localStorage.setItem("userName", userName);
       localStorage.setItem("invoiceNumber", 1);
-      navigate("/createinvoice");
+      navigate("/businessinfo");
       setLoading(false);
     } catch (err) {
       console.log(err);
@@ -164,6 +164,7 @@ const Signup = () => {
     // also create db for business, tax and additional info
     await addDoc(basicInfo_CollectionRef, {
       businessInfo: null,
+      imageUrl: null,
       taxInfo: null,
       additionalInfo: null,
       loggedInUser: code,

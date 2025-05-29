@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FaRegEdit } from "react-icons/fa";
 import { BsWhatsapp } from "react-icons/bs";
@@ -6,11 +6,9 @@ import { Printer } from "lucide-react";
 import { Download } from "lucide-react";
 import { addDoc, collection, getDocs } from 'firebase/firestore';
 import { db } from '../../config/firebase';
-import { useReactToPrint } from "react-to-print";
 
-function ViewInvoice() {
+function ArchivedViewInvoice() {
   const [invoiceInfo, setInvoiceInfo] = useState({});
-  const printRef = useRef(null);
 
   const location = useLocation();
   const id = location.state.id;
@@ -59,15 +57,10 @@ function ViewInvoice() {
     expectedDate = month + " " + today.getDate() + ", " + today.getFullYear();
   }
   const loggedInUser = localStorage.getItem("user");
-  const invoiceInfo_CollectionRef = collection(db, "Invoice_Info");
+  const invoiceInfo_CollectionRef = collection(db, "Archived_Invoices");
   const handleDownload = async() => {
 
   }
-
-  const handlePrint = useReactToPrint({
-      documentTitle: "Invoice",
-      contentRef: printRef,
-    });
 
   const getInvoiceData = async () => {
     const data = await getDocs(invoiceInfo_CollectionRef);
@@ -110,7 +103,7 @@ function ViewInvoice() {
         </div> */}
         <div>
           <button
-            onClick={handlePrint}
+
             className="flex items-center bg-[#E5E7EB]  font-bold px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
           >
             <span className="mr-2">
@@ -146,8 +139,7 @@ function ViewInvoice() {
 
 
           </div>
-          <div id="invoice" className="w-full md:w-8/12 mx-auto  border-[1.7px] mt-4 rounded-md p-4 ">
-        <div ref={printRef} className='p-4 '>
+        <div className='w-8/12 mx-auto  border-[1.7px] mt-4 rounded-md p-4 '>
           <div className='flex justify-between'>
           <div>
               <img src='../images/matadi1.jpeg' className='h-20 w-20'/>
@@ -312,8 +304,7 @@ function ViewInvoice() {
           </div>
         </div>
         </div>
-        </div>
     )
 }
 
-export default ViewInvoice;
+export default ArchivedViewInvoice;

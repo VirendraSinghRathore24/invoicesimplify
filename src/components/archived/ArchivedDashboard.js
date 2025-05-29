@@ -1,10 +1,10 @@
 import { addDoc, collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { db } from "../config/firebase";
+import { db } from "../../config/firebase";
 import { useNavigate } from "react-router-dom";
-import Loader from "./Loader";
+import Loader from "../Loader";
 
-const Dashboard = () => {
+const ArchivedDashboard = () => {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -22,10 +22,7 @@ const Dashboard = () => {
     if (window.confirm("Are you sure you want to delete this entry?")) {
       setData(data.filter((item) => item.id !== user.id));
 
-      // archive before deleting
-      await archiveInvoice(user);
-
-      const invDoc = doc(db, "Invoice_Info", user.id);
+      const invDoc = doc(db, "Archived_Invoices", user.id);
       await deleteDoc(invDoc);
 
       const totalAmount = amount - user?.amountInfo?.amount;
@@ -35,19 +32,9 @@ const Dashboard = () => {
     }
   };
 
-  // archive deleted invoice to another collection
-  // first get the invoice data and then add it to the archive collection
-  const archiveInvoice = async (user) => {
-    const archiveCollectionRef = collection(db, "Archived_Invoices");
-    const archivedInvoice = {
-      ...user,
-      archivedAt: new Date().toISOString(),
-    };
-    await addDoc(archiveCollectionRef, archivedInvoice);
-  };
 
   const handleView = (id) => {
-    navigate("/viewinvoice", {
+    navigate("/archivedviewinvoice", {
       state: {
         id: id
       },
@@ -238,7 +225,7 @@ const Dashboard = () => {
 
 
 
-  const invoiceInfo_CollectionRef = collection(db, "Invoice_Info");
+  const invoiceInfo_CollectionRef = collection(db, "Archived_Invoices");
   const getInvoiceInfo = async () => {
     setLoading(true);
     const data = await getDocs(invoiceInfo_CollectionRef);
@@ -296,7 +283,7 @@ const Dashboard = () => {
 
   return (
     <div>
-      <div className="flex flex-col w-full mx-auto font-bold text-2xl bg-gray-200 py-4 px-2 rounded-md">Dashboard</div>
+      <div className="flex flex-col w-full mx-auto font-bold text-2xl bg-gray-200 py-4 px-2 rounded-md">Dashboard - Deleted Invoices</div>
      
       <div className="flex justify-between py-4 gap-x-2">
         <div className="flex flex-col gap-y-4 font-bold text-xl shadow-lg border-2 p-5 bg-amber-50 gap-y-4 rounded-md h-32 w-3/12">
@@ -429,4 +416,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default ArchivedDashboard;

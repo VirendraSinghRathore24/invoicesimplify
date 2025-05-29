@@ -21,6 +21,8 @@ import AddTaxInfo from './components/tax/AddTaxInfo';
 import EditTaxInfo from './components/tax/EditTaxInfo';
 import AddAddtionalInfo from './components/additionalInfo/AddAddtionalInfo';
 import Inventory from './components/inventory/Inventory';
+import ArchivedDashboard from './components/archived/ArchivedDashboard';
+import ArchivedViewInvoice from './components/archived/ArchivedViewInvoice';
 
 
 function App() {
@@ -64,6 +66,9 @@ function App() {
         
         <Route path="/dashboard" element={<Dashboard/>}/>
         <Route path="/inventory" element={<Inventory/>}/>
+
+        <Route path="/archiveddashboard" element={<ArchivedDashboard/>}/>
+        <Route path="/archivedviewinvoice" element={<ArchivedViewInvoice/>}/>
       </Routes>
       <ToastContainer/>
       </div>
