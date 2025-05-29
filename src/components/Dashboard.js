@@ -52,6 +52,9 @@ const Dashboard = () => {
   };
 
   const handleSort = (key) => {
+    if(!key) return;
+
+    key = key.toLowerCase();
     let direction = "asc";
     if (sortConfig.key === key && sortConfig.direction === "asc") {
       direction = "desc";
@@ -184,6 +187,7 @@ const Dashboard = () => {
       sortableData.sort(sortStatus);
       setFilteredData(sortableData);
     }
+    return filteredData;
     
   }, [data, sortConfig, searchTerm]);
 
@@ -265,7 +269,7 @@ const Dashboard = () => {
 
         <div className="flex flex-col gap-y-4 font-bold text-xl shadow-lg border-2 p-5 bg-green-50 gap-y-4 rounded-md h-32 w-3/12">
           <div className="">Invoices</div>
-          <div className="text-2xl">{sortedData ? sortedData.length : 0}</div>
+          <div className="text-2xl">{filteredData ? filteredData.length : 0}</div>
         </div>
       </div>
     
@@ -298,10 +302,10 @@ const Dashboard = () => {
               <th
                 key={header}
                 className="px-4 py-3 border-r cursor-pointer"
-                onClick={() => handleSort(header.toLowerCase())}
+                onClick={() => handleSort(header)}
               >
                 {header}
-                {sortConfig.key.toLowerCase() !== "view" && sortConfig.key.toLowerCase() !== "delete" && sortConfig.key === header.toLowerCase() && (
+                {sortConfig.key?.toLowerCase() !== "view" && sortConfig.key?.toLowerCase() !== "delete" && sortConfig.key === header.toLowerCase() && (
                   <span>{sortConfig.direction === "asc" ? " 🔼" : " 🔽"}</span>
                 )}
               </th>
@@ -326,15 +330,15 @@ const Dashboard = () => {
                   index % 2 === 0 ? "bg-white" : "bg-gray-50"
                 } hover:bg-gray-200`}
               >
-                <td className="px-4 py-3 border-r">{index+1}.</td>
-                <td className="px-4 py-3 border-r">{user.invoiceInfo.invoiceNumber}</td>
-                <td className="px-4 py-3 border-r">{user.customerInfo.customerName}</td>
-                <td className="px-4 py-3 border-r">{user.customerInfo.customerPhone}</td>
-                <td className="px-4 py-3 border-r">{formatDate(user.invoiceInfo.date)}</td>
-                <td className="px-4 py-3 border-r text-right">{Math.round(user.amountInfo.amount + user.taxCalculatedInfo.cgst + user.taxCalculatedInfo.sgst)}</td>
-                <td className="px-4 py-3 border-r text-right">{user.amountInfo.advance}</td>
-                <td className="px-4 py-3 border-r text-right">{user.taxCalculatedInfo.balance}</td>
-                <td className="px-4 py-3 border-r">
+                <td className="px-4 py-3 border-r w-[5%]">{index+1}.</td>
+                <td className="px-4 py-3 border-r w-[10%]">{user.invoiceInfo.invoiceNumber}</td>
+                <td className="px-4 py-3 border-r w-[20%]">{user.customerInfo.customerName}</td>
+                <td className="px-4 py-3 border-r w-[10%]">{user.customerInfo.customerPhone}</td>
+                <td className="px-4 py-3 border-r w-[10%]">{formatDate(user.invoiceInfo.date)}</td>
+                <td className="px-4 py-3 border-r text-right w-[10%]">{Math.round(user.amountInfo.amount + user.taxCalculatedInfo.cgst + user.taxCalculatedInfo.sgst)}</td>
+                <td className="px-4 py-3 border-r text-right w-[10%]">{user.amountInfo.advance}</td>
+                <td className="px-4 py-3 border-r text-right w-[10%]">{user.taxCalculatedInfo.balance}</td>
+                <td className="px-4 py-3 border-r w-[10%]">
                   <span
                     className={`px-2 py-1 rounded-full text-xs font-semibold ${
                       (user.amountInfo.amount - user.amountInfo.advance) === 0
@@ -345,12 +349,12 @@ const Dashboard = () => {
                     {user.taxCalculatedInfo.balance === 0 ? 'Paid' : 'Due'}
                   </span>
                 </td>
-                <td className="px-4 py-3 border-r ">
+                <td className="px-4 py-3 border-r w-[10%]">
                   <button onClick={() => handleView(user.id)} className="text-blue-600 hover:text-blue-800 font-semibold text-sm">
                     View
                   </button>
                 </td>
-                <td className="px-4 py-3">
+                <td className="px-4 py-3 w-[10%]">
                   <button
                     onClick={() => handleDelete(user)}
                     className="text-red-600 hover:text-red-800 font-semibold text-sm"
