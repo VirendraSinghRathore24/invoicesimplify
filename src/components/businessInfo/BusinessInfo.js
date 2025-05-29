@@ -21,7 +21,7 @@ const BusinessInfo = () => {
   const basicInfo_CollectionRef = collection(db, "Basic_Info");
   const deleteBusinessInfo = async () => {
     try {
-      var res = window.confirm("Delete the item?");
+      var res = window.confirm("Are you sure to delete Business Info?");
       if (res) {
         const data = await getDocs(basicInfo_CollectionRef);
         const filteredData = data.docs.map((doc) => ({

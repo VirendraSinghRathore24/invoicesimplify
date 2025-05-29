@@ -355,7 +355,7 @@ const AddInvoice = () => {
   const handleResetInvoice = () => {
     var res = window.confirm("Reset will delete all data. Continue?");
     if(!res) return;
-    
+
     setCustomerName("");
     setCustomerPhone("");
     setExpectedDate("");
@@ -846,12 +846,12 @@ useEffect(() => {
                           />
                         </td>
                         <td className="w-[20%] text-center">
-                          <div className="w-full text-xs mt-3 ">
+                          <div className="w-full  mt-3 font-extrabold text-xs">
                             {row.amount}
                           </div>
                         </td>
                         <td className="w-[10%]">
-                          <div>
+                          <div className="mt-2">
                             {rows.length > 1 && (
                               
                               <Trash2

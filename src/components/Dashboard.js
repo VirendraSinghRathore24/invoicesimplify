@@ -59,24 +59,132 @@ const Dashboard = () => {
     setSortConfig({ key, direction });
   };
 
+  const sortInvoiceNumber = (a, b) => {
+    if (a.invoiceInfo.invoiceNumber < b.invoiceInfo.invoiceNumber) {
+      return sortConfig.direction === "asc" ? -1 : 1;
+    }
+    if (a.invoiceInfo.invoiceNumber > b.invoiceInfo.invoiceNumber) {
+      return sortConfig.direction === "asc" ? 1 : -1;
+    }
+    return 0;
+  };
+
+  const sortCustomerName = (a, b) => {
+    if (a.customerInfo.customerName < b.customerInfo.customerName) {
+      return sortConfig.direction === "asc" ? -1 : 1;
+    }
+    if (a.customerInfo.customerName > b.customerInfo.customerName) {
+      return sortConfig.direction === "asc" ? 1 : -1;
+    }
+    return 0;
+  };
+
+  const sortCustomerPhone = (a, b) => {
+    if (a.customerInfo.customerPhone < b.customerInfo.customerPhone) {
+      return sortConfig.direction === "asc" ? -1 : 1;
+    }
+    if (a.customerInfo.customerPhone > b.customerInfo.customerPhone) {
+      return sortConfig.direction === "asc" ? 1 : -1;
+    }
+    return 0;
+  };
+
+  const sortDate = (a, b) => {
+    const dateA = new Date(a.invoiceInfo.date);
+    const dateB = new Date(b.invoiceInfo.date);
+    if (dateA < dateB) {
+      return sortConfig.direction === "asc" ? -1 : 1;
+    }
+    if (dateA > dateB) {
+      return sortConfig.direction === "asc" ? 1 : -1;
+    }
+    return 0;
+  };
+
+  const sortAmount = (a, b) => {
+    const amountA = Math.round(a.amountInfo.amount + a.taxCalculatedInfo.cgst + a.taxCalculatedInfo.sgst);
+    const amountB = Math.round(b.amountInfo.amount + b.taxCalculatedInfo.cgst + b.taxCalculatedInfo.sgst);
+    if (amountA < amountB) {
+      return sortConfig.direction === "asc" ? -1 : 1;
+    }
+    if (amountA > amountB) {
+      return sortConfig.direction === "asc" ? 1 : -1;
+    }
+    return 0;
+  };
+
+  const sortPaid = (a, b) => {
+    const paidA = Math.round(a.amountInfo.advance);
+    const paidB = Math.round(b.amountInfo.advance);
+    if (paidA < paidB) {
+      return sortConfig.direction === "asc" ? -1 : 1;
+    }
+    if (paidA > paidB) {
+      return sortConfig.direction === "asc" ? 1 : -1;
+    }
+    return 0;
+  };
+
+  const sortBalance = (a, b) => {
+    const balanceA = Math.round(a.taxCalculatedInfo.balance);
+    const balanceB = Math.round(b.taxCalculatedInfo.balance);
+    if (balanceA < balanceB) {
+      return sortConfig.direction === "asc" ? -1 : 1;
+    }
+    if (balanceA > balanceB) {
+      return sortConfig.direction === "asc" ? 1 : -1;
+    }
+    return 0;
+  };
+
+  const sortStatus = (a, b) => {
+    const statusA = a.taxCalculatedInfo.balance === 0 ? 'Paid' : 'Due';
+    const statusB = b.taxCalculatedInfo.balance === 0 ? 'Paid' : 'Due';
+    if (statusA < statusB) {
+      return sortConfig.direction === "asc" ? -1 : 1;
+    }
+    if (statusA > statusB) {
+      return sortConfig.direction === "asc" ? 1 : -1;
+    }
+    return 0;
+  };
+
   const sortedData = React.useMemo(() => {
     let sortableData = [...data];
-    if (sortConfig.key) {
-      sortableData.sort((a, b) => {
-        if (a[sortConfig.key] < b[sortConfig.key]) {
-          return sortConfig.direction === "asc" ? -1 : 1;
-        }
-        if (a[sortConfig.key] > b[sortConfig.key]) {
-          return sortConfig.direction === "asc" ? 1 : -1;
-        }
-        return 0;
-      });
+
+    if(sortConfig.key === "invoice") {
+      sortableData.sort(sortInvoiceNumber);
+      setFilteredData(sortableData);
+    } 
+    else if(sortConfig.key === "name") {
+      sortableData.sort(sortCustomerName);
+      setFilteredData(sortableData);
     }
-    return sortableData.filter((item) =>
-      Object.values(item).some((value) =>
-        value.toString().toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    );
+    else if(sortConfig.key === "phone") {
+      sortableData.sort(sortCustomerPhone);
+      setFilteredData(sortableData);
+    }
+    else if(sortConfig.key === "date") {
+      sortableData.sort(sortDate);
+      setFilteredData(sortableData);
+    }
+    else if(sortConfig.key === "amount") {
+      sortableData.sort(sortAmount);
+      setFilteredData(sortableData);
+    }
+    else if(sortConfig.key === "paid") {
+      sortableData.sort(sortPaid);
+      setFilteredData(sortableData);
+    }
+    else if(sortConfig.key === "balance") {
+      sortableData.sort(sortBalance);
+      setFilteredData(sortableData);
+    }
+    else if(sortConfig.key === "status") {
+      sortableData.sort(sortStatus);
+      setFilteredData(sortableData);
+    }
+    
   }, [data, sortConfig, searchTerm]);
 
   const invoiceInfo_CollectionRef = collection(db, "Invoice_Info");
@@ -171,7 +279,7 @@ const Dashboard = () => {
           className="p-2 border border-gray-300 rounded-md mb-4 w-full"
         />
       </div>
-      <table className="min-w-full text-sm text-left text-gray-700">
+      <table className="min-w-full text-sm text-left text-gray-700 ">
         <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
           <tr>
             {[
@@ -193,7 +301,7 @@ const Dashboard = () => {
                 onClick={() => handleSort(header.toLowerCase())}
               >
                 {header}
-                {sortConfig.key === header.toLowerCase() && (
+                {sortConfig.key.toLowerCase() !== "view" && sortConfig.key.toLowerCase() !== "delete" && sortConfig.key === header.toLowerCase() && (
                   <span>{sortConfig.direction === "asc" ? " 🔼" : " 🔽"}</span>
                 )}
               </th>
@@ -201,7 +309,7 @@ const Dashboard = () => {
           </tr>
         </thead>
         
-        <tbody >
+        <tbody>
           {filteredData.map((user, index) => {
             const formatDate = (dateString) => {
               const date = new Date(dateString);

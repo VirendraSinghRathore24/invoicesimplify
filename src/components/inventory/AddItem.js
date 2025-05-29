@@ -123,6 +123,7 @@ useEffect(() => {
                   <input
                     className="form-input w-[400px] block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
                     name="itemName"
+                    autoFocus
                     required
                     placeholder="Enter Item Name"
                     value={inputs?.itemName || ""}

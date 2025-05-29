@@ -106,7 +106,8 @@ function Inventory() {
     }
   }
 
-  const handleEdit = (post) => {
+  const handleEdit = (post, index) => {
+    post.index = index;
     setEditPost(post);
     setOpenEditModal(true);
     
@@ -172,7 +173,7 @@ function Inventory() {
               <td className="px-4 py-3 border-r">{post?.itemPrice}</td>
               <td className="px-4 py-3 cursor-pointer">
                 <button
-                  onClick={() => handleEdit(post)}
+                  onClick={() => handleEdit(post, index)}
                   className="text-blue-600 hover:text-red-800 font-semibold text-sm"
                 >
                   Edit

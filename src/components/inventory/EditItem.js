@@ -48,8 +48,13 @@ const location = useLocation();
 
     // update inventory info
     
-    const existingItems = inventoryInfo.inventory;
+    const existingItems = inventoryInfo.inventory.sort((a, b) => a.itemName.localeCompare(b.itemName));
 
+    // Prepare the updated item
+    
+    // Update the item name at index 2
+    existingItems[editPost.index].itemName = inputs.itemName;
+    
     // Find the item to update
     const updatedItems = existingItems.map((item) =>
       item.id === inventoryInfo.id ? { ...item, ...inputs } : item
@@ -133,6 +138,19 @@ const location = useLocation();
                     value={inputs?.itemName || ""}
                     onChange={(e) => {
                       localStorage.setItem("itemName", e.target.value);
+                      handleChange(e);
+                    }}
+                  />
+                </div>
+                <div className="w-full mx-auto">
+                  <input
+                    className="form-input w-[400px] block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
+                    name="itemPrice"
+                    required
+                    placeholder="Enter Item Price"
+                    value={inputs?.itemPrice || ""}
+                    onChange={(e) => {
+                      localStorage.setItem("itemPrice", e.target.value);
                       handleChange(e);
                     }}
                   />
