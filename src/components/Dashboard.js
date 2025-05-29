@@ -234,7 +234,7 @@ const Dashboard = () => {
     }
     return filteredData;
     
-  }, [data, sortConfig, searchTerm]);
+  }, [data, sortConfig]);
 
 
 
