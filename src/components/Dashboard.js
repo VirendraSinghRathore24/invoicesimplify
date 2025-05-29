@@ -149,6 +149,19 @@ const Dashboard = () => {
     return 0;
   };
 
+  const sortDelivery = (a, b) => {
+    const dateA = a.invoiceInfo.expectedDate ? new Date(a.invoiceInfo.expectedDate) : 0;
+    const dateB = b.invoiceInfo.expectedDate ? new Date(b.invoiceInfo.expectedDate) : 0;
+
+    if (dateA < dateB) {
+      return sortConfig.direction === "asc" ? -1 : 1;
+    }
+    if (dateA > dateB) {
+      return sortConfig.direction === "asc" ? 1 : -1;
+    }
+    return 0;
+  };
+
   const sortAmount = (a, b) => {
     const amountA = Math.round(a.amountInfo.amount + a.taxCalculatedInfo.cgst + a.taxCalculatedInfo.sgst);
     const amountB = Math.round(b.amountInfo.amount + b.taxCalculatedInfo.cgst + b.taxCalculatedInfo.sgst);
@@ -214,6 +227,10 @@ const Dashboard = () => {
     }
     else if(sortConfig.key === "date") {
       sortableData.sort(sortDate);
+      setFilteredData(sortableData);
+    }
+    else if(sortConfig.key === "delivery") {
+      sortableData.sort(sortDelivery);
       setFilteredData(sortableData);
     }
     else if(sortConfig.key === "amount") {
@@ -339,6 +356,7 @@ const Dashboard = () => {
               "Name",
               "Phone",
               "Date",
+              "Delivery",
               "Amount",
               "Paid",
               "Balance",
@@ -382,6 +400,7 @@ const Dashboard = () => {
                 <td className="px-4 py-3 border-r w-[20%]">{user.customerInfo.customerName}</td>
                 <td className="px-4 py-3 border-r w-[10%]">{user.customerInfo.customerPhone}</td>
                 <td className="px-4 py-3 border-r w-[10%]">{formatDate(user.invoiceInfo.date)}</td>
+                <td className="px-4 py-3 border-r w-[10%]">{user.invoiceInfo.expectedDate ? formatDate(user.invoiceInfo.expectedDate) : ''}</td>
                 <td className="px-4 py-3 border-r text-right w-[10%]">{Math.round(user.amountInfo.amount + user.taxCalculatedInfo.cgst + user.taxCalculatedInfo.sgst)}</td>
                 <td className="px-4 py-3 border-r text-right w-[10%]">{user.amountInfo.advance}</td>
                 <td className="px-4 py-3 border-r text-right w-[10%]">{user.taxCalculatedInfo.balance}</td>
