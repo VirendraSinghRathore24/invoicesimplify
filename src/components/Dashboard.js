@@ -48,8 +48,39 @@ const Dashboard = () => {
       item.invoiceInfo.invoiceNumber.toString().toLowerCase().includes(e.target.value.toLowerCase())
     );
     setFilteredData(result);
-   
+
+    updateAmountAfterSearch(result);
+    updateBalanceAfterSearch(result);
+    updatePaidAfterSearch(result);
   };
+
+  const updateAmountAfterSearch = (result) => {
+    const totalAmount = result.reduce((acc, item) => {
+      const amount = Math.round(item.amountInfo.amount + item.taxCalculatedInfo.cgst + item.taxCalculatedInfo.sgst);
+      return acc + amount;
+    }, 0);
+
+    setAmount(totalAmount);
+  }
+
+  const updateBalanceAfterSearch = (result) => {
+    const totalBalance = result.reduce((acc, item) => {
+      const balance = Math.round(item.taxCalculatedInfo.balance);
+      return acc + balance;
+    }, 0);
+
+    setBalance(totalBalance);
+  }
+
+  const updatePaidAfterSearch = (result) => {
+    const totalPaid = result.reduce((acc, item) => {
+      const paid = Math.round(item.amountInfo.advance);
+      return acc + paid;
+    }, 0);
+
+    setPaid(totalPaid);
+  }
+  
 
   const handleSort = (key) => {
     if(!key) return;
@@ -190,6 +221,8 @@ const Dashboard = () => {
     return filteredData;
     
   }, [data, sortConfig, searchTerm]);
+
+
 
   const invoiceInfo_CollectionRef = collection(db, "Invoice_Info");
   const getInvoiceInfo = async () => {
