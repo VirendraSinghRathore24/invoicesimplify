@@ -211,6 +211,12 @@ const AddInvoice = () => {
       alert("Please add at least one item to the invoice.");
     }
 
+    if(expectedDate && new Date(expectedDate) < new Date(date)){
+      alert("Expected delivery date cannot be before the invoice date.");
+      document.querySelector('input[name="expecteddate"]').focus();
+      return;
+    }
+
     const customerInfo = {
       customerName: customerName,
       customerPhone: customerPhone,
