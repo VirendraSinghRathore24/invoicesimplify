@@ -23,7 +23,9 @@ const AddInvoice = () => {
   const [isBusinessInfo, setIsBusinessInfo] = useState(false);
 
   const countryCode = localStorage.getItem("countryCode");
-
+  const refreshPage = () => {
+    navigate(0); // React Router v6+
+  };
   useEffect(() => {
     //console.log(signature);
   }, [signature]);
@@ -377,6 +379,9 @@ const AddInvoice = () => {
     deleteLocalStoragePersonalInfo();
 
     deleteLocalStorageInvoiceInfo();
+  
+    refreshPage();
+    
   };
 
   const [sign, setSign] = useState(false);
