@@ -54,6 +54,7 @@ const location = useLocation();
     
     // Update the item name at index 2
     existingItems[editPost.index].itemName = inputs.itemName;
+    existingItems[editPost.index].itemPrice = inputs.itemPrice;
     
     // Find the item to update
     const updatedItems = existingItems.map((item) =>

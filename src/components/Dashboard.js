@@ -396,13 +396,13 @@ const Dashboard = () => {
                 } hover:bg-gray-200`}
               >
                 <td className="px-4 py-3 border-r w-[5%]">{index+1}.</td>
-                <td className="px-4 py-3 border-r w-[10%]">{user.invoiceInfo.invoiceNumber}</td>
-                <td className="px-4 py-3 border-r w-[20%]">{user.customerInfo.customerName}</td>
+                <td className="px-4 py-3 border-r w-[9%]">{user.invoiceInfo.invoiceNumber}</td>
+                <td className="px-4 py-3 border-r w-[18%]">{user.customerInfo.customerName}</td>
                 <td className="px-4 py-3 border-r w-[10%]">{user.customerInfo.customerPhone}</td>
                 <td className="px-4 py-3 border-r w-[10%]">{formatDate(user.invoiceInfo.date)}</td>
                 <td className="px-4 py-3 border-r w-[10%]">{user.invoiceInfo.expectedDate ? formatDate(user.invoiceInfo.expectedDate) : ''}</td>
-                <td className="px-4 py-3 border-r text-right w-[10%]">{Math.round(user.amountInfo.amount + user.taxCalculatedInfo.cgst + user.taxCalculatedInfo.sgst)}</td>
-                <td className="px-4 py-3 border-r text-right w-[10%]">{user.amountInfo.advance}</td>
+                <td className="px-4 py-3 border-r text-right w-[8%]">{Math.round(user.amountInfo.amount + user.taxCalculatedInfo.cgst + user.taxCalculatedInfo.sgst)}</td>
+                <td className="px-4 py-3 border-r text-right w-[8%]">{user.amountInfo.advance}</td>
                 <td className="px-4 py-3 border-r text-right w-[10%]">{user.taxCalculatedInfo.balance}</td>
                 <td className="px-4 py-3 border-r w-[10%]">
                   <span
@@ -415,12 +415,12 @@ const Dashboard = () => {
                     {user.taxCalculatedInfo.balance === 0 ? 'Paid' : 'Due'}
                   </span>
                 </td>
-                <td className="px-4 py-3 border-r w-[10%]">
+                <td className="px-4 py-3 border-r w-[8%]">
                   <button onClick={() => handleView(user.id)} className="text-blue-600 hover:text-blue-800 font-semibold text-sm">
                     View
                   </button>
                 </td>
-                <td className="px-4 py-3 w-[10%]">
+                <td className="px-4 py-3 w-[8%]">
                   <button
                     onClick={() => handleDelete(user)}
                     className="text-red-600 hover:text-red-800 font-semibold text-sm"
