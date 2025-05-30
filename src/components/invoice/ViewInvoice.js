@@ -117,17 +117,6 @@ function ViewInvoice() {
   return (
     <div className="my-5">
       <div className="flex justify-between w-8/12 mx-auto">
-        {/* <div className="flex gap-x-2">
-          <button
-             onClick={() => navigate('/createinvoice')}
-            className="flex items-center bg-[#E5E7EB] cursor-pointer font-bold px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
-          >
-            <span className="mr-2">
-              <FaRegEdit size={22} />
-            </span>
-            Edit
-          </button>
-        </div> */}
         <div>
           <button
             onClick={handlePrint}

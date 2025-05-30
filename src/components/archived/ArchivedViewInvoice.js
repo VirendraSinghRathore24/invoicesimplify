@@ -157,8 +157,9 @@ function ArchivedViewInvoice() {
 
 
           </div>
-        <div className='w-8/12 mx-auto  border-[1.7px] mt-4 rounded-md p-4 '>
-          <div className='flex justify-between'>
+        <div id="invoice" className='w-8/12 mx-auto  border-[1.7px] mt-4 rounded-md p-4 '>
+          <div className='p-4'>
+          <div className='flex justify-between '>
           <div>
               <img src='../images/matadi1.jpeg' className='h-20 w-20'/>
           </div>
@@ -321,6 +322,7 @@ function ArchivedViewInvoice() {
                  { invoiceInfo?.invoiceInfo?.expectedDate && <div className='text-sm font-semibold text-blue-700 text-center'>Expected Delivery Date :  {expectedDate}</div>}
                  { invoiceInfo?.invoiceInfo?.expectedDate && <div className='mt-2'></div>}
           </div>
+        </div>
         </div>
         </div>
     )

@@ -206,7 +206,7 @@ useEffect(() => {
 
   return (
     <div className="my-5">
-      <div className="flex justify-between w-8/12 mx-auto">
+      <div className="flex justify-between w-9/12 mx-auto">
         <div className="flex gap-x-2">
           <button
             onClick={() => navigate("/createinvoice")}
@@ -248,8 +248,8 @@ useEffect(() => {
           </button>
         </div>
       </div>
-     
-      <div id="invoice" className="w-full md:w-8/12 mx-auto  border-[1.7px] m-4 rounded-md p-4">
+   
+      <div id="invoice" className="w-full md:w-9/12 mx-auto  border-[1.7px] rounded-md p-4 m-4">
       <div ref={printRef} className="p-4">
         <div className="flex justify-between">
           <div>
@@ -442,8 +442,6 @@ useEffect(() => {
         </div>
       </div>
     </div>
-
-
 
     </div>
   );
