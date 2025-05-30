@@ -353,9 +353,9 @@ function ViewInvoice() {
                 Expected Delivery Date : {expectedDate}
               </div>
             )}
-            {invoiceInfo?.invoiceInfo?.expectedDate && (
+            
               <div className="mt-2"></div>
-            )}
+        
           </div>
         </div>
       </div>

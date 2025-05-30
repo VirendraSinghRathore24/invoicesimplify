@@ -320,7 +320,7 @@ function ArchivedViewInvoice() {
                    
                   </div>
                  { invoiceInfo?.invoiceInfo?.expectedDate && <div className='text-sm font-semibold text-blue-700 text-center'>Expected Delivery Date :  {expectedDate}</div>}
-                 { invoiceInfo?.invoiceInfo?.expectedDate && <div className='mt-2'></div>}
+                 <div className='mt-2'></div>
           </div>
         </div>
         </div>

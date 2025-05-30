@@ -434,11 +434,9 @@ useEffect(() => {
               Expected Delivery Date : {expectedDate}
             </div>
           )}
-          {invoiceInfo?.expectedDate && (
-            <div className="mt-2">
-              
-            </div>
-          )}
+          
+            <div className="mt-2"></div>
+         
         </div>
       </div>
     </div>
