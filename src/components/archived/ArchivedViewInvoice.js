@@ -6,6 +6,9 @@ import { Printer } from "lucide-react";
 import { Download } from "lucide-react";
 import { addDoc, collection, getDocs } from 'firebase/firestore';
 import { db } from '../../config/firebase';
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
+import { toast } from 'react-toastify';
 
 function ArchivedViewInvoice() {
   const [invoiceInfo, setInvoiceInfo] = useState({});
@@ -58,9 +61,24 @@ function ArchivedViewInvoice() {
   }
   const loggedInUser = localStorage.getItem("user");
   const invoiceInfo_CollectionRef = collection(db, "Archived_Invoices");
-  const handleDownload = async() => {
+  const handleDownload = async () => {
+    const input = document.getElementById("invoice");
+    if (!input) return;
 
-  }
+    const canvas = await html2canvas(input, { scale: 2 });
+    const imgData = canvas.toDataURL("image/png");
+
+    const pdf = new jsPDF("p", "mm", "a4");
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+    pdf.save(`${invoiceInfo.customerInfo?.customerName + "_invoice"}.pdf`);
+
+    toast("Invoice downloaded successfully!", {
+      position: "top-center",
+    });
+  };
 
   const getInvoiceData = async () => {
     const data = await getDocs(invoiceInfo_CollectionRef);
@@ -301,6 +319,7 @@ function ArchivedViewInvoice() {
                    
                   </div>
                  { invoiceInfo?.invoiceInfo?.expectedDate && <div className='text-sm font-semibold text-blue-700 text-center'>Expected Delivery Date :  {expectedDate}</div>}
+                 { invoiceInfo?.invoiceInfo?.expectedDate && <div className='mt-2'></div>}
           </div>
         </div>
         </div>

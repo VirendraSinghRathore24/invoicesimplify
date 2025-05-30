@@ -1,4 +1,4 @@
-import React, { use, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaRegEdit } from "react-icons/fa";
 import { BsWhatsapp } from "react-icons/bs";
@@ -14,6 +14,9 @@ import {
 } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import { useReactToPrint } from "react-to-print";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
+import { toast } from "react-toastify";
 
 function Invoice() {
   const [businessInfo, setBusinessInfo] = useState({});
@@ -77,30 +80,39 @@ function Invoice() {
     expectedDate = month + " " + today.getDate() + ", " + today.getFullYear();
   }
 
-  const fileName = customerInfo?.custname;
   const loggedInUser = localStorage.getItem("user");
   const invoiceInfo_CollectionRef = collection(db, "Invoice_Info");
   const handleDownload = async () => {
-    //await sendToWhatsapp();
-    if (pdfExportComponent.current) {
-      pdfExportComponent.current.save();
-    }
+    const input = document.getElementById("invoice");
+  if (!input) return;
 
-    await addDoc(invoiceInfo_CollectionRef, {
-      invoiceInfo: invoiceInfo,
-      amountInfo: amountInfo,
-      customerInfo: customerInfo,
-      rows: rows,
-      businessInfo: businessInfo,
-      taxInfo: taxInfo,
-      additionalInfo: additionalInfo,
-      taxCalculatedInfo: taxCalculatedInfo,
-      loggedInUser: loggedInUser,
-    });
+  const canvas = await html2canvas(input, { scale: 2 });
+  const imgData = canvas.toDataURL("image/png");
 
-    clearLocalStorage();
-    alert("Invoice Download successfully!");
-    await updateInvoiceNumber();
+  const pdf = new jsPDF("p", "mm", "a4");
+  const pdfWidth = pdf.internal.pageSize.getWidth();
+  const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+  pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+  pdf.save(`${customerInfo?.customerName + "_invoice"}.pdf`);
+
+  await addDoc(invoiceInfo_CollectionRef, {
+    invoiceInfo,
+    amountInfo,
+    customerInfo,
+    rows,
+    businessInfo,
+    taxInfo,
+    additionalInfo,
+    taxCalculatedInfo,
+    loggedInUser,
+  });
+
+  clearLocalStorage();
+  toast("Invoice downloaded successfully!", {
+    position: 'top-center',
+  });
+  await updateInvoiceNumber();
 
   };
 
@@ -237,7 +249,7 @@ useEffect(() => {
         </div>
       </div>
      
-      <div id="invoice" className="w-full md:w-8/12 mx-auto  border-[1.7px] mt-4 rounded-md p-4 ">
+      <div id="invoice" className="w-full md:w-8/12 mx-auto  border-[1.7px] m-4 rounded-md p-4">
       <div ref={printRef} className="p-4">
         <div className="flex justify-between">
           <div>
@@ -321,7 +333,7 @@ useEffect(() => {
           <div className="flex flex-col w-full">
             
               <div className="w-full flex justify-end gap-x-10 mt-2">
-                <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-sm font-semibold rounded-md uppercase">
+                <div className="w-11/12 flex justify-end mx-auto mt-1 px-2 text-sm font-semibold rounded-md uppercase">
                   SubTotal
                 </div>
                 <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-sm font-semibold rounded-md">
@@ -420,6 +432,11 @@ useEffect(() => {
           {invoiceInfo?.expectedDate && (
             <div className="text-sm font-semibold text-blue-700 text-center">
               Expected Delivery Date : {expectedDate}
+            </div>
+          )}
+          {invoiceInfo?.expectedDate && (
+            <div className="mt-2">
+              
             </div>
           )}
         </div>
