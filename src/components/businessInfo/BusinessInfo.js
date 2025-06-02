@@ -4,6 +4,7 @@ import AddBusinessInfo from "./AddBusinessInfo";
 import { useNavigate } from "react-router-dom";
 import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
 import { db } from "../../config/firebase";
+import Header from "../Header";
 
 const BusinessInfo = () => {
   const [posts, setPosts] = useState([]);
@@ -15,7 +16,6 @@ const BusinessInfo = () => {
     if (isDeleted) {
       localStorage.removeItem("businessInfo");
       setPosts(null);
-      
     }
   };
   const basicInfo_CollectionRef = collection(db, "Basic_Info");
@@ -49,10 +49,10 @@ const BusinessInfo = () => {
   const handleLogin = () => {
     const user = localStorage.getItem("user");
 
-    if(!user || user === "undefined" || user === "null"){
+    if (!user || user === "undefined" || user === "null") {
       navigate("/login");
-    } 
-}
+    }
+  };
 
   useEffect(() => {
     handleLogin();
@@ -68,65 +68,71 @@ const BusinessInfo = () => {
 
   return (
     <div>
-      <div className="flex flex-col w-full mx-auto font-bold text-2xl bg-gray-200 py-4 px-2 rounded-md">
-        Business Information
-      </div>
-      <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4">
-        {posts && (
-          <table className="min-w-full text-sm text-left text-gray-700">
-            <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
-              <tr>
-                <th className="px-4 py-3 border-r">Title</th>
-                <th className="px-4 py-3 border-r">SubTitle1</th>
-                <th className="px-4 py-3 border-r">Address</th>
-                <th className="px-4 py-3 border-r">Phone1</th>
-                <th className="px-4 py-3 border-r">Phone2</th>
-                <th className="px-4 py-3 border-r">Email</th>
-                <th className="px-4 py-3 border-r">Edit</th>
-                <th className="px-4 py-3">Delete</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="border-t bg-white">
-                <td className="px-4 py-3 border-r">{posts?.name}</td>
-                <td className="px-4 py-3 border-r">{posts?.subTitle1}</td>
-                <td className="px-4 py-3 border-r">
-                  {posts?.address1}, {posts?.address2} - {posts?.address3}
-                </td>
-                <td className="px-4 py-3 border-r">{posts?.phonePrimary}</td>
-                <td className="px-4 py-3 border-r">{posts?.phoneSecondary}</td>
-                <td className="px-4 py-3 border-r">{posts?.email}</td>
-                <td className="px-4 py-3">
-                  <button
-                    onClick={() => navigate("/editbusinessinfo")}
-                    className="text-blue-600 hover:text-red-800 font-semibold text-sm"
-                  >
-                    Edit
-                  </button>
-                </td>
-                <td className="px-4 py-3">
-                  <button
-                    onClick={() => handleDelete()}
-                    className="text-red-600 hover:text-red-800 font-semibold text-sm"
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        )}
+      <Header />
 
-        {!posts && (
-          <div className="flex h-screen items-center justify-center ">
-            <div onClick={() => navigate("/addbusinessinfo")}>
-              <button className="border-2 bg-[#444] text-white fond-bold text-lg py-4 px-8 rounded-md cursor-pointer">
-                {" "}
-                + Add Business Info
-              </button>
+      <div className="p-6">
+        <div className="flex flex-col w-full mx-auto font-bold text-2xl bg-gray-200 py-4 px-2 rounded-md">
+          Business Information
+        </div>
+        <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4">
+          {posts && (
+            <table className="min-w-full text-sm text-left text-gray-700">
+              <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
+                <tr>
+                  <th className="px-4 py-3 border-r">Title</th>
+                  <th className="px-4 py-3 border-r">SubTitle1</th>
+                  <th className="px-4 py-3 border-r">Address</th>
+                  <th className="px-4 py-3 border-r">Phone1</th>
+                  <th className="px-4 py-3 border-r">Phone2</th>
+                  <th className="px-4 py-3 border-r">Email</th>
+                  <th className="px-4 py-3 border-r">Edit</th>
+                  <th className="px-4 py-3">Delete</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="border-t bg-white">
+                  <td className="px-4 py-3 border-r">{posts?.name}</td>
+                  <td className="px-4 py-3 border-r">{posts?.subTitle1}</td>
+                  <td className="px-4 py-3 border-r">
+                    {posts?.address1}, {posts?.address2} - {posts?.address3}
+                  </td>
+                  <td className="px-4 py-3 border-r">{posts?.phonePrimary}</td>
+                  <td className="px-4 py-3 border-r">
+                    {posts?.phoneSecondary}
+                  </td>
+                  <td className="px-4 py-3 border-r">{posts?.email}</td>
+                  <td className="px-4 py-3">
+                    <button
+                      onClick={() => navigate("/editbusinessinfo")}
+                      className="text-blue-600 hover:text-red-800 font-semibold text-sm"
+                    >
+                      Edit
+                    </button>
+                  </td>
+                  <td className="px-4 py-3">
+                    <button
+                      onClick={() => handleDelete()}
+                      className="text-red-600 hover:text-red-800 font-semibold text-sm"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          )}
+
+          {!posts && (
+            <div className="flex h-screen items-center justify-center ">
+              <div onClick={() => navigate("/addbusinessinfo")}>
+                <button className="border-2 bg-[#444] text-white fond-bold text-lg py-4 px-8 rounded-md cursor-pointer">
+                  {" "}
+                  + Add Business Info
+                </button>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

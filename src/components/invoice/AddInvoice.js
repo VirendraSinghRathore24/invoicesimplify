@@ -9,6 +9,7 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import InventoryModal from "../inventory/InventoryModal";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../config/firebase";
+import Header from "../Header";
 //import CurrencyFlag from "react-currency-flags";
 //import "./Sign.css";
 //import { Textarea } from "@headlessui/react";
@@ -103,9 +104,7 @@ const AddInvoice = () => {
   const [symbol, setSymbol] = useState("₹");
 
   // item details
-  const [rows, setRows] = useState([
-    { desc: "", rate: "", qty: 1, amount: 0 },
-  ]);
+  const [rows, setRows] = useState([{ desc: "", rate: "", qty: 1, amount: 0 }]);
   const handleInputChange = (name, value, index) => {
     const values = [...rows];
     //const { name, value } = e.target;
@@ -213,7 +212,7 @@ const AddInvoice = () => {
       alert("Please add at least one item to the invoice.");
     }
 
-    if(expectedDate && new Date(expectedDate) < new Date(date)){
+    if (expectedDate && new Date(expectedDate) < new Date(date)) {
       alert("Expected delivery date cannot be before the invoice date.");
       document.querySelector('input[name="expecteddate"]').focus();
       return;
@@ -362,13 +361,13 @@ const AddInvoice = () => {
 
   const handleResetInvoice = () => {
     var res = window.confirm("Reset will delete all data. Continue?");
-    if(!res) return;
+    if (!res) return;
 
     setCustomerName("");
     setCustomerPhone("");
     setExpectedDate("");
     setAdvance("");
-  
+
     setDate(new Date().toISOString().slice(0, 10));
     setAmount(0);
     setSignature(null);
@@ -379,9 +378,8 @@ const AddInvoice = () => {
     deleteLocalStoragePersonalInfo();
 
     deleteLocalStorageInvoiceInfo();
-  
+
     refreshPage();
-    
   };
 
   const [sign, setSign] = useState(false);
@@ -583,13 +581,11 @@ const AddInvoice = () => {
     getLocalStorageUpiInfo();
   }, [name, accountName, inv_name, upiType]);
 
-  const[selectedIndex, setSelectedIndex] = useState(0);
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const [openItem, setOpenItem] = useState(false);
   const handleSearch = (index) => {
     setSelectedIndex(index);
     setOpenItem(true);
-
-    
   };
 
   const handleCloseItem = () => {
@@ -639,415 +635,451 @@ const AddInvoice = () => {
   const handleLogin = () => {
     const user = localStorage.getItem("user");
 
-    if(!user || user === "undefined" || user === "null"){
+    if (!user || user === "undefined" || user === "null") {
       navigate("/login");
-    } 
-}
-useEffect(() => { 
-  handleLogin();
-},[]);
+    }
+  };
+  useEffect(() => {
+    handleLogin();
+  }, []);
 
   return (
     <div>
-      {/* <Header /> */}
-      {loading && (
-        <>
-          <div className="h-2 w-2 bg-[#d6f539] rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-          <div className="h-2 w-2 bg-[#d6f539] rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-          <div className="h-2 w-2 bg-[#d6f539] rounded-full animate-bounce"></div>
-        </>
-      )}
-      <div>
-        <div className="flex justify-between mx-auto font-bold text-md bg-gray-200 py-4 px-2 rounded-md fixed w-[81.5%]">
-          <div className="text-2xl">Create Invoice</div>
-          <div className="flex gap-x-4">
-            <button
-              onClick={handleResetInvoice}
-              className="bg-[#146eb4] text-white border-[1.4px] border-gray-400  py-2 px-6 font-semibold rounded-md  hover:scale-110 transition duration-300 ease-in cursor-pointer "
-            >
-              Reset
-            </button>
-            <button
-              onClick={handleCreateInvoice}
-              className="bg-amber-600 border-[1.4px] border-gray-400 text-white py-2 px-6 font-semibold rounded-md text-richblack-700 hover:scale-110 transition duration-300 ease-in cursor-pointer "
-            >
-              Create Invoice
-            </button>
+      <Header />
+
+      <div className="p-6">
+        {/* <Header /> */}
+        {loading && (
+          <>
+            <div className="h-2 w-2 bg-[#d6f539] rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+            <div className="h-2 w-2 bg-[#d6f539] rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+            <div className="h-2 w-2 bg-[#d6f539] rounded-full animate-bounce"></div>
+          </>
+        )}
+        <div>
+          <div className="flex justify-between mx-auto font-bold text-md bg-gray-200 py-4 px-2 rounded-md fixed w-[81.5%]">
+            <div className="text-2xl">Create Invoice</div>
+            <div className="flex gap-x-4">
+              <button
+                onClick={handleResetInvoice}
+                className="bg-[#146eb4] text-white border-[1.4px] border-gray-400  py-2 px-6 font-semibold rounded-md  hover:scale-110 transition duration-300 ease-in cursor-pointer "
+              >
+                Reset
+              </button>
+              <button
+                onClick={handleCreateInvoice}
+                className="bg-amber-600 border-[1.4px] border-gray-400 text-white py-2 px-6 font-semibold rounded-md text-richblack-700 hover:scale-110 transition duration-300 ease-in cursor-pointer "
+              >
+                Create Invoice
+              </button>
+            </div>
           </div>
-        </div>
-        <div className="flex flex-col w-full gap-y-3 mx-auto ">
-          <div className="flex justify-between gap-x-2 w-full mx-auto mt-20">
-            <div className="flex flex-col w-6/12 mx-auto justify-start items-left mt-4 shadow-lg border-2 p-5 bg-white gap-y-4 rounded-md">
-              <div className="flex flex-col justify-start items-left gap-y-4 ">
+          <div className="flex flex-col w-full gap-y-3 mx-auto ">
+            <div className="flex justify-between gap-x-2 w-full mx-auto mt-20">
+              <div className="flex flex-col w-6/12 mx-auto justify-start items-left mt-4 shadow-lg border-2 p-5 bg-white gap-y-4 rounded-md">
+                <div className="flex flex-col justify-start items-left gap-y-4 ">
+                  <div className="flex ">
+                    <div className="text-xl text-gray-600 font-medium">
+                      Customer
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col justify-start items-left">
+                    <div className="text-xs font-bold leading-5 text-gray-700 mt-2">
+                      Name
+                    </div>
+                    <div>
+                      <input
+                        className="form-input w-8/12 block font-semibold text-xs rounded border border-gray-400 p-2 leading-5 focus:text-gray-600"
+                        required
+                        name="custname"
+                        placeholder="Enter Customer Name"
+                        value={customerName}
+                        onChange={(e) => {
+                          localStorage.setItem("custname", e.target.value);
+                          setCustomerName(e.target.value);
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex flex-col ">
+                  <div className="text-xs font-bold leading-5 text-gray-700 mt-2">
+                    Mobile
+                  </div>
+                  <div className="flex justify-start items-left -ml-4">
+                    <span className="p-[7px] bg-[#eee] border border-[#ccc] border-r-0 rounded-l font-normal text-sm">
+                      +91
+                    </span>
+                    <input
+                      className="p-[5px] pl-[10px] border border-[#ccc] rounded-r w-[120px] text-sm text-left"
+                      type="text"
+                      name="custphone"
+                      value={customerPhone}
+                      onChange={handleCustomerPhoneChange}
+                      maxLength={10}
+                      placeholder="Mobile number..."
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="w-6/12 mx-auto flex flex-col mt-4 shadow-lg border-2 p-4 bg-white gap-y-4 rounded-md">
                 <div className="flex ">
                   <div className="text-xl text-gray-600 font-medium">
-                    Customer
+                    Invoice
                   </div>
                 </div>
-
-                <div className="flex flex-col justify-start items-left">
-                  <div className="text-xs font-bold leading-5 text-gray-700 mt-2">
-                    Name
+                <div className="flex justify-between w-full mx-auto">
+                  <div className="flex flex-col">
+                    <div className="text-xs font-medium leading-5 text-gray-700 mt-2">
+                      Invoice #
+                    </div>
+                    <div>
+                      <input
+                        className="w-6/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
+                        required
+                        name="invoiceNumber"
+                        placeholder="10"
+                        value={invoiceNumber}
+                        onChange={(e) => {
+                          setInvoiceNumber(e.target.value);
+                          localStorage.setItem("invoiceNumber", e.target.value);
+                        }}
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <input
-                      className="form-input w-8/12 block font-semibold text-xs rounded border border-gray-400 p-2 leading-5 focus:text-gray-600"
-                      required
-                      name="custname"
-                      placeholder="Enter Customer Name"
-                      value={customerName}
-                      onChange={(e) => {
-                        localStorage.setItem("custname", e.target.value);
-                        setCustomerName(e.target.value);
-                      }}
-                    />
+                  <div className="flex flex-col">
+                    <div className="text-xs font-medium leading-5 text-gray-700 mt-2">
+                      Date
+                    </div>
+                    <div>
+                      <input
+                        className="w-12/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
+                        required
+                        name="date"
+                        placeholder="Date"
+                        type="date"
+                        value={date}
+                        onChange={(e) => {
+                          setDate(e.target.value);
+                          localStorage.setItem("date", e.target.value);
+                        }}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-
-              <div className="flex flex-col ">
-                <div className="text-xs font-bold leading-5 text-gray-700 mt-2">
-                  Mobile
-                </div>
-                <div className="flex justify-start items-left -ml-4">
-                  <span className="p-[7px] bg-[#eee] border border-[#ccc] border-r-0 rounded-l font-normal text-sm">
-                    +91
-                  </span>
-                  <input
-                    className="p-[5px] pl-[10px] border border-[#ccc] rounded-r w-[120px] text-sm text-left"
-                    type="text"
-                    name="custphone"
-                    value={customerPhone}
-                    onChange={handleCustomerPhoneChange}
-                    maxLength={10}
-                    placeholder="Mobile number..."
-                  />
+                <div className="flex flex-col">
+                  <div className="flex flex-col">
+                    <div className="text-xs font-medium leading-5 text-gray-700 mt-2">
+                      Expected Delivery
+                    </div>
+                    <div>
+                      <input
+                        className="w-3/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
+                        required
+                        name="expecteddate"
+                        placeholder="Date"
+                        type="date"
+                        value={expectedDate}
+                        onChange={(e) => {
+                          setExpectedDate(e.target.value);
+                          localStorage.setItem("expecteddate", e.target.value);
+                        }}
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="w-6/12 mx-auto flex flex-col mt-4 shadow-lg border-2 p-4 bg-white gap-y-4 rounded-md">
-              <div className="flex ">
-                <div className="text-xl text-gray-600 font-medium">Invoice</div>
-              </div>
-              <div className="flex justify-between w-full mx-auto">
-                <div className="flex flex-col">
-                  <div className="text-xs font-medium leading-5 text-gray-700 mt-2">
-                    Invoice #
-                  </div>
-                  <div>
-                    <input
-                      className="w-6/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
-                      required
-                      name="invoiceNumber"
-                      placeholder="10"
-                      value={invoiceNumber}
-                      onChange={(e) => {
-                        setInvoiceNumber(e.target.value);
-                        localStorage.setItem("invoiceNumber", e.target.value);
-                      }}
-                    />
-                  </div>
-                </div>
-                <div className="flex flex-col">
-                  <div className="text-xs font-medium leading-5 text-gray-700 mt-2">
-                    Date
-                  </div>
-                  <div>
-                    <input
-                      className="w-12/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
-                      required
-                      name="date"
-                      placeholder="Date"
-                      type="date"
-                      value={date}
-                      onChange={(e) => {
-                        setDate(e.target.value);
-                        localStorage.setItem("date", e.target.value);
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col">
-                <div className="flex flex-col">
-                  <div className="text-xs font-medium leading-5 text-gray-700 mt-2">
-                    Expected Delivery
-                  </div>
-                  <div>
-                    <input
-                      className="w-3/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
-                      required
-                      name="expecteddate"
-                      placeholder="Date"
-                      type="date"
-                      value={expectedDate}
-                      onChange={(e) => {
-                        setExpectedDate(e.target.value);
-                        localStorage.setItem("expecteddate", e.target.value);
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+            <div className="w-full mx-auto shadow-lg border-2 p-4 bg-white gap-y-4 rounded-md">
+              <div className="overflow-hidden ">
+                <table className="w-full mx-auto text-center text-sm font-light">
+                  <thead className="text-[12px] md:text-md uppercase max-md:hidden">
+                    <tr className="flex justify-between border-y-2 py-2 border-black">
+                      <th className="w-[10%]">S.No.</th>
+                      <th className="w-[30%] text-left">Description</th>
+                      <th className="w-[15%]">Rate</th>
+                      <th className="w-[10%] max-md:hidden">Quantity</th>
+                      <th className="w-[10%] md:hidden">Qty</th>
+                      <th className="w-[20%] text-center">Amount</th>
+                      <th className="w-[10%]"></th>
+                    </tr>
+                  </thead>
 
-          <div className="w-full mx-auto shadow-lg border-2 p-4 bg-white gap-y-4 rounded-md">
-          
-            <div className="overflow-hidden ">
-              <table className="w-full mx-auto text-center text-sm font-light">
-                <thead className="text-[12px] md:text-md uppercase max-md:hidden">
-                  <tr className="flex justify-between border-y-2 py-2 border-black">
-                    <th className="w-[10%]">S.No.</th>
-                    <th className="w-[30%] text-left">Description</th>
-                    <th className="w-[15%]">Rate</th>
-                    <th className="w-[10%] max-md:hidden">Quantity</th>
-                    <th className="w-[10%] md:hidden">Qty</th>
-                    <th className="w-[20%] text-center">Amount</th>
-                    <th className="w-[10%]"></th>
-                  </tr>
-                </thead>
-
-                <tbody className="max-md:hidden ">
-                  {rows &&
-                    rows.length > 0 &&
-                    rows.map((row, index) => (
-                      <div>
-                      <tr className="flex justify-between text-[12px] md:text-md w-full mt-4">
-                        <td className="w-[10%] text-center mt-2">
-                          {index + 1}.
-                        </td>
-                        <td className="w-[30%] text-left">
-                          <div className="relative w-full max-w-md">
-                            <input
-                              type="text"
-                              placeholder="Item Description"
-                              className="w-full py-2 pr-10 pl-4 border border-gray-300 rounded-md "
-                              name="desc"
-                              value={row.desc || rows[index].desc}
-                              onChange={(e) => handleInputChange(e.target.name, e.target.value, index)}
-                            />
-                            <button
-                              onClick={() => handleSearch(index)}
-                              className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-blue-600"
-                            >
-                              <FontAwesomeIcon icon={faSearch} />
-                            </button>
-                          </div>
-                        </td>
-                        <td className="w-[15%] text-center">
-                          <input
-                            className="w-full text-right block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
-                            required
-                            name="rate"
-                            placeholder="Price"
-                            value={row.rate || rows[index].rate}
-                            onChange={(e) => handleInputChange(e.target.name, e.target.value, index)}
-                          />
-                        </td>
-                        <td className="w-[10%] ">
-                          <input
-                            className="w-full text-right block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
-                            required
-                            name="quantity"
-                            placeholder="Quantity"
-                            value={row.qty}
-                            onChange={(e) => handleInputChange(e.target.name, e.target.value, index)}
-                          />
-                        </td>
-                        <td className="w-[20%] text-center">
-                          <div className="w-full  mt-3 font-extrabold text-xs">
-                            {row.amount}
-                          </div>
-                        </td>
-                        <td className="w-[10%]">
-                          <div className="mt-2">
-                            {rows.length > 1 && (
-                              
-                              <Trash2
-                                color="red"
-                                className="cursor-pointer text-red-500 hover:text-red-700"
-                                size={20}
-                                onClick={(e) => handleDeleteRow(index, e)}
-                              />
-                                
-                            )}
-                          </div>
-                        </td>
-                        
-                      </tr>
-                      <div className="border-b-2 border-dashed py-2"></div>
-                      </div>
-                    ))}
-                </tbody>
-               
-                <tbody className="md:hidden">
-                  {rows &&
-                    rows.length > 0 &&
-                    rows.map((row, index) => (
-                      <tr className="flex justify-between text-[12px] md:text-md w-full mt-4">
-                        <div className="w-full mx-auto flex flex-col gap-y-2">
-                          <td className="w-full text-left">
-                            <input
-                              className=" w-full block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
-                              required
-                              name="desc"
-                              placeholder="Description"
-                              value={row.desc}
-                              onChange={(e) => handleInputChange(e.target.name, e.target.value, index)}
-                            />
-                          </td>
-                          <div className="w-full mx-auto flex gap-x-2">
-                            <td className="w-[30%] text-center">
+                  <tbody className="max-md:hidden ">
+                    {rows &&
+                      rows.length > 0 &&
+                      rows.map((row, index) => (
+                        <div>
+                          <tr className="flex justify-between text-[12px] md:text-md w-full mt-4">
+                            <td className="w-[10%] text-center mt-2">
+                              {index + 1}.
+                            </td>
+                            <td className="w-[30%] text-left">
+                              <div className="relative w-full max-w-md">
+                                <input
+                                  type="text"
+                                  placeholder="Item Description"
+                                  className="w-full py-2 pr-10 pl-4 border border-gray-300 rounded-md "
+                                  name="desc"
+                                  value={row.desc || rows[index].desc}
+                                  onChange={(e) =>
+                                    handleInputChange(
+                                      e.target.name,
+                                      e.target.value,
+                                      index
+                                    )
+                                  }
+                                />
+                                <button
+                                  onClick={() => handleSearch(index)}
+                                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-blue-600"
+                                >
+                                  <FontAwesomeIcon icon={faSearch} />
+                                </button>
+                              </div>
+                            </td>
+                            <td className="w-[15%] text-center">
                               <input
                                 className="w-full text-right block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
                                 required
                                 name="rate"
                                 placeholder="Price"
-                                value={row.rate}
-                                onChange={(e) => handleInputChange(e.target.name, e.target.value, index)}
+                                value={row.rate || rows[index].rate}
+                                onChange={(e) =>
+                                  handleInputChange(
+                                    e.target.name,
+                                    e.target.value,
+                                    index
+                                  )
+                                }
                               />
                             </td>
-                            <td className="w-[20%] ">
+                            <td className="w-[10%] ">
                               <input
                                 className="w-full text-right block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
                                 required
                                 name="quantity"
                                 placeholder="Quantity"
                                 value={row.qty}
-                                onChange={(e) => handleInputChange(e.target.name, e.target.value, index)}
+                                onChange={(e) =>
+                                  handleInputChange(
+                                    e.target.name,
+                                    e.target.value,
+                                    index
+                                  )
+                                }
                               />
                             </td>
-                            <td className="w-[30%] text-center">
-                              <div className="w-full text-xs mt-3 ">
+                            <td className="w-[20%] text-center">
+                              <div className="w-full  mt-3 font-extrabold text-xs">
                                 {row.amount}
                               </div>
                             </td>
-                            <td className="w-[20%]">
-                              <div>
-                                <button
-                                  className="border-2 px-2 py-1 rounded-md bg-gray-700 text-white font-bold mt-2"
-                                  onClick={handleAddRow}
-                                >
-                                  +
-                                </button>
+                            <td className="w-[10%]">
+                              <div className="mt-2">
                                 {rows.length > 1 && (
-                                  <button
-                                    className="border-2 px-2 py-1 rounded-md bg-gray-700 text-white font-bold mt-2 "
+                                  <Trash2
+                                    color="red"
+                                    className="cursor-pointer text-red-500 hover:text-red-700"
+                                    size={20}
                                     onClick={(e) => handleDeleteRow(index, e)}
-                                  >
-                                    x
-                                  </button>
+                                  />
                                 )}
                               </div>
                             </td>
-                          </div>
+                          </tr>
+                          <div className="border-b-2 border-dashed py-2"></div>
                         </div>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
-            </div>
-            {/* <hr className="w-full mt-4"></hr> */}
-            <div className="flex justify-start">
-              
-              <button
-                className="border-2 px-3 py-1 rounded-md bg-gray-700 text-2xl text-white font-bold mt-2"
-                onClick={handleAddRow}
-              >
-                +
-              </button>
-            </div>
-            <hr className="w-full mt-2"></hr>
+                      ))}
+                  </tbody>
 
-            <div className="w-full flex justify-end gap-x-10 mt-2">
-              <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-sm font-bold rounded-md uppercase">
-                SubTotal
+                  <tbody className="md:hidden">
+                    {rows &&
+                      rows.length > 0 &&
+                      rows.map((row, index) => (
+                        <tr className="flex justify-between text-[12px] md:text-md w-full mt-4">
+                          <div className="w-full mx-auto flex flex-col gap-y-2">
+                            <td className="w-full text-left">
+                              <input
+                                className=" w-full block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
+                                required
+                                name="desc"
+                                placeholder="Description"
+                                value={row.desc}
+                                onChange={(e) =>
+                                  handleInputChange(
+                                    e.target.name,
+                                    e.target.value,
+                                    index
+                                  )
+                                }
+                              />
+                            </td>
+                            <div className="w-full mx-auto flex gap-x-2">
+                              <td className="w-[30%] text-center">
+                                <input
+                                  className="w-full text-right block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
+                                  required
+                                  name="rate"
+                                  placeholder="Price"
+                                  value={row.rate}
+                                  onChange={(e) =>
+                                    handleInputChange(
+                                      e.target.name,
+                                      e.target.value,
+                                      index
+                                    )
+                                  }
+                                />
+                              </td>
+                              <td className="w-[20%] ">
+                                <input
+                                  className="w-full text-right block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
+                                  required
+                                  name="quantity"
+                                  placeholder="Quantity"
+                                  value={row.qty}
+                                  onChange={(e) =>
+                                    handleInputChange(
+                                      e.target.name,
+                                      e.target.value,
+                                      index
+                                    )
+                                  }
+                                />
+                              </td>
+                              <td className="w-[30%] text-center">
+                                <div className="w-full text-xs mt-3 ">
+                                  {row.amount}
+                                </div>
+                              </td>
+                              <td className="w-[20%]">
+                                <div>
+                                  <button
+                                    className="border-2 px-2 py-1 rounded-md bg-gray-700 text-white font-bold mt-2"
+                                    onClick={handleAddRow}
+                                  >
+                                    +
+                                  </button>
+                                  {rows.length > 1 && (
+                                    <button
+                                      className="border-2 px-2 py-1 rounded-md bg-gray-700 text-white font-bold mt-2 "
+                                      onClick={(e) => handleDeleteRow(index, e)}
+                                    >
+                                      x
+                                    </button>
+                                  )}
+                                </div>
+                              </td>
+                            </div>
+                          </div>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
               </div>
-              <div
-                className="w-3/12 mx-auto flex justify-end mt-1 px-2  text-sm font-bold rounded-md"
-                name="amount"
-              >
-                ₹ {amount}
+              {/* <hr className="w-full mt-4"></hr> */}
+              <div className="flex justify-start">
+                <button
+                  className="border-2 px-3 py-1 rounded-md bg-gray-700 text-2xl text-white font-bold mt-2"
+                  onClick={handleAddRow}
+                >
+                  +
+                </button>
               </div>
-            </div>
+              <hr className="w-full mt-2"></hr>
 
-            {taxInfo?.cgstAmount && (
               <div className="w-full flex justify-end gap-x-10 mt-2">
                 <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-sm font-bold rounded-md uppercase">
-                  CGST ({taxInfo?.cgstAmount}%)
+                  SubTotal
                 </div>
                 <div
                   className="w-3/12 mx-auto flex justify-end mt-1 px-2  text-sm font-bold rounded-md"
                   name="amount"
                 >
-                  ₹ {Math.round((taxInfo?.cgstAmount ?? 0) * amount) / 100}
+                  ₹ {amount}
                 </div>
               </div>
-            )}
 
-            {taxInfo?.sgstAmount && (
+              {taxInfo?.cgstAmount && (
+                <div className="w-full flex justify-end gap-x-10 mt-2">
+                  <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-sm font-bold rounded-md uppercase">
+                    CGST ({taxInfo?.cgstAmount}%)
+                  </div>
+                  <div
+                    className="w-3/12 mx-auto flex justify-end mt-1 px-2  text-sm font-bold rounded-md"
+                    name="amount"
+                  >
+                    ₹ {Math.round((taxInfo?.cgstAmount ?? 0) * amount) / 100}
+                  </div>
+                </div>
+              )}
+
+              {taxInfo?.sgstAmount && (
+                <div className="w-full flex justify-end gap-x-10 mt-2">
+                  <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-sm font-bold rounded-md uppercase">
+                    SGST ({taxInfo?.sgstAmount}%)
+                  </div>
+                  <div
+                    className="w-3/12 mx-auto flex justify-end mt-1 px-2  text-sm font-bold rounded-md"
+                    name="amount"
+                  >
+                    ₹ {Math.round((taxInfo?.sgstAmount ?? 0) * amount) / 100}
+                  </div>
+                </div>
+              )}
+
               <div className="w-full flex justify-end gap-x-10 mt-2">
                 <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-sm font-bold rounded-md uppercase">
-                  SGST ({taxInfo?.sgstAmount}%)
+                  Total
                 </div>
                 <div
                   className="w-3/12 mx-auto flex justify-end mt-1 px-2  text-sm font-bold rounded-md"
                   name="amount"
                 >
-                  ₹ {Math.round((taxInfo?.sgstAmount ?? 0) * amount) / 100}
+                  ₹{" "}
+                  {Math.round(
+                    amount +
+                      ((taxInfo?.cgstAmount ?? 0) * amount) / 100 +
+                      ((taxInfo?.sgstAmount ?? 0) * amount) / 100
+                  )}
                 </div>
               </div>
-            )}
 
-            <div className="w-full flex justify-end gap-x-10 mt-2">
-              <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-sm font-bold rounded-md uppercase">
-                Total
-              </div>
-              <div
-                className="w-3/12 mx-auto flex justify-end mt-1 px-2  text-sm font-bold rounded-md"
-                name="amount"
-              >
-                ₹{" "}
-                {Math.round(
-                  amount +
-                    ((taxInfo?.cgstAmount ?? 0) * amount) / 100 +
-                    ((taxInfo?.sgstAmount ?? 0) * amount) / 100
-                )}
-              </div>
-            </div>
-
-            <hr className="w-full my-4"></hr>
-            <div className="w-full flex justify-end gap-x-10 mt-2">
-              <div className="w-9/12 flex justify-end mx-auto mt-2 px-2 text-sm font-bold rounded-md uppercase">
-                Advance
-              </div>
-              <div className="w-[16%] mx-auto  flex gap-x-2">
-                <div className="text-md font-bold mt-1">₹ </div>
-                <input
-                  className="form-input text-md font-bold block w-full rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
-                  pattern="^[0-9]*$"
-                  name="advance"
-                  placeholder="Advance..."
-                  value={advance}
-                  onChange={handleAdvanceChange}
-                />
+              <hr className="w-full my-4"></hr>
+              <div className="w-full flex justify-end gap-x-10 mt-2">
+                <div className="w-9/12 flex justify-end mx-auto mt-2 px-2 text-sm font-bold rounded-md uppercase">
+                  Advance
+                </div>
+                <div className="w-[16%] mx-auto  flex gap-x-2">
+                  <div className="text-md font-bold mt-1">₹ </div>
+                  <input
+                    className="form-input text-md font-bold block w-full rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
+                    pattern="^[0-9]*$"
+                    name="advance"
+                    placeholder="Advance..."
+                    value={advance}
+                    onChange={handleAdvanceChange}
+                  />
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="mt-2 text-sm py-1">
-            <div>
-              {/* <button onClick={handleSave} className='bg-[#146eb4] text-sm text-white py-2 px-4 font-semibold rounded-md text-richblack-700 hover:scale-110 transition duration-300 ease-in cursor-pointer '>Get Uploaded Signature</button> */}
+            <div className="mt-2 text-sm py-1">
+              <div>
+                {/* <button onClick={handleSave} className='bg-[#146eb4] text-sm text-white py-2 px-4 font-semibold rounded-md text-richblack-700 hover:scale-110 transition duration-300 ease-in cursor-pointer '>Get Uploaded Signature</button> */}
 
-              {/* <div className='mt-2'>Signature</div> */}
-              {/* <div className='border-2 w-[150px] h-[150px] rounded-md cursor-pointer mt-2'>
+                {/* <div className='mt-2'>Signature</div> */}
+                {/* <div className='border-2 w-[150px] h-[150px] rounded-md cursor-pointer mt-2'>
                 
                      <ImageUpload setSelectedFile={setSelectedFile} avatarURL={avatarURL} setAvatarURL={setAvatarURL}/>
                 </div> */}
-            </div>
-            {/* <div
+              </div>
+              {/* <div
               onClick={() => setOpenSign(true)}
               className="bg-[#146eb4] text-center w-4/12 md:w-2/12 border-[1.4px] border-gray-400 text-white py-2 px-2 font-semibold rounded-md text-richblack-700 mb-2 cursor-pointer "
             >
@@ -1055,29 +1087,30 @@ useEffect(() => {
               <button>+ Add Signature</button>
             </div> */}
 
-            {sign && (
-              <div className="w-[35%] md:w-[20%] border-2">
-                <img src={signature} alt="sign" />
-                <div className="flex justify-between">
-                  <div className="px-2 text-xs"> Signed on: {signedDate}</div>
-                  <div>
-                    {" "}
-                    <button onClick={handleCloseSign1}>
-                      <X />
-                    </button>
+              {sign && (
+                <div className="w-[35%] md:w-[20%] border-2">
+                  <img src={signature} alt="sign" />
+                  <div className="flex justify-between">
+                    <div className="px-2 text-xs"> Signed on: {signedDate}</div>
+                    <div>
+                      {" "}
+                      <button onClick={handleCloseSign1}>
+                        <X />
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
+        {openItem && (
+          <InventoryModal
+            handleCloseItem={handleCloseItem}
+            setItem={setItem}
+          ></InventoryModal>
+        )}
       </div>
-      {openItem && (
-        <InventoryModal
-          handleCloseItem={handleCloseItem}
-          setItem={setItem}
-        ></InventoryModal>
-      )}
     </div>
   );
 };

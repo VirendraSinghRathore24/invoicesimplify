@@ -4,10 +4,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { db } from "../../config/firebase";
 import { X } from "lucide-react";
 import { toast } from "react-toastify";
+import Header from "../Header";
 
-function AddItem({handleCloseItem, setItemAdded}) {
-
-const location = useLocation();
+function AddItem({ handleCloseItem, setItemAdded }) {
+  const location = useLocation();
   const [inputs, setInputs] = useState({});
   const [showList, setShowList] = useState(false);
   const [posts, setPosts] = useState([]);
@@ -26,7 +26,7 @@ const location = useLocation();
     setItemAdded(true);
     handleCloseItem();
 
-    toast('Item added successfully!!!');
+    toast("Item added successfully!!!");
 
     // sending  info to next screen
     //localStorage.setItem("inventory", JSON.stringify(data));
@@ -68,7 +68,7 @@ const location = useLocation();
     navigate(-1);
   };
 
-  const checkIfListExists = async() => {
+  const checkIfListExists = async () => {
     const data = await getDocs(inventoryInfo_CollectionRef);
     const filteredData = data.docs.map((doc) => ({
       ...doc.data(),
@@ -83,87 +83,95 @@ const location = useLocation();
     // get items list
     const existingItems = inventoryInfo.inventory;
 
-    if(existingItems.length > 0){
+    if (existingItems.length > 0) {
       setShowList(true);
       setPosts(inventoryInfo.inventory);
     }
-  }
+  };
   const handleLogin = () => {
     const user = localStorage.getItem("user");
 
-    if(!user || user === "undefined" || user === "null"){
+    if (!user || user === "undefined" || user === "null") {
       navigate("/login");
-    } 
-}
-useEffect(() => {
-  handleLogin();
-}, []);
+    }
+  };
+  useEffect(() => {
+    handleLogin();
+  }, []);
 
   return (
-    <div className=" w-full mx-auto fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center ">
-      <div className="overflow-auto mt-6 bg-white p-4 text-black rounded-xl">
-      <div className="flex justify-between py-2">
-          <div className=" text-lg font-bold">Add Item </div>
-          <button onClick={handleCloseItem}>
-            <X size={30} />
-          </button>
-        </div>
+    <div>
+      <Header />
 
-        <hr />
-        <div>
-          
-          <form
-            onSubmit={handleSubmit}
-            className="w-full mx-auto flex flex-col md:flex-row justify-between mt-10"
-          >
-            <div className="flex flex-col gap-y-4 w-full  mx-auto">
-              <div className="flex flex-col gap-y-4">
-                
-                <div className="w-full mx-auto">
-                  <input
-                    className="form-input w-[400px] block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
-                    name="itemName"
-                    autoFocus
-                    required
-                    placeholder="Enter Item Name"
-                    value={inputs?.itemName || ""}
-                    onChange={(e) => {
-                      localStorage.setItem("itemName", e.target.value);
-                      handleChange(e);
-                    }}
-                  />
+      <div className=" w-full mx-auto fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center p-6">
+        <div className="overflow-auto mt-6 bg-white p-4 text-black rounded-xl">
+          <div className="flex justify-between py-2">
+            <div className=" text-lg font-bold">Add Item </div>
+            <button onClick={handleCloseItem}>
+              <X size={30} />
+            </button>
+          </div>
+
+          <hr />
+          <div>
+            <form
+              onSubmit={handleSubmit}
+              className="w-full mx-auto flex flex-col md:flex-row justify-between mt-10"
+            >
+              <div className="flex flex-col gap-y-4 w-full  mx-auto">
+                <div className="flex flex-col gap-y-4">
+                  <div className="w-full mx-auto">
+                    <input
+                      className="form-input w-[400px] block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
+                      name="itemName"
+                      autoFocus
+                      required
+                      placeholder="Enter Item Name"
+                      value={inputs?.itemName || ""}
+                      onChange={(e) => {
+                        localStorage.setItem("itemName", e.target.value);
+                        handleChange(e);
+                      }}
+                    />
+                  </div>
+
+                  <div className="w-full mx-auto">
+                    <input
+                      className="form-input w-[400px] block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
+                      name="itemPrice"
+                      required
+                      placeholder="Enter Item Price"
+                      value={inputs?.itemPrice || ""}
+                      onChange={(e) => {
+                        localStorage.setItem("itemPrice", e.target.value);
+                        handleChange(e);
+                      }}
+                    />
+                  </div>
                 </div>
 
-                <div className="w-full mx-auto">
-                  <input
-                    className="form-input w-[400px] block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
-                    name="itemPrice"
-                    required
-                    placeholder="Enter Item Price"
-                    value={inputs?.itemPrice || ""}
-                    onChange={(e) => {
-                      localStorage.setItem("itemPrice", e.target.value);
-                      handleChange(e);
-                    }}
-                  />
+                <div className="flex justify-evenly">
+                  <div className="rounded-md flex justify-between w-full mx-auto">
+                    <button
+                      type="button"
+                      onClick={handleCloseItem}
+                      className="px-4 py-2 rounded-md text-black w-3/12 border-[1.4px] border-black"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="bg-[#444] px-4 py-2 rounded-md text-white w-3/12"
+                    >
+                      Save
+                    </button>
+                  </div>
                 </div>
               </div>
-
-              <div className="flex justify-evenly">
-                <div className="rounded-md flex justify-between w-full mx-auto">
-                 <button type='button' onClick={handleCloseItem} className='px-4 py-2 rounded-md text-black w-3/12 border-[1.4px] border-black'>Cancel</button>
-                  <button
-                    type="submit"
-                    className="bg-[#444] px-4 py-2 rounded-md text-white w-3/12"
-                  >
-                    Save
-                  </button>
-                </div>
-              </div>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
-    </div>
+      </div>
     </div>
   );
 }

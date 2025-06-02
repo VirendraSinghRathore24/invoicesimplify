@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { MdDelete } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import { db } from '../../config/firebase';
+import Header from '../Header';
 
 
 const AdditionalInformation = () => {
@@ -72,6 +73,9 @@ const AdditionalInformation = () => {
 
   return (
     <div>
+      <Header/>
+   
+    <div className='p-6'>
       <div className="flex flex-col w-full mx-auto font-bold text-2xl bg-gray-200 py-4 px-2 rounded-md">Additional Information</div>
 <div>
 
@@ -128,7 +132,7 @@ const AdditionalInformation = () => {
    
            
             </div>
-           
+            </div> 
   )
 }
 

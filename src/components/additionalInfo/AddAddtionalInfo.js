@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { db } from '../../config/firebase';
 import { toast } from 'react-toastify';
+import Header from '../Header';
 
 function AddAddtionalInfo() {
   const navigate = useNavigate();
@@ -84,7 +85,10 @@ function AddAddtionalInfo() {
           setInputs(JSON.parse(info1));
   },[]);
     return (
-        <div>
+      <div>
+         <Header/>
+      
+        <div className='p-6'>
           <div className="flex flex-col w-full mx-auto font-bold text-2xl bg-gray-200 py-4 px-2 rounded-md">Add Additional Information</div>
         
         <div className='flex flex-col w-full my-auto px-4 shadow-lg border-2 p-5 bg-white gap-y-4 rounded-md mt-4'>
@@ -180,7 +184,7 @@ function AddAddtionalInfo() {
 
         </div>
         </div>
-        
+        </div>
     )
 }
 

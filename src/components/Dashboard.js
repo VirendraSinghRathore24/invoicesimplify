@@ -10,6 +10,7 @@ import { db } from "../config/firebase";
 import { useNavigate } from "react-router-dom";
 import Loader from "./Loader";
 import { SquareArrowOutUpRight } from "lucide-react";
+import Header from "./Header";
 
 const Dashboard = () => {
   const [data, setData] = useState([]);
@@ -334,7 +335,11 @@ const Dashboard = () => {
 
   return (
     <div>
-      <div className="flex flex-col w-full mx-auto font-bold text-2xl bg-gray-200 py-4 px-2 rounded-md">
+       <Header/>
+    
+    <div className="p-6">
+     
+      <div className="flex flex-col w-full mx-auto font-bold text-2xl bg-gray-200 py-4 px-2 rounded-md ">
         Dashboard
       </div>
 
@@ -509,6 +514,7 @@ const Dashboard = () => {
       </div>
 
       {loading && <Loader />}
+    </div>
     </div>
   );
 };

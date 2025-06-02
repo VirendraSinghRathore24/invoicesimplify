@@ -23,6 +23,7 @@ import AddAddtionalInfo from './components/additionalInfo/AddAddtionalInfo';
 import Inventory from './components/inventory/Inventory';
 import ArchivedDashboard from './components/archived/ArchivedDashboard';
 import ArchivedViewInvoice from './components/archived/ArchivedViewInvoice';
+import Header from './components/Header';
 
 
 function App() {
@@ -35,7 +36,7 @@ function App() {
      
       {showSidebar && <Sidebar/>}
      
-      <div className="flex-1 p-6 overflow-y-auto">
+      <div className="flex-1  overflow-y-auto">
       <Routes>
         <Route path="/" element={<Home/>}/> 
 

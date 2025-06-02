@@ -5,6 +5,7 @@ import { db } from "../../config/firebase";
 import AddItem from "./AddItem";
 import { Edit } from "lucide-react";
 import EditItem from "./EditItem";
+import Header from "../Header";
 
 function Inventory() {
   const location = useLocation();
@@ -13,20 +14,19 @@ function Inventory() {
   const [posts, setPosts] = useState([]);
   const [itemAdded, setItemAdded] = useState(false);
   const [editPost, setEditPost] = useState(null);
-  
 
   const navigate = useNavigate();
   const inventoryInfo_CollectionRef = collection(db, "Inventory_Info");
 
-  const [openItem, setOpenItem] = useState(false);  
-    const handleCloseItem = () => {
-      setOpenItem(false);
-    }
+  const [openItem, setOpenItem] = useState(false);
+  const handleCloseItem = () => {
+    setOpenItem(false);
+  };
 
-    const [openEditModal, setOpenEditModal] = useState(false);  
-    const handleCloseEditModal = () => {
-      setOpenEditModal(false);
-    }
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const handleCloseEditModal = () => {
+    setOpenEditModal(false);
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -85,7 +85,7 @@ function Inventory() {
     navigate(-1);
   };
 
-  const checkIfListExists = async() => {
+  const checkIfListExists = async () => {
     const data = await getDocs(inventoryInfo_CollectionRef);
     const filteredData = data.docs.map((doc) => ({
       ...doc.data(),
@@ -98,27 +98,28 @@ function Inventory() {
     )[0];
 
     // get items list
-    const existingItems = inventoryInfo.inventory.sort((a, b) => a.itemName.localeCompare(b.itemName));
+    const existingItems = inventoryInfo.inventory.sort((a, b) =>
+      a.itemName.localeCompare(b.itemName)
+    );
 
-    if(existingItems.length > 0){
+    if (existingItems.length > 0) {
       setShowList(true);
       setPosts(inventoryInfo.inventory);
     }
-  }
+  };
 
   const handleEdit = (post, index) => {
     post.index = index;
     setEditPost(post);
     setOpenEditModal(true);
-    
-  }
+  };
   const handleLogin = () => {
     const user = localStorage.getItem("user");
 
-    if(!user || user === "undefined" || user === "null"){
+    if (!user || user === "undefined" || user === "null") {
       navigate("/login");
-    } 
-}
+    }
+  };
 
   useEffect(() => {
     handleLogin();
@@ -131,80 +132,90 @@ function Inventory() {
 
   return (
     <div>
-       <div className="flex flex-col w-full mx-auto font-bold text-2xl bg-gray-200 py-4 px-2 rounded-md">Add Inventory</div>
-        
-   
-    <div className="flex flex-col w-full m-auto p-4">
-      
-      {showList ? (
-        <div>
-          <div className="flex justify-end">
-      <button onClick={() => setOpenItem(true)} className="border-1 px-4 py-2 bg-[#444] text-white font-bold rounded-md hover:bg-amber-800"> +  Add Item</button>
-      </div>
-        <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4">
-          
-         <div className="p-4">
-        <input
-          type="text"
-          placeholder="Search..."
-          
-          className="p-2 border border-gray-300 rounded-md mb-4 w-full"
-        />
-      </div>
-        <table className="min-w-full text-sm text-left text-gray-700">
-          <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
-            <tr>
-              <th className="px-4 py-3 border-r">S.No.</th>
-              <th className="px-4 py-3 border-r">Item Name</th>
-              <th className="px-4 py-3 border-r">Price</th>
-              <th className="px-4 py-3 border-r">Edit</th>
-              <th className="px-4 py-3">Delete</th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              posts && posts.length > 0 && posts.map((post, index) => (
-                <tr key={index}
-                className={`border-t ${
-                  index % 2 === 0 ? "bg-white" : "bg-gray-50"
-                } hover:bg-gray-200`}>
-              <td className="px-4 py-3 border-r">{index + 1}.</td>
-              <td className="px-4 py-3 border-r">{post?.itemName}</td>
-              <td className="px-4 py-3 border-r">{post?.itemPrice}</td>
-              <td className="px-4 py-3 cursor-pointer">
+      <Header />
+
+      <div className="p-6">
+        <div className="flex flex-col w-full mx-auto font-bold text-2xl bg-gray-200 py-4 px-2 rounded-md">
+          Add Inventory
+        </div>
+
+        <div className="flex flex-col w-full m-auto p-4">
+          {showList ? (
+            <div>
+              <div className="flex justify-end">
                 <button
-                  onClick={() => handleEdit(post, index)}
-                  className="text-blue-600 hover:text-red-800 font-semibold text-sm"
+                  onClick={() => setOpenItem(true)}
+                  className="border-1 px-4 py-2 bg-[#444] text-white font-bold rounded-md hover:bg-amber-800"
                 >
-                  Edit
+                  {" "}
+                  + Add Item
                 </button>
-              </td>
-              <td className="px-4 py-3 cursor-pointer">
-                <button className="text-red-600 hover:text-red-800 font-semibold text-sm">
-                  Delete
-                </button>
-              </td>
-            </tr>
-              ))
-            }
-            
-          </tbody>
-        </table>
-        </div>
-        </div>
-
-      ) : (
-                  <div className="flex h-screen items-center justify-center ">
-            <div onClick={() => setOpenItem(true)}>
-              <button className="border-2 bg-[#444] text-white fond-bold text-lg py-4 px-8 rounded-md cursor-pointer">
-                {" "}
-                + Add Inventory
-              </button>
+              </div>
+              <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4">
+                <div className="p-4">
+                  <input
+                    type="text"
+                    placeholder="Search..."
+                    className="p-2 border border-gray-300 rounded-md mb-4 w-full"
+                  />
+                </div>
+                <table className="min-w-full text-sm text-left text-gray-700">
+                  <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
+                    <tr>
+                      <th className="px-4 py-3 border-r">S.No.</th>
+                      <th className="px-4 py-3 border-r">Item Name</th>
+                      <th className="px-4 py-3 border-r">Price</th>
+                      <th className="px-4 py-3 border-r">Edit</th>
+                      <th className="px-4 py-3">Delete</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {posts &&
+                      posts.length > 0 &&
+                      posts.map((post, index) => (
+                        <tr
+                          key={index}
+                          className={`border-t ${
+                            index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                          } hover:bg-gray-200`}
+                        >
+                          <td className="px-4 py-3 border-r">{index + 1}.</td>
+                          <td className="px-4 py-3 border-r">
+                            {post?.itemName}
+                          </td>
+                          <td className="px-4 py-3 border-r">
+                            {post?.itemPrice}
+                          </td>
+                          <td className="px-4 py-3 cursor-pointer">
+                            <button
+                              onClick={() => handleEdit(post, index)}
+                              className="text-blue-600 hover:text-red-800 font-semibold text-sm"
+                            >
+                              Edit
+                            </button>
+                          </td>
+                          <td className="px-4 py-3 cursor-pointer">
+                            <button className="text-red-600 hover:text-red-800 font-semibold text-sm">
+                              Delete
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
-
-      )}
-      {openItem && (
+          ) : (
+            <div className="flex h-screen items-center justify-center ">
+              <div onClick={() => setOpenItem(true)}>
+                <button className="border-2 bg-[#444] text-white fond-bold text-lg py-4 px-8 rounded-md cursor-pointer">
+                  {" "}
+                  + Add Inventory
+                </button>
+              </div>
+            </div>
+          )}
+          {openItem && (
             <AddItem
               handleCloseItem={handleCloseItem}
               setItemAdded={setItemAdded}
@@ -217,7 +228,8 @@ function Inventory() {
               editPost={editPost}
             ></EditItem>
           )}
-    </div>
+        </div>
+      </div>
     </div>
   );
 }
