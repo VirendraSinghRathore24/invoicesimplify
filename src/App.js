@@ -25,6 +25,7 @@ import ArchivedDashboard from './components/archived/ArchivedDashboard';
 import ArchivedViewInvoice from './components/archived/ArchivedViewInvoice';
 import Header from './components/Header';
 import Upgrade from './components/Upgrade';
+import Success from './components/Success';
 
 
 function App() {
@@ -73,6 +74,7 @@ function App() {
         <Route path="/archivedviewinvoice" element={<ArchivedViewInvoice/>}/>
 
         <Route path="/upgrade" element={<Upgrade/>}/>
+        <Route path="/success" element={<Success/>}/>
       </Routes>
       <ToastContainer/>
       </div>

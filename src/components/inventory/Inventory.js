@@ -35,19 +35,6 @@ function Inventory() {
 
     // update item to db
     await updateInventoryItems(inputs);
-
-    // // TODO - rework with DB
-    // const data = [
-    //   { name: "Aari Jarsdoshi Poshak" },
-    //   { name: "New Design Poshak" },
-    //   { name: "Apni Poshak" },
-    //   { name: "Gotta and Jari Poshak" },
-    //   { name: "Amazing Poshak" },
-    //   { name: "Jaipuri Poshak" },
-    // ];
-
-    // sending  info to next screen
-    //localStorage.setItem("inventory", JSON.stringify(data));
   };
 
   const updateInventoryItems = async (item) => {
@@ -107,6 +94,10 @@ function Inventory() {
       setPosts(inventoryInfo.inventory);
     }
   };
+
+  const handleDelete = async(post) => {
+    // TODO - it is under array so be carefull while deleting
+  }
 
   const handleEdit = (post, index) => {
     post.index = index;
@@ -195,7 +186,7 @@ function Inventory() {
                             </button>
                           </td>
                           <td className="px-4 py-3 cursor-pointer">
-                            <button className="text-red-600 hover:text-red-800 font-semibold text-sm">
+                            <button onClick={() => handleDelete(post)} className="text-red-600 hover:text-red-800 font-semibold text-sm">
                               Delete
                             </button>
                           </td>

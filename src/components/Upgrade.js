@@ -165,7 +165,10 @@ const Upgrade = () => {
               Add customization, reporting and automation
             </div>
             <div className="font-bold text-2xl">₹499.00/mo</div>
-            <button onClick={() => submitHandler(499)} className="bg-[#FF5721] text-md text-white p-4 font-bold rounded-md text-richblack-700 hover:scale-110 transition duration-300 ease-in cursor-pointer ">
+            <button onClick={() => navigate('/success', { 
+              state: {
+                order: {id: 1234567890, amount: 49900, currency : "INR"}
+              }})} className="bg-[#FF5721] text-md text-white p-4 font-bold rounded-md text-richblack-700 hover:scale-110 transition duration-300 ease-in cursor-pointer ">
               Buy Now
             </button>
             <hr />
