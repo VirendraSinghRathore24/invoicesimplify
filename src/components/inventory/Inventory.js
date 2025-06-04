@@ -23,8 +23,9 @@ function Inventory() {
   const inventoryInfo_CollectionRef = collection(db, "Inventory_Info");
 
   const [openItem, setOpenItem] = useState(false);
-  const handleCloseItem = () => {
+  const handleCloseItem = async () => {
     setOpenItem(false);
+    await checkIfListExists();
   };
 
   const [openEditModal, setOpenEditModal] = useState(false);
@@ -161,7 +162,7 @@ function Inventory() {
 
     let info1 = localStorage.getItem("inventory");
     setInputs(JSON.parse(info1));
-  }, [itemAdded]);
+  }, []);
 
   return (
     <div>
@@ -195,63 +196,65 @@ function Inventory() {
                     className="p-2 border border-gray-300 rounded-md mb-4 w-full"
                   />
                 </div>
-                <table className="min-w-full text-sm text-left text-gray-700">
-                  <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
-                    <tr>
-                      <th className="px-4 py-3 border-r">S.No.</th>
-                      <th className="px-4 py-3 border-r">Item Name</th>
-                      <th className="px-4 py-3 border-r">Price</th>
-                      <th className="px-4 py-3 border-r">Edit</th>
-                      <th className="px-4 py-3">Delete</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredData &&
-                      filteredData.length > 0 &&
-                      filteredData.map((post, index) => (
-                        <tr
-                          key={index}
-                          className={`border-t ${
-                            index % 2 === 0 ? "bg-white" : "bg-gray-50"
-                          } hover:bg-gray-200`}
-                        >
-                          <td className="px-4 py-3 border-r">{index + 1}.</td>
-                          <td className="px-4 py-3 border-r">
-                            {post?.itemName}
-                          </td>
-                          <td className="px-4 py-3 border-r">
-                            {post?.itemPrice}
-                          </td>
-                          <td className="px-4 py-3 cursor-pointer">
-                            <button
-                              onClick={() => handleEdit(post, index)}
-                              className="text-blue-600 hover:text-red-800 font-semibold text-sm"
-                            >
-                              Edit
-                            </button>
-                          </td>
-                          <td className="px-4 py-3 cursor-pointer">
-                            <button
-                              onClick={() => handleDelete(post)}
-                              className="text-red-600 hover:text-red-800 font-semibold text-sm"
-                            >
-                              Delete
-                            </button>
+                <div className="overflow-auto h-[485px]">
+                  <table className="min-w-full text-sm text-left text-gray-700">
+                    <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
+                      <tr>
+                        <th className="px-4 py-3 border-r">S.No.</th>
+                        <th className="px-4 py-3 border-r">Item Name</th>
+                        <th className="px-4 py-3 border-r">Price</th>
+                        <th className="px-4 py-3 border-r">Edit</th>
+                        <th className="px-4 py-3">Delete</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredData &&
+                        filteredData.length > 0 &&
+                        filteredData.map((post, index) => (
+                          <tr
+                            key={index}
+                            className={`border-t ${
+                              index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                            } hover:bg-gray-200`}
+                          >
+                            <td className="px-4 py-3 border-r">{index + 1}.</td>
+                            <td className="px-4 py-3 border-r">
+                              {post?.itemName}
+                            </td>
+                            <td className="px-4 py-3 border-r">
+                              {post?.itemPrice}
+                            </td>
+                            <td className="px-4 py-3 cursor-pointer">
+                              <button
+                                onClick={() => handleEdit(post, index)}
+                                className="text-blue-600 hover:text-red-800 font-semibold text-sm"
+                              >
+                                Edit
+                              </button>
+                            </td>
+                            <td className="px-4 py-3 cursor-pointer">
+                              <button
+                                onClick={() => handleDelete(post)}
+                                className="text-red-600 hover:text-red-800 font-semibold text-sm"
+                              >
+                                Delete
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      {filteredData.length === 0 && (
+                        <tr>
+                          <td
+                            colSpan="9"
+                            className="text-center px-4 py-6 text-gray-500"
+                          >
+                            No data available.
                           </td>
                         </tr>
-                      ))}
-                    {filteredData.length === 0 && (
-                      <tr>
-                        <td
-                          colSpan="9"
-                          className="text-center px-4 py-6 text-gray-500"
-                        >
-                          No data available.
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           ) : (
@@ -279,7 +282,7 @@ function Inventory() {
           )}
         </div>
       </div>
-      {loading && <Loader/>}
+      {loading && <Loader />}
     </div>
   );
 }

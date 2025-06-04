@@ -239,7 +239,7 @@ const Dashboard = () => {
   };
 
   const sortedData = React.useMemo(() => {
-    let sortableData = [...data];
+    let sortableData = [...filteredData];
 
     if (sortConfig.key === "invoice") {
       sortableData.sort(sortInvoiceNumber);
@@ -335,187 +335,189 @@ const Dashboard = () => {
 
   return (
     <div>
-       <Header/>
-    
-    <div className="p-6">
-     
-      <div className="flex flex-col w-full mx-auto font-bold text-2xl bg-gray-200 py-4 px-2 rounded-md ">
-        Dashboard
-      </div>
+      <Header />
 
-      <div className="flex justify-between py-4 gap-x-2">
-        <div className="flex justify-between gap-y-4 font-bold text-xl shadow-lg border-2 p-5 bg-amber-50 gap-y-4 rounded-md h-32 w-3/12">
-          <div className="flex flex-col cursor-pointer">
-            <div className="">Balance</div>
-            <div className="text-2xl">₹ {balance}</div>
-          </div>
-          <SquareArrowOutUpRight />
+      <div className="p-6">
+        <div className="flex flex-col w-full mx-auto font-bold text-2xl bg-gray-200 py-4 px-2 rounded-md ">
+          Dashboard
         </div>
 
-        <div className="flex justify-between gap-y-4 font-bold text-xl shadow-lg border-2 p-5 bg-red-50 gap-y-4 rounded-md h-32 w-3/12">
-          <div className="flex flex-col cursor-pointer">
-            <div className="">Amount</div>
-            <div className="text-2xl">₹ {amount}</div>
-          </div>
-          <SquareArrowOutUpRight />
-        </div>
-
-        <div className="flex justify-between gap-y-4 font-bold text-xl shadow-lg border-2 p-5 bg-blue-50 gap-y-4 rounded-md h-32 w-3/12">
-          <div className="flex flex-col cursor-pointer">
-            <div className="">Paid</div>
-            <div className="text-2xl">₹ {paid}</div>
-          </div>
-          <SquareArrowOutUpRight />
-        </div>
-
-        <div className="flex justify-between gap-y-4 font-bold text-xl shadow-lg border-2 p-5 bg-green-50 gap-y-4 rounded-md h-32 w-3/12">
-          <div className="flex flex-col cursor-pointer">
-            <div className="">Invoices</div>
-            <div className="text-2xl">
-              {filteredData ? filteredData.length : 0}
+        <div className="flex justify-between py-4 gap-x-2">
+          <div className="flex justify-between gap-y-4 font-bold text-xl shadow-lg border-2 p-5 bg-amber-50 gap-y-4 rounded-md h-32 w-3/12">
+            <div className="flex flex-col cursor-pointer">
+              <div className="">Balance</div>
+              <div className="text-2xl">₹ {balance}</div>
             </div>
+            <SquareArrowOutUpRight />
           </div>
-          <SquareArrowOutUpRight />
-        </div>
-      </div>
 
-      <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4 shadow-lg border-2 bg-white gap-y-4 rounded-md">
-        <div className="p-4">
-          <input
-            type="text"
-            placeholder="Search..."
-            autoFocus
-            value={searchTerm}
-            onChange={handleSearch}
-            className="p-2 border border-gray-300 rounded-md mb-4 w-full"
-          />
+          <div className="flex justify-between gap-y-4 font-bold text-xl shadow-lg border-2 p-5 bg-red-50 gap-y-4 rounded-md h-32 w-3/12">
+            <div className="flex flex-col cursor-pointer">
+              <div className="">Amount</div>
+              <div className="text-2xl">₹ {amount}</div>
+            </div>
+            <SquareArrowOutUpRight />
+          </div>
+
+          <div className="flex justify-between gap-y-4 font-bold text-xl shadow-lg border-2 p-5 bg-blue-50 gap-y-4 rounded-md h-32 w-3/12">
+            <div className="flex flex-col cursor-pointer">
+              <div className="">Paid</div>
+              <div className="text-2xl">₹ {paid}</div>
+            </div>
+            <SquareArrowOutUpRight />
+          </div>
+
+          <div className="flex justify-between gap-y-4 font-bold text-xl shadow-lg border-2 p-5 bg-green-50 gap-y-4 rounded-md h-32 w-3/12">
+            <div className="flex flex-col cursor-pointer">
+              <div className="">Invoices</div>
+              <div className="text-2xl">
+                {filteredData ? filteredData.length : 0}
+              </div>
+            </div>
+            <SquareArrowOutUpRight />
+          </div>
         </div>
-        <table className="min-w-full text-sm text-left text-gray-700 ">
-          <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
-            <tr>
-              {[
-                "S.No.",
-                "Invoice",
-                "Name",
-                "Phone",
-                "Date",
-                "Delivery",
-                "Amount",
-                "Paid",
-                "Balance",
-                "Status",
-                "View",
-                "Delete",
-              ].map((header) => (
-                <th
-                  key={header}
-                  className="px-4 py-3 border-r cursor-pointer"
-                  onClick={() => handleSort(header)}
-                >
-                  {header}
-                  {sortConfig.key?.toLowerCase() !== "view" &&
-                    sortConfig.key?.toLowerCase() !== "delete" &&
-                    sortConfig.key === header.toLowerCase() && (
-                      <span>
-                        {sortConfig.direction === "asc" ? " 🔼" : " 🔽"}
+
+        <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4 shadow-lg border-2 bg-white gap-y-4 rounded-md">
+          <div className="p-4">
+            <input
+              type="text"
+              placeholder="Search..."
+              autoFocus
+              value={searchTerm}
+              onChange={handleSearch}
+              className="p-2 border border-gray-300 rounded-md mb-4 w-full"
+            />
+          </div>
+          <table className="min-w-full text-sm text-left text-gray-700 ">
+            <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
+              <tr>
+                {[
+                  "S.No.",
+                  "Invoice",
+                  "Name",
+                  "Phone",
+                  "Date",
+                  "Delivery",
+                  "Amount",
+                  "Paid",
+                  "Balance",
+                  "Status",
+                  "View",
+                  "Delete",
+                ].map((header) => (
+                  <th
+                    key={header}
+                    className="px-4 py-3 border-r cursor-pointer"
+                    onClick={() => handleSort(header)}
+                  >
+                    {header}
+                    {sortConfig.key?.toLowerCase() !== "view" &&
+                      sortConfig.key?.toLowerCase() !== "delete" &&
+                      sortConfig.key === header.toLowerCase() && (
+                        <span>
+                          {sortConfig.direction === "asc" ? " 🔼" : " 🔽"}
+                        </span>
+                      )}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+
+            <tbody>
+              {filteredData.map((user, index) => {
+                const formatDate = (dateString) => {
+                  const date = new Date(dateString);
+                  const day = String(date.getDate()).padStart(2, "0");
+                  const month = String(date.getMonth() + 1).padStart(2, "0");
+                  const year = date.getFullYear();
+                  return `${day}-${month}-${year}`;
+                };
+
+                return (
+                  <tr
+                    key={user.id}
+                    className={`border-t ${
+                      index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                    } hover:bg-gray-200`}
+                  >
+                    <td className="px-4 py-3 border-r w-[5%]">{index + 1}.</td>
+                    <td className="px-4 py-3 border-r w-[9%]">
+                      {user.invoiceInfo.invoiceNumber}
+                    </td>
+                    <td className="px-4 py-3 border-r w-[18%]">
+                      {user.customerInfo.customerName}
+                    </td>
+                    <td className="px-4 py-3 border-r w-[10%]">
+                      {user.customerInfo.customerPhone}
+                    </td>
+                    <td className="px-4 py-3 border-r w-[10%]">
+                      {formatDate(user.invoiceInfo.date)}
+                    </td>
+                    <td className="px-4 py-3 border-r w-[10%]">
+                      {user.invoiceInfo.expectedDate
+                        ? formatDate(user.invoiceInfo.expectedDate)
+                        : ""}
+                    </td>
+                    <td className="px-4 py-3 border-r text-right w-[8%]">
+                      {Math.round(
+                        user.amountInfo.amount +
+                          user.taxCalculatedInfo.cgst +
+                          user.taxCalculatedInfo.sgst
+                      )}
+                    </td>
+                    <td className="px-4 py-3 border-r text-right w-[8%]">
+                      {user.amountInfo.advance}
+                    </td>
+                    <td className="px-4 py-3 border-r text-right w-[10%]">
+                      {user.taxCalculatedInfo.balance}
+                    </td>
+                    <td className="px-4 py-3 border-r w-[10%]">
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                          user.amountInfo.amount - user.amountInfo.advance === 0
+                            ? "bg-green-100 text-green-700"
+                            : "bg-red-300 text-red-700"
+                        }`}
+                      >
+                        {user.taxCalculatedInfo.balance === 0 ? "Paid" : "Due"}
                       </span>
-                    )}
-                </th>
-              ))}
-            </tr>
-          </thead>
-
-          <tbody>
-            {filteredData.map((user, index) => {
-              const formatDate = (dateString) => {
-                const date = new Date(dateString);
-                const day = String(date.getDate()).padStart(2, "0");
-                const month = String(date.getMonth() + 1).padStart(2, "0");
-                const year = date.getFullYear();
-                return `${day}-${month}-${year}`;
-              };
-
-              return (
-                <tr
-                  key={user.id}
-                  className={`border-t ${
-                    index % 2 === 0 ? "bg-white" : "bg-gray-50"
-                  } hover:bg-gray-200`}
-                >
-                  <td className="px-4 py-3 border-r w-[5%]">{index + 1}.</td>
-                  <td className="px-4 py-3 border-r w-[9%]">
-                    {user.invoiceInfo.invoiceNumber}
-                  </td>
-                  <td className="px-4 py-3 border-r w-[18%]">
-                    {user.customerInfo.customerName}
-                  </td>
-                  <td className="px-4 py-3 border-r w-[10%]">
-                    {user.customerInfo.customerPhone}
-                  </td>
-                  <td className="px-4 py-3 border-r w-[10%]">
-                    {formatDate(user.invoiceInfo.date)}
-                  </td>
-                  <td className="px-4 py-3 border-r w-[10%]">
-                    {user.invoiceInfo.expectedDate
-                      ? formatDate(user.invoiceInfo.expectedDate)
-                      : ""}
-                  </td>
-                  <td className="px-4 py-3 border-r text-right w-[8%]">
-                    {Math.round(
-                      user.amountInfo.amount +
-                        user.taxCalculatedInfo.cgst +
-                        user.taxCalculatedInfo.sgst
-                    )}
-                  </td>
-                  <td className="px-4 py-3 border-r text-right w-[8%]">
-                    {user.amountInfo.advance}
-                  </td>
-                  <td className="px-4 py-3 border-r text-right w-[10%]">
-                    {user.taxCalculatedInfo.balance}
-                  </td>
-                  <td className="px-4 py-3 border-r w-[10%]">
-                    <span
-                      className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                        user.amountInfo.amount - user.amountInfo.advance === 0
-                          ? "bg-green-100 text-green-700"
-                          : "bg-red-300 text-red-700"
-                      }`}
-                    >
-                      {user.taxCalculatedInfo.balance === 0 ? "Paid" : "Due"}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 border-r w-[8%]">
-                    <button
-                      onClick={() => handleView(user.id)}
-                      className="text-blue-600 hover:text-blue-800 font-semibold text-sm"
-                    >
-                      View
-                    </button>
-                  </td>
-                  <td className="px-4 py-3 w-[8%]">
-                    <button
-                      onClick={() => handleDelete(user)}
-                      className="text-red-600 hover:text-red-800 font-semibold text-sm"
-                    >
-                      Delete
-                    </button>
+                    </td>
+                    <td className="px-4 py-3 border-r w-[8%]">
+                      <button
+                        onClick={() => handleView(user.id)}
+                        className="text-blue-600 hover:text-blue-800 font-semibold text-sm"
+                      >
+                        View
+                      </button>
+                    </td>
+                    <td className="px-4 py-3 w-[8%]">
+                      <button
+                        onClick={() => handleDelete(user)}
+                        className="text-red-600 hover:text-red-800 font-semibold text-sm"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+              {filteredData.length === 0 && (
+                <tr>
+                  <td
+                    colSpan="9"
+                    className="text-center px-4 py-6 text-gray-500"
+                  >
+                    No data available.
                   </td>
                 </tr>
-              );
-            })}
-            {filteredData.length === 0 && (
-              <tr>
-                <td colSpan="9" className="text-center px-4 py-6 text-gray-500">
-                  No data available.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+              )}
+            </tbody>
+          </table>
+        </div>
 
-      {loading && <Loader />}
-    </div>
+        {loading && <Loader />}
+      </div>
     </div>
   );
 };
