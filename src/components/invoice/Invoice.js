@@ -252,7 +252,7 @@ function Invoice() {
           </div>
         </div>
 
-        <div className="w-full md:w-8/12 mx-auto border-[1.7px] rounded-md m-2">
+        <div className="w-full md:w-8/12 mx-auto border-[1.7px] rounded-md m-2 mt-4">
           <div id="invoice" ref={printRef} className="p-8 m-4">
             <div className="flex justify-between">
               <div>

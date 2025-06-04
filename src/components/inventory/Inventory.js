@@ -224,7 +224,7 @@ function Inventory() {
                             <td className="px-4 py-3 border-r">
                               {post?.itemPrice}
                             </td>
-                            <td className="px-4 py-3 cursor-pointer">
+                            <td className="px-4 py-3 cursor-pointer border-r">
                               <button
                                 onClick={() => handleEdit(post, index)}
                                 className="text-blue-600 hover:text-red-800 font-semibold text-sm"

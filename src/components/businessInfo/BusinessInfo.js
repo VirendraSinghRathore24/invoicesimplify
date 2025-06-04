@@ -101,7 +101,7 @@ const BusinessInfo = () => {
                     {posts?.phoneSecondary}
                   </td>
                   <td className="px-4 py-3 border-r">{posts?.email}</td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3 border-r">
                     <button
                       onClick={() => navigate("/editbusinessinfo")}
                       className="text-blue-600 hover:text-red-800 font-semibold text-sm"

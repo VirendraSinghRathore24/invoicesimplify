@@ -77,8 +77,8 @@ const TaxInfo = () => {
                     <th className="px-4 py-3 border-r">GSTIN</th>
                     <th className="px-4 py-3 border-r">CGST %</th>
                     <th className="px-4 py-3 border-r">SGST %</th>
-                    <th className="px-4 py-3 border-r">Status</th>
-                    <th className="px-4 py-3">Actions</th>
+                    <th className="px-4 py-3 border-r">Edit</th>
+                    <th className="px-4 py-3">Delete</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -86,7 +86,7 @@ const TaxInfo = () => {
                     <td className="px-4 py-3 border-r">{posts?.gstNumber}</td>
                     <td className="px-4 py-3 border-r">{posts?.cgstAmount}</td>
                     <td className="px-4 py-3 border-r">{posts?.sgstAmount}</td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3 border-r">
                       <button
                         onClick={() => navigate("/edittaxinfo")}
                         className="text-blue-600 hover:text-red-800 font-semibold text-sm"
