@@ -439,14 +439,22 @@ function Invoice() {
                   <div>{additionalInfo?.note4}</div>
                 </div>
                 <div className="text-sm text-blue-700 font-bold">
-                  <div className="">NO CHANGE</div>
-                  <div>NO REFUND</div>
-                  <div>NO CANCEL</div>
+                  <div>{additionalInfo?.middlenote1}</div>
+                  <div>{additionalInfo?.middlenote2}</div>
+                  <div>{additionalInfo?.middlenote3}</div>
+                  <div>{additionalInfo?.middlenote4}</div>
+                </div>
+                <div className="text-sm text-blue-700 font-bold">
+                  <div>{additionalInfo?.rnote1}</div>
+                  <div>{additionalInfo?.rnote2}</div>
+                  <div>{additionalInfo?.rnote3}</div>
+                  <div>{additionalInfo?.rnote4}</div>
                   <div className="text-sm text-black mt-4">
                     For: {businessInfo?.name}
                   </div>
                 </div>
               </div>
+
               {invoiceInfo?.expectedDate && (
                 <div className="text-sm font-semibold text-blue-700 text-center">
                   Expected Delivery Date : {expectedDate}
@@ -454,6 +462,9 @@ function Invoice() {
               )}
 
               <div className="mt-2"></div>
+              <div className="text-sm text-gray-700 font-bold">
+                <div>{additionalInfo?.additionaldesc}</div>
+              </div>
             </div>
           </div>
         </div>

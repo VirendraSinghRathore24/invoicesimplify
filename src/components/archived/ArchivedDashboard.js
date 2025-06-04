@@ -207,7 +207,7 @@ const ArchivedDashboard = () => {
   };
 
   const sortedData = React.useMemo(() => {
-    let sortableData = [...data];
+    let sortableData = [...filteredData];
 
     if (sortConfig.key === "invoice") {
       sortableData.sort(sortInvoiceNumber);
