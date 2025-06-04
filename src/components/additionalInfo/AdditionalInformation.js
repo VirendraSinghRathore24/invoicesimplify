@@ -100,10 +100,18 @@ const AdditionalInformation = () => {
                 </thead>
                 <tbody>
                   <tr className="border-t bg-white">
-                    <td className="px-4 py-3 border-r">{posts?.note1}</td>
-                    <td className="px-4 py-3 border-r">{posts?.note2}</td>
-                    <td className="px-4 py-3 border-r">{posts?.note3}</td>
-                    <td className="px-4 py-3 border-r">{posts?.note4}</td>
+                    <td className="px-4 py-3 border-r w-[24%]">
+                      {posts?.note1}
+                    </td>
+                    <td className="px-4 py-3 border-r w-[24%]">
+                      {posts?.note2}
+                    </td>
+                    <td className="px-4 py-3 border-r w-[24%]">
+                      {posts?.note3}
+                    </td>
+                    <td className="px-4 py-3 border-r w-[24%]">
+                      {posts?.note4}
+                    </td>
                     <td className="px-4 py-3">
                       <button
                         onClick={() => navigate("/editadditionalinfo")}
@@ -132,10 +140,18 @@ const AdditionalInformation = () => {
                 </thead>
                 <tbody>
                   <tr className="border-t bg-white">
-                    <td className="px-4 py-3 border-r">{posts?.middlenote1}</td>
-                    <td className="px-4 py-3 border-r">{posts?.middlenote2}</td>
-                    <td className="px-4 py-3 border-r">{posts?.middlenote3}</td>
-                    <td className="px-4 py-3 border-r">{posts?.middlenote4}</td>
+                    <td className="px-4 py-3 border-r w-[24%]">
+                      {posts?.middlenote1}
+                    </td>
+                    <td className="px-4 py-3 border-r w-[24%]">
+                      {posts?.middlenote2}
+                    </td>
+                    <td className="px-4 py-3 border-r w-[24%]">
+                      {posts?.middlenote3}
+                    </td>
+                    <td className="px-4 py-3 border-r w-[24%]">
+                      {posts?.middlenote4}
+                    </td>
                     <td className="px-4 py-3">
                       <button
                         onClick={() => navigate("/editadditionalinfo")}
@@ -164,10 +180,18 @@ const AdditionalInformation = () => {
                 </thead>
                 <tbody>
                   <tr className="border-t bg-white">
-                    <td className="px-4 py-3 border-r">{posts?.rnote1}</td>
-                    <td className="px-4 py-3 border-r">{posts?.rnote2}</td>
-                    <td className="px-4 py-3 border-r">{posts?.rnote3}</td>
-                    <td className="px-4 py-3 border-r">{posts?.rnote4}</td>
+                    <td className="px-4 py-3 border-r w-[24%]">
+                      {posts?.rnote1}
+                    </td>
+                    <td className="px-4 py-3 border-r w-[24%]">
+                      {posts?.rnote2}
+                    </td>
+                    <td className="px-4 py-3 border-r w-[24%]">
+                      {posts?.rnote3}
+                    </td>
+                    <td className="px-4 py-3 border-r w-[24%]">
+                      {posts?.rnote4}
+                    </td>
                     <td className="px-4 py-3">
                       <button
                         onClick={() => navigate("/editadditionalinfo")}
@@ -195,7 +219,7 @@ const AdditionalInformation = () => {
                 </thead>
                 <tbody>
                   <tr className="border-t bg-white">
-                    <td className="px-4 py-3 border-r">
+                    <td className="px-4 py-3 border-r w-[96%]">
                       {posts?.additionaldesc}
                     </td>
                     <td className="px-4 py-3">
