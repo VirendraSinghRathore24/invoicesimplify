@@ -206,7 +206,7 @@ function Invoice() {
       <Header />
 
       <div className="my-5 p-6">
-        <div className="flex justify-between w-8/12 mx-auto">
+        <div className="flex justify-between w-8/12 mx-auto ">
           <div className="flex gap-x-2">
             <button
               onClick={() => navigate("/createinvoice")}

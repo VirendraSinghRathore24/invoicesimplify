@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { db } from '../../config/firebase';
+import Header from '../Header';
 
 function EditTaxInfo() {
   const location = useLocation();  
@@ -75,7 +76,10 @@ function EditTaxInfo() {
         },[]);
 
     return (
-        <div>
+      <div>
+        <Header/>
+     
+        <div className='p-6'>
           <div className="flex flex-col w-full mx-auto font-bold text-2xl bg-gray-200 py-4 px-2 rounded-md">Edit Tax & GST Information</div>
        
         <div className='flex flex-col w-5/12 m-auto p-4 mt-10 shadow-lg border-2 p-5 bg-white gap-y-4 rounded-md'>
@@ -152,7 +156,7 @@ function EditTaxInfo() {
             </form>
         </div>
         </div>
-        
+        </div>
     )
 }
 

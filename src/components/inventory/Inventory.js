@@ -6,6 +6,7 @@ import AddItem from "./AddItem";
 import { Edit } from "lucide-react";
 import EditItem from "./EditItem";
 import Header from "../Header";
+import Loader from "../Loader";
 
 function Inventory() {
   const location = useLocation();
@@ -14,6 +15,9 @@ function Inventory() {
   const [posts, setPosts] = useState([]);
   const [itemAdded, setItemAdded] = useState(false);
   const [editPost, setEditPost] = useState(null);
+  const [filteredData, setFilteredData] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
   const inventoryInfo_CollectionRef = collection(db, "Inventory_Info");
@@ -73,6 +77,7 @@ function Inventory() {
   };
 
   const checkIfListExists = async () => {
+    setLoading(true);
     const data = await getDocs(inventoryInfo_CollectionRef);
     const filteredData = data.docs.map((doc) => ({
       ...doc.data(),
@@ -92,12 +97,39 @@ function Inventory() {
     if (existingItems.length > 0) {
       setShowList(true);
       setPosts(inventoryInfo.inventory);
+      setFilteredData(inventoryInfo.inventory);
     }
+    setLoading(false);
   };
 
-  const handleDelete = async(post) => {
-    // TODO - it is under array so be carefull while deleting
-  }
+  const handleDelete = async (post) => {
+    const res = window.confirm("Are you sure you want to delete this item?");
+    if (!res) return;
+
+    const data = await getDocs(inventoryInfo_CollectionRef);
+    const filteredData = data.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+
+    const loggedInUser = localStorage.getItem("user");
+    const inventoryInfo = filteredData.filter(
+      (x) => x.loggedInUser === loggedInUser
+    )[0];
+
+    const existingItems = inventoryInfo.inventory;
+    const updatedItems = existingItems.filter(
+      (item) => item.itemName !== post.itemName
+    );
+
+    const codeDoc = doc(db, "Inventory_Info", inventoryInfo.id);
+    await updateDoc(codeDoc, {
+      inventory: updatedItems,
+    });
+
+    setPosts(updatedItems);
+    setFilteredData(updatedItems);
+  };
 
   const handleEdit = (post, index) => {
     post.index = index;
@@ -110,6 +142,16 @@ function Inventory() {
     if (!user || user === "undefined" || user === "null") {
       navigate("/login");
     }
+  };
+
+  const handleSearch = (e) => {
+    const val = e.target.value;
+    setSearchTerm(val);
+
+    const result = posts.filter((x) =>
+      x.itemName.toLowerCase().includes(val.toLowerCase())
+    );
+    setFilteredData(result);
   };
 
   useEffect(() => {
@@ -147,6 +189,9 @@ function Inventory() {
                   <input
                     type="text"
                     placeholder="Search..."
+                    autoFocus
+                    value={searchTerm}
+                    onChange={handleSearch}
                     className="p-2 border border-gray-300 rounded-md mb-4 w-full"
                   />
                 </div>
@@ -161,9 +206,9 @@ function Inventory() {
                     </tr>
                   </thead>
                   <tbody>
-                    {posts &&
-                      posts.length > 0 &&
-                      posts.map((post, index) => (
+                    {filteredData &&
+                      filteredData.length > 0 &&
+                      filteredData.map((post, index) => (
                         <tr
                           key={index}
                           className={`border-t ${
@@ -186,12 +231,25 @@ function Inventory() {
                             </button>
                           </td>
                           <td className="px-4 py-3 cursor-pointer">
-                            <button onClick={() => handleDelete(post)} className="text-red-600 hover:text-red-800 font-semibold text-sm">
+                            <button
+                              onClick={() => handleDelete(post)}
+                              className="text-red-600 hover:text-red-800 font-semibold text-sm"
+                            >
                               Delete
                             </button>
                           </td>
                         </tr>
                       ))}
+                    {filteredData.length === 0 && (
+                      <tr>
+                        <td
+                          colSpan="9"
+                          className="text-center px-4 py-6 text-gray-500"
+                        >
+                          No data available.
+                        </td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -221,6 +279,7 @@ function Inventory() {
           )}
         </div>
       </div>
+      {loading && <Loader/>}
     </div>
   );
 }

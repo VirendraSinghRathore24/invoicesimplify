@@ -384,6 +384,7 @@ const Dashboard = () => {
           <input
             type="text"
             placeholder="Search..."
+            autoFocus
             value={searchTerm}
             onChange={handleSearch}
             className="p-2 border border-gray-300 rounded-md mb-4 w-full"

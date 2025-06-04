@@ -5,12 +5,14 @@ import { X } from "lucide-react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import { useNavigate } from "react-router-dom";
+import Loader from "../Loader";
 
 
 const InventoryModal = ({ handleCloseItem, setItem }) => {
   const [posts, setPosts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredData, setFilteredData] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -23,6 +25,7 @@ const InventoryModal = ({ handleCloseItem, setItem }) => {
 
   const inventoryInfo_CollectionRef = collection(db, "Inventory_Info");
   const getInventoryList = async() => {
+    setLoading(true);
     const data = await getDocs(inventoryInfo_CollectionRef);
         const filteredData = data.docs.map((doc) => ({
           ...doc.data(),
@@ -38,6 +41,7 @@ const InventoryModal = ({ handleCloseItem, setItem }) => {
         const existingItems = inventoryInfo.inventory.sort((a, b) => a.itemName.localeCompare(b.itemName));
         setPosts(existingItems);
         setFilteredData(existingItems);
+        setLoading(false);
   }
 
   const handleLogin = () => {
@@ -95,6 +99,7 @@ const InventoryModal = ({ handleCloseItem, setItem }) => {
         <input
           type="text"
           placeholder="Search..."
+          autoFocus
           value={searchTerm}
           onChange={(e) => handleSearch(e)}
           className="p-2 border border-gray-300 rounded-md mb-4 w-full"
@@ -133,18 +138,19 @@ const InventoryModal = ({ handleCloseItem, setItem }) => {
               <td className="px-4 py-3 border-r">{post.itemPrice}</td>
             </tr>
           ))}
-          {/* {sortedData.length === 0 && (
+          {filteredData.length === 0 && (
             <tr>
               <td colSpan="9" className="text-center px-4 py-6 text-gray-500">
                 No data available.
               </td>
             </tr>
-          )} */}
+          )}
         </tbody>
       </table>
       </div>
     </div>
       </div>
+      {loading && <Loader/>}
     </div>
   );
 };
