@@ -4,6 +4,7 @@ import { FaRegEdit } from "react-icons/fa";
 import { BsWhatsapp } from "react-icons/bs";
 import { Printer } from "lucide-react";
 import { Download } from "lucide-react";
+import axios from "axios";
 
 import {
   addDoc,
@@ -97,6 +98,14 @@ function Invoice() {
     pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
     pdf.save(`${customerInfo?.customerName + "_invoice"}.pdf`);
 
+    const linkStr = generateBase62String();
+    await addInvoiceDataToDB(linkStr);
+    toast("Invoice downloaded successfully!", {
+      position: "top-center",
+    });
+  };
+
+  const addInvoiceDataToDB = async (linkStr) => {
     await addDoc(invoiceInfo_CollectionRef, {
       invoiceInfo,
       amountInfo,
@@ -109,11 +118,127 @@ function Invoice() {
       loggedInUser,
     });
 
-    clearLocalStorage();
-    toast("Invoice downloaded successfully!", {
-      position: "top-center",
+    const invoiceInfo_CollectionRef1 = collection(db, "Invoice_LinkInfo");
+    // for link uses
+    await addDoc(invoiceInfo_CollectionRef1, {
+      invoiceInfo,
+      amountInfo,
+      customerInfo,
+      rows,
+      businessInfo,
+      taxInfo,
+      additionalInfo,
+      taxCalculatedInfo,
+      linkStr,
     });
+
+    clearLocalStorage();
     await updateInvoiceNumber();
+  };
+
+  function generateBase62String(length = 35) {
+    const chars =
+      "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    let result = "";
+    const array = new Uint8Array(length);
+    window.crypto.getRandomValues(array);
+
+    for (let i = 0; i < length; i++) {
+      result += chars[array[i] % chars.length];
+    }
+
+    return result;
+  }
+
+  const getCurrentDate = () => {
+    const now = new Date();
+
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+    const hours = String(now.getHours()).padStart(2, "0");
+    const minutes = String(now.getMinutes()).padStart(2, "0");
+
+    const formatted = `${day}/${month}/${year}  ${hours}:${minutes}`;
+    return formatted;
+  };
+
+  const handleWhatsApp = async () => {
+    // 1. Generate random link - 10 char long link - whatsapp view
+    // 2. Store invoice data along with the link
+    // 3. Send Whatsapp meesage to customer
+    // 4. When customer click on invoice button -
+    // - it will show invoice and user can download if he want
+
+    //await fetch("http://localhost:5001/invoice");
+
+    try {
+      // Render the HTML element to canvas
+      // const element = printRef.current;
+      // const canvas = await html2canvas(element, { scale: 2 });
+      // const imgData = canvas.toDataURL("image/png");
+
+      // // Generate PDF
+      // const pdf = new jsPDF("p", "mm", "a4");
+      // const pdfWidth = pdf.internal.pageSize.getWidth();
+      // const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+      // pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+
+      // // Convert PDF to Blob
+      // const pdfBlob = pdf.output("blob");
+
+      // // Prepare form data for Cloudinary upload
+      // const formData = new FormData();
+      // formData.append("file", pdfBlob);
+      // formData.append("upload_preset", "invoice");
+
+      // //"https://res.cloudinary.com/dixqxdivr/image/upload/v1749145006/b6pomfjrylwxvog1e4bo.pdf"
+
+      // // Upload to Cloudinary
+      // const cloudName = "dixqxdivr";
+      // const url = `https://api.cloudinary.com/v1_1/${cloudName}/upload`;
+
+      // const response = await axios.post(url, formData, {
+      //   headers: { "Content-Type": "multipart/form-data" },
+      // });
+
+      // console.log("Cloudinary upload response:", response.data);
+      // alert("PDF uploaded! URL:\n" + response.data.secure_url);
+
+      const linkStr = generateBase62String();
+      await addInvoiceDataToDB(linkStr);
+
+      const response = await fetch("http://localhost:5001/send-message", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: customerInfo.customerName,
+          phone: customerInfo.customerPhone,
+          businessname: businessInfo.businessname,
+          amount: amountInfo?.amount,
+          urllink:
+            "https://www.invoicesimplify.netlify.com/customerinvoice/" +
+            linkStr,
+          date: getCurrentDate(),
+        }),
+      });
+
+      const result = await response.json();
+
+      //const res = await fetch("http://localhost:5001/send-message");
+      //const data = await res.json();
+      if (result.success) {
+        alert("Message sent successfully!");
+      } else {
+        alert("Failed to send message.");
+      }
+    } catch (error) {
+      console.error("Error generating/uploading PDF", error);
+      alert("Failed to generate or upload PDF.");
+    }
   };
 
   const clearLocalStorage = () => {
@@ -243,7 +368,10 @@ function Invoice() {
           </div>
 
           <div>
-            <button className="flex items-center bg-[#E5E7EB]  font-bold px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300">
+            <button
+              onClick={() => handleWhatsApp()}
+              className="flex items-center bg-[#E5E7EB]  font-bold px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
+            >
               <span className="mr-2">
                 <BsWhatsapp size={22} />
               </span>
