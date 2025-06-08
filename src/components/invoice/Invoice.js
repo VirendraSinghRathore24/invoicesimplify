@@ -220,8 +220,7 @@ function Invoice() {
           businessname: businessInfo.businessname,
           amount: amountInfo?.amount,
           urllink:
-            "https://www.invoicesimplify.netlify.com/customerinvoice/" +
-            linkStr,
+            "http://www.invoicesimplify.netlify.com/customerinvoice/" + linkStr,
           date: getCurrentDate(),
         }),
       });
