@@ -133,7 +133,7 @@ function ViewInvoice() {
             </button>
           </div>
 
-          <div>
+          {/* <div>
             <button
               onClick={() => handleDownload()}
               className="flex items-center bg-[#E5E7EB]  font-bold px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
@@ -143,7 +143,7 @@ function ViewInvoice() {
               </span>
               Download
             </button>
-          </div>
+          </div> */}
 
           <div>
             <button className="flex items-center bg-[#E5E7EB]  font-bold px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300">

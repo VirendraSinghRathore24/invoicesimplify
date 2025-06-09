@@ -281,6 +281,20 @@ function Invoice() {
   const handlePrint = useReactToPrint({
     documentTitle: "Invoice",
     contentRef: printRef,
+    onAfterPrint: async () => {
+      try {
+        const linkStr = generateBase62String();
+        await addInvoiceDataToDB(linkStr);
+        toast("Invoice printed successfully!", {
+          position: "top-center",
+        });
+      } catch (error) {
+        console.error("Error adding invoice data to the database:", error);
+        toast("Failed to add invoice data to the database.", {
+          position: "top-center",
+        });
+      }
+    },
   });
 
   useEffect(() => {
@@ -354,7 +368,7 @@ function Invoice() {
             </button>
           </div>
 
-          <div>
+          {/* <div>
             <button
               onClick={() => handleDownload()}
               className="flex items-center bg-[#E5E7EB]  font-bold px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
@@ -364,7 +378,7 @@ function Invoice() {
               </span>
               Download
             </button>
-          </div>
+          </div> */}
 
           <div>
             <button

@@ -11,6 +11,8 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import Header from "../Header";
 import SignModal from "../SignModal";
+import ConfirmModal from "../confirmModal/ConfirmModal";
+import AlertModal from "../confirmModal/AlertModal";
 //import CurrencyFlag from "react-currency-flags";
 //import "./Sign.css";
 //import { Textarea } from "@headlessui/react";
@@ -190,22 +192,24 @@ const AddInvoice = () => {
 
   const [taxInfo, setTaxInfo] = useState([]);
 
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [showConfirm1, setShowConfirm1] = useState(false);
+  const [showConfirm2, setShowConfirm2] = useState(false);
+  const [showConfirm3, setShowConfirm3] = useState(false);
+
   const handleCreateInvoice = async () => {
     if (!customerName?.trim()) {
-      alert("Customer name is required.");
-      document.querySelector('input[name="custname"]').focus();
+      setShowConfirm(true);
       return;
     }
 
     if (!customerPhone?.trim()) {
-      alert("Customer phone is required.");
-      document.querySelector('input[name="custphone"]').focus();
+      setShowConfirm1(true);
       return;
     }
 
     if (customerPhone?.trim().length !== 10) {
-      alert("Customer phone number is not valid.");
-      document.querySelector('input[name="custphone"]').focus();
+      setShowConfirm2(true);
       return;
     }
 
@@ -214,8 +218,7 @@ const AddInvoice = () => {
     }
 
     if (expectedDate && new Date(expectedDate) < new Date(date)) {
-      alert("Expected delivery date cannot be before the invoice date.");
-      document.querySelector('input[name="expecteddate"]').focus();
+      setShowConfirm3(true);
       return;
     }
 
@@ -1126,6 +1129,42 @@ const AddInvoice = () => {
             handleCloseSign={handleCloseSign}
           ></SignModal>
         )}
+        <AlertModal
+          isOpen={showConfirm}
+          onClose={() => {
+            setShowConfirm(false);
+            document.querySelector('input[name="custname"]').focus();
+          }}
+          title="Required"
+          message="Customer Name is required."
+        />
+        <AlertModal
+          isOpen={showConfirm1}
+          onClose={() => {
+            setShowConfirm1(false);
+            document.querySelector('input[name="custphone"]').focus();
+          }}
+          title="Required"
+          message="Customer Phone number is required."
+        />
+        <AlertModal
+          isOpen={showConfirm2}
+          onClose={() => {
+            setShowConfirm2(false);
+            document.querySelector('input[name="custphone"]').focus();
+          }}
+          title="Not Valid"
+          message="Customer phone number is not valid."
+        />
+        <AlertModal
+          isOpen={showConfirm3}
+          onClose={() => {
+            setShowConfirm3(false);
+            document.querySelector('input[name="expecteddate"]').focus();
+          }}
+          title="Not Allowed"
+          message="Expected delivery date cannot be before the invoice date."
+        />
       </div>
     </div>
   );

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
 import { db } from "../config/firebase";
+import Loader from "./Loader";
 
 const SettlePopup = ({ handleCloseSettlePopup }) => {
   const [amount, setAmount] = useState(0);
@@ -10,6 +11,7 @@ const SettlePopup = ({ handleCloseSettlePopup }) => {
   const [docId, setDocId] = useState("");
   const [invoiceNumber, setInvoiceNumber] = useState();
   const [payment, setPayment] = useState();
+  const [loading, setLoading] = useState(false);
 
   const handleSettleChange = (e) => {
     const val = e.target.value;
@@ -17,18 +19,28 @@ const SettlePopup = ({ handleCloseSettlePopup }) => {
   };
 
   const handleSettlePayment = async (e) => {
-    e.preventDefault();
+    try {
+      setLoading(true);
 
-    if (parseInt(payment) > parseInt(balance)) {
-      alert("Settle amount can not be more than remaining balance !!!");
-      return;
+      e.preventDefault();
+
+      if (parseInt(payment) > parseInt(balance)) {
+        alert("Settle amount can not be more than remaining balance !!!");
+        document.querySelector('input[name="payment"]').focus();
+        setLoading(false);
+        return;
+      }
+
+      await updateInvoiceInfo();
+      await updateInvoiceLinkInfo();
+
+      // Close popup
+      handleCloseSettlePopup();
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
     }
-
-    await updateInvoiceInfo();
-    await updateInvoiceLinkInfo();
-
-    // Close popup
-    handleCloseSettlePopup();
   };
 
   const updateInvoiceInfo = async () => {
@@ -87,7 +99,7 @@ const SettlePopup = ({ handleCloseSettlePopup }) => {
         </div>
         <hr />
         <form onSubmit={handleSettlePayment}>
-          <div className="flex justify-end font-bold text-lg">
+          <div className="flex justify-end font-bold text-lg p-2">
             Invoice : {invoiceNumber}
           </div>
           <div className="flex flex-col gap-y-4 p-4">
@@ -136,6 +148,7 @@ const SettlePopup = ({ handleCloseSettlePopup }) => {
           </div>
         </form>
       </div>
+      {loading && <Loader />}
     </div>
   );
 };

@@ -109,7 +109,7 @@ function ViewInvoiceByCustomer() {
   return (
     <div>
       <div className="my-5 p-6">
-        <div className="flex justify-between w-8/12 mx-auto">
+        {/* <div className="flex justify-between w-8/12 mx-auto">
           <div>
             <button
               onClick={handlePrint}
@@ -133,7 +133,7 @@ function ViewInvoiceByCustomer() {
               Download
             </button>
           </div>
-        </div>
+        </div> */}
         <div
           id="invoice"
           className="w-full md:w-8/12 mx-auto  border-[1.7px] mt-4 rounded-md p-4 "

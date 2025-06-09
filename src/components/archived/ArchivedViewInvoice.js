@@ -115,17 +115,6 @@ function ArchivedViewInvoice() {
 
       <div className="my-5 p-6">
         <div className="flex justify-between w-8/12 mx-auto">
-          {/* <div className="flex gap-x-2">
-          <button
-             onClick={() => navigate('/createinvoice')}
-            className="flex items-center bg-[#E5E7EB] cursor-pointer font-bold px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
-          >
-            <span className="mr-2">
-              <FaRegEdit size={22} />
-            </span>
-            Edit
-          </button>
-        </div> */}
           <div>
             <button className="flex items-center bg-[#E5E7EB]  font-bold px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300">
               <span className="mr-2">
@@ -135,7 +124,7 @@ function ArchivedViewInvoice() {
             </button>
           </div>
 
-          <div>
+          {/* <div>
             <button
               onClick={() => handleDownload()}
               className="flex items-center bg-[#E5E7EB]  font-bold px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
@@ -145,7 +134,7 @@ function ArchivedViewInvoice() {
               </span>
               Download
             </button>
-          </div>
+          </div> */}
 
           <div>
             <button className="flex items-center bg-[#E5E7EB]  font-bold px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300">
