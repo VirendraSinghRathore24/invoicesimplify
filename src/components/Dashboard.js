@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import Loader from "./Loader";
 import { SquareArrowOutUpRight } from "lucide-react";
 import Header from "./Header";
+import SettlePopup from "./SettlePopup";
 
 const Dashboard = () => {
   const [data, setData] = useState([]);
@@ -25,6 +26,12 @@ const Dashboard = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
+
+  const [openSettlePopup, setOpenSettlePopup] = useState(false);
+  const handleCloseSettlePopup = () => {
+    setOpenSettlePopup(false);
+    getInvoiceInfo();
+  };
 
   const handleDelete = async (user) => {
     if (window.confirm("Are you sure you want to delete this entry?")) {
@@ -52,6 +59,18 @@ const Dashboard = () => {
       archivedAt: new Date().toISOString(),
     };
     await addDoc(archiveCollectionRef, archivedInvoice);
+  };
+
+  const handleSettle = (post) => {
+    const settleInfo = {
+      amount: post.amountInfo.amount,
+      advance: post.amountInfo.advance,
+      balance: post.taxCalculatedInfo.balance,
+      docid: post.id,
+    };
+
+    localStorage.setItem("settleInfo", JSON.stringify(settleInfo));
+    setOpenSettlePopup(true);
   };
 
   const handleView = (id) => {
@@ -226,9 +245,9 @@ const Dashboard = () => {
     return 0;
   };
 
-  const sortStatus = (a, b) => {
-    const statusA = a.taxCalculatedInfo.balance === 0 ? "Paid" : "Due";
-    const statusB = b.taxCalculatedInfo.balance === 0 ? "Paid" : "Due";
+  const sortSettle = (a, b) => {
+    const statusA = a.taxCalculatedInfo.balance > 0 ? "" : "Settle";
+    const statusB = b.taxCalculatedInfo.balance > 0 ? "" : "Settle";
     if (statusA < statusB) {
       return sortConfig.direction === "asc" ? -1 : 1;
     }
@@ -265,8 +284,8 @@ const Dashboard = () => {
     } else if (sortConfig.key === "balance") {
       sortableData.sort(sortBalance);
       setFilteredData(sortableData);
-    } else if (sortConfig.key === "status") {
-      sortableData.sort(sortStatus);
+    } else if (sortConfig.key === "settle") {
+      sortableData.sort(sortSettle);
       setFilteredData(sortableData);
     }
     return filteredData;
@@ -329,7 +348,6 @@ const Dashboard = () => {
 
   useEffect(() => {
     handleLogin();
-
     getInvoiceInfo();
   }, []);
 
@@ -402,7 +420,7 @@ const Dashboard = () => {
                   "Amount",
                   "Paid",
                   "Balance",
-                  "Status",
+                  "Settle",
                   "View",
                   "Delete",
                 ].map((header) => (
@@ -469,10 +487,17 @@ const Dashboard = () => {
                     <td className="px-4 py-3 border-r text-right w-[8%]">
                       {user.amountInfo.advance}
                     </td>
-                    <td className="px-4 py-3 border-r text-right w-[10%]">
-                      {user.taxCalculatedInfo.balance}
-                    </td>
-                    <td className="px-4 py-3 border-r w-[10%]">
+                    {user.taxCalculatedInfo.balance === 0 ? (
+                      <td className="px-4 py-3 text-green-600 border-r text-right w-[10%]">
+                        Fully Paid
+                      </td>
+                    ) : (
+                      <td className="px-4 py-3 border-r text-right w-[10%]">
+                        {user.taxCalculatedInfo.balance}
+                      </td>
+                    )}
+
+                    {/* <td className="px-4 py-3 border-r w-[10%]">
                       <span
                         className={`px-2 py-1 rounded-full text-xs font-semibold ${
                           user.amountInfo.amount - user.amountInfo.advance === 0
@@ -482,7 +507,24 @@ const Dashboard = () => {
                       >
                         {user.taxCalculatedInfo.balance === 0 ? "Paid" : "Due"}
                       </span>
-                    </td>
+                    </td> */}
+                    {user.taxCalculatedInfo.balance > 0 ? (
+                      <td className="px-4 py-3 border-r w-[8%] text-center">
+                        <button
+                          onClick={() => handleSettle(user)}
+                          className="text-blue-600 hover:text-blue-800 font-semibold text-sm"
+                        >
+                          Settle
+                        </button>
+                      </td>
+                    ) : (
+                      <td className="px-4 py-3 border-r w-[10%] text-center">
+                        {user.invoiceInfo.settledDate
+                          ? formatDate(user.invoiceInfo.settledDate)
+                          : ""}
+                      </td>
+                    )}
+
                     <td className="px-4 py-3 border-r w-[8%]">
                       <button
                         onClick={() => handleView(user.id)}
@@ -515,7 +557,11 @@ const Dashboard = () => {
             </tbody>
           </table>
         </div>
-
+        {openSettlePopup && (
+          <SettlePopup
+            handleCloseSettlePopup={handleCloseSettlePopup}
+          ></SettlePopup>
+        )}
         {loading && <Loader />}
       </div>
     </div>
