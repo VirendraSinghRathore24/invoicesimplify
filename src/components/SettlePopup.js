@@ -87,6 +87,9 @@ const SettlePopup = ({ handleCloseSettlePopup }) => {
         </div>
         <hr />
         <form onSubmit={handleSettlePayment}>
+          <div className="flex justify-end font-bold text-lg">
+            Invoice : {invoiceNumber}
+          </div>
           <div className="flex flex-col gap-y-4 p-4">
             <div className="flex justify-evenly">
               <div>Amount : </div>
