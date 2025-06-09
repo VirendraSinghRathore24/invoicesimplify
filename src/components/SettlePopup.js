@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { X } from "lucide-react";
-import { doc, updateDoc } from "firebase/firestore";
+import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
 import { db } from "../config/firebase";
 
 const SettlePopup = ({ handleCloseSettlePopup }) => {
@@ -8,6 +8,7 @@ const SettlePopup = ({ handleCloseSettlePopup }) => {
   const [advance, setAdvance] = useState(0);
   const [balance, setBalance] = useState(0);
   const [docId, setDocId] = useState("");
+  const [invoiceNumber, setInvoiceNumber] = useState();
   const [payment, setPayment] = useState();
 
   const handleSettleChange = (e) => {
@@ -24,7 +25,7 @@ const SettlePopup = ({ handleCloseSettlePopup }) => {
     }
 
     await updateInvoiceInfo();
-    // await updateInvoiceLinkInfo();
+    await updateInvoiceLinkInfo();
 
     // Close popup
     handleCloseSettlePopup();
@@ -44,11 +45,22 @@ const SettlePopup = ({ handleCloseSettlePopup }) => {
   };
 
   const updateInvoiceLinkInfo = async () => {
+    const invoiceLinkInfo_CollectionRef = collection(db, "Invoice_LinkInfo");
+    const data = await getDocs(invoiceLinkInfo_CollectionRef);
+    const filteredData = data.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+
+    const linkInfo = filteredData.filter(
+      (x) => x.invoiceInfo.invoiceNumber === invoiceNumber
+    )[0];
+
     // Update advance and balance in the database
     const updatedAdvance = parseInt(advance) + parseInt(payment);
     const updatedBalance = parseInt(balance) - parseInt(payment);
 
-    const codeDoc = doc(db, "Invoice_LinkInfo", docId);
+    const codeDoc = doc(db, "Invoice_LinkInfo", linkInfo.id);
     await updateDoc(codeDoc, {
       "amountInfo.advance": updatedAdvance,
       "taxCalculatedInfo.balance": updatedBalance,
@@ -61,6 +73,7 @@ const SettlePopup = ({ handleCloseSettlePopup }) => {
     setBalance(settleInfo.balance);
     setAdvance(settleInfo.advance);
     setDocId(settleInfo.docid);
+    setInvoiceNumber(settleInfo.invoicenumber);
   }, []);
 
   return (

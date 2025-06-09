@@ -67,6 +67,7 @@ const Dashboard = () => {
       advance: post.amountInfo.advance,
       balance: post.taxCalculatedInfo.balance,
       docid: post.id,
+      invoicenumber: post.invoiceInfo.invoiceNumber,
     };
 
     localStorage.setItem("settleInfo", JSON.stringify(settleInfo));
