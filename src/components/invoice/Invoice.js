@@ -205,6 +205,13 @@ function Invoice() {
 
       // console.log("Cloudinary upload response:", response.data);
       // alert("PDF uploaded! URL:\n" + response.data.secure_url);
+      const alreadyPrintedOnce = await checkIfInvoiceAlreadyPrintedOnce();
+      if (alreadyPrintedOnce) {
+        toast("Invoice sent successfully!", {
+          position: "top-center",
+        });
+        return;
+      }
 
       const linkStr = generateBase62String();
       await addInvoiceDataToDB(linkStr);
