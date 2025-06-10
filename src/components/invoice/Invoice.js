@@ -283,6 +283,14 @@ function Invoice() {
     contentRef: printRef,
     onAfterPrint: async () => {
       try {
+        const alreadyPrintedOnce = await checkIfInvoiceAlreadyPrintedOnce();
+        if (alreadyPrintedOnce) {
+          toast("Invoice printed successfully!", {
+            position: "top-center",
+          });
+          return;
+        }
+
         const linkStr = generateBase62String();
         await addInvoiceDataToDB(linkStr);
         toast("Invoice printed successfully!", {
@@ -296,6 +304,28 @@ function Invoice() {
       }
     },
   });
+
+  const checkIfInvoiceAlreadyPrintedOnce = async () => {
+    const data = await getDocs(invoiceInfo_CollectionRef);
+    const filteredData = data.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+
+    if (!filteredData) return false;
+
+    const allBrandsInfo = filteredData.filter(
+      (x) => x.loggedInUser === loggedInUser
+    );
+
+    if (!allBrandsInfo) return false;
+
+    const invoiceData = allBrandsInfo.filter(
+      (x) => x.invoiceInfo.invoiceNumber === parseInt(invoiceInfo.invoiceNumber)
+    )[0];
+
+    return invoiceData !== undefined;
+  };
 
   useEffect(() => {
     let info1 = localStorage.getItem("businessInfo");
