@@ -28,10 +28,13 @@ import Upgrade from "./components/Upgrade";
 import Success from "./components/Success";
 import PaymentHistory from "./components/PaymentHistory";
 import ViewInvoiceByCustomer from "./components/invoice/ViewInvoiceByCustomer";
+import ForgotPassword from "./components/login/ForgotPassword";
 
 function App() {
   const location = useLocation();
-  const showSidebar = !["/", "/login", "/signup"].includes(location.pathname);
+  const showSidebar = !["/", "/login", "/signup", "/forgotpassword"].includes(
+    location.pathname
+  );
 
   const showSidebar1 = !location.pathname.includes("/customerinvoice");
 
@@ -46,6 +49,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/logout" element={<Logout />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/forgotpassword" element={<ForgotPassword />} />
           // Business Info
           <Route path="/businessinfo" element={<BusinessInfo />} />
           <Route path="/editbusinessinfo" element={<EditBusinessInfo />} />

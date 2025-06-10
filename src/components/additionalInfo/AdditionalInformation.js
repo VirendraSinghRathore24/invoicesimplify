@@ -58,11 +58,12 @@ const AdditionalInformation = () => {
   };
   useEffect(() => {
     handleLogin();
-    let info3 = localStorage.getItem("additionalInfo");
-    if (info3 === "undefined" || info3 === "null") {
+    let info = localStorage.getItem("additionalInfo");
+    if (info === "undefined" || info === "null" || info === null) {
       setPosts([]);
     } else {
-      setPosts(JSON.parse(info3));
+      const data = JSON.parse(info);
+      setPosts([data]);
     }
   }, []);
 
@@ -73,7 +74,7 @@ const AdditionalInformation = () => {
       <div className="p-6">
         <div className="flex justify-between w-full mx-auto font-bold text-2xl bg-gray-200 py-4 px-2 rounded-md">
           <div>Additional Information</div>
-          {posts && (
+          {posts && posts.length > 0 && (
             <div>
               <button
                 onClick={() => handleDelete()}
@@ -85,8 +86,10 @@ const AdditionalInformation = () => {
           )}
         </div>
         <div>
-          {posts && <div className="mt-4">Left Bottom Text</div>}
-          {posts && (
+          {posts && posts.length > 0 && (
+            <div className="mt-4">Left Bottom Text</div>
+          )}
+          {posts && posts.length > 0 && (
             <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4">
               <table className="min-w-full text-sm text-left text-gray-700">
                 <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
@@ -101,16 +104,16 @@ const AdditionalInformation = () => {
                 <tbody>
                   <tr className="border-t bg-white">
                     <td className="px-4 py-3 border-r w-[24%]">
-                      {posts?.note1}
+                      {posts[0]?.note1}
                     </td>
                     <td className="px-4 py-3 border-r w-[24%]">
-                      {posts?.note2}
+                      {posts[0]?.note2}
                     </td>
                     <td className="px-4 py-3 border-r w-[24%]">
-                      {posts?.note3}
+                      {posts[0]?.note3}
                     </td>
                     <td className="px-4 py-3 border-r w-[24%]">
-                      {posts?.note4}
+                      {posts[0]?.note4}
                     </td>
                     <td className="px-4 py-3">
                       <button
@@ -125,8 +128,10 @@ const AdditionalInformation = () => {
               </table>
             </div>
           )}
-          {posts && <div className="mt-6">Middle Bottom Text</div>}
-          {posts && (
+          {posts && posts.length > 0 && (
+            <div className="mt-6">Middle Bottom Text</div>
+          )}
+          {posts && posts.length > 0 && (
             <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4">
               <table className="min-w-full text-sm text-left text-gray-700">
                 <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
@@ -141,16 +146,16 @@ const AdditionalInformation = () => {
                 <tbody>
                   <tr className="border-t bg-white">
                     <td className="px-4 py-3 border-r w-[24%]">
-                      {posts?.middlenote1}
+                      {posts[0]?.middlenote1}
                     </td>
                     <td className="px-4 py-3 border-r w-[24%]">
-                      {posts?.middlenote2}
+                      {posts[0]?.middlenote2}
                     </td>
                     <td className="px-4 py-3 border-r w-[24%]">
-                      {posts?.middlenote3}
+                      {posts[0]?.middlenote3}
                     </td>
                     <td className="px-4 py-3 border-r w-[24%]">
-                      {posts?.middlenote4}
+                      {posts[0]?.middlenote4}
                     </td>
                     <td className="px-4 py-3">
                       <button
@@ -165,8 +170,10 @@ const AdditionalInformation = () => {
               </table>
             </div>
           )}
-          {posts && <div className="mt-6">Right Bottom Text</div>}
-          {posts && (
+          {posts && posts.length > 0 && (
+            <div className="mt-6">Right Bottom Text</div>
+          )}
+          {posts && posts.length > 0 && (
             <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4">
               <table className="min-w-full text-sm text-left text-gray-700">
                 <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
@@ -181,16 +188,16 @@ const AdditionalInformation = () => {
                 <tbody>
                   <tr className="border-t bg-white">
                     <td className="px-4 py-3 border-r w-[24%]">
-                      {posts?.rnote1}
+                      {posts[0]?.rnote1}
                     </td>
                     <td className="px-4 py-3 border-r w-[24%]">
-                      {posts?.rnote2}
+                      {posts[0]?.rnote2}
                     </td>
                     <td className="px-4 py-3 border-r w-[24%]">
-                      {posts?.rnote3}
+                      {posts[0]?.rnote3}
                     </td>
                     <td className="px-4 py-3 border-r w-[24%]">
-                      {posts?.rnote4}
+                      {posts[0]?.rnote4}
                     </td>
                     <td className="px-4 py-3">
                       <button
@@ -205,8 +212,10 @@ const AdditionalInformation = () => {
               </table>
             </div>
           )}
-          {posts && <div className="mt-6">Additional Description</div>}
-          {posts && (
+          {posts && posts.length > 0 && (
+            <div className="mt-6">Additional Description</div>
+          )}
+          {posts && posts.length > 0 && (
             <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4">
               <table className="min-w-full text-sm text-left text-gray-700">
                 <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
@@ -220,7 +229,7 @@ const AdditionalInformation = () => {
                 <tbody>
                   <tr className="border-t bg-white">
                     <td className="px-4 py-3 border-r w-[96%]">
-                      {posts?.additionaldesc}
+                      {posts[0]?.additionaldesc}
                     </td>
                     <td className="px-4 py-3">
                       <button
@@ -235,7 +244,7 @@ const AdditionalInformation = () => {
               </table>
             </div>
           )}
-          {!posts && (
+          {posts.length === 0 && (
             <div className="flex h-screen items-center justify-center ">
               <div onClick={() => navigate("/addadditionalinfo")}>
                 <button className="border-2 bg-[#444] text-white fond-bold text-lg py-4 px-8 rounded-md cursor-pointer">

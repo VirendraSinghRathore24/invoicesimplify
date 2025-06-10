@@ -51,12 +51,13 @@ const TaxInfo = () => {
   };
 
   useEffect(() => {
-    let info1 = localStorage.getItem("taxInfo");
+    let info = localStorage.getItem("taxInfo");
 
-    if (info1 === "undefined" || info1 === "null") {
+    if (info === "undefined" || info === "null" || info === null) {
       setPosts([]);
     } else {
-      setPosts(JSON.parse(info1));
+      const data = JSON.parse(info);
+      setPosts([data]);
     }
   }, []);
 
@@ -70,7 +71,7 @@ const TaxInfo = () => {
         </div>
         <div>
           <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4">
-            {posts && (
+            {posts && posts.length > 0 && (
               <table className="min-w-full text-sm text-left text-gray-700">
                 <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
                   <tr>
@@ -83,9 +84,15 @@ const TaxInfo = () => {
                 </thead>
                 <tbody>
                   <tr className="border-t bg-white">
-                    <td className="px-4 py-3 border-r">{posts?.gstNumber}</td>
-                    <td className="px-4 py-3 border-r">{posts?.cgstAmount}</td>
-                    <td className="px-4 py-3 border-r">{posts?.sgstAmount}</td>
+                    <td className="px-4 py-3 border-r">
+                      {posts[0]?.gstNumber}
+                    </td>
+                    <td className="px-4 py-3 border-r">
+                      {posts[0]?.cgstAmount}
+                    </td>
+                    <td className="px-4 py-3 border-r">
+                      {posts[0]?.sgstAmount}
+                    </td>
                     <td className="px-4 py-3 border-r">
                       <button
                         onClick={() => navigate("/edittaxinfo")}
@@ -107,7 +114,7 @@ const TaxInfo = () => {
               </table>
             )}
 
-            {!posts && (
+            {posts.length === 0 && (
               <div className="h-screen flex items-center justify-center ">
                 <div onClick={() => navigate("/addtaxinfo")}>
                   <button className="border-2 bg-[#444] text-white fond-bold text-lg py-4 px-8 rounded-md cursor-pointer">

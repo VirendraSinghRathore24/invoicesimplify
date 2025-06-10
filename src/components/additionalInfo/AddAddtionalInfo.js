@@ -305,7 +305,7 @@ function AddAddtionalInfo() {
                     type="submit"
                     className="bg-[#444] px-4 py-2 rounded-md text-white w-3/12"
                   >
-                    Update
+                    Save
                   </button>
                 </div>
               </div>

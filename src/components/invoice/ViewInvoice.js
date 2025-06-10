@@ -344,9 +344,16 @@ function ViewInvoice() {
                   <div>{invoiceInfo?.additionalInfo?.note4}</div>
                 </div>
                 <div className="text-sm text-blue-700 font-bold">
-                  <div>NO CHANGE</div>
-                  <div>NO REFUND</div>
-                  <div>NO CANCEL</div>
+                  <div>{invoiceInfo?.additionalInfo?.middlenote1}</div>
+                  <div>{invoiceInfo?.additionalInfo?.middlenote2}</div>
+                  <div>{invoiceInfo?.additionalInfo?.middlenote3}</div>
+                  <div>{invoiceInfo?.additionalInfo?.middlenote4}</div>
+                </div>
+                <div className="text-sm text-blue-700 font-bold">
+                  <div>{invoiceInfo?.additionalInfo?.rnote1}</div>
+                  <div>{invoiceInfo?.additionalInfo?.rnote2}</div>
+                  <div>{invoiceInfo?.additionalInfo?.rnote3}</div>
+                  <div>{invoiceInfo?.additionalInfo?.rnote4}</div>
                   <div className="text-sm text-black mt-4">
                     For: {invoiceInfo?.businessInfo?.name}
                   </div>
