@@ -21,6 +21,7 @@ const Dashboard = () => {
   const [amount, setAmount] = useState(0);
   const [balance, setBalance] = useState(0);
   const [paid, setPaid] = useState(0);
+  const [settled, setSettled] = useState(0);
 
   const navigate = useNavigate();
 
@@ -103,6 +104,11 @@ const Dashboard = () => {
     updateAmountAfterSearch(result);
     updateBalanceAfterSearch(result);
     updatePaidAfterSearch(result);
+
+    const totalSettled = result.filter(
+      (item) => item.taxCalculatedInfo.balance === 0
+    ).length;
+    setSettled(result.length - totalSettled);
   };
 
   const updateAmountAfterSearch = (result) => {
@@ -331,6 +337,12 @@ const Dashboard = () => {
 
     setPaid(totalPaid);
 
+    // Calculate the settled count
+    const totalSettled = invoiceInfo.filter(
+      (item) => item.taxCalculatedInfo.balance === 0
+    ).length;
+    setSettled(invoiceInfo.length - totalSettled);
+
     const invoiceInfo1 = invoiceInfo.sort(
       (a, b) => b.invoiceInfo.invoiceNumber - a.invoiceInfo.invoiceNumber
     );
@@ -380,8 +392,8 @@ const Dashboard = () => {
 
           <div className="flex justify-between gap-y-4 font-bold text-xl shadow-lg border-2 p-5 bg-blue-50 gap-y-4 rounded-md h-32 w-3/12">
             <div className="flex flex-col cursor-pointer">
-              <div className="">Paid</div>
-              <div className="text-2xl">₹ {paid}</div>
+              <div className="">Pending</div>
+              <div className="text-2xl">{settled}</div>
             </div>
             <SquareArrowOutUpRight />
           </div>

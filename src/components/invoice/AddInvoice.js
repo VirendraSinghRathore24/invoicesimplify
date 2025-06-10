@@ -1073,47 +1073,6 @@ const AddInvoice = () => {
                 </div>
               </div>
             </div>
-
-            <div className="mt-2 text-sm py-1">
-              {/* <div>
-                <button
-                  onClick={handleSave}
-                  className="bg-[#146eb4] text-sm text-white py-2 px-4 font-semibold rounded-md text-richblack-700 hover:scale-110 transition duration-300 ease-in cursor-pointer "
-                >
-                  Get Uploaded Signature
-                </button>{" "}
-                <div className="mt-2">Signature</div>
-                <div className="border-2 w-[150px] h-[150px] rounded-md cursor-pointer mt-2">
-                  <ImageUpload
-                    setSelectedFile={setSelectedFile}
-                    avatarURL={avatarURL}
-                    setAvatarURL={setAvatarURL}
-                  />
-                </div>
-              </div> */}
-              <div
-                onClick={() => setOpenSign(true)}
-                className="bg-[#146eb4] text-center w-4/12 md:w-2/12 border-[1.4px] border-gray-400 text-white py-2 font-semibold rounded-md text-richblack-700 mb-2 cursor-pointer "
-              >
-                {" "}
-                <button>+ Add Signature</button>
-              </div>
-
-              {sign && (
-                <div className="w-[35%] md:w-[20%] border-2">
-                  <img src={signature} alt="sign" />
-                  <div className="flex justify-between">
-                    <div className="px-2 text-xs"> Signed on: {signedDate}</div>
-                    <div>
-                      {" "}
-                      <button onClick={handleCloseSign1}>
-                        <X />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
           </div>
         </div>
         {openItem && (
@@ -1121,13 +1080,6 @@ const AddInvoice = () => {
             handleCloseItem={handleCloseItem}
             setItem={setItem}
           ></InventoryModal>
-        )}
-        {openSign && (
-          <SignModal
-            setSignature={setSignature}
-            handleSignOpen={handleSignOpen}
-            handleCloseSign={handleCloseSign}
-          ></SignModal>
         )}
         <AlertModal
           isOpen={showConfirm}
