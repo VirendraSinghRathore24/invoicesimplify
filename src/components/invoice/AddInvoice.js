@@ -566,10 +566,27 @@ const AddInvoice = () => {
 
   return (
     <div>
-      <Header />
+      <div className="top-0 mx-auto w-full h-[72px] text-white sticky bg-white shadow-lg">
+        <div className="flex justify-between mx-auto font-bold text-md  py-4 px-2 rounded-md fixed w-[81.5%]">
+          <div className="text-2xl text-black">Create Invoice</div>
+          <div className="flex gap-x-4">
+            <button
+              onClick={handleResetInvoice}
+              className="bg-[#146eb4] text-white border-[1.4px] border-gray-400  py-2 px-6 font-semibold rounded-md  hover:scale-110 transition duration-300 ease-in cursor-pointer "
+            >
+              Reset
+            </button>
+            <button
+              onClick={handleCreateInvoice}
+              className="bg-amber-600 border-[1.4px] border-gray-400 text-white py-2 px-6 font-semibold rounded-md text-richblack-700 hover:scale-110 transition duration-300 ease-in cursor-pointer "
+            >
+              Create Invoice
+            </button>
+          </div>
+        </div>
+      </div>
 
-      <div className="p-6">
-        {/* <Header /> */}
+      <div className="px-3">
         {loading && (
           <>
             <div className="h-2 w-2 bg-[#d6f539] rounded-full animate-bounce [animation-delay:-0.3s]"></div>
@@ -578,26 +595,9 @@ const AddInvoice = () => {
           </>
         )}
         <div>
-          <div className="flex justify-between mx-auto font-bold text-md bg-gray-200 py-4 px-2 rounded-md fixed w-[81.5%]">
-            <div className="text-2xl">Create Invoice</div>
-            <div className="flex gap-x-4">
-              <button
-                onClick={handleResetInvoice}
-                className="bg-[#146eb4] text-white border-[1.4px] border-gray-400  py-2 px-6 font-semibold rounded-md  hover:scale-110 transition duration-300 ease-in cursor-pointer "
-              >
-                Reset
-              </button>
-              <button
-                onClick={handleCreateInvoice}
-                className="bg-amber-600 border-[1.4px] border-gray-400 text-white py-2 px-6 font-semibold rounded-md text-richblack-700 hover:scale-110 transition duration-300 ease-in cursor-pointer "
-              >
-                Create Invoice
-              </button>
-            </div>
-          </div>
           <div className="flex flex-col w-full gap-y-3 mx-auto ">
-            <div className="flex justify-between gap-x-2 w-full mx-auto mt-20">
-              <div className="flex flex-col w-6/12 mx-auto justify-start items-left mt-4 shadow-lg border-2 p-5 bg-white gap-y-4 rounded-md">
+            <div className="flex justify-between gap-x-2 w-full mx-auto">
+              <div className="flex flex-col w-6/12 mx-auto justify-start items-left mt-4 shadow-lg border-[1.2px] p-5 bg-white gap-y-4 rounded-md">
                 <div className="flex flex-col justify-start items-left gap-y-4 ">
                   <div className="flex ">
                     <div className="text-xl text-gray-600 font-medium">
@@ -646,7 +646,7 @@ const AddInvoice = () => {
                 </div>
               </div>
 
-              <div className="w-6/12 mx-auto flex flex-col mt-4 shadow-lg border-2 p-4 bg-white gap-y-4 rounded-md">
+              <div className="w-6/12 mx-auto flex flex-col mt-4 shadow-lg border-[1.2px] p-4 bg-white gap-y-4 rounded-md">
                 <div className="flex ">
                   <div className="text-xl text-gray-600 font-medium">
                     Invoice
@@ -715,7 +715,7 @@ const AddInvoice = () => {
               </div>
             </div>
 
-            <div className="w-full mx-auto shadow-lg border-2 p-4 bg-white gap-y-4 rounded-md">
+            <div className="w-full mx-auto shadow-lg border-[1.2px] p-4 bg-white gap-y-4 rounded-md">
               <div className="overflow-hidden ">
                 <table className="w-full mx-auto text-center text-sm font-light">
                   <thead className="text-[12px] md:text-md uppercase max-md:hidden">

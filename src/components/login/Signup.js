@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { auth, db, googleProvider } from "../../config/firebase";
 
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 import { FcGoogle } from "react-icons/fc";
 import {
@@ -14,11 +14,13 @@ import {
 import { addDoc, collection, getDocs } from "firebase/firestore";
 import AddtionalInfo from "../additionalInfo/EditAddtionalInfo";
 import Loader from "../Loader";
+import LoginFooter from "./LoginFooter";
 
 const Signup = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [loading, setLoading] = useState(false);
@@ -75,7 +77,6 @@ const Signup = () => {
         return;
       }
 
-      
       const auth = getAuth();
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
@@ -93,7 +94,7 @@ const Signup = () => {
           localStorage.setItem("user", code);
           localStorage.setItem("userName", userName);
           localStorage.setItem("invoiceNumber", 1);
-        
+
           setLoading(false);
           navigate("/businessinfo");
 
@@ -102,11 +103,10 @@ const Signup = () => {
         .catch((error) => {
           if (error.code === "auth/email-already-in-use") {
             alert(email + " already in use, Please login!!!");
-          } 
-            if (error.code === "auth/weak-password") {
-              alert("Password should be at least 6 characters long !!!");
-            }
-          else{
+          }
+          if (error.code === "auth/weak-password") {
+            alert("Password should be at least 6 characters long !!!");
+          } else {
             alert("Error : " + error.code);
           }
           setLoading(false);
@@ -133,7 +133,7 @@ const Signup = () => {
 
       if (result === undefined) {
         // 2. it is new user
-        
+
         await initializeDB(code, userName);
       }
       // check orgCode with DB
@@ -150,7 +150,7 @@ const Signup = () => {
     }
   };
 
-  const initializeDB = async(code, userName) => {
+  const initializeDB = async (code, userName) => {
     const orgCode = Math.random().toString(36).slice(2);
 
     await addDoc(login_CollectionRef, {
@@ -158,7 +158,7 @@ const Signup = () => {
       code: code,
       userName: userName,
       invoiceNumber: 1,
-      type: "poshak"
+      type: "poshak",
     });
 
     // also create db for business, tax and additional info
@@ -172,11 +172,11 @@ const Signup = () => {
 
     // initialize inventory info
     await addDoc(inventoryInfo_CollectionRef, {
-        orgCode: orgCode,
-        loggedInUser: code,
-        inventory: []
-      });
-  }
+      orgCode: orgCode,
+      loggedInUser: code,
+      inventory: [],
+    });
+  };
 
   const getExistingUser = async (loggedInUser) => {
     const loginCollectionRef = collection(db, "Login_Info");
@@ -195,122 +195,88 @@ const Signup = () => {
     window.scroll(0, 0);
   }, []);
   return (
-    <div className="bg-[#444] w-full mx-auto h-full flex flex-col">
-      <form
-        onSubmit={createUserWithUsernameAndPassword}
-        className="px-10 py-4 mt-2 md:mt-10 gap-y-4 justify-center w-full md:w-[28%] mx-auto "
-      >
-        <h2 className="text-center font-semibold text-3xl text-white ">
-          Sign Up
-        </h2>
-        <h2 className="text-center text-xl mt-2 text-white ">
-          You're a few seconds away from your Invoice account!
-        </h2>
-        <div className="bg-white mt-4 p-6 rounded-xl">
-          <div>
-            <div className="flex  flex-col ">
-              <div className="text-xs font-medium leading-5  mt-2">
-                First Name
-              </div>
+    <div className="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-white">
+      {/* Header */}
+      <header className="bg-white dark:bg-gray-800 shadow px-6 py-4 flex justify-between items-center">
+        <NavLink
+          to={"/"}
+          className="text-2xl font-bold text-indigo-600 dark:text-white"
+        >
+          InvoiceSimplify
+        </NavLink>
+      </header>
+
+      {/* Signup Form */}
+      <main className="flex-grow flex items-center justify-center px-4 py-10">
+        <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-3xl shadow-lg p-8">
+          <h2 className="text-3xl font-semibold mb-6 text-center">
+            Create Your Account
+          </h2>
+          <form
+            onSubmit={createUserWithUsernameAndPassword}
+            className="space-y-5"
+          >
+            <div>
+              <label className="block text-sm font-medium mb-1">Name</label>
               <input
-                className="form-input block  text-xs rounded border border-gray-400 py-2 px-4 leading-5"
-                required
+                type="text"
                 name="name"
-                type="text"
-                placeholder="Virendra"
-                value={firstname}
+                value={name}
                 onChange={(e) => {
-                  setFirstname(e.target.value);
+                  setName(e.target.value);
                 }}
+                required
+                className="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"
               />
             </div>
-          </div>
-          <div>
-            <div className="flex  flex-col ">
-              <div className="text-xs font-medium  leading-5  mt-2">
-                Last Name
-              </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Email</label>
               <input
-                className="form-input block text-xs rounded border border-gray-400 py-2 px-4 leading-5"
-                required
-                name="lastname"
-                type="text"
-                placeholder="Singh"
-                value={lastname}
-                onChange={(e) => {
-                  setLastname(e.target.value);
-                }}
-              />
-            </div>
-          </div>
-          <div>
-            <div className="flex  flex-col ">
-              <div className="text-xs font-medium leading-5  mt-2">Email</div>
-              <input
-                className="form-input block  text-xs rounded border border-gray-400 py-2 px-4 leading-5"
-                required
-                name="email"
                 type="email"
-                placeholder="name@gmail.com"
+                name="email"
                 value={email}
                 onChange={(e) => {
                   setEmail(e.target.value);
                 }}
+                required
+                className="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"
               />
             </div>
-          </div>
-          <div>
-            <div className="flex  flex-col ">
-              <div className="text-xs font-medium leading-5  mt-2">
-                Password
-              </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Password</label>
               <input
-                className="form-input block  text-xs rounded border border-gray-400 py-2 px-4 leading-5"
-                required
-                name="password"
                 type="password"
-                placeholder="********"
+                name="password"
                 value={password}
                 onChange={(e) => {
                   setPassword(e.target.value);
                 }}
+                required
+                className="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"
               />
             </div>
-          </div>
-          <button
-            type="submit"
-            className="w-full border-[1.4px]  text-white bg-[#444] font-medium py-2 px-6 rounded-md mt-4 cursor-pointer "
-          >
-            Sign Up
-          </button>
-          <div className="w-full  mx-auto">
             <button
-              className="w-full flex justify-center items-center rounded-[8px] font-medium text-richblack-700 border border-richblack-700
-            px-[12px] py-[8px] gap-x-2 mt-6 bg-yellow-300 hover:bg-green-300"
-              onClick={signInWithGoogle}
+              type="submit"
+              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-semibold text-sm"
             >
-              <FcGoogle />
-              <p>Sign in with Google</p>
+              Sign Up
             </button>
-          </div>
-          <button
-            onClick={handleOnClick}
-            className="w-full border-[1.4px] bg-[#E5E7EB] py-2 px-6 font-medium rounded-md mt-6 cursor-pointer "
-          >
-            Cancel
-          </button>
+            <div className="text-center text-sm text-gray-600 dark:text-gray-400 mt-4">
+              Already have an account?{" "}
+              <NavLink
+                to={"/login"}
+                className="text-indigo-600 hover:underline"
+              >
+                Login
+              </NavLink>
+            </div>
+          </form>
         </div>
-        <div className="flex justify-evenly gap-x-3 mt-3">
-          <div className="text-white mt-2">Already have an account?</div>
-          <button
-            onClick={handleLogin}
-            className=" border-[1.4px] bg-[#E5E7EB] py-2 px-6 font-semibold rounded-md  cursor-pointer "
-          >
-            Login
-          </button>
-        </div>
-      </form>
-      {loading && <Loader/>}
+        {loading && <Loader />}
+      </main>
+
+      {/* Footer */}
+      <LoginFooter />
     </div>
   );
 };

@@ -1,27 +1,34 @@
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import LoginFooter from "./LoginFooter";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
+  const [submitted, setSubmitted] = useState(false);
 
-  const handleUpdatePassword = () => {
-    const auth = getAuth();
+  const handleUpdatePassword = (e) => {
+    try {
+      e.preventDefault();
+      const auth = getAuth();
 
-    sendPasswordResetEmail(auth, email)
-      .then(() => {
-        toast("Password reset email sent, Please check your email !!!", {
-          position: "top-center",
+      sendPasswordResetEmail(auth, email)
+        .then(() => {
+          toast("Password reset email sent, Please check your email !!!", {
+            position: "top-center",
+          });
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          // ..
         });
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // ..
-      });
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const handleSignup = () => {
@@ -32,56 +39,69 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="bg-[#444] w-full mx-auto h-full flex flex-col">
-      <div className="px-10 py-4 mt-2 md:mt-10 gap-y-4 justify-center w-full md:w-[28%] mx-auto ">
-        <h2 className="text-center font-semibold text-3xl text-white ">
-          Reset your password
-        </h2>
-        <h2 className="text-center text-xl mt-2 text-white ">
-          Enter your email and we'll send you a link to change your password.
-        </h2>
-        <div className="bg-white mt-4 p-6 rounded-xl">
-          <div>
-            <div className="flex  flex-col ">
-              <div className="text-xs font-medium leading-5 mt-2">Email</div>
-              <input
-                className="form-input block  text-xs rounded border border-gray-400 py-2 px-4 leading-5"
-                required
-                name="name"
-                type="email"
-                placeholder="name@example.com"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                }}
-              />
+    <div className="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-white">
+      {/* Header */}
+      <header className="bg-white dark:bg-gray-800 shadow px-6 py-4 flex justify-between items-center">
+        <NavLink
+          to={"/"}
+          className="text-2xl font-bold text-indigo-600 dark:text-white"
+        >
+          InvoiceSimplify
+        </NavLink>
+      </header>
+
+      {/* Main Section */}
+      <main className="flex-grow flex items-center justify-center px-4 py-10">
+        <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-3xl shadow-lg p-8">
+          <h2 className="text-2xl sm:text-3xl font-semibold mb-4 text-center">
+            Forgot Your Password?
+          </h2>
+
+          <p className="text-sm text-gray-600 dark:text-gray-400 text-center mb-6">
+            Enter your email address and we’ll send you a reset link.
+          </p>
+
+          {submitted ? (
+            <div className="text-center text-green-600 dark:text-green-400">
+              ✅ A password reset link has been sent to <strong>{email}</strong>
             </div>
-          </div>
+          ) : (
+            <form onSubmit={handleUpdatePassword} className="space-y-5">
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
 
-          <button
-            onClick={handleUpdatePassword}
-            className="w-full border-[1.4px] text-white bg-[#444] py-2 px-6  rounded-md mt-4 cursor-pointer "
-          >
-            Reset your Password
-          </button>
+              <button
+                type="submit"
+                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-semibold text-sm transition"
+              >
+                Send Reset Link
+              </button>
 
-          <button
-            onClick={handleOnClick}
-            className="w-full border-[1.4px] bg-[#E5E7EB] py-2 px-6 font-semibold rounded-md mt-6 cursor-pointer "
-          >
-            Cancel
-          </button>
+              <div className="text-center mt-4 text-sm text-gray-600 dark:text-gray-400">
+                <NavLink
+                  to={"/login"}
+                  className="text-indigo-600 hover:underline"
+                >
+                  Back to Login
+                </NavLink>
+              </div>
+            </form>
+          )}
         </div>
-        <div className="flex justify-evenly gap-x-3 mt-3">
-          <div className="text-white mt-2">Got your password?</div>
-          <button
-            onClick={handleSignup}
-            className=" border-[1.4px] bg-[#E5E7EB] py-2 px-6 font-semibold rounded-md  cursor-pointer "
-          >
-            Sign In
-          </button>
-        </div>
-      </div>
+      </main>
+
+      {/* Footer */}
+      <LoginFooter />
     </div>
   );
 };

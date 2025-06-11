@@ -13,6 +13,7 @@ import {
 
 import { getAccountData, getPersonalData } from "../DatabaseHelper";
 import Loader from "../Loader";
+import LoginFooter from "./LoginFooter";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -29,34 +30,42 @@ const Login = () => {
   };
 
   // get all data and add to local storage
-    const getAllData = async (loggedInUser) => { 
-        const basicInfo_CollectionRef = collection(db, "Basic_Info");
-        const data = await getDocs(basicInfo_CollectionRef);
-        const filteredData = data.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-        }));
-    
-        const basicInfo = filteredData.filter((x) => x.loggedInUser === loggedInUser)[0];
-    
-        localStorage.setItem("businessInfo", JSON.stringify(basicInfo?.businessInfo));
-        localStorage.setItem("taxInfo", JSON.stringify(basicInfo?.taxInfo));
-        localStorage.setItem("additionalInfo", JSON.stringify(basicInfo?.additionalInfo));
-     }
+  const getAllData = async (loggedInUser) => {
+    const basicInfo_CollectionRef = collection(db, "Basic_Info");
+    const data = await getDocs(basicInfo_CollectionRef);
+    const filteredData = data.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
 
-  const signInWithUsernameAndPassword = async(e) => {
-    try{
+    const basicInfo = filteredData.filter(
+      (x) => x.loggedInUser === loggedInUser
+    )[0];
+
+    localStorage.setItem(
+      "businessInfo",
+      JSON.stringify(basicInfo?.businessInfo)
+    );
+    localStorage.setItem("taxInfo", JSON.stringify(basicInfo?.taxInfo));
+    localStorage.setItem(
+      "additionalInfo",
+      JSON.stringify(basicInfo?.additionalInfo)
+    );
+  };
+
+  const signInWithUsernameAndPassword = async (e) => {
+    try {
       e.preventDefault();
       setLoading(true);
       const auth = getAuth();
       signInWithEmailAndPassword(auth, email, password)
-        .then(async(userCredential) => {
+        .then(async (userCredential) => {
           // Signed in
           const user = userCredential.user;
-          
+
           const code = auth?.currentUser?.email;
           const userName = auth?.currentUser?.displayName;
-    
+
           localStorage.setItem("auth", "Logged In");
           localStorage.setItem("user", code);
           localStorage.setItem("userName", userName);
@@ -66,9 +75,9 @@ const Login = () => {
 
           const info = localStorage.getItem("businessInfo");
 
-          if(info === "undefined"){
+          if (info === "undefined") {
             navigate("/businessinfo");
-          }else{
+          } else {
             navigate("/createinvoice");
           }
 
@@ -79,22 +88,19 @@ const Login = () => {
           const errorCode = error.code;
           const errorMessage = error.message;
 
-          if(errorCode === 'auth/invalid-credential'){
-            alert('username or password is invalid !!!');
-           }
-           setLoading(false);
-           return;
+          if (errorCode === "auth/invalid-credential") {
+            alert("username or password is invalid !!!");
+          }
+          setLoading(false);
+          return;
         });
+    } catch (err) {
+      setLoading(false);
     }
-    catch(err){
-        setLoading(false);
-    }
-    
   };
 
   const signInWithGoogle = async () => {
     try {
-      
       await signInWithPopup(auth, googleProvider);
 
       setLoading(true);
@@ -111,9 +117,9 @@ const Login = () => {
 
       const info = localStorage.getItem("businessInfo");
 
-      if(!info){
+      if (!info) {
         navigate("/businessinfo");
-      }else{
+      } else {
         navigate("/createinvoice");
       }
 
@@ -123,94 +129,85 @@ const Login = () => {
     }
   };
 
-
   useEffect(() => {
-    
-    window.scroll(0,0);
-  },[])
+    window.scroll(0, 0);
+  }, []);
 
   return (
-    <div className="bg-[#444] w-full m-auto h-full flex flex-col">
-      <form onSubmit={signInWithUsernameAndPassword} className="px-10 py-4 mt-2 md:mt-10 gap-y-4 justify-center w-full md:w-[28%] mx-auto ">
-        <h2 className="text-center font-semibold text-3xl text-white ">
-          Log in to your account
-        </h2>
-        <h2 className="text-center text-xl mt-2 text-white ">
-          Welcome back, we hope you're having a great day.
-        </h2>
-        <div className="bg-white mt-4 p-6 rounded-xl">
-          <div>
-            <div className="flex  flex-col ">
-              <div className="text-xs font-medium leading-5  mt-2">Email</div>
+    <div className="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-white">
+      {/* Header */}
+      <header className="bg-white dark:bg-gray-800 shadow px-6 py-4 flex justify-between items-center">
+        <NavLink
+          to={"/"}
+          className="text-2xl font-bold text-indigo-600 dark:text-white"
+        >
+          InvoiceSimplify
+        </NavLink>
+      </header>
+
+      {/* Login Form */}
+      <main className="flex-grow flex items-center justify-center px-4 py-10">
+        <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-3xl shadow-lg p-8">
+          <h2 className="text-3xl font-semibold mb-6 text-center">
+            Login to Your Account
+          </h2>
+          <form onSubmit={signInWithUsernameAndPassword} className="space-y-5">
+            <div>
+              <label className="block text-sm font-medium mb-1">Email</label>
               <input
-                className="form-input block  text-xs rounded border border-gray-400 py-2 px-4 leading-5"
-                required
-                name="name"
                 type="email"
-                placeholder="name@example.com"
+                name="email"
                 value={email}
                 onChange={(e) => {
                   setEmail(e.target.value);
                 }}
+                required
+                className="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"
               />
             </div>
-          </div>
-          <div>
-            <div className="flex  flex-col ">
-              <div className="text-xs font-medium  leading-5  mt-2">
-                Password
+            <div>
+              <div className="flex justify-between items-center mb-1">
+                <label className="block text-sm font-medium">Password</label>
+                <NavLink
+                  to={"/forgotpassword"}
+                  className="text-sm text-indigo-600 hover:underline"
+                >
+                  Forgot Password?
+                </NavLink>
               </div>
               <input
-                className="form-input block text-xs rounded border border-gray-400 py-2 px-4 leading-5"
-                required
-                name="name"
                 type="password"
-                placeholder="*******"
+                name="password"
                 value={password}
                 onChange={(e) => {
                   setPassword(e.target.value);
                 }}
+                required
+                className="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"
               />
             </div>
-          </div>
-          <div className="text-xs text-[#999999] mt-1">
-            <NavLink to={"/forgotpassword"}>Forgot your password?</NavLink>
-          </div>
-          <button
-            type="submit"
-            className="w-full border-[1.4px]  text-white bg-[#444] py-2 px-6 font-semibold rounded-md mt-4 cursor-pointer "
-          >
-            Login
-          </button>
-
-          <div className="w-full  mx-auto">
             <button
-              className="w-full flex justify-center items-center rounded-[8px] text-richblack-700 border border-richblack-700
-            px-[12px] py-[8px] gap-x-2 mt-6 bg-yellow-300 hover:bg-green-300"
-              onClick={signInWithGoogle}
+              type="submit"
+              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-semibold text-sm"
             >
-              <FcGoogle />
-              <p>Sign in with Google</p>
+              Login
             </button>
-          </div>
-          <button
-            onClick={handleOnClick}
-            className="w-full border-[1.4px] bg-[#E5E7EB] py-2 px-6 rounded-md mt-6 cursor-pointer "
-          >
-            Cancel
-          </button>
+            <div className="text-center text-sm text-gray-600 dark:text-gray-400 mt-4">
+              Don’t have an account?{" "}
+              <NavLink
+                to={"/signup"}
+                className="text-indigo-600 hover:underline"
+              >
+                Sign Up
+              </NavLink>
+            </div>
+          </form>
         </div>
-        <div className="flex justify-evenly gap-x-3 mt-3">
-          <div className="text-white mt-2">Don't have an account?</div>
-          <button
-            onClick={handleSignup}
-            className=" border-[1.4px] bg-[#E5E7EB] py-2 px-6 font-semibold rounded-md  cursor-pointer "
-          >
-            Sign Up
-          </button>
-        </div>
-      </form>
-      {loading && <Loader/>}
+        {loading && <Loader />}
+      </main>
+
+      {/* Footer */}
+      <LoginFooter />
     </div>
   );
 };
