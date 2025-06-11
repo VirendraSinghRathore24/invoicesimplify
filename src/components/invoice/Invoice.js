@@ -583,7 +583,7 @@ function Invoice() {
                   </div>
                 )}
                 <div className="border-b-2 border-dashed py-1"></div>
-                {taxCalculatedInfo?.balance && (
+                {
                   <div className="w-full flex justify-end gap-x-10 mt-2">
                     <div className="w-11/12 flex justify-end mx-auto mt-1 px-2 text-sm font-bold rounded-md uppercase">
                       Balance
@@ -598,7 +598,7 @@ function Invoice() {
                         )}
                     </div>
                   </div>
-                )}
+                }
               </div>
               <div className="flex justify-between border-b-[1.2px] border-black mt-2"></div>
               <div className="flex justify-between w-full mx-auto mt-2">

@@ -335,34 +335,6 @@ const AddInvoice = () => {
     setInvoiceNumber(loginInfo?.invoiceNumber);
   };
 
-  const [openSign, setOpenSign] = useState(false);
-  const handleCloseSign = () => {
-    setOpenSign(false);
-  };
-
-  const getBrandInfo = async () => {
-    // get all saved data
-    setOpen(true);
-  };
-
-  const getPersonalData = async () => {
-    //setOpenPersonal(true);
-    setShowModal(true);
-  };
-
-  const handleCloseModal = () => {
-    setShowModal(false);
-  };
-
-  const getAccountData = () => {
-    setOpenAccount(true);
-  };
-
-  const getCurrencyData = async () => {
-    // get all saved data
-    setOpenCurrency(true);
-  };
-
   const handleResetInvoice = () => {
     var res = window.confirm("Reset will delete all data. Continue?");
     if (!res) return;
@@ -421,11 +393,6 @@ const AddInvoice = () => {
     setOpenAccount(false);
   };
 
-  const [openCurrency, setOpenCurrency] = React.useState(false);
-  const handleCloseCurrency = () => {
-    setOpenCurrency(false);
-  };
-
   const [showModal, setShowModal] = React.useState(false);
 
   const getLocalStoragePersonalInfo = () => {
@@ -436,39 +403,6 @@ const AddInvoice = () => {
     setAddress3(localStorage.getItem("address3"));
     setCustomerPhone(localStorage.getItem("custphone"));
     setAdvance(localStorage.getItem("advance"));
-  };
-
-  const getLocalStorageAccountInfo = () => {
-    setAccountName(localStorage.getItem("accountName"));
-    setBankName(localStorage.getItem("bankName"));
-    setAccountNumber(localStorage.getItem("accountNumber"));
-    setAccountType(localStorage.getItem("accountType"));
-    setBranch(localStorage.getItem("branch"));
-    setUpi(localStorage.getItem("upi"));
-    setIfsc(localStorage.getItem("ifsc"));
-    setPan(localStorage.getItem("pan"));
-  };
-
-  const getLocalStorageInvoiceToInfo = () => {
-    setInv_Name(localStorage.getItem("inv_name"));
-    setInv_Email(localStorage.getItem("inv_email"));
-    setInv_Address1(localStorage.getItem("inv_address1"));
-    setInv_Address2(localStorage.getItem("inv_address2"));
-    setInv_Address3(localStorage.getItem("inv_address3"));
-    setInv_Phone(localStorage.getItem("inv_phone"));
-    setInv_Gst(localStorage.getItem("inv_gst"));
-    setInv_Pan(localStorage.getItem("inv_pan"));
-    setInv_Tin(localStorage.getItem("inv_tin"));
-    setInv_Cin(localStorage.getItem("inv_cin"));
-  };
-
-  const getLocalStorageCurrencyInfo = () => {
-    const code = localStorage.getItem("code");
-    if (code) {
-      setCurrency(localStorage.getItem("code"));
-    } else {
-      setCurrency("INR");
-    }
   };
 
   const getLocalStorageInvoiceInfo = async () => {
@@ -526,39 +460,11 @@ const AddInvoice = () => {
     localStorage.removeItem("custphone");
   };
 
-  const deleteLocalStorageAccountInfo = () => {
-    localStorage.removeItem("accountName");
-    localStorage.removeItem("bankName");
-    localStorage.removeItem("accountNumber");
-    localStorage.removeItem("accountType");
-    localStorage.removeItem("branch");
-    localStorage.removeItem("upi");
-    localStorage.removeItem("ifsc");
-    localStorage.removeItem("pan");
-  };
-
-  const deleteLocalStorageInvoiceToInfo = () => {
-    localStorage.removeItem("inv_name");
-    localStorage.removeItem("inv_email");
-    localStorage.removeItem("inv_address1");
-    localStorage.removeItem("inv_address2");
-    localStorage.removeItem("inv_address3");
-    localStorage.removeItem("inv_phone");
-    localStorage.removeItem("inv_gst");
-    localStorage.removeItem("inv_pan");
-    localStorage.removeItem("inv_tin");
-    localStorage.removeItem("inv_cin");
-  };
-
   const deleteLocalStorageInvoiceInfo = () => {
     //localStorage.removeItem("invoiceNumber");
     localStorage.removeItem("date");
     localStorage.removeItem("expecteddate");
     localStorage.removeItem("advance");
-  };
-
-  const deleteLocalStorageSignInfo = () => {
-    localStorage.removeItem("sign");
   };
 
   const getUserSettingsData = async (loggedInUser) => {
@@ -574,16 +480,12 @@ const AddInvoice = () => {
 
   useEffect(() => {
     getLocalStoragePersonalInfo();
-    getLocalStorageAccountInfo();
-    getLocalStorageInvoiceToInfo();
     getLocalStorageInvoiceInfo();
     getAllRowsFromLocalStorage();
 
-    getLocalStorageCurrencyInfo();
-
     getLocalStorageSignInfo();
     getLocalStorageUpiInfo();
-  }, [name, accountName, inv_name, upiType]);
+  }, [name]);
 
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [openItem, setOpenItem] = useState(false);
@@ -608,6 +510,18 @@ const AddInvoice = () => {
     let info2 = localStorage.getItem("taxInfo");
     let taxData = info2 === "undefined" ? null : JSON.parse(info2);
     setTaxInfo(taxData);
+
+    let rowsInfo = localStorage.getItem("rows");
+    if (rowsInfo) {
+      const rowsData = JSON.parse(rowsInfo);
+
+      var total = 0;
+      for (let i = 0; i < rowsData?.length; i++) {
+        total += parseInt(rowsData[i].amount);
+      }
+
+      setAmount(total);
+    }
 
     window.scroll(0, 0);
     setTimeout(function () {
@@ -1017,7 +931,7 @@ const AddInvoice = () => {
                   </div>
                   <div
                     className="w-3/12 mx-auto flex justify-end mt-1 px-2  text-sm font-bold rounded-md"
-                    name="amount"
+                    name="cgst"
                   >
                     ₹ {Math.round((taxInfo?.cgstAmount ?? 0) * amount) / 100}
                   </div>
@@ -1031,7 +945,7 @@ const AddInvoice = () => {
                   </div>
                   <div
                     className="w-3/12 mx-auto flex justify-end mt-1 px-2  text-sm font-bold rounded-md"
-                    name="amount"
+                    name="sgst"
                   >
                     ₹ {Math.round((taxInfo?.sgstAmount ?? 0) * amount) / 100}
                   </div>
@@ -1044,7 +958,7 @@ const AddInvoice = () => {
                 </div>
                 <div
                   className="w-3/12 mx-auto flex justify-end mt-1 px-2  text-sm font-bold rounded-md"
-                  name="amount"
+                  name="total"
                 >
                   ₹{" "}
                   {Math.round(
