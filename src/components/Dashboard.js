@@ -366,46 +366,37 @@ const Dashboard = () => {
 
   return (
     <div>
-      <Header />
+      <div className="top-0 mx-auto w-full h-[72px] text-white sticky bg-white shadow-lg">
+        <div className="flex justify-between mx-auto font-bold text-md  py-4 px-2 rounded-md fixed w-[81.5%]">
+          <div className="text-2xl text-black">Dashboard</div>
+        </div>
+      </div>
 
       <div className="p-6">
-        <div className="flex flex-col w-full mx-auto font-bold text-2xl bg-gray-200 py-4 px-2 rounded-md ">
-          Dashboard
-        </div>
-
-        <div className="flex justify-between py-4 gap-x-2">
-          <div className="flex justify-between gap-y-4 font-bold text-xl shadow-lg border-2 p-5 bg-amber-50 gap-y-4 rounded-md h-32 w-3/12">
-            <div className="flex flex-col cursor-pointer">
-              <div className="">Balance</div>
-              <div className="text-2xl">₹ {balance}</div>
-            </div>
-            <SquareArrowOutUpRight />
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-8 ">
+          <div className={`p-5 rounded-lg shadow bg-indigo-500 text-white`}>
+            <p className="text-md">Total Invoices</p>
+            <h3 className="mt-2 text-2xl font-semibold">
+              {filteredData ? filteredData.length : 0}
+            </h3>
           </div>
 
-          <div className="flex justify-between gap-y-4 font-bold text-xl shadow-lg border-2 p-5 bg-red-50 gap-y-4 rounded-md h-32 w-3/12">
-            <div className="flex flex-col cursor-pointer">
-              <div className="">Amount</div>
-              <div className="text-2xl">₹ {amount}</div>
-            </div>
-            <SquareArrowOutUpRight />
+          <div className={`p-5 rounded-lg shadow bg-emerald-500 text-white`}>
+            <p className="text-md">Paid</p>
+            <h3 className="mt-2 text-2xl font-semibold">
+              {" "}
+              {filteredData ? filteredData.length - settled : 0}
+            </h3>
           </div>
 
-          <div className="flex justify-between gap-y-4 font-bold text-xl shadow-lg border-2 p-5 bg-blue-50 gap-y-4 rounded-md h-32 w-3/12">
-            <div className="flex flex-col cursor-pointer">
-              <div className="">Pending</div>
-              <div className="text-2xl">{settled}</div>
-            </div>
-            <SquareArrowOutUpRight />
+          <div className={`p-5 rounded-lg shadow bg-yellow-500 text-white`}>
+            <p className="text-md">Outstanding</p>
+            <h3 className="mt-2 text-2xl font-semibold">{settled}</h3>
           </div>
 
-          <div className="flex justify-between gap-y-4 font-bold text-xl shadow-lg border-2 p-5 bg-green-50 gap-y-4 rounded-md h-32 w-3/12">
-            <div className="flex flex-col cursor-pointer">
-              <div className="">Invoices</div>
-              <div className="text-2xl">
-                {filteredData ? filteredData.length : 0}
-              </div>
-            </div>
-            <SquareArrowOutUpRight />
+          <div className={`p-5 rounded-lg shadow bg-purple-500 text-white`}>
+            <p className="text-md">Balance</p>
+            <h3 className="mt-2 text-2xl font-semibold">₹ {balance}</h3>
           </div>
         </div>
 
