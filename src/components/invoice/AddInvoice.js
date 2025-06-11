@@ -279,7 +279,7 @@ const AddInvoice = () => {
     // const imageUrl1 = await getDownloadURL(imageRef);
     const amountInfo = {
       amount: amount,
-      advance: advance,
+      advance: advance === null ? 0 : parseInt(advance),
     };
 
     localStorage.setItem("amountInfo", JSON.stringify(amountInfo));
@@ -289,7 +289,9 @@ const AddInvoice = () => {
 
     const cgst = Math.round((taxData?.cgstAmount ?? 0) * amount) / 100;
     const sgst = Math.round((taxData?.sgstAmount ?? 0) * amount) / 100;
-    const balance = Math.round(amount + cgst + sgst - parseInt(advance));
+    const balance = Math.round(
+      amount + cgst + sgst - (advance === null ? 0 : parseInt(advance))
+    );
     const taxCalculatedInfo = {
       cgst: cgst,
       sgst: sgst,
@@ -342,7 +344,7 @@ const AddInvoice = () => {
     setCustomerName("");
     setCustomerPhone("");
     setExpectedDate("");
-    setAdvance("");
+    setAdvance(0);
 
     setDate(new Date().toISOString().slice(0, 10));
     setAmount(0);
