@@ -1,12 +1,11 @@
-import React from "react";
-import { CheckCircle, Star } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { CheckCircle, Star, Moon, Sun } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
-
 const features = [
   "Create invoices in seconds",
-  "Whatsapp or print with one click",
+  "Download or share with one click",
   "Works great on mobile and desktop",
-  "Dashboard to track invoices easily",
+  "No signup required to get started",
 ];
 
 const testimonials = [
@@ -34,6 +33,7 @@ const testimonials = [
 ];
 
 const Home = () => {
+  const [darkMode, setDarkMode] = useState(false);
   const navigate = useNavigate();
   const handleCreateInvoice = () => {
     const user = localStorage.getItem("user");
@@ -44,22 +44,43 @@ const Home = () => {
       navigate("/login");
     }
   };
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (darkMode) {
+      root.classList.add("dark");
+    } else {
+      root.classList.remove("dark");
+    }
+  }, [darkMode]);
+
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-800 font-sans">
-      {/* Header Toolbar */}
-      <header className="bg-white shadow-md">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-white transition-colors duration-300">
+      {/* Header */}
+      <header className="bg-white dark:bg-gray-800 shadow-md">
         <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-          <h1 className="text-xl font-bold text-indigo-600">InvoiceSimplify</h1>
-          <button
-            onClick={handleCreateInvoice}
-            className="bg-indigo-600 text-white px-4 py-2 rounded-xl hover:bg-indigo-700 transition"
-          >
-            Try It Free !
-          </button>
+          <h1 className="text-xl font-bold text-indigo-600 dark:text-white">
+            InvoiceSimplify
+          </h1>
+          <div className="flex items-center gap-4">
+            <button
+              onClick={handleCreateInvoice}
+              className="bg-indigo-600 text-white px-4 py-2 rounded-xl hover:bg-indigo-700 transition"
+            >
+              Create Invoice
+            </button>
+            <button
+              onClick={() => setDarkMode(!darkMode)}
+              className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition"
+              title="Toggle Dark Mode"
+            >
+              {darkMode ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
+          </div>
         </div>
       </header>
 
-      {/* Hero Section */}
+      {/* Hero */}
       <section className="bg-gradient-to-br from-indigo-600 to-purple-600 text-white py-20 px-6 text-center">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-4xl sm:text-5xl font-bold mb-6 leading-tight">
@@ -77,7 +98,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* Features */}
       <section className="py-16 px-6">
         <div className="max-w-5xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-8">
@@ -87,7 +108,7 @@ const Home = () => {
             {features.map((feature, index) => (
               <div
                 key={index}
-                className="flex items-start space-x-4 bg-white p-5 rounded-xl shadow hover:shadow-lg transition"
+                className="flex items-start space-x-4 bg-white dark:bg-gray-800 p-5 rounded-xl shadow hover:shadow-lg transition"
               >
                 <CheckCircle className="text-green-500 mt-1" size={28} />
                 <p className="text-lg font-medium">{feature}</p>
@@ -97,17 +118,17 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <section className="bg-gray-100 py-16 px-6">
+      {/* Testimonials */}
+      <section className="bg-gray-100 dark:bg-gray-800 py-16 px-6">
         <div className="max-w-5xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-12">
-            Loved by Business Owners & Creaters
+            Loved by Creators & Freelancers
           </h2>
           <div className="grid gap-10 md:grid-cols-3">
             {testimonials.map((user, index) => (
               <div
                 key={index}
-                className="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition text-left"
+                className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-md hover:shadow-lg transition text-left"
               >
                 <div className="flex items-center mb-4 space-x-4">
                   <img
@@ -117,10 +138,14 @@ const Home = () => {
                   />
                   <div>
                     <h4 className="font-semibold">{user.name}</h4>
-                    <p className="text-sm text-gray-500">{user.title}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      {user.title}
+                    </p>
                   </div>
                 </div>
-                <p className="text-gray-700 italic mb-4">“{user.quote}”</p>
+                <p className="text-gray-700 dark:text-gray-300 italic mb-4">
+                  “{user.quote}”
+                </p>
                 <div className="flex space-x-1 text-yellow-400">
                   {[...Array(5)].map((_, i) => (
                     <Star key={i} size={16} fill="currentColor" />
@@ -132,8 +157,8 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Call to Action */}
-      <section className="bg-white py-16 px-6">
+      {/* CTA */}
+      <section className="bg-white dark:bg-gray-900 py-16 px-6">
         <div className="max-w-4xl mx-auto text-center">
           <h3 className="text-2xl sm:text-3xl font-semibold mb-6">
             Start Invoicing in Just a Few Clicks
