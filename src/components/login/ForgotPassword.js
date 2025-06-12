@@ -52,20 +52,27 @@ const ForgotPassword = () => {
 
       {/* Main Section */}
       <main className="flex-grow flex items-center justify-center px-4 py-10">
-        <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-3xl shadow-lg p-8">
-          <h2 className="text-2xl sm:text-3xl font-semibold mb-4 text-center">
-            Forgot Your Password?
-          </h2>
+        <div className="max-w-4xl w-full bg-white dark:bg-gray-800 rounded-3xl shadow-lg overflow-hidden grid md:grid-cols-2">
+          <div className="hidden md:flex flex-col justify-center items-center bg-gradient-to-br from-indigo-500 to-purple-600 text-white p-8">
+            <h2 className="text-3xl font-bold mb-4">Not Remember !</h2>
+            <p className="text-center text-sm">
+              Reset password by sending link to you email.
+            </p>
+            <img
+              src="../images/Forgotpassword-amico.svg"
+              alt="Login Illustration"
+              className="w-3/4 mt-6"
+            />
+          </div>
+          <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-3xl shadow-lg p-8">
+            <h2 className="text-2xl sm:text-3xl font-semibold mb-4 text-center">
+              Forgot Your Password?
+            </h2>
 
-          <p className="text-sm text-gray-600 dark:text-gray-400 text-center mb-6">
-            Enter your email address and we’ll send you a reset link.
-          </p>
+            <p className="text-sm text-gray-600 dark:text-gray-400 text-center mb-6">
+              Enter your email address and we’ll send you a reset link.
+            </p>
 
-          {submitted ? (
-            <div className="text-center text-green-600 dark:text-green-400">
-              ✅ A password reset link has been sent to <strong>{email}</strong>
-            </div>
-          ) : (
             <form onSubmit={handleUpdatePassword} className="space-y-5">
               <div>
                 <label className="block text-sm font-medium mb-1">
@@ -96,7 +103,7 @@ const ForgotPassword = () => {
                 </NavLink>
               </div>
             </form>
-          )}
+          </div>
         </div>
       </main>
 
