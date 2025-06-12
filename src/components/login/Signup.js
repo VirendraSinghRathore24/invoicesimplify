@@ -214,7 +214,7 @@ const Signup = () => {
               Welcome to InvoiceSimplify
             </h2>
             <p className="text-center text-sm">
-              Fast, simple & mobile-friendly invoicing for freelancers and
+              Fast, simple & mobile-friendly invoicing for business and
               creators.
             </p>
             <img
