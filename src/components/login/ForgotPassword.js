@@ -56,7 +56,7 @@ const ForgotPassword = () => {
           <div className="hidden md:flex flex-col justify-center items-center bg-gradient-to-br from-indigo-500 to-purple-600 text-white p-8">
             <h2 className="text-3xl font-bold mb-4">Not Remember !</h2>
             <p className="text-center text-sm">
-              Reset password by sending link to you email.
+              Reset password by sending link to your email.
             </p>
             <img
               src="../images/Forgotpassword-amico.svg"
@@ -80,6 +80,7 @@ const ForgotPassword = () => {
                 </label>
                 <input
                   type="email"
+                  autoFocus
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}

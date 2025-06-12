@@ -64,7 +64,10 @@ const Dashboard = () => {
 
   const handleSettle = (post) => {
     const settleInfo = {
-      amount: post.amountInfo.amount,
+      amount:
+        post.amountInfo.amount +
+        post.taxCalculatedInfo.cgst +
+        post.taxCalculatedInfo.sgst,
       advance: post.amountInfo.advance,
       balance: post.taxCalculatedInfo.balance,
       docid: post.id,

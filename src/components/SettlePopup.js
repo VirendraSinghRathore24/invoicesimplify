@@ -89,65 +89,87 @@ const SettlePopup = ({ handleCloseSettlePopup }) => {
   }, []);
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center ">
-      <div className="overflow-auto mt-6 bg-white p-4 text-black rounded-xl w-3/12">
-        <div className="flex justify-between py-2">
-          <div className=" text-lg font-bold">Settle Payment</div>
-          <button onClick={handleCloseSettlePopup}>
-            <X size={30} />
+    <div className="fixed inset-0 z-50 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center">
+      <div className="w-full max-w-md mx-4 bg-white dark:bg-gray-900 text-black dark:text-white rounded-xl shadow-xl p-6">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-semibold">💰 Settle Payment</h2>
+          <button
+            onClick={handleCloseSettlePopup}
+            className="text-gray-600 hover:text-red-500"
+          >
+            <X size={28} />
           </button>
         </div>
-        <hr />
-        <form onSubmit={handleSettlePayment}>
-          <div className="flex justify-end font-bold text-lg p-2">
-            Invoice : {invoiceNumber}
-          </div>
-          <div className="flex flex-col gap-y-4 p-4">
-            <div className="flex justify-evenly">
-              <div>Amount : </div>
-              <div>₹ {amount}</div>
+
+        <hr className="mb-4 border-gray-300 dark:border-gray-700" />
+
+        {/* Invoice Info */}
+        <div className="text-right font-medium text-gray-700 dark:text-gray-300 mb-2">
+          Invoice: <span className="font-bold">{invoiceNumber}</span>
+        </div>
+
+        {/* Form */}
+        <form onSubmit={handleSettlePayment} className="space-y-5">
+          {/* Summary */}
+          <div className="grid gap-3 text-md">
+            <div className="flex justify-between">
+              <span>Amount:</span>
+              <span className="font-semibold">₹ {amount}</span>
             </div>
-            <div className="flex justify-evenly">
-              <div>Advance : </div>
-              <div>₹ {advance}</div>
+            <div className="flex justify-between">
+              <span>Advance:</span>
+              <span className="font-semibold">₹ {advance}</span>
             </div>
-            <div className="flex justify-evenly">
-              <div>Balance : </div>
-              <div>₹ {balance}</div>
-            </div>
-            <div className="flex justify-evenly">
-              <div>Settle : </div>
-              <div className="mx-auto flex gap-x-2">
-                <div className="text-md font-bold mt-1">₹ </div>
-                <input
-                  className="form-input text-md font-bold block rounded border border-gray-400 py-2 px-4 leading-5"
-                  pattern="^[0-9]*$"
-                  name="payment"
-                  required
-                  autoFocus
-                  value={payment}
-                  onChange={handleSettleChange}
-                />
-              </div>
+            <div className="flex justify-between">
+              <span>Balance:</span>
+              <span className="font-semibold text-red-600 dark:text-red-400">
+                ₹ {balance}
+              </span>
             </div>
           </div>
-          <hr />
-          <div className="flex justify-between mt-2">
+
+          {/* Input */}
+          <div>
+            <label htmlFor="payment" className="block text-sm mb-1 font-medium">
+              Settle Amount
+            </label>
+            <div className="flex items-center gap-2">
+              <span className="text-lg font-bold">₹</span>
+              <input
+                id="payment"
+                name="payment"
+                type="text"
+                pattern="^[0-9]*$"
+                required
+                value={payment}
+                onChange={handleSettleChange}
+                autoFocus
+                className="w-full border border-gray-400 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800"
+              />
+            </div>
+          </div>
+
+          {/* Buttons */}
+          <div className="flex justify-end gap-3 pt-2">
             <button
+              type="button"
               onClick={handleCloseSettlePopup}
-              className=" border-[1.4px] border-black text-black py-2 px-6 font-semibold rounded-md text-richblack-700 hover:scale-110 transition duration-300 ease-in cursor-pointer "
+              className="px-5 py-2 rounded-md border border-gray-500 text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="bg-[#444] border-[1.4px] border-gray-400 text-white py-2 px-6 font-semibold rounded-md text-richblack-700 hover:scale-110 transition duration-300 ease-in cursor-pointer "
+              className="px-5 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 transition"
             >
               Save
             </button>
           </div>
         </form>
       </div>
+
+      {/* Loader */}
       {loading && <Loader />}
     </div>
   );
