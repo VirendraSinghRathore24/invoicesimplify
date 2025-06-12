@@ -554,7 +554,7 @@ const Dashboard = () => {
               {filteredData.length === 0 && (
                 <tr>
                   <td
-                    colSpan="9"
+                    colSpan="12"
                     className="text-center px-4 py-6 text-gray-500"
                   >
                     No data available.

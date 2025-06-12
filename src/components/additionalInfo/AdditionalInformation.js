@@ -60,7 +60,7 @@ const AdditionalInformation = () => {
     handleLogin();
     let info = localStorage.getItem("additionalInfo");
     if (info === "undefined" || info === "null" || info === null) {
-      setPosts([]);
+      setPosts(null);
     } else {
       const data = JSON.parse(info);
       setPosts([data]);
@@ -74,7 +74,7 @@ const AdditionalInformation = () => {
       <div className="p-6">
         <div className="flex justify-between w-full mx-auto font-bold text-2xl bg-gray-200 py-4 px-2 rounded-md">
           <div>Additional Information</div>
-          {posts && posts.length > 0 && (
+          {posts && (
             <div>
               <button
                 onClick={() => handleDelete()}
@@ -86,10 +86,8 @@ const AdditionalInformation = () => {
           )}
         </div>
         <div>
-          {posts && posts.length > 0 && (
-            <div className="mt-4">Left Bottom Text</div>
-          )}
-          {posts && posts.length > 0 && (
+          {posts && <div className="mt-4">Left Bottom Text</div>}
+          {posts && (
             <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4">
               <table className="min-w-full text-sm text-left text-gray-700">
                 <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
@@ -128,10 +126,8 @@ const AdditionalInformation = () => {
               </table>
             </div>
           )}
-          {posts && posts.length > 0 && (
-            <div className="mt-6">Middle Bottom Text</div>
-          )}
-          {posts && posts.length > 0 && (
+          {posts && <div className="mt-6">Middle Bottom Text</div>}
+          {posts && (
             <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4">
               <table className="min-w-full text-sm text-left text-gray-700">
                 <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
@@ -170,10 +166,8 @@ const AdditionalInformation = () => {
               </table>
             </div>
           )}
-          {posts && posts.length > 0 && (
-            <div className="mt-6">Right Bottom Text</div>
-          )}
-          {posts && posts.length > 0 && (
+          {posts && <div className="mt-6">Right Bottom Text</div>}
+          {posts && (
             <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4">
               <table className="min-w-full text-sm text-left text-gray-700">
                 <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
@@ -212,10 +206,8 @@ const AdditionalInformation = () => {
               </table>
             </div>
           )}
-          {posts && posts.length > 0 && (
-            <div className="mt-6">Additional Description</div>
-          )}
-          {posts && posts.length > 0 && (
+          {posts && <div className="mt-6">Additional Description</div>}
+          {posts && (
             <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4">
               <table className="min-w-full text-sm text-left text-gray-700">
                 <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
@@ -244,7 +236,7 @@ const AdditionalInformation = () => {
               </table>
             </div>
           )}
-          {posts.length === 0 && (
+          {!posts && (
             <div className="flex h-screen items-center justify-center ">
               <div onClick={() => navigate("/addadditionalinfo")}>
                 <button className="border-2 bg-[#444] text-white fond-bold text-lg py-4 px-8 rounded-md cursor-pointer">

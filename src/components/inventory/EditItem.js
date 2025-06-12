@@ -5,7 +5,7 @@ import { db } from "../../config/firebase";
 import { X } from "lucide-react";
 import { toast } from "react-toastify";
 
-function EditItem({ handleCloseEditModal, setItemEdited, editPost }) {
+function EditItem({ handleCloseEditModal, setItemAdded, editPost }) {
   const location = useLocation();
   const [inputs, setInputs] = useState(editPost);
   const [showList, setShowList] = useState(false);
@@ -23,7 +23,7 @@ function EditItem({ handleCloseEditModal, setItemEdited, editPost }) {
     await updateInventoryItems(inputs);
 
     handleCloseEditModal();
-    setItemEdited(true);
+    setItemAdded(true);
 
     toast("Item updated successfully!!!");
 

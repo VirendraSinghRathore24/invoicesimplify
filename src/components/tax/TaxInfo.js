@@ -54,7 +54,7 @@ const TaxInfo = () => {
     let info = localStorage.getItem("taxInfo");
 
     if (info === "undefined" || info === "null" || info === null) {
-      setPosts([]);
+      setPosts(null);
     } else {
       const data = JSON.parse(info);
       setPosts([data]);
