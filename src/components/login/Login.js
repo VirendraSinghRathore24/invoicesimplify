@@ -147,61 +147,77 @@ const Login = () => {
 
       {/* Login Form */}
       <main className="flex-grow flex items-center justify-center px-4 py-10">
-        <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-3xl shadow-lg p-8">
-          <h2 className="text-3xl font-semibold mb-6 text-center">
-            Login to Your Account
-          </h2>
-          <form onSubmit={signInWithUsernameAndPassword} className="space-y-5">
-            <div>
-              <label className="block text-sm font-medium mb-1">Email</label>
-              <input
-                type="email"
-                name="email"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                }}
-                required
-                className="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"
-              />
-            </div>
-            <div>
-              <div className="flex justify-between items-center mb-1">
-                <label className="block text-sm font-medium">Password</label>
+        <div className="max-w-4xl w-full bg-white dark:bg-gray-800 rounded-3xl shadow-lg overflow-hidden grid md:grid-cols-2">
+          <div className="hidden md:flex flex-col justify-center items-center bg-gradient-to-br from-indigo-500 to-purple-600 text-white p-8">
+            <h2 className="text-3xl font-bold mb-4">Welcome Back!</h2>
+            <p className="text-center text-sm">
+              Login to manage your invoices easily and efficiently.
+            </p>
+            <img
+              src="../images/Login-amico.svg"
+              alt="Login Illustration"
+              className="w-3/4 mt-6"
+            />
+          </div>
+          <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-3xl shadow-lg p-8">
+            <h2 className="text-3xl font-semibold mb-6 text-center">
+              Login to Your Account
+            </h2>
+            <form
+              onSubmit={signInWithUsernameAndPassword}
+              className="space-y-5"
+            >
+              <div>
+                <label className="block text-sm font-medium mb-1">Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                  }}
+                  required
+                  className="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"
+                />
+              </div>
+              <div>
+                <div className="flex justify-between items-center mb-1">
+                  <label className="block text-sm font-medium">Password</label>
+                  <NavLink
+                    to={"/forgotpassword"}
+                    className="text-sm text-indigo-600 hover:underline"
+                  >
+                    Forgot Password?
+                  </NavLink>
+                </div>
+                <input
+                  type="password"
+                  name="password"
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                  }}
+                  required
+                  className="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"
+                />
+              </div>
+              <button
+                type="submit"
+                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-semibold text-sm"
+              >
+                Login
+              </button>
+              <div className="text-center text-sm text-gray-600 dark:text-gray-400 mt-4">
+                Don’t have an account?{" "}
                 <NavLink
-                  to={"/forgotpassword"}
-                  className="text-sm text-indigo-600 hover:underline"
+                  to={"/signup"}
+                  className="text-indigo-600 hover:underline"
                 >
-                  Forgot Password?
+                  Sign Up
                 </NavLink>
               </div>
-              <input
-                type="password"
-                name="password"
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                }}
-                required
-                className="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"
-              />
-            </div>
-            <button
-              type="submit"
-              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-semibold text-sm"
-            >
-              Login
-            </button>
-            <div className="text-center text-sm text-gray-600 dark:text-gray-400 mt-4">
-              Don’t have an account?{" "}
-              <NavLink
-                to={"/signup"}
-                className="text-indigo-600 hover:underline"
-              >
-                Sign Up
-              </NavLink>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
         {loading && <Loader />}
       </main>
