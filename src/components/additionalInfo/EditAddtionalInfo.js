@@ -299,15 +299,15 @@ function AddtionalInfo() {
                   <button
                     type="button"
                     onClick={() => navigate("/additionalinfo")}
-                    className="px-4 py-2 rounded-md text-black w-3/12 border-[1.4px] border-black"
+                    className="px-5 py-2 rounded-md border border-gray-500 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="bg-[#444] px-4 py-2 rounded-md text-white w-3/12"
+                    className="px-5 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 transition"
                   >
-                    Update
+                    Update Changes
                   </button>
                 </div>
               </div>

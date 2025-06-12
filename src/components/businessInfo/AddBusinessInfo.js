@@ -311,13 +311,13 @@ function AddBusinessInfo() {
                   <button
                     type="button"
                     onClick={() => navigate("/businessinfo")}
-                    className="px-4 py-2 rounded-md text-black w-3/12 border-[1.4px] border-black"
+                    className="px-5 py-2 rounded-md border border-gray-500 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="bg-[#444] px-4 py-2 rounded-md text-white w-3/12"
+                    className="px-5 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 transition"
                   >
                     <span className="flex items-center gap-1">
                       {saving ? (
@@ -327,7 +327,9 @@ function AddBusinessInfo() {
                           <div className="h-3 w-3 bg-[#d6f539] rounded-full animate-bounce"></div>
                         </div>
                       ) : (
-                        <div className="text-center w-full mx-auto">Save</div>
+                        <div className="text-center w-full mx-auto">
+                          Save Changes
+                        </div>
                       )}
                     </span>
                   </button>
