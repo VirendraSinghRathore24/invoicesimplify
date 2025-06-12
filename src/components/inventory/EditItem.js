@@ -5,17 +5,14 @@ import { db } from "../../config/firebase";
 import { X } from "lucide-react";
 import { toast } from "react-toastify";
 
-function EditItem({handleCloseEditModal, setItemAdded, editPost}) {
-
-const location = useLocation();
+function EditItem({ handleCloseEditModal, setItemEdited, editPost }) {
+  const location = useLocation();
   const [inputs, setInputs] = useState(editPost);
   const [showList, setShowList] = useState(false);
   const [posts, setPosts] = useState([]);
 
   const navigate = useNavigate();
   const inventoryInfo_CollectionRef = collection(db, "Inventory_Info");
-
-  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -25,10 +22,10 @@ const location = useLocation();
     // update item to db
     await updateInventoryItems(inputs);
 
-    setItemAdded(true);
     handleCloseEditModal();
+    setItemEdited(true);
 
-    toast('Item updated successfully!!!');
+    toast("Item updated successfully!!!");
 
     // sending  info to next screen
     //localStorage.setItem("inventory", JSON.stringify(data));
@@ -36,26 +33,28 @@ const location = useLocation();
 
   const updateInventoryItems = async () => {
     const data = await getDocs(inventoryInfo_CollectionRef);
-       const filteredData = data.docs.map((doc) => ({
-         ...doc.data(),
-         id: doc.id,
-       }));
-   
-       const loggedInUser = localStorage.getItem("user");
-       const inventoryInfo = filteredData.filter(
-         (x) => x.loggedInUser === loggedInUser
-       )[0];
+    const filteredData = data.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+
+    const loggedInUser = localStorage.getItem("user");
+    const inventoryInfo = filteredData.filter(
+      (x) => x.loggedInUser === loggedInUser
+    )[0];
 
     // update inventory info
-    
-    const existingItems = inventoryInfo.inventory.sort((a, b) => a.itemName.localeCompare(b.itemName));
+
+    const existingItems = inventoryInfo.inventory.sort((a, b) =>
+      a.itemName.localeCompare(b.itemName)
+    );
 
     // Prepare the updated item
-    
+
     // Update the item name at index 2
     existingItems[editPost.index].itemName = inputs.itemName;
     existingItems[editPost.index].itemPrice = inputs.itemPrice;
-    
+
     // Find the item to update
     const updatedItems = existingItems.map((item) =>
       item.id === inventoryInfo.id ? { ...item, ...inputs } : item
@@ -77,7 +76,7 @@ const location = useLocation();
     navigate(-1);
   };
 
-  const checkIfListExists = async() => {
+  const checkIfListExists = async () => {
     const data = await getDocs(inventoryInfo_CollectionRef);
     const filteredData = data.docs.map((doc) => ({
       ...doc.data(),
@@ -92,28 +91,27 @@ const location = useLocation();
     // get items list
     const existingItems = inventoryInfo.inventory;
 
-    if(existingItems.length > 0){
+    if (existingItems.length > 0) {
       setShowList(true);
       setPosts(inventoryInfo.inventory);
     }
-  }
+  };
 
   const handleLogin = () => {
     const user = localStorage.getItem("user");
 
-    if(!user || user === "undefined" || user === "null"){
+    if (!user || user === "undefined" || user === "null") {
       navigate("/login");
-    } 
-}
+    }
+  };
   useEffect(() => {
     handleLogin();
-
-  },[]);
+  }, []);
 
   return (
     <div className=" w-full mx-auto fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center p-6">
       <div className="overflow-auto mt-6 bg-white p-4 text-black rounded-xl">
-      <div className="flex justify-between py-2">
+        <div className="flex justify-between py-2">
           <div className=" text-lg font-bold">Edit Item </div>
           <button onClick={handleCloseEditModal}>
             <X size={30} />
@@ -122,14 +120,12 @@ const location = useLocation();
 
         <hr />
         <div>
-          
           <form
             onSubmit={handleSubmit}
             className="w-full mx-auto flex flex-col md:flex-row justify-between mt-10"
           >
             <div className="flex flex-col gap-y-4 w-full  mx-auto">
               <div className="flex flex-col gap-y-4">
-                
                 <div className="w-full mx-auto">
                   <input
                     className="form-input w-[400px] block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
@@ -160,10 +156,16 @@ const location = useLocation();
 
               <div className="flex justify-evenly">
                 <div className="rounded-md flex justify-between w-full mx-auto">
-                 <button type='button' onClick={handleCloseEditModal} className='px-4 py-2 rounded-md text-black w-3/12 border-[1.4px] border-black'>Cancel</button>
+                  <button
+                    type="button"
+                    onClick={handleCloseEditModal}
+                    className="px-5 py-2 border border-gray-400 text-gray-700 dark:text-white rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+                  >
+                    Cancel
+                  </button>
                   <button
                     type="submit"
-                    className="bg-[#444] px-4 py-2 rounded-md text-white w-3/12"
+                    className="px-5 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition"
                   >
                     Update
                   </button>
@@ -172,7 +174,7 @@ const location = useLocation();
             </div>
           </form>
         </div>
-    </div>
+      </div>
     </div>
   );
 }

@@ -77,95 +77,6 @@ function EditTaxInfo() {
   }, []);
 
   return (
-    // <div>
-    //   <Header />
-
-    //   <div className="p-6">
-    //     <div className="flex flex-col w-full mx-auto font-bold text-2xl bg-gray-200 py-4 px-2 rounded-md">
-    //       Edit Tax & GST Information
-    //     </div>
-
-    //     <div className="flex flex-col w-5/12 m-auto p-4 mt-10 shadow-lg border-2 p-5 bg-white gap-y-4 rounded-md">
-    //       <form
-    //         onSubmit={handleSubmit}
-    //         className="w-full mx-auto flex flex-col md:flex-row justify-between"
-    //       >
-    //         <div className="flex flex-col gap-y-4 w-full md:w-7/12 mx-auto">
-    //           <div className="flex flex-col">
-    //             <div className="text-xs font-medium leading-5 text-gray-700">
-    //               GST Number
-    //             </div>
-    //             <div>
-    //               <input
-    //                 className="form-input w-full block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
-    //                 name="gstNumber"
-    //                 placeholder="Enter GST Number"
-    //                 value={inputs?.gstNumber || ""}
-    //                 onChange={(e) => {
-    //                   localStorage.setItem("gstNumber", e.target.value);
-    //                   handleChange(e);
-    //                 }}
-    //               />
-    //             </div>
-    //           </div>
-    //           <div className="flex flex-col">
-    //             <div className="text-xs font-medium leading-5 text-gray-700 mt-2">
-    //               CGST %
-    //             </div>
-    //             <div>
-    //               <input
-    //                 className="form-input w-5/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
-    //                 name="cgstAmount"
-    //                 placeholder="CGST %"
-    //                 value={inputs?.cgstAmount || ""}
-    //                 onChange={(e) => {
-    //                   localStorage.setItem("cgstAmount", e.target.value);
-    //                   handleChange(e);
-    //                 }}
-    //               />
-    //             </div>
-    //           </div>
-    //           <div className="flex flex-col">
-    //             <div className="text-xs font-medium leading-5 text-gray-700 mt-2">
-    //               SGST %
-    //             </div>
-    //             <div>
-    //               <input
-    //                 className="form-input w-5/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
-    //                 name="sgstAmount"
-    //                 placeholder="SGST %"
-    //                 value={inputs?.sgstAmount || ""}
-    //                 onChange={(e) => {
-    //                   localStorage.setItem("sgstAmount", e.target.value);
-    //                   handleChange(e);
-    //                 }}
-    //               />
-    //             </div>
-    //           </div>
-
-    //           <div className="flex justify-evenly">
-    //             <div className="rounded-md flex justify-between w-full mx-auto">
-    //               <button
-    //                 type="button"
-    //                 onClick={() => navigate("/taxinfo")}
-    //                 className="px-5 py-2 rounded-md border border-gray-500 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition"
-    //               >
-    //                 Cancel
-    //               </button>
-    //               <button
-    //                 type="submit"
-    //                 className="px-5 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 transition text-center"
-    //               >
-    //                 Update Changes
-    //               </button>
-    //             </div>
-    //           </div>
-    //         </div>
-    //       </form>
-    //     </div>
-    //   </div>
-    // </div>
-
     <div>
       <Header />
 
@@ -236,6 +147,7 @@ function EditTaxInfo() {
               {/* Buttons */}
               <div className="flex justify-end gap-4 pt-4">
                 <button
+                  onClick={() => navigate("/taxinfo")}
                   type="button"
                   className="px-5 py-2 border border-gray-400 text-gray-700 dark:text-white rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 transition"
                 >

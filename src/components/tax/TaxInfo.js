@@ -71,7 +71,7 @@ const TaxInfo = () => {
         </div>
         <div>
           <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4">
-            {posts && posts.length > 0 && (
+            {posts && (
               <table className="min-w-full text-sm text-left text-gray-700">
                 <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
                   <tr>
@@ -114,7 +114,7 @@ const TaxInfo = () => {
               </table>
             )}
 
-            {posts.length === 0 && (
+            {!posts && (
               <div className="h-screen flex items-center justify-center ">
                 <div onClick={() => navigate("/addtaxinfo")}>
                   <button className="border-2 bg-[#444] text-white fond-bold text-lg py-4 px-8 rounded-md cursor-pointer">

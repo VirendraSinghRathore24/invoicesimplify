@@ -457,11 +457,8 @@ function Invoice() {
               </div>
             )}
             <hr className="w-full mt-4 border-[1.1px]"></hr>
-            {businessInfo?.address1 && (
-              <div className="py-2 text-center">
-                {businessInfo.address1}, {businessInfo.address2} -{" "}
-                {businessInfo.address3}
-              </div>
+            {businessInfo?.address && (
+              <div className="py-2 text-center">{businessInfo.address}</div>
             )}
             <hr className="w-full mt-1 border-[1.1px]"></hr>
             <div className="flex justify-between">

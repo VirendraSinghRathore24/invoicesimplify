@@ -81,6 +81,7 @@ const BusinessInfo = () => {
                 <tr>
                   <th className="px-4 py-3 border-r">Title</th>
                   <th className="px-4 py-3 border-r">SubTitle1</th>
+                  <th className="px-4 py-3 border-r">SubTitle2</th>
                   <th className="px-4 py-3 border-r">Address</th>
                   <th className="px-4 py-3 border-r">Phone1</th>
                   <th className="px-4 py-3 border-r">Phone2</th>
@@ -93,9 +94,8 @@ const BusinessInfo = () => {
                 <tr className="border-t bg-white">
                   <td className="px-4 py-3 border-r">{posts?.name}</td>
                   <td className="px-4 py-3 border-r">{posts?.subTitle1}</td>
-                  <td className="px-4 py-3 border-r">
-                    {posts?.address1}, {posts?.address2} - {posts?.address3}
-                  </td>
+                  <td className="px-4 py-3 border-r">{posts?.subTitle2}</td>
+                  <td className="px-4 py-3 border-r">{posts?.address}</td>
                   <td className="px-4 py-3 border-r">{posts?.phonePrimary}</td>
                   <td className="px-4 py-3 border-r">
                     {posts?.phoneSecondary}

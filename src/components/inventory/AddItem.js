@@ -155,13 +155,13 @@ function AddItem({ handleCloseItem, setItemAdded }) {
                     <button
                       type="button"
                       onClick={handleCloseItem}
-                      className="px-4 py-2 rounded-md text-black w-3/12 border-[1.4px] border-black"
+                      className="px-5 py-2 border border-gray-400 text-gray-700 dark:text-white rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 transition"
                     >
                       Cancel
                     </button>
                     <button
                       type="submit"
-                      className="bg-[#444] px-4 py-2 rounded-md text-white w-3/12"
+                      className="px-5 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition"
                     >
                       Save
                     </button>
