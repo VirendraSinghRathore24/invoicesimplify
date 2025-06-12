@@ -434,16 +434,21 @@ const Dashboard = () => {
                   <th
                     key={header}
                     className="px-4 py-3 border-r cursor-pointer"
-                    onClick={() => handleSort(header)}
+                    onClick={() =>
+                      !["S.No.", "View", "Delete"].includes(header) &&
+                      handleSort(header)
+                    }
                   >
                     {header}
-                    {sortConfig.key?.toLowerCase() !== "view" &&
-                      sortConfig.key?.toLowerCase() !== "delete" &&
-                      sortConfig.key === header.toLowerCase() && (
-                        <span>
-                          {sortConfig.direction === "asc" ? " 🔼" : " 🔽"}
-                        </span>
-                      )}
+                    {!["S.No.", "View", "Delete"].includes(header) && (
+                      <span>
+                        {sortConfig.key === header.toLowerCase()
+                          ? sortConfig.direction === "asc"
+                            ? " 🔼"
+                            : " 🔽"
+                          : " ⬍"}
+                      </span>
+                    )}
                   </th>
                 ))}
               </tr>
@@ -466,8 +471,8 @@ const Dashboard = () => {
                       index % 2 === 0 ? "bg-white" : "bg-gray-50"
                     } hover:bg-gray-200`}
                   >
-                    <td className="px-4 py-3 border-r w-[5%]">{index + 1}.</td>
-                    <td className="px-4 py-3 border-r w-[9%]">
+                    <td className="px-4 py-3 border-r w-[4%]">{index + 1}.</td>
+                    <td className="px-4 py-3 border-r w-[10%]">
                       {user.invoiceInfo.invoiceNumber}
                     </td>
                     <td className="px-4 py-3 border-r w-[18%]">
@@ -484,7 +489,7 @@ const Dashboard = () => {
                         ? formatDate(user.invoiceInfo.expectedDate)
                         : ""}
                     </td>
-                    <td className="px-4 py-3 border-r text-right w-[8%]">
+                    <td className="px-4 py-3 border-r text-right w-[10%]">
                       {Math.round(
                         user.amountInfo.amount +
                           user.taxCalculatedInfo.cgst +
@@ -504,19 +509,8 @@ const Dashboard = () => {
                       </td>
                     )}
 
-                    {/* <td className="px-4 py-3 border-r w-[10%]">
-                      <span
-                        className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                          user.amountInfo.amount - user.amountInfo.advance === 0
-                            ? "bg-green-100 text-green-700"
-                            : "bg-red-300 text-red-700"
-                        }`}
-                      >
-                        {user.taxCalculatedInfo.balance === 0 ? "Paid" : "Due"}
-                      </span>
-                    </td> */}
                     {user.taxCalculatedInfo.balance > 0 ? (
-                      <td className="px-4 py-3 border-r w-[8%] text-center">
+                      <td className="px-4 py-3 border-r w-[10%] text-center">
                         <button
                           onClick={() => handleSettle(user)}
                           className="text-blue-600 hover:text-blue-800 font-semibold text-sm"
