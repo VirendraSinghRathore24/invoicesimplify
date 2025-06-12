@@ -3,9 +3,9 @@ import { CheckCircle, Star, Moon, Sun } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 const features = [
   "Create invoices in seconds",
-  "Download or share with one click",
+  "Print or whatsapp with one click",
   "Works great on mobile and desktop",
-  "No signup required to get started",
+  "Dashboard to track invoices",
 ];
 
 const testimonials = [
@@ -122,7 +122,7 @@ const Home = () => {
       <section className="bg-gray-100 dark:bg-gray-800 py-16 px-6">
         <div className="max-w-5xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-12">
-            Loved by Creators & Freelancers
+            Loved by Business Owners & Creators
           </h2>
           <div className="grid gap-10 md:grid-cols-3">
             {testimonials.map((user, index) => (
