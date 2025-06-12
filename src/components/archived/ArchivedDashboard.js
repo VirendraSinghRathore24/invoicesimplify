@@ -307,30 +307,6 @@ const ArchivedDashboard = () => {
           Dashboard - Deleted Invoices
         </div>
 
-        <div className="flex justify-between py-4 gap-x-2">
-          <div className="flex flex-col gap-y-4 font-bold text-xl shadow-lg border-2 p-5 bg-amber-50 gap-y-4 rounded-md h-32 w-3/12">
-            <div className="">Balance</div>
-            <div className="text-2xl">₹ {balance}</div>
-          </div>
-
-          <div className="flex flex-col gap-y-4 font-bold text-xl shadow-lg border-2 p-5 bg-red-50 gap-y-4 rounded-md h-32 w-3/12">
-            <div className="">Amount</div>
-            <div className="text-2xl">₹ {amount}</div>
-          </div>
-
-          <div className="flex flex-col gap-y-4 font-bold text-xl shadow-lg border-2 p-5 bg-blue-50 gap-y-4 rounded-md h-32 w-3/12">
-            <div className="">Paid</div>
-            <div className="text-2xl">₹ {paid}</div>
-          </div>
-
-          <div className="flex flex-col gap-y-4 font-bold text-xl shadow-lg border-2 p-5 bg-green-50 gap-y-4 rounded-md h-32 w-3/12">
-            <div className="">Invoices</div>
-            <div className="text-2xl">
-              {filteredData ? filteredData.length : 0}
-            </div>
-          </div>
-        </div>
-
         <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4 shadow-lg border-2 bg-white gap-y-4 rounded-md">
           <div className="p-4">
             <input
