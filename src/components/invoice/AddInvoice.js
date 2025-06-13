@@ -9,9 +9,7 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import InventoryModal from "../inventory/InventoryModal";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../config/firebase";
-import Header from "../Header";
-import SignModal from "../SignModal";
-import ConfirmModal from "../confirmModal/ConfirmModal";
+
 import AlertModal from "../confirmModal/AlertModal";
 //import CurrencyFlag from "react-currency-flags";
 //import "./Sign.css";
@@ -76,10 +74,16 @@ const AddInvoice = () => {
   const [inv_cin, setInv_Cin] = useState("");
   const [saveInvoiceTo, setSaveInvoiceTo] = useState(true);
 
+  const [paymentType, setPaymentType] = useState("fullyPaid");
+  const [advanceAmount, setAdvanceAmount] = useState("");
+
   // invoice details
   const [invoiceNumber, setInvoiceNumber] = useState("");
 
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
+  const [settledDate, setSettledDate] = useState(
+    new Date().toISOString().slice(0, 10)
+  );
   const [expectedDate, setExpectedDate] = useState();
   const [discount, setDiscount] = useState(0.0);
 
@@ -213,6 +217,15 @@ const AddInvoice = () => {
       return;
     }
 
+    if (
+      (paymentType === "advance" && advanceAmount === "") ||
+      parseInt(advanceAmount) <= 0
+    ) {
+      alert("Please enter valid advance amount");
+      document.querySelector('input[name="advanceAmount"]').focus();
+      return;
+    }
+
     if (rows.length === 0) {
       alert("Please add at least one item to the invoice.");
     }
@@ -229,48 +242,11 @@ const AddInvoice = () => {
 
     localStorage.setItem("customerInfo", JSON.stringify(customerInfo));
 
-    const personalInfo = {
-      name: name,
-      email: email,
-      address1: address1,
-      address2: address2,
-      address3: address3,
-      phone: phone,
-      name_zipcode_phone: name + "-" + address3 + "-" + phone,
-      savePersonal: savePersonal,
-    };
-
-    const accountInfo = {
-      accountName: accountName,
-      accountNumber: accountNumber,
-      bankName: bankName,
-      accountType: accountType,
-      upiType: upiType,
-      upiId: upiId,
-      ifsc: ifsc,
-      pan: pan,
-      branch: branch,
-      saveAccount: saveAccount,
-    };
-
-    const invoiceToInfo = {
-      inv_name: inv_name,
-      inv_email: inv_email,
-      inv_address1: inv_address1,
-      inv_address2: inv_address2,
-      inv_address3: inv_address3,
-      inv_phone: inv_phone,
-      inv_gst: inv_gst,
-      inv_tin: inv_tin,
-      inv_pan: inv_pan,
-      inv_cin: inv_cin,
-      saveInvoiceTo: saveInvoiceTo,
-    };
-
     const invoiceInfo = {
       invoiceNumber: invoiceNumber,
       date: date,
       expectedDate: expectedDate,
+      settledDate: settledDate,
     };
     localStorage.setItem("invoiceInfo", JSON.stringify(invoiceInfo));
     // const imageRef = ref(storage, `images/signature/${showTime}-${selectedFile.name}`);
@@ -279,8 +255,17 @@ const AddInvoice = () => {
     // const imageUrl1 = await getDownloadURL(imageRef);
     const amountInfo = {
       amount: amount,
-      advance: advance === null ? 0 : parseInt(advance),
+      paymentType: paymentType,
+      advance: parseInt(advanceAmount),
     };
+
+    if (paymentType === "fullyPaid") {
+      invoiceInfo.settledDate = settledDate;
+    } else {
+      invoiceInfo.settledDate = "";
+    }
+    localStorage.setItem("advanceAmount", advanceAmount);
+    localStorage.setItem("paymentType", paymentType);
 
     localStorage.setItem("amountInfo", JSON.stringify(amountInfo));
 
@@ -289,14 +274,21 @@ const AddInvoice = () => {
 
     const cgst = Math.round((taxData?.cgstAmount ?? 0) * amount) / 100;
     const sgst = Math.round((taxData?.sgstAmount ?? 0) * amount) / 100;
-    const balance = Math.round(
-      amount + cgst + sgst - (advance === null ? 0 : parseInt(advance))
-    );
+    const balance = Math.round(amount + cgst + sgst - parseInt(advanceAmount));
     const taxCalculatedInfo = {
       cgst: cgst,
       sgst: sgst,
       balance: balance,
     };
+
+    const total = Math.round(amount + cgst + sgst);
+    localStorage.setItem("total", total);
+
+    if (paymentType === "advance" && parseInt(advanceAmount) > total) {
+      alert("Advance amount can not be greater than total amount");
+      document.querySelector('input[name="advanceAmount"]').focus();
+      return;
+    }
 
     localStorage.setItem(
       "taxCalculatedInfo",
@@ -304,23 +296,7 @@ const AddInvoice = () => {
     );
     localStorage.setItem("rows", JSON.stringify(rows));
 
-    navigate("/invoice", {
-      state: {
-        personalInfo: personalInfo,
-        accountInfo: accountInfo,
-        invoiceToInfo: invoiceToInfo,
-        invoiceInfo: invoiceInfo,
-        invoiceName: invoiceName,
-        rows: rows,
-        amount: amount,
-        symbol: symbol,
-        imageUrl: signature,
-        signedDate: signedDate,
-        currency: currency,
-        isAccountInfo: isAccountInfo,
-        isBusinessInfo: isBusinessInfo,
-      },
-    });
+    navigate("/invoice");
   };
 
   const login_CollectionRef = collection(db, "Login_Info");
@@ -524,6 +500,14 @@ const AddInvoice = () => {
 
       setAmount(total);
     }
+
+    const payType = localStorage.getItem("paymentType");
+    const type = payType === "undefined" ? "fullyPaid" : payType;
+    setPaymentType(type);
+
+    const advAmount = localStorage.getItem("advanceAmount");
+    const amt = advAmount === "undefined" ? "" : advAmount;
+    setAdvanceAmount(amt);
 
     window.scroll(0, 0);
     setTimeout(function () {
@@ -914,65 +898,128 @@ const AddInvoice = () => {
               </div>
               <hr className="w-full mt-2"></hr>
 
-              <div className="w-full flex justify-end gap-x-10 mt-2">
-                <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-sm font-bold rounded-md uppercase">
-                  SubTotal
-                </div>
-                <div
-                  className="w-3/12 mx-auto flex justify-end mt-1 px-2  text-sm font-bold rounded-md"
-                  name="amount"
-                >
-                  ₹ {amount}
-                </div>
-              </div>
+              <div className="flex justify-between w-full mx-auto">
+                <div className="w-3/12 mt-2">
+                  <div className="w-full mx-auto p-6 bg-white dark:bg-gray-800 shadow-md border-[1.4px] rounded-md">
+                    <h2 className="text-xl font-semibold mb-4">Payment Type</h2>
 
-              {taxInfo?.cgstAmount && (
-                <div className="w-full flex justify-end gap-x-10 mt-2">
-                  <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-sm font-bold rounded-md uppercase">
-                    CGST ({taxInfo?.cgstAmount}%)
-                  </div>
-                  <div
-                    className="w-3/12 mx-auto flex justify-end mt-1 px-2  text-sm font-bold rounded-md"
-                    name="cgst"
-                  >
-                    ₹ {Math.round((taxInfo?.cgstAmount ?? 0) * amount) / 100}
-                  </div>
-                </div>
-              )}
+                    {/* Radio Options */}
+                    <div className="flex flex-col gap-6 mb-4">
+                      <label className="flex items-center gap-2">
+                        <input
+                          type="radio"
+                          name="payment"
+                          value="fullyPaid"
+                          checked={paymentType === "fullyPaid"}
+                          onChange={() => {
+                            setPaymentType("fullyPaid");
+                            setAdvanceAmount("");
+                          }}
+                          className="accent-indigo-600"
+                        />
+                        Fully Paid
+                      </label>
 
-              {taxInfo?.sgstAmount && (
-                <div className="w-full flex justify-end gap-x-10 mt-2">
-                  <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-sm font-bold rounded-md uppercase">
-                    SGST ({taxInfo?.sgstAmount}%)
-                  </div>
-                  <div
-                    className="w-3/12 mx-auto flex justify-end mt-1 px-2  text-sm font-bold rounded-md"
-                    name="sgst"
-                  >
-                    ₹ {Math.round((taxInfo?.sgstAmount ?? 0) * amount) / 100}
-                  </div>
-                </div>
-              )}
+                      <label className="flex items-center gap-2">
+                        <input
+                          type="radio"
+                          name="payment"
+                          value="advance"
+                          checked={paymentType === "advance"}
+                          onChange={() => setPaymentType("advance")}
+                          className="accent-indigo-600"
+                        />
+                        Advance
+                      </label>
+                    </div>
 
-              <div className="w-full flex justify-end gap-x-10 mt-2">
-                <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-sm font-bold rounded-md uppercase">
-                  Total
+                    {/* Input field for Advance */}
+                    {paymentType === "advance" && (
+                      <div className="mt-2">
+                        <label className="block mb-1 font-medium">
+                          Enter Advance Amount (₹)
+                        </label>
+                        <input
+                          name="advanceAmount"
+                          type="text"
+                          pattern="[0-9]*"
+                          autoFocus
+                          value={advanceAmount}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            if (/^\d*$/.test(val)) setAdvanceAmount(val);
+                          }}
+                          className="w-8/12 border border-gray-300 dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+                          //placeholder="e.g. 500"
+                        />
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <div
-                  className="w-3/12 mx-auto flex justify-end mt-1 px-2  text-sm font-bold rounded-md"
-                  name="total"
-                >
-                  ₹{" "}
-                  {Math.round(
-                    amount +
-                      ((taxInfo?.cgstAmount ?? 0) * amount) / 100 +
-                      ((taxInfo?.sgstAmount ?? 0) * amount) / 100
+                <div className="w-8/12">
+                  <div className="w-full flex justify-end gap-x-10 mt-2">
+                    <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-sm font-bold rounded-md uppercase">
+                      SubTotal
+                    </div>
+                    <div
+                      className="w-3/12 mx-auto flex justify-end mt-1 px-2  text-sm font-bold rounded-md"
+                      name="amount"
+                    >
+                      ₹ {amount}
+                    </div>
+                  </div>
+
+                  {taxInfo?.cgstAmount && (
+                    <div className="w-full flex justify-end gap-x-10 mt-2">
+                      <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-sm font-bold rounded-md uppercase">
+                        CGST ({taxInfo?.cgstAmount}%)
+                      </div>
+                      <div
+                        className="w-3/12 mx-auto flex justify-end mt-1 px-2  text-sm font-bold rounded-md"
+                        name="cgst"
+                      >
+                        ₹{" "}
+                        {Math.round((taxInfo?.cgstAmount ?? 0) * amount) / 100}
+                      </div>
+                    </div>
                   )}
+
+                  {taxInfo?.sgstAmount && (
+                    <div className="w-full flex justify-end gap-x-10 mt-2">
+                      <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-sm font-bold rounded-md uppercase">
+                        SGST ({taxInfo?.sgstAmount}%)
+                      </div>
+                      <div
+                        className="w-3/12 mx-auto flex justify-end mt-1 px-2  text-sm font-bold rounded-md"
+                        name="sgst"
+                      >
+                        ₹{" "}
+                        {Math.round((taxInfo?.sgstAmount ?? 0) * amount) / 100}
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="w-full flex justify-end gap-x-10 mt-2">
+                    <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-sm font-bold rounded-md uppercase">
+                      Total
+                    </div>
+                    <div
+                      className="w-3/12 mx-auto flex justify-end mt-1 px-2  text-sm font-bold rounded-md"
+                      name="total"
+                    >
+                      ₹{" "}
+                      {Math.round(
+                        amount +
+                          ((taxInfo?.cgstAmount ?? 0) * amount) / 100 +
+                          ((taxInfo?.sgstAmount ?? 0) * amount) / 100
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
+              {/* <hr className="w-full my-4"></hr> */}
 
-              <hr className="w-full my-4"></hr>
-              <div className="w-full flex justify-end gap-x-10 mt-2">
+              {/* <div className="w-full flex justify-end gap-x-10 mt-2">
                 <div className="w-9/12 flex justify-end mx-auto mt-2 px-2 text-sm font-bold rounded-md uppercase">
                   Advance
                 </div>
@@ -987,7 +1034,7 @@ const AddInvoice = () => {
                     onChange={handleAdvanceChange}
                   />
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

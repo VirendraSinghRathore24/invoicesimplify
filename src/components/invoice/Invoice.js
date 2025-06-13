@@ -29,6 +29,7 @@ function Invoice() {
   const [amountInfo, setAmountInfo] = useState({});
   const [taxCalculatedInfo, setTaxCalculatedInfo] = useState({});
   const [rows, setRows] = useState({});
+  const [total, setTotal] = useState(0);
   const printRef = useRef(null);
   const pdfExportComponent = React.useRef(null);
 
@@ -362,6 +363,9 @@ function Invoice() {
 
     let info8 = localStorage.getItem("rows");
     setRows(JSON.parse(info8));
+
+    let info9 = localStorage.getItem("total");
+    setTotal(info9);
   }, []);
 
   const handleLogin = () => {
@@ -560,16 +564,11 @@ function Invoice() {
                     Total
                   </div>
                   <div className="w-3/12 mx-auto flex justify-end mt-1 px-2  text-sm font-bold rounded-md">
-                    ₹{" "}
-                    {parseInt(
-                      amountInfo.amount +
-                        taxCalculatedInfo?.cgst +
-                        taxCalculatedInfo?.sgst
-                    )}
+                    ₹ {total}
                   </div>
                 </div>
                 <div className="border-b-2 border-dashed py-1"></div>
-                {amountInfo?.advance > 0 && (
+                {amountInfo?.paymentType === "advance" && (
                   <div className="w-full flex justify-end gap-x-10 mt-2">
                     <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-sm font-bold rounded-md uppercase">
                       Advance
@@ -580,22 +579,28 @@ function Invoice() {
                   </div>
                 )}
                 <div className="border-b-2 border-dashed py-1"></div>
-                {
+                {amountInfo?.paymentType === "advance" ? (
                   <div className="w-full flex justify-end gap-x-10 mt-2">
                     <div className="w-11/12 flex justify-end mx-auto mt-1 px-2 text-sm font-bold rounded-md uppercase">
                       Balance
                     </div>
                     <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-sm font-bold rounded-md">
                       ₹{" "}
-                      {taxCalculatedInfo.balance ??
-                        parseInt(
-                          amountInfo.amount +
-                            taxCalculatedInfo?.cgst +
-                            taxCalculatedInfo?.sgst
+                      {Math.round(taxCalculatedInfo.balance) ??
+                        Math.round(
+                          parseInt(
+                            amountInfo.amount +
+                              taxCalculatedInfo?.cgst +
+                              taxCalculatedInfo?.sgst
+                          )
                         )}
                     </div>
                   </div>
-                }
+                ) : (
+                  <div className="w-full flex justify-end gap-x-10 mt-2 font-bold text-lg text-green-800">
+                    Fully Paid
+                  </div>
+                )}
               </div>
               <div className="flex justify-between border-b-[1.2px] border-black mt-2"></div>
               <div className="flex justify-between w-full mx-auto mt-2">
