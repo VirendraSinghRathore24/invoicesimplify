@@ -496,9 +496,20 @@ const Dashboard = () => {
                           user.taxCalculatedInfo.sgst
                       )}
                     </td>
-                    <td className="px-4 py-3 border-r text-right w-[8%]">
-                      {user.amountInfo.advance}
-                    </td>
+                    {user.amountInfo.paymentType === "fullyPaid" ? (
+                      <td className="px-4 py-3 border-r text-right w-[8%]">
+                        {Math.round(
+                          user.amountInfo.amount +
+                            user.taxCalculatedInfo.cgst +
+                            user.taxCalculatedInfo.sgst
+                        )}
+                      </td>
+                    ) : (
+                      <td className="px-4 py-3 border-r text-right w-[8%]">
+                        {user.amountInfo.advance}
+                      </td>
+                    )}
+
                     {user.amountInfo.paymentType === "fullyPaid" ||
                     user.taxCalculatedInfo.balance === 0 ? (
                       <td className="px-4 py-3 text-green-600 border-r text-right w-[10%]">

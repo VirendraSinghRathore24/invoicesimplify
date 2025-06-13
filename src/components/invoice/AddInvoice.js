@@ -225,9 +225,21 @@ const AddInvoice = () => {
       document.querySelector('input[name="advanceAmount"]').focus();
       return;
     }
-
-    if (rows.length === 0) {
-      alert("Please add at least one item to the invoice.");
+    // validate each row before creating invoice
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i];
+      if (!row.desc.trim()) {
+        alert("Item description can not be empty !!!");
+        return;
+      }
+      if (!row.rate) {
+        alert("Price (Rate) can not be empty !!!");
+        return;
+      }
+      if (!row.qty) {
+        alert("Quantity can not be empty !!!");
+        return;
+      }
     }
 
     if (expectedDate && new Date(expectedDate) < new Date(date)) {

@@ -142,9 +142,9 @@ const SettlePopup = ({ handleCloseSettlePopup }) => {
                 type="text"
                 pattern="^[0-9]*$"
                 required
+                autoFocus
                 value={payment}
                 onChange={handleSettleChange}
-                autoFocus
                 className="w-full border border-gray-400 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800"
               />
             </div>
