@@ -499,7 +499,8 @@ const Dashboard = () => {
                     <td className="px-4 py-3 border-r text-right w-[8%]">
                       {user.amountInfo.advance}
                     </td>
-                    {user.amountInfo.paymentType === "fullyPaid" ? (
+                    {user.amountInfo.paymentType === "fullyPaid" ||
+                    user.taxCalculatedInfo.balance === 0 ? (
                       <td className="px-4 py-3 text-green-600 border-r text-right w-[10%]">
                         Fully Paid
                       </td>

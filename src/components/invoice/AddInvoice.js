@@ -502,11 +502,11 @@ const AddInvoice = () => {
     }
 
     const payType = localStorage.getItem("paymentType");
-    const type = payType === "undefined" ? "fullyPaid" : payType;
+    const type = payType === null ? "fullyPaid" : payType;
     setPaymentType(type);
 
     const advAmount = localStorage.getItem("advanceAmount");
-    const amt = advAmount === "undefined" ? "" : advAmount;
+    const amt = advAmount === null ? "" : advAmount;
     setAdvanceAmount(amt);
 
     window.scroll(0, 0);
@@ -1000,7 +1000,7 @@ const AddInvoice = () => {
                   )}
 
                   <div className="w-full flex justify-end gap-x-10 mt-2">
-                    <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-sm font-bold rounded-md uppercase">
+                    <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-md font-bold rounded-md uppercase">
                       Total
                     </div>
                     <div

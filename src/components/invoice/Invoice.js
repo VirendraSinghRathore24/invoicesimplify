@@ -254,6 +254,8 @@ function Invoice() {
     localStorage.removeItem("expectedDate");
     localStorage.removeItem("advance");
     localStorage.removeItem("rows");
+    localStorage.removeItem("paymentType");
+    localStorage.removeItem("advanceAmount");
   };
 
   const sendToWhatsapp = async () => {
