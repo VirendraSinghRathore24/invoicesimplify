@@ -448,6 +448,9 @@ function Invoice() {
                 <div className="text-lg font-medium">
                   {businessInfo?.subTitle1}
                 </div>
+                <div className="text-lg font-medium">
+                  {businessInfo?.subTitle2}
+                </div>
               </div>
 
               <div className="flex flex-col font-semibold">
@@ -458,7 +461,7 @@ function Invoice() {
               </div>
             </div>
             {taxInfo?.gstNumber && (
-              <div className="text-sm font-medium text-center">
+              <div className="text-sm font-medium text-center mt-1">
                 GSTIN: {taxInfo.gstNumber}
               </div>
             )}

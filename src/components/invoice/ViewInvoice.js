@@ -171,6 +171,9 @@ function ViewInvoice() {
                 <div className="text-lg font-medium">
                   {invoiceInfo?.businessInfo?.subTitle1}
                 </div>
+                <div className="text-lg font-medium">
+                  {invoiceInfo?.businessInfo?.subTitle2}
+                </div>
               </div>
 
               <div className="flex flex-col font-semibold">
@@ -181,15 +184,13 @@ function ViewInvoice() {
               </div>
             </div>
             {invoiceInfo?.taxInfo?.gstNumber && (
-              <div className="text-sm font-medium text-center">
+              <div className="text-sm font-medium text-center mt-1">
                 GSTIN: {invoiceInfo?.taxInfo?.gstNumber}
               </div>
             )}
             <hr className="w-full mt-4 border-[1.1px]"></hr>
             <div className="py-2 text-center">
-              {invoiceInfo?.businessInfo?.address1},{" "}
-              {invoiceInfo?.businessInfo?.address2} -{" "}
-              {invoiceInfo?.businessInfo?.address3}
+              {invoiceInfo?.businessInfo?.address}
             </div>
             <hr className="w-full mt-1 border-[1.1px]"></hr>
             <div className="flex justify-between">
@@ -248,7 +249,7 @@ function ViewInvoice() {
               </table>
               <div className="flex justify-between border-b-[1.2px] border-black mt-2 py-1"></div>
               <div className="flex flex-col w-full">
-                {invoiceInfo?.taxInfo?.sgstAmount && (
+                {
                   <div className="w-full flex justify-end gap-x-10">
                     <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-sm font-semibold rounded-md uppercase ">
                       SubTotal{" "}
@@ -257,7 +258,7 @@ function ViewInvoice() {
                       ₹ {invoiceInfo?.amountInfo?.amount}
                     </div>
                   </div>
-                )}
+                }
                 {invoiceInfo?.taxInfo?.cgstAmount && (
                   <div className="border-b-2 border-dashed py-1"></div>
                 )}
@@ -301,28 +302,36 @@ function ViewInvoice() {
                   </div>
                 </div>
                 <div className="border-b-2 border-dashed py-1"></div>
-                {invoiceInfo?.amountInfo?.advance > 0 && (
-                  <div className="w-full flex justify-end gap-x-12">
-                    <div className="w-11/12 flex justify-end mx-auto mt-1 px-2 text-sm font-bold rounded-md uppercase text-center">
-                      Advance{" "}
+                {invoiceInfo?.amountInfo?.paymentType === "advance" && (
+                  <div className="w-full flex justify-end gap-x-10 mt-2">
+                    <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-sm font-bold rounded-md uppercase">
+                      Advance
                     </div>
-                    <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-sm font-bold rounded-md ">
+                    <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-sm font-bold rounded-md">
                       ₹ {invoiceInfo?.amountInfo?.advance}
                     </div>
                   </div>
                 )}
                 <div className="border-b-2 border-dashed py-1"></div>
-                {invoiceInfo?.taxCalculatedInfo?.balance ? (
-                  <div className="w-full flex justify-end gap-x-10">
-                    <div className="w-11/12 flex justify-end mx-auto mt-1 px-2 text-sm font-bold rounded-md uppercase text-center">
-                      Balance{" "}
+                {invoiceInfo?.amountInfo?.paymentType === "advance" ? (
+                  <div className="w-full flex justify-end gap-x-10 mt-2">
+                    <div className="w-11/12 flex justify-end mx-auto mt-1 px-2 text-sm font-bold rounded-md uppercase">
+                      Balance
                     </div>
-                    <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-sm font-bold rounded-md ">
-                      ₹ {invoiceInfo?.taxCalculatedInfo?.balance}
+                    <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-sm font-bold rounded-md">
+                      ₹{" "}
+                      {Math.round(invoiceInfo?.taxCalculatedInfo.balance) ??
+                        Math.round(
+                          parseInt(
+                            invoiceInfo?.amountInfo.amount +
+                              invoiceInfo?.taxCalculatedInfo?.cgst +
+                              invoiceInfo?.taxCalculatedInfo?.sgst
+                          )
+                        )}
                     </div>
                   </div>
                 ) : (
-                  <div className=" mt-1 px-2 text-xl font-extrabold rounded-md  text-right text-green-700 ">
+                  <div className="w-full flex justify-end gap-x-10 mt-2 font-bold text-lg text-green-800">
                     Fully Paid
                   </div>
                 )}
