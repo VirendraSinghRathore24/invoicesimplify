@@ -900,7 +900,7 @@ const AddInvoice = () => {
 
               <div className="flex justify-between w-full mx-auto">
                 <div className="w-3/12 mt-2">
-                  <div className="w-full mx-auto p-6 bg-white dark:bg-gray-800 shadow-md border-[1.4px] rounded-md">
+                  <div className="w-full mx-auto p-6 bg-white shadow-md border-[1.4px] rounded-md">
                     <h2 className="text-xl font-semibold mb-4">Payment Type</h2>
 
                     {/* Radio Options */}
@@ -949,7 +949,7 @@ const AddInvoice = () => {
                             const val = e.target.value;
                             if (/^\d*$/.test(val)) setAdvanceAmount(val);
                           }}
-                          className="w-8/12 border border-gray-300 dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+                          className="w-8/12 border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 "
                           //placeholder="e.g. 500"
                         />
                       </div>

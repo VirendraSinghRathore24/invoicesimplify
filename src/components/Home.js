@@ -10,25 +10,25 @@ const features = [
 
 const testimonials = [
   {
-    name: "Anjali Mehta",
-    title: "Freelance Graphic Designer",
+    name: "Amit Rathore",
+    title: "Startup Business Owner",
     quote:
       "This tool made my invoicing 10x faster. I can now send branded invoices to my clients within minutes!",
-    image: "https://i.pravatar.cc/150?img=47",
+    image: "../images/amit.png",
   },
   {
-    name: "Ravi Sharma",
+    name: "Sanju Shekhawat",
     title: "Content Creator",
     quote:
       "I was tired of messy invoice formats. This app helped me look more professional and save time.",
-    image: "https://i.pravatar.cc/150?img=12",
+    image: "../images/sanju.png",
   },
   {
-    name: "Neha Kapoor",
+    name: "Soniya Pachauri",
     title: "Small Business Owner",
     quote:
       "Super simple and mobile-friendly! I love how intuitive it is. Invoicing is no longer a chore.",
-    image: "https://i.pravatar.cc/150?img=31",
+    image: "../images/soniya.png",
   },
 ];
 
