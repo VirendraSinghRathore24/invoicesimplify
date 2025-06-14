@@ -29,12 +29,19 @@ import Success from "./components/Success";
 import PaymentHistory from "./components/PaymentHistory";
 import ViewInvoiceByCustomer from "./components/invoice/ViewInvoiceByCustomer";
 import ForgotPassword from "./components/login/ForgotPassword";
+import AboutUs from "./components/AboutUs";
+import ContactUs from "./components/ContactUs";
 
 function App() {
   const location = useLocation();
-  const showSidebar = !["/", "/login", "/signup", "/forgotpassword"].includes(
-    location.pathname
-  );
+  const showSidebar = ![
+    "/",
+    "/login",
+    "/signup",
+    "/forgotpassword",
+    "/aboutus",
+    "/contactus",
+  ].includes(location.pathname);
 
   const showSidebar1 = !location.pathname.includes("/customerinvoice");
 
@@ -80,7 +87,11 @@ function App() {
             path="/customerinvoice/:id"
             element={<ViewInvoiceByCustomer />}
           />
+          // about us
+          <Route path="/aboutus" element={<AboutUs />} />
+          <Route path="/contactus" element={<ContactUs />} />
         </Routes>
+
         <ToastContainer />
       </div>
     </div>

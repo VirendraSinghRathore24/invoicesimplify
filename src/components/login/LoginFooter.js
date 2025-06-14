@@ -7,10 +7,10 @@ const LoginFooter = () => {
       {/* Footer */}
       <footer className="bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 py-6 px-4 text-center border-t border-gray-200 dark:border-gray-700">
         <div className="flex flex-col sm:flex-row justify-center gap-6 text-sm">
-          <NavLink to={"/about"} className="hover:underline">
+          <NavLink to={"/aboutus"} className="hover:underline">
             About Us
           </NavLink>
-          <NavLink to={"/contact"} className="hover:underline">
+          <NavLink to={"/contactus"} className="hover:underline">
             Contact Us
           </NavLink>
           <NavLink to={"/"} className="hover:underline">

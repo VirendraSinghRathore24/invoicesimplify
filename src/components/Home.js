@@ -57,7 +57,7 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-white transition-colors duration-300">
       {/* Header */}
-      <header className="bg-white dark:bg-gray-800 shadow-md">
+      <header className="bg-white dark:bg-gray-800 shadow-md fixed top-0 left-0 w-full z-50">
         <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
           <h1 className="text-xl font-bold text-indigo-600 dark:text-white">
             InvoiceSimplify
@@ -81,7 +81,7 @@ const Home = () => {
       </header>
 
       {/* Hero */}
-      <section className="bg-gradient-to-br from-indigo-600 to-purple-600 text-white py-20 px-6 text-center">
+      <section className="bg-gradient-to-br from-indigo-600 to-purple-600 text-white py-20 px-6 text-center mt-16">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-4xl sm:text-5xl font-bold mb-6 leading-tight">
             Simplify Your Invoicing
