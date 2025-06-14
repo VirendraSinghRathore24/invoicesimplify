@@ -217,6 +217,12 @@ const AddInvoice = () => {
       return;
     }
 
+    let info1 = localStorage.getItem("businessInfo");
+    if (info1 === null) {
+      alert("Please add business name to create invoice !!!");
+      return;
+    }
+
     if (
       (paymentType === "advance" && advanceAmount === "") ||
       parseInt(advanceAmount) <= 0
@@ -793,7 +799,7 @@ const AddInvoice = () => {
                             </td>
                             <td className="w-[20%] text-center">
                               <div className="w-full  mt-3 font-extrabold text-xs">
-                                {row.amount}
+                                ₹ {row.amount}
                               </div>
                             </td>
                             <td className="w-[10%]">
@@ -871,7 +877,7 @@ const AddInvoice = () => {
                               </td>
                               <td className="w-[30%] text-center">
                                 <div className="w-full text-xs mt-3 ">
-                                  {row.amount}
+                                  ₹ {row.amount}
                                 </div>
                               </td>
                               <td className="w-[20%]">

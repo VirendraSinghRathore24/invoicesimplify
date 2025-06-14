@@ -190,6 +190,10 @@ const Signup = () => {
     const userCode = filteredData.filter((x) => x.code === loggedInUser)[0];
     return userCode;
   };
+  const handlePageChange = (e) => {
+    const selected = e.target.value;
+    //if (selected) navigate(selected);
+  };
 
   useEffect(() => {
     window.scroll(0, 0);
@@ -205,6 +209,7 @@ const Signup = () => {
           InvoiceSimplify
         </NavLink>
       </header>
+      {/* 🔽 Page Dropdown */}
 
       {/* Signup Form */}
       <main className="flex-grow flex items-center justify-center px-4 py-10">
@@ -273,6 +278,22 @@ const Signup = () => {
                   className="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"
                 />
               </div>
+              {/* <div className="w-full max-w-md mb-6">
+                <select
+                  onChange={handlePageChange}
+                  defaultValue=""
+                  className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                  <option value="" disabled>
+                    Select your business type
+                  </option>
+                  <option value="/dashboard">Rajputi Poshak</option>
+                  <option value="/createinvoice">Content Creator</option>
+                  <option value="/invoice">Medical Shop</option>
+                  <option value="/businessinfo">Digital Studio</option>
+                  <option value="/inventory">Inventory</option>
+                </select>
+              </div> */}
               <button
                 type="submit"
                 className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-semibold text-sm"
