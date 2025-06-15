@@ -6,6 +6,7 @@ function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
   const userCode = localStorage.getItem("user");
+  const type = localStorage.getItem("type");
 
   const handleLogout = () => {
     const res = window.confirm("Are you sure you want to logout?");
@@ -38,7 +39,7 @@ function Header() {
           {isMenuOpen && (
             <div className="absolute right-0 mt-3 w-48 bg-white border border-gray-300 rounded-md shadow-lg">
               <div className="px-4 py-2 text-sm text-center text-gray-700 font-bold">
-                {userCode}
+                {type}
               </div>
               <hr />
               <div className="px-4 py-2 text-sm text-center text-amber-800 font-bold">

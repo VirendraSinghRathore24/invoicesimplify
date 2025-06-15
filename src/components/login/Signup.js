@@ -24,6 +24,7 @@ const Signup = () => {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [loading, setLoading] = useState(false);
+  const [type, setType] = useState("notselected");
 
   const handleLogin = () => {
     navigate("/login");
@@ -68,6 +69,12 @@ const Signup = () => {
   const createUserWithUsernameAndPassword = async (e) => {
     try {
       e.preventDefault();
+
+      if (type === "notselected") {
+        alert("Please select type of business !!!");
+        return;
+      }
+
       setLoading(true);
       const userExists = await checkIfUserExists(email);
 
@@ -94,6 +101,7 @@ const Signup = () => {
           localStorage.setItem("user", code);
           localStorage.setItem("userName", userName);
           localStorage.setItem("invoiceNumber", 1);
+          localStorage.setItem("type", type);
 
           setLoading(false);
           navigate("/businessinfo");
@@ -158,7 +166,7 @@ const Signup = () => {
       code: code,
       userName: userName,
       invoiceNumber: 1,
-      type: "poshak",
+      type: type,
     });
 
     // also create db for business, tax and additional info
@@ -191,8 +199,8 @@ const Signup = () => {
     return userCode;
   };
   const handlePageChange = (e) => {
-    const selected = e.target.value;
-    //if (selected) navigate(selected);
+    const selectedType = e.target.value;
+    setType(selectedType);
   };
 
   useEffect(() => {
@@ -233,7 +241,7 @@ const Signup = () => {
               Create Your Account
             </h2>
             <form
-              onSubmit={createUserWithUsernameAndPassword}
+              onSubmit={(e) => createUserWithUsernameAndPassword(e)}
               className="space-y-5"
             >
               <div>
@@ -278,22 +286,19 @@ const Signup = () => {
                   className="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"
                 />
               </div>
-              {/* <div className="w-full max-w-md mb-6">
+              <div className="w-full max-w-md mb-6">
                 <select
                   onChange={handlePageChange}
                   defaultValue=""
                   className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
-                  <option value="" disabled>
-                    Select your business type
-                  </option>
-                  <option value="/dashboard">Rajputi Poshak</option>
-                  <option value="/createinvoice">Content Creator</option>
-                  <option value="/invoice">Medical Shop</option>
-                  <option value="/businessinfo">Digital Studio</option>
-                  <option value="/inventory">Inventory</option>
+                  <option value="notselected">Select your business type</option>
+                  <option value="Rajputi Poshak">Rajputi Poshak</option>
+                  {/* <option value="contentcreator">Content Creator</option>
+                  <option value="digitalstudio">Digital Studio</option> */}
+                  <option value="Others">Others</option>
                 </select>
-              </div> */}
+              </div>
               <button
                 type="submit"
                 className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-semibold text-sm"

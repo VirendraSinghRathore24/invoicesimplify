@@ -77,6 +77,8 @@ const AddInvoice = () => {
   const [paymentType, setPaymentType] = useState("fullyPaid");
   const [advanceAmount, setAdvanceAmount] = useState("");
 
+  const type = localStorage.getItem("type");
+
   // invoice details
   const [invoiceNumber, setInvoiceNumber] = useState("");
 
@@ -225,7 +227,7 @@ const AddInvoice = () => {
 
     if (
       (paymentType === "advance" && advanceAmount === "") ||
-      parseInt(advanceAmount) <= 0
+      parseInt(advanceAmount) < 0
     ) {
       alert("Please enter valid advance amount");
       document.querySelector('input[name="advanceAmount"]').focus();
@@ -693,27 +695,32 @@ const AddInvoice = () => {
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-col">
+                {type === "Rajputi Poshak" && (
                   <div className="flex flex-col">
-                    <div className="text-xs font-medium leading-5 text-gray-700 mt-2">
-                      Expected Delivery
-                    </div>
-                    <div>
-                      <input
-                        className="w-3/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
-                        required
-                        name="expecteddate"
-                        placeholder="Date"
-                        type="date"
-                        value={expectedDate}
-                        onChange={(e) => {
-                          setExpectedDate(e.target.value);
-                          localStorage.setItem("expecteddate", e.target.value);
-                        }}
-                      />
+                    <div className="flex flex-col">
+                      <div className="text-xs font-medium leading-5 text-gray-700 mt-2">
+                        Expected Delivery
+                      </div>
+                      <div>
+                        <input
+                          className="w-3/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
+                          required
+                          name="expecteddate"
+                          placeholder="Date"
+                          type="date"
+                          value={expectedDate}
+                          onChange={(e) => {
+                            setExpectedDate(e.target.value);
+                            localStorage.setItem(
+                              "expecteddate",
+                              e.target.value
+                            );
+                          }}
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
 

@@ -53,6 +53,20 @@ const Login = () => {
     );
   };
 
+  const login_CollectionRef = collection(db, "Login_Info");
+  const getBusinessType = async () => {
+    const data = await getDocs(login_CollectionRef);
+    const filteredData = data.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+
+    const loggedInUser = localStorage.getItem("user");
+    const loginInfo = filteredData.filter((x) => x.code === loggedInUser)[0];
+
+    localStorage.setItem("type", loginInfo.type);
+  };
+
   const signInWithUsernameAndPassword = async (e) => {
     try {
       e.preventDefault();
@@ -69,6 +83,8 @@ const Login = () => {
           localStorage.setItem("auth", "Logged In");
           localStorage.setItem("user", code);
           localStorage.setItem("userName", userName);
+
+          await getBusinessType();
 
           // get all data and add to local storage
           await getAllData(code);

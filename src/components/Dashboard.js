@@ -22,6 +22,7 @@ const Dashboard = () => {
   const [balance, setBalance] = useState(0);
   const [paid, setPaid] = useState(0);
   const [settled, setSettled] = useState(0);
+  const type = localStorage.getItem("type");
 
   const navigate = useNavigate();
 
@@ -416,42 +417,80 @@ const Dashboard = () => {
           </div>
           <table className="min-w-full text-sm text-left text-gray-700 ">
             <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
-              <tr>
-                {[
-                  "S.No.",
-                  "Invoice",
-                  "Name",
-                  "Phone",
-                  "Date",
-                  "Delivery",
-                  "Amount",
-                  "Paid",
-                  "Balance",
-                  "Settle",
-                  "View",
-                  "Delete",
-                ].map((header) => (
-                  <th
-                    key={header}
-                    className="px-4 py-3 border-r cursor-pointer"
-                    onClick={() =>
-                      !["S.No.", "View", "Delete"].includes(header) &&
-                      handleSort(header)
-                    }
-                  >
-                    {header}
-                    {!["S.No.", "View", "Delete"].includes(header) && (
-                      <span>
-                        {sortConfig.key === header.toLowerCase()
-                          ? sortConfig.direction === "asc"
-                            ? " 🔼"
-                            : " 🔽"
-                          : " ⬍"}
-                      </span>
-                    )}
-                  </th>
-                ))}
-              </tr>
+              {type === "Rajputi Poshak" ? (
+                <tr>
+                  {[
+                    "S.No.",
+                    "Invoice",
+                    "Name",
+                    "Phone",
+                    "Date",
+                    "Delivery",
+                    "Amount",
+                    "Paid",
+                    "Balance",
+                    "Settle",
+                    "View",
+                    "Delete",
+                  ].map((header) => (
+                    <th
+                      key={header}
+                      className="px-4 py-3 border-r cursor-pointer"
+                      onClick={() =>
+                        !["S.No.", "View", "Delete"].includes(header) &&
+                        handleSort(header)
+                      }
+                    >
+                      {header}
+                      {!["S.No.", "View", "Delete"].includes(header) && (
+                        <span>
+                          {sortConfig.key === header.toLowerCase()
+                            ? sortConfig.direction === "asc"
+                              ? " 🔼"
+                              : " 🔽"
+                            : " ⬍"}
+                        </span>
+                      )}
+                    </th>
+                  ))}
+                </tr>
+              ) : (
+                <tr>
+                  {[
+                    "S.No.",
+                    "Invoice",
+                    "Name",
+                    "Phone",
+                    "Date",
+                    "Amount",
+                    "Paid",
+                    "Balance",
+                    "Settle",
+                    "View",
+                    "Delete",
+                  ].map((header) => (
+                    <th
+                      key={header}
+                      className="px-4 py-3 border-r cursor-pointer"
+                      onClick={() =>
+                        !["S.No.", "View", "Delete"].includes(header) &&
+                        handleSort(header)
+                      }
+                    >
+                      {header}
+                      {!["S.No.", "View", "Delete"].includes(header) && (
+                        <span>
+                          {sortConfig.key === header.toLowerCase()
+                            ? sortConfig.direction === "asc"
+                              ? " 🔼"
+                              : " 🔽"
+                            : " ⬍"}
+                        </span>
+                      )}
+                    </th>
+                  ))}
+                </tr>
+              )}
             </thead>
 
             <tbody>
@@ -484,11 +523,13 @@ const Dashboard = () => {
                     <td className="px-4 py-3 border-r w-[10%]">
                       {formatDate(user.invoiceInfo.date)}
                     </td>
-                    <td className="px-4 py-3 border-r w-[10%]">
-                      {user.invoiceInfo.expectedDate
-                        ? formatDate(user.invoiceInfo.expectedDate)
-                        : ""}
-                    </td>
+                    {type === "Rajputi Poshak" && (
+                      <td className="px-4 py-3 border-r w-[10%]">
+                        {user.invoiceInfo.expectedDate
+                          ? formatDate(user.invoiceInfo.expectedDate)
+                          : ""}
+                      </td>
+                    )}
                     <td className="px-4 py-3 border-r text-right w-[10%]">
                       {Math.round(
                         user.amountInfo.amount +

@@ -104,7 +104,7 @@ const ContactUs = () => {
             <div>
               <h4 className="text-lg font-semibold">📍 Address</h4>
               <p className="text-gray-600 dark:text-gray-400">
-                InvoiceSimplify HQ, Sector 21, Mumbai, India
+                InvoiceSimplify, Bhartiya City, Bengaluru, India - 560067
               </p>
             </div>
             <div>

@@ -14,6 +14,11 @@ function AddTaxInfo() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    if (!inputs?.gstNumber && !inputs?.cgstAmount && !inputs?.sgstAmount) {
+      alert("Please enter valid details to save the data !!!");
+      return;
+    }
+
     // Add to local storage
     // sending  info to next screen
     localStorage.setItem("taxInfo", JSON.stringify(inputs));
