@@ -31,6 +31,8 @@ import ViewInvoiceByCustomer from "./components/invoice/ViewInvoiceByCustomer";
 import ForgotPassword from "./components/login/ForgotPassword";
 import AboutUs from "./components/AboutUs";
 import ContactUs from "./components/ContactUs";
+import PrivacyPolicy from "./components/PrivacyPolicy";
+import TermsOfUse from "./components/TermsOfUse";
 
 function App() {
   const location = useLocation();
@@ -41,6 +43,8 @@ function App() {
     "/forgotpassword",
     "/aboutus",
     "/contactus",
+    "/privacypolicy",
+    "/termsofuse",
   ].includes(location.pathname);
 
   const showSidebar1 = !location.pathname.includes("/customerinvoice");
@@ -90,6 +94,8 @@ function App() {
           // about us
           <Route path="/aboutus" element={<AboutUs />} />
           <Route path="/contactus" element={<ContactUs />} />
+          <Route path="/privacypolicy" element={<PrivacyPolicy />} />
+          <Route path="/termsofuse" element={<TermsOfUse />} />
         </Routes>
 
         <ToastContainer />

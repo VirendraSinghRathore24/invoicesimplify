@@ -34,14 +34,16 @@ const testimonials = [
 
 const Home = () => {
   const [darkMode, setDarkMode] = useState(false);
-  const navigate = useNavigate();
+
   const handleCreateInvoice = () => {
     const user = localStorage.getItem("user");
 
     if (user && user !== "undefined" && user !== "null") {
-      navigate("/createinvoice");
+      const newWindow = window.open("/createinvoice", "_blank");
+      if (newWindow) newWindow.opener = null;
     } else {
-      navigate("/login");
+      const newWindow = window.open("/login", "_blank");
+      if (newWindow) newWindow.opener = null;
     }
   };
 
