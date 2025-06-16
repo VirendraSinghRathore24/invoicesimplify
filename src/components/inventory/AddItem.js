@@ -20,6 +20,11 @@ function AddItem({ handleCloseItem, setItemAdded }) {
 
     // check if item is already added
 
+    const isValid = validatePrices(inputs.buyPrice, inputs.sellPrice);
+    if (!isValid) {
+      return;
+    }
+
     // update item to db
     await updateInventoryItems(inputs);
 
@@ -30,6 +35,14 @@ function AddItem({ handleCloseItem, setItemAdded }) {
 
     // sending  info to next screen
     //localStorage.setItem("inventory", JSON.stringify(data));
+  };
+
+  const validatePrices = (buyPrice, sellPrice) => {
+    if (parseInt(sellPrice) < parseInt(buyPrice)) {
+      alert("Sell price cannot be less than buy price.");
+      return false;
+    }
+    return true;
   };
 
   const updateInventoryItems = async (item) => {

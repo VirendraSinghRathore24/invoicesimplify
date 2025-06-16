@@ -19,6 +19,10 @@ function EditItem({ handleCloseEditModal, setItemAdded, editPost }) {
 
     // check if item is already added
 
+    const isValid = validatePrices(inputs.buyPrice, inputs.sellPrice);
+    if (!isValid) {
+      return;
+    }
     // update item to db
     await updateInventoryItems(inputs);
 
@@ -69,6 +73,14 @@ function EditItem({ handleCloseEditModal, setItemAdded, editPost }) {
     await updateDoc(codeDoc, {
       inventory: updatedItems,
     });
+  };
+
+  const validatePrices = (buyPrice, sellPrice) => {
+    if (parseInt(sellPrice) < parseInt(buyPrice)) {
+      alert("Sell price cannot be less than buy price.");
+      return false;
+    }
+    return true;
   };
 
   const handleChange = (event) => {
