@@ -201,13 +201,13 @@ function StockModal({ handleCloseStockModal, setItemAdded, editPost }) {
               <div className="w-5/12">
                 <div className="flex  justify-between gap-4 mb-6">
                   <div>
-                    <div className="block font-medium mb-1">Item Name</div>
+                    <div className="block mb-1 font-bold">Item Name</div>
                     <div className="block font-medium mb-1">
                       {editPost.itemName}
                     </div>
                   </div>
                   <div>
-                    <div className="block font-medium mb-1">Item Code</div>
+                    <div className="block font-bold mb-1">Item Code</div>
                     <div className="block font-medium mb-1">
                       {editPost.itemCode}
                     </div>
