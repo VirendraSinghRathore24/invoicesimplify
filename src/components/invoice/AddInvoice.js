@@ -135,6 +135,9 @@ const AddInvoice = () => {
     }
 
     if (name === "quantity" && /^\d*$/.test(value)) {
+      const isExceeded = isQuantityExceeded(value, values[index].desc);
+      if (!isExceeded) return;
+
       // Allow only whole numbers
       values[index].qty = value;
       values[index].amount = values[index].qty * values[index].rate;
@@ -210,6 +213,19 @@ const AddInvoice = () => {
       }
     }
     return false;
+  };
+
+  const isQuantityExceeded = (qty, itemName) => {
+    if (inventoryItems) {
+      const item = inventoryItems.find((x) => x.itemName === itemName);
+      if (item) {
+        if (item.itemQty < parseInt(qty)) {
+          alert(`Quantity of ${itemName} is not sufficient in stock !!!`);
+          return false;
+        }
+      }
+    }
+    return true;
   };
 
   const navigate = useNavigate();
