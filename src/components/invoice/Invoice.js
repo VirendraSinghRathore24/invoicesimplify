@@ -107,6 +107,38 @@ function Invoice() {
   };
 
   const addInvoiceDataToDB = async (linkStr) => {
+    // reduce the quantity of items in inventory
+    const inventoryInfo_CollectionRef = collection(db, "Inventory_Info");
+    const data = await getDocs(inventoryInfo_CollectionRef);
+    const filteredData = data.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+    const loggedInUser = localStorage.getItem("user");
+    const inventoryInfo = filteredData.filter(
+      (x) => x.loggedInUser === loggedInUser
+    )[0];
+    if (!inventoryInfo) return;
+    const existingItems = inventoryInfo.inventory.sort((a, b) =>
+      a.itemName.localeCompare(b.itemName)
+    );
+    // Prepare the updated item
+    const updatedItems = existingItems.map((item) => {
+      const row = rows.find((r) => r.desc === item.itemName);
+      if (row) {
+        return {
+          ...item,
+          itemQty: item.itemQty - row.qty,
+        };
+      }
+      return item;
+    });
+    // Update the inventory in Firestore
+    const codeDoc = doc(db, "Inventory_Info", inventoryInfo.id);
+    await updateDoc(codeDoc, {
+      inventory: updatedItems,
+    });
+
     await addDoc(invoiceInfo_CollectionRef, {
       invoiceInfo,
       amountInfo,
