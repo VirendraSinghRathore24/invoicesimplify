@@ -114,6 +114,9 @@ const AddInvoice = () => {
   const [item, setItem] = useState("");
   const [symbol, setSymbol] = useState("₹");
 
+  const [loss, setLoss] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
   // item details
   const [rows, setRows] = useState([{ desc: "", rate: "", qty: 1, amount: 0 }]);
   const handleInputChange = (name, value, index) => {
@@ -129,10 +132,14 @@ const AddInvoice = () => {
       values[index].rate = value;
       values[index].amount = values[index].qty * values[index].rate;
 
-      const isValid = validateBuySellPrice(values[index].desc, value);
-      if (!isValid) {
-        alert("Sell price cannot be less than buy price");
-      }
+      // //const isValid = validateBuySellPrice(values[index].desc, value);
+      // // Example validation: check if input is empty
+      // if (!isValid) {
+      //   setErrorMessage("Sell price cannot be less than buy price.");
+      // } else {
+      //   setErrorMessage("");
+      // }
+      // setLoss(!isValid);
     }
 
     if (name === "quantity" && /^\d*$/.test(value)) {
@@ -201,17 +208,17 @@ const AddInvoice = () => {
     }
   };
 
-  const validateBuySellPrice = (itemName, modifiedSellValue) => {
+  const isLoss = (modifiedSellValue, itemName) => {
     const existingItems = JSON.parse(localStorage.getItem("inventoryItems"));
     if (existingItems) {
       const item = existingItems.find((x) => x.itemName === itemName);
       if (item) {
         if (item.buyPrice > parseInt(modifiedSellValue)) {
-          return false;
+          return true;
         }
       }
     }
-    return true;
+    return false;
   };
 
   const navigate = useNavigate();
@@ -794,7 +801,11 @@ const AddInvoice = () => {
                             </td>
                             <td className="w-[15%] text-center">
                               <input
-                                className="w-full text-right block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
+                                className={`w-full text-right block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600 ${
+                                  isLoss(row.rate, row.desc)
+                                    ? "border-red-500 focus:ring-red-500 outline-red-500"
+                                    : "border-gray-300 focus:ring-indigo-500"
+                                }`}
                                 required
                                 name="rate"
                                 placeholder="Price"
@@ -807,6 +818,11 @@ const AddInvoice = () => {
                                   )
                                 }
                               />
+                              {isLoss(row.rate, row.desc) && (
+                                <p className="text-sm text-red-600 mt-1">
+                                  Selling at a loss for this item!
+                                </p>
+                              )}
                             </td>
                             <td className="w-[10%] ">
                               <input
