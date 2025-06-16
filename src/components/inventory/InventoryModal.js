@@ -7,7 +7,6 @@ import { db } from "../../config/firebase";
 import { useNavigate } from "react-router-dom";
 import Loader from "../Loader";
 
-
 const InventoryModal = ({ handleCloseItem, setItem }) => {
   const [posts, setPosts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -19,38 +18,25 @@ const InventoryModal = ({ handleCloseItem, setItem }) => {
   const handleSelect = (post) => {
     setItem(post.itemName);
     localStorage.setItem("selectedItem", post.itemName);
-    localStorage.setItem("selectedItemPrice", post.itemPrice);
+    localStorage.setItem("selectedItemPrice", post.sellPrice);
     handleCloseItem();
-  }
+  };
 
-  const inventoryInfo_CollectionRef = collection(db, "Inventory_Info");
-  const getInventoryList = async() => {
+  const getInventoryList = async () => {
     setLoading(true);
-    const data = await getDocs(inventoryInfo_CollectionRef);
-        const filteredData = data.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-        }));
-    
-        const loggedInUser = localStorage.getItem("user");
-        const inventoryInfo = filteredData.filter(
-          (x) => x.loggedInUser === loggedInUser
-        )[0];
-    
-        // get items list
-        const existingItems = inventoryInfo.inventory.sort((a, b) => a.itemName.localeCompare(b.itemName));
-        setPosts(existingItems);
-        setFilteredData(existingItems);
-        setLoading(false);
-  }
+    const existingItems = JSON.parse(localStorage.getItem("inventoryItems"));
+    setPosts(existingItems);
+    setFilteredData(existingItems);
+    setLoading(false);
+  };
 
   const handleLogin = () => {
     const user = localStorage.getItem("user");
 
-    if(!user || user === "undefined" || user === "null"){
+    if (!user || user === "undefined" || user === "null") {
       navigate("/login");
-    } 
-}
+    }
+  };
   useEffect(() => {
     handleLogin();
     getInventoryList();
@@ -95,65 +81,67 @@ const InventoryModal = ({ handleCloseItem, setItem }) => {
 
         <hr />
         <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md">
-      <div className="p-4">
-        <input
-          type="text"
-          placeholder="Search..."
-          autoFocus
-          value={searchTerm}
-          onChange={(e) => handleSearch(e)}
-          className="p-2 border border-gray-300 rounded-md mb-4 w-full"
-        />
-      </div>
-      <div className="overflow-auto h-[400px]">
-      <table className="min-w-full text-sm text-left text-gray-700 ">
-      <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
-          <tr>
-            {[
-              "ID",
-              "Name",
-              "Price"
-            ].map((header) => (
-              <th
-                key={header}
-                className="px-4 py-3 border-r cursor-pointer"
-                //onClick={() => handleSort(header.toLowerCase())}
-              >
-                {header}
-                {/* {sortConfig.key === header.toLowerCase() && (
+          <div className="p-4">
+            <input
+              type="text"
+              placeholder="Search..."
+              autoFocus
+              value={searchTerm}
+              onChange={(e) => handleSearch(e)}
+              className="p-2 border border-gray-300 rounded-md mb-4 w-full"
+            />
+          </div>
+          <div className="overflow-auto h-[400px]">
+            <table className="min-w-full text-sm text-left text-gray-700 ">
+              <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
+                <tr>
+                  {["ID", "Name", "Price"].map((header) => (
+                    <th
+                      key={header}
+                      className="px-4 py-3 border-r cursor-pointer"
+                      //onClick={() => handleSort(header.toLowerCase())}
+                    >
+                      {header}
+                      {/* {sortConfig.key === header.toLowerCase() && (
                   <span>{sortConfig.direction === "asc" ? " 🔼" : " 🔽"}</span>
                 )} */}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {filteredData && filteredData.map((post, index) => (
-            <tr onClick={() => handleSelect(post)}
-              key={post.id}
-              className={`border ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-amber-300 cursor-pointer`}
-            >
-              <td className="px-4 py-3 border-r">{index+1}.</td>
-              <td className="px-4 py-3 border-r">{post.itemName}</td>
-              <td className="px-4 py-3 border-r">{post.itemPrice}</td>
-            </tr>
-          ))}
-          {filteredData.length === 0 && (
-            <tr>
-              <td colSpan="9" className="text-center px-4 py-6 text-gray-500">
-                No data available.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {filteredData &&
+                  filteredData.map((post, index) => (
+                    <tr
+                      onClick={() => handleSelect(post)}
+                      key={post.id}
+                      className={`border ${
+                        index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                      } hover:bg-amber-300 cursor-pointer`}
+                    >
+                      <td className="px-4 py-3 border-r">{index + 1}.</td>
+                      <td className="px-4 py-3 border-r">{post.itemName}</td>
+                      <td className="px-4 py-3 border-r">{post.sellPrice}</td>
+                    </tr>
+                  ))}
+                {filteredData.length === 0 && (
+                  <tr>
+                    <td
+                      colSpan="9"
+                      className="text-center px-4 py-6 text-gray-500"
+                    >
+                      No data available.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
-    </div>
-      </div>
-      {loading && <Loader/>}
+      {loading && <Loader />}
     </div>
   );
 };
-
 
 export default InventoryModal;

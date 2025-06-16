@@ -48,9 +48,14 @@ function AddItem({ handleCloseItem, setItemAdded }) {
     const existingItems = inventoryInfo.inventory;
     const newItem = {
       itemName: inputs.itemName,
-      itemPrice: inputs.itemPrice,
+      itemCode: inputs.itemCode,
+      itemQty: inputs.itemQty,
+      buyPrice: inputs.buyPrice,
+      sellPrice: inputs.sellPrice,
     };
     const inventoryData = [...existingItems, newItem];
+
+    localStorage.setItem("inventoryItems", JSON.stringify(inventoryData));
 
     // update inventory info
     const codeDoc = doc(db, "Inventory_Info", inventoryInfo.id);
@@ -103,7 +108,199 @@ function AddItem({ handleCloseItem, setItemAdded }) {
     <div>
       <Header />
 
-      <div className=" w-full mx-auto fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center p-6">
+      <div className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md p-6">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
+              Add Inventory Item
+            </h2>
+            <button
+              onClick={handleCloseItem}
+              className="text-2xl hover:text-red-500"
+            >
+              <X size={30} />
+            </button>
+          </div>
+          <hr />
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-4 text-gray-800 dark:text-white mt-3"
+          >
+            <div>
+              <label className="block font-medium mb-1">Item Name</label>
+              <input
+                type="text"
+                name="itemName"
+                autoFocus
+                value={inputs?.itemName}
+                onChange={handleChange}
+                required
+                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block font-medium mb-1">Item Code</label>
+                <input
+                  type="number"
+                  name="itemCode"
+                  value={inputs?.itemCode}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+              <div>
+                <label className="block font-medium mb-1">Quantity</label>
+                <input
+                  type="number"
+                  name="itemQty"
+                  value={inputs?.itemQty}
+                  onChange={handleChange}
+                  required
+                  min="0"
+                  className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block font-medium mb-1">
+                  Buy Price (₹) / Unit
+                </label>
+                <input
+                  type="number"
+                  name="buyPrice"
+                  value={inputs?.buyPrice}
+                  onChange={handleChange}
+                  required
+                  min="0"
+                  step="0.01"
+                  className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+              <div>
+                <label className="block font-medium mb-1">
+                  Sell Price (₹) / Unit
+                </label>
+                <input
+                  type="number"
+                  name="sellPrice"
+                  value={inputs.sellPrice}
+                  onChange={handleChange}
+                  required
+                  min="0"
+                  step="0.01"
+                  className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+            </div>
+
+            <hr />
+            <div className="flex justify-end mt-4 gap-3">
+              <button
+                type="button"
+                onClick={handleCloseItem}
+                className="px-4 py-2 border border-gray-400 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-5 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+              >
+                Save Item
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+      {/* <div className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg w-full max-w-md p-6 relative">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-bold text-gray-800 dark:text-white">
+              Add Item
+            </h2>
+            <button
+              onClick={handleCloseItem}
+              className="text-gray-500 hover:text-red-600 text-xl font-bold"
+            >
+              <X size={30} />
+            </button>
+          </div>
+          <hr />
+          <form onSubmit={handleSubmit} className="space-y-4 mt-3">
+            <div>
+              <label className="block text-gray-700 dark:text-gray-300 font-medium mb-1">
+                Item Description
+              </label>
+              <input
+                type="text"
+                name="description"
+                autoFocus
+                //value={item.description}
+                onChange={handleChange}
+                required
+                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+
+            <div className="flex w-full mx-auto justify-between">
+              <div>
+                <label className="block text-gray-700 dark:text-gray-300 font-medium mb-1">
+                  Price (₹)
+                </label>
+                <input
+                  type="number"
+                  name="price"
+                  //value={item.price}
+                  onChange={handleChange}
+                  required
+                  min="0"
+                  step="0.01"
+                  className="w-9/12 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-gray-700 dark:text-gray-300 font-medium mb-1">
+                  Quantity
+                </label>
+                <input
+                  type="number"
+                  name="quantity"
+                  //value={item.quantity}
+                  onChange={handleChange}
+                  required
+                  min="1"
+                  className="w-6/12 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+            </div>
+
+            <hr />
+
+            <div className="flex justify-end gap-4">
+              <button
+                type="button"
+                //onClick={onClose}
+                className="px-4 py-2 rounded-md border border-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition"
+              >
+                Save Item
+              </button>
+            </div>
+          </form>
+        </div>
+      </div> */}
+
+      {/* <div className=" w-full mx-auto fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center p-6">
         <div className="overflow-auto mt-6 bg-white p-4 text-black rounded-xl">
           <div className="flex justify-between py-2">
             <div className=" text-lg font-bold">Add Item </div>
@@ -118,7 +315,7 @@ function AddItem({ handleCloseItem, setItemAdded }) {
               onSubmit={handleSubmit}
               className="w-full mx-auto flex flex-col md:flex-row justify-between mt-10"
             >
-              <div className="flex flex-col gap-y-4 w-full  mx-auto">
+              <div className="flex flex-col gap-y-4 w-full mx-auto">
                 <div className="flex flex-col gap-y-4">
                   <div className="w-full mx-auto">
                     <input
@@ -135,21 +332,35 @@ function AddItem({ handleCloseItem, setItemAdded }) {
                     />
                   </div>
 
-                  <div className="w-full mx-auto">
-                    <input
-                      className="form-input w-[400px] block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
-                      name="itemPrice"
-                      required
-                      placeholder="Enter Item Price"
-                      value={inputs?.itemPrice || ""}
-                      onChange={(e) => {
-                        localStorage.setItem("itemPrice", e.target.value);
-                        handleChange(e);
-                      }}
-                    />
+                  <div className="flex gap-x-2 mx-auto w-full justify-between">
+                    <div>
+                      <input
+                        className="form-input w-[140px] block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
+                        name="itemPrice"
+                        required
+                        placeholder="Price"
+                        value={inputs?.itemPrice || ""}
+                        onChange={(e) => {
+                          localStorage.setItem("itemPrice", e.target.value);
+                          handleChange(e);
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <input
+                        className="form-input w-[100px]  block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
+                        name="itemQty"
+                        required
+                        placeholder="Quantity"
+                        value={inputs?.itemQty}
+                        onChange={(e) => {
+                          handleChange(e);
+                        }}
+                      />
+                    </div>
                   </div>
                 </div>
-
+                <hr />
                 <div className="flex justify-evenly">
                   <div className="rounded-md flex justify-between w-full mx-auto">
                     <button
@@ -171,7 +382,7 @@ function AddItem({ handleCloseItem, setItemAdded }) {
             </form>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

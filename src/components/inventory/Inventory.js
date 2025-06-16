@@ -95,6 +95,8 @@ function Inventory() {
       a.itemName.localeCompare(b.itemName)
     );
 
+    localStorage.setItem("inventoryItems", JSON.stringify(existingItems));
+
     if (existingItems.length > 0) {
       setShowList(true);
       setPosts(inventoryInfo.inventory);
@@ -202,7 +204,10 @@ function Inventory() {
                       <tr>
                         <th className="px-4 py-3 border-r">S.No.</th>
                         <th className="px-4 py-3 border-r">Item Name</th>
-                        <th className="px-4 py-3 border-r">Price</th>
+                        <th className="px-4 py-3 border-r">Item Code</th>
+                        <th className="px-4 py-3 border-r">Quantity</th>
+                        <th className="px-4 py-3 border-r">Buy Price</th>
+                        <th className="px-4 py-3 border-r">Sell Price</th>
                         <th className="px-4 py-3 border-r">Edit</th>
                         <th className="px-4 py-3">Delete</th>
                       </tr>
@@ -217,14 +222,25 @@ function Inventory() {
                               index % 2 === 0 ? "bg-white" : "bg-gray-50"
                             } hover:bg-gray-200`}
                           >
-                            <td className="px-4 py-3 border-r">{index + 1}.</td>
-                            <td className="px-4 py-3 border-r">
+                            <td className="px-4 py-3 border-r border-b">
+                              {index + 1}.
+                            </td>
+                            <td className="px-4 py-3 border-r border-b">
                               {post?.itemName}
                             </td>
-                            <td className="px-4 py-3 border-r">
-                              {post?.itemPrice}
+                            <td className="px-4 py-3 border-r border-b">
+                              {post?.itemCode}
                             </td>
-                            <td className="px-4 py-3 cursor-pointer border-r">
+                            <td className="px-4 py-3 border-r border-b">
+                              {post?.itemQty}
+                            </td>
+                            <td className="px-4 py-3 border-r border-b">
+                              {post?.buyPrice}
+                            </td>
+                            <td className="px-4 py-3 border-r border-b">
+                              {post?.sellPrice}
+                            </td>
+                            <td className="px-4 py-3 cursor-pointer border-r border-b">
                               <button
                                 onClick={() => handleEdit(post, index)}
                                 className="text-blue-600 hover:text-red-800 font-semibold text-sm"
@@ -232,7 +248,7 @@ function Inventory() {
                                 Edit
                               </button>
                             </td>
-                            <td className="px-4 py-3 cursor-pointer">
+                            <td className="px-4 py-3 cursor-pointer border-b">
                               <button
                                 onClick={() => handleDelete(post)}
                                 className="text-red-600 hover:text-red-800 font-semibold text-sm"

@@ -53,13 +53,17 @@ function EditItem({ handleCloseEditModal, setItemAdded, editPost }) {
 
     // Update the item name at index 2
     existingItems[editPost.index].itemName = inputs.itemName;
-    existingItems[editPost.index].itemPrice = inputs.itemPrice;
+    existingItems[editPost.index].itemCode = inputs.itemCode;
+    existingItems[editPost.index].itemQty = inputs.itemQty;
+    existingItems[editPost.index].buyPrice = inputs.buyPrice;
+    existingItems[editPost.index].sellPrice = inputs.sellPrice;
 
     // Find the item to update
     const updatedItems = existingItems.map((item) =>
       item.id === inventoryInfo.id ? { ...item, ...inputs } : item
     );
 
+    localStorage.setItem("inventoryItems", JSON.stringify(updatedItems));
     // Update the inventory in Firestore
     const codeDoc = doc(db, "Inventory_Info", inventoryInfo.id);
     await updateDoc(codeDoc, {
@@ -122,55 +126,100 @@ function EditItem({ handleCloseEditModal, setItemAdded, editPost }) {
         <div>
           <form
             onSubmit={handleSubmit}
-            className="w-full mx-auto flex flex-col md:flex-row justify-between mt-10"
+            className="space-y-4 text-gray-800 dark:text-white mt-3"
           >
-            <div className="flex flex-col gap-y-4 w-full  mx-auto">
-              <div className="flex flex-col gap-y-4">
-                <div className="w-full mx-auto">
-                  <input
-                    className="form-input w-[400px] block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
-                    name="itemName"
-                    required
-                    placeholder="Enter Item Name"
-                    value={inputs?.itemName || ""}
-                    onChange={(e) => {
-                      localStorage.setItem("itemName", e.target.value);
-                      handleChange(e);
-                    }}
-                  />
-                </div>
-                <div className="w-full mx-auto">
-                  <input
-                    className="form-input w-[400px] block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
-                    name="itemPrice"
-                    required
-                    placeholder="Enter Item Price"
-                    value={inputs?.itemPrice || ""}
-                    onChange={(e) => {
-                      localStorage.setItem("itemPrice", e.target.value);
-                      handleChange(e);
-                    }}
-                  />
-                </div>
-              </div>
+            <div>
+              <label className="block font-medium mb-1">Item Name</label>
+              <input
+                type="text"
+                name="itemName"
+                autoFocus
+                value={inputs?.itemName}
+                onChange={(e) => {
+                  localStorage.setItem("itemName", e.target.value);
+                  handleChange(e);
+                }}
+                required
+                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
 
-              <div className="flex justify-evenly">
-                <div className="rounded-md flex justify-between w-full mx-auto">
-                  <button
-                    type="button"
-                    onClick={handleCloseEditModal}
-                    className="px-5 py-2 border border-gray-400 text-gray-700 dark:text-white rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 transition"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="px-5 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition"
-                  >
-                    Update
-                  </button>
-                </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block font-medium mb-1">Item Code</label>
+                <input
+                  type="number"
+                  name="itemCode"
+                  value={inputs?.itemCode}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
               </div>
+              <div>
+                <label className="block font-medium mb-1">Quantity</label>
+                <input
+                  type="number"
+                  name="itemQty"
+                  value={inputs?.itemQty}
+                  onChange={handleChange}
+                  required
+                  min="0"
+                  className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block font-medium mb-1">
+                  Buy Price (₹) / Unit
+                </label>
+                <input
+                  type="number"
+                  name="buyPrice"
+                  value={inputs?.buyPrice}
+                  onChange={handleChange}
+                  required
+                  min="0"
+                  step="0.01"
+                  className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+              <div>
+                <label className="block font-medium mb-1">
+                  Sell Price (₹) / Unit
+                </label>
+                <input
+                  type="number"
+                  name="sellPrice"
+                  value={inputs.sellPrice}
+                  onChange={(e) => {
+                    localStorage.setItem("sellPrice", e.target.value);
+                    handleChange(e);
+                  }}
+                  required
+                  min="0"
+                  step="0.01"
+                  className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+            </div>
+
+            <hr />
+            <div className="flex justify-end mt-4 gap-3">
+              <button
+                type="button"
+                onClick={handleCloseEditModal}
+                className="px-4 py-2 border border-gray-400 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-5 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+              >
+                Update Item
+              </button>
             </div>
           </form>
         </div>

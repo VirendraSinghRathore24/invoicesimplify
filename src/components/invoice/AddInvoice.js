@@ -49,6 +49,8 @@ const AddInvoice = () => {
 
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
+  const inventoryItems = JSON.parse(localStorage.getItem("inventoryItems"));
+  console.log(inventoryItems);
 
   // account information
   const [accountName, setAccountName] = useState("");
@@ -126,6 +128,11 @@ const AddInvoice = () => {
       // Allow only numbers with up to 2 decimal places
       values[index].rate = value;
       values[index].amount = values[index].qty * values[index].rate;
+
+      const isValid = validateBuySellPrice(values[index].desc, value);
+      if (!isValid) {
+        alert("Sell price cannot be less than buy price");
+      }
     }
 
     if (name === "quantity" && /^\d*$/.test(value)) {
@@ -192,6 +199,19 @@ const AddInvoice = () => {
 
       RemoveTotal(rows[index].amount);
     }
+  };
+
+  const validateBuySellPrice = (itemName, modifiedSellValue) => {
+    const existingItems = JSON.parse(localStorage.getItem("inventoryItems"));
+    if (existingItems) {
+      const item = existingItems.find((x) => x.itemName === itemName);
+      if (item) {
+        if (item.buyPrice > parseInt(modifiedSellValue)) {
+          return false;
+        }
+      }
+    }
+    return true;
   };
 
   const navigate = useNavigate();
