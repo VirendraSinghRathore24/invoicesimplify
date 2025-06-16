@@ -117,9 +117,7 @@ const AddInvoice = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   // item details
-  const [rows, setRows] = useState([
-    { desc: "", rate: "", buyPrice: "", qty: 1, amount: 0 },
-  ]);
+  const [rows, setRows] = useState([]);
   const handleInputChange = (name, value, index) => {
     const values = [...rows];
     //const { name, value } = e.target;
@@ -135,12 +133,19 @@ const AddInvoice = () => {
     }
 
     if (name === "quantity" && /^\d*$/.test(value)) {
-      const isExceeded = isQuantityExceeded(value, values[index].desc);
+      const isExceeded = isQuantityExceeded(
+        value,
+        values[index].code,
+        values[index].desc
+      );
       if (!isExceeded) return;
 
       // Allow only whole numbers
       values[index].qty = value;
       values[index].amount = values[index].qty * values[index].rate;
+    }
+    if (name === "code") {
+      values[index].code = value;
     }
 
     localStorage.setItem("rows", JSON.stringify(values));
@@ -149,10 +154,14 @@ const AddInvoice = () => {
   };
 
   const getAllRowsFromLocalStorage = () => {
-    const val = JSON.parse(localStorage.getItem("rows"));
+    const items = localStorage.getItem("rows");
+    if (items === null || items === "undefined" || items === "null") {
+      return;
+    }
+    const val = JSON.parse(items);
 
     if (val === null) {
-      setRows([{ desc: "", rate: "", qty: 1, amount: 0 }]);
+      setRows([]);
     } else {
       setRows(val);
     }
@@ -178,7 +187,7 @@ const AddInvoice = () => {
 
   const handleAddRow = () => {
     if (rows?.length < 50) {
-      setRows([...rows, { desc: "", rate: "", qty: 1, amount: 0 }]);
+      //setRows([...rows, { desc: "", code: "", rate: "", qty: 1, amount: 0 }]);
       AddTotal();
     }
   };
@@ -187,8 +196,8 @@ const AddInvoice = () => {
     localStorage.removeItem("rows");
     //if (rows.length > 0) return;
     //setRows([...rows, { desc: "", rate: "", qty: "", amount: 0 }]);
-    setRows([{ desc: "", rate: "", qty: 1, amount: 0 }]);
-    AddTotal();
+    //setRows([{ desc: "", code: "", rate: "", qty: 1, amount: 0 }]);
+    //AddTotal();
   };
 
   const handleDeleteRow = (index, e) => {
@@ -203,9 +212,9 @@ const AddInvoice = () => {
     }
   };
 
-  const isLoss = (modifiedSellValue, itemName) => {
+  const isLoss = (modifiedSellValue, itemCode) => {
     if (inventoryItems) {
-      const item = inventoryItems.find((x) => x.itemName === itemName);
+      const item = inventoryItems.find((x) => x.itemCode === itemCode);
       if (item) {
         if (item.buyPrice > parseInt(modifiedSellValue)) {
           return true;
@@ -215,9 +224,9 @@ const AddInvoice = () => {
     return false;
   };
 
-  const isQuantityExceeded = (qty, itemName) => {
+  const isQuantityExceeded = (qty, itemCode, itemName) => {
     if (inventoryItems) {
-      const item = inventoryItems.find((x) => x.itemName === itemName);
+      const item = inventoryItems.find((x) => x.itemCode === itemCode);
       if (item) {
         if (item.itemQty < parseInt(qty)) {
           alert(`Quantity of ${itemName} is not sufficient in stock !!!`);
@@ -477,12 +486,6 @@ const AddInvoice = () => {
     }
   };
 
-  const deleteLocalStorageUpiInfo = () => {
-    localStorage.removeItem("upiId");
-    localStorage.removeItem("upiType");
-    setUpiEnabled(true);
-  };
-
   const deleteLocalStoragePersonalInfo = () => {
     localStorage.removeItem("custname");
     localStorage.removeItem("email");
@@ -527,10 +530,31 @@ const AddInvoice = () => {
   };
 
   const handleCloseItem = () => {
-    const it = localStorage.getItem("selectedItem");
-    handleInputChange("desc", it, selectedIndex);
-    const price = localStorage.getItem("selectedItemPrice");
-    handleInputChange("rate", price, selectedIndex);
+    const selectedItem = localStorage.getItem("selectedItem");
+    if (
+      !selectedItem ||
+      selectedItem === "undefined" ||
+      selectedItem === "null"
+    ) {
+      setOpenItem(false);
+      return;
+    }
+    const price = parseFloat(localStorage.getItem("selectedItemPrice"));
+    const item = {
+      desc: localStorage.getItem("selectedItem"),
+      code: localStorage.getItem("selectedItemCode"),
+      rate: price,
+      qty: 1,
+      amount: 1 * price,
+    };
+
+    setRows((prevRows) => {
+      const updatedRows = [...prevRows, item];
+      localStorage.setItem("rows", JSON.stringify(updatedRows));
+      setAmount((prevAmount) => prevAmount + item.amount);
+      return updatedRows;
+    });
+
     setOpenItem(false);
   };
 
@@ -544,7 +568,7 @@ const AddInvoice = () => {
     setTaxInfo(taxData);
 
     let rowsInfo = localStorage.getItem("rows");
-    if (rowsInfo) {
+    if (rowsInfo !== null && rowsInfo !== "undefined") {
       const rowsData = JSON.parse(rowsInfo);
 
       var total = 0;
@@ -798,18 +822,18 @@ const AddInvoice = () => {
                                     )
                                   }
                                 />
-                                <button
+                                {/* <button
                                   onClick={() => handleSearch(index)}
                                   className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-blue-600"
                                 >
                                   <FontAwesomeIcon icon={faSearch} />
-                                </button>
+                                </button> */}
                               </div>
                             </td>
                             <td className="w-[15%] text-center">
                               <input
                                 className={`w-full text-right block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600 ${
-                                  isLoss(row.rate, row.desc)
+                                  isLoss(row.rate, row.code)
                                     ? "border-red-500 focus:ring-red-500 outline-red-500"
                                     : "border-gray-300 focus:ring-indigo-500"
                                 }`}
@@ -825,7 +849,7 @@ const AddInvoice = () => {
                                   )
                                 }
                               />
-                              {isLoss(row.rate, row.desc) && (
+                              {isLoss(row.rate, row.code) && (
                                 <p className="text-sm text-red-600 mt-1">
                                   Selling at a loss for this item!
                                 </p>
@@ -854,14 +878,12 @@ const AddInvoice = () => {
                             </td>
                             <td className="w-[10%]">
                               <div className="mt-2">
-                                {rows.length > 1 && (
-                                  <Trash2
-                                    color="red"
-                                    className="cursor-pointer text-red-500 hover:text-red-700"
-                                    size={20}
-                                    onClick={(e) => handleDeleteRow(index, e)}
-                                  />
-                                )}
+                                <Trash2
+                                  color="red"
+                                  className="cursor-pointer text-red-500 hover:text-red-700"
+                                  size={20}
+                                  onClick={(e) => handleDeleteRow(index, e)}
+                                />
                               </div>
                             </td>
                           </tr>
@@ -959,7 +981,7 @@ const AddInvoice = () => {
               <div className="flex justify-start">
                 <button
                   className="border-2 px-3 py-1 rounded-md bg-gray-700 text-2xl text-white font-bold mt-2"
-                  onClick={handleAddRow}
+                  onClick={() => handleSearch()}
                 >
                   +
                 </button>

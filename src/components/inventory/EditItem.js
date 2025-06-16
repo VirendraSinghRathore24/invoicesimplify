@@ -160,8 +160,9 @@ function EditItem({ handleCloseEditModal, setItemAdded, editPost }) {
               <div>
                 <label className="block font-medium mb-1">Item Code</label>
                 <input
-                  type="number"
+                  type="text"
                   name="itemCode"
+                  required
                   value={inputs?.itemCode}
                   onChange={handleChange}
                   className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"

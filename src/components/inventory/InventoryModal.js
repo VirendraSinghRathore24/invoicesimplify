@@ -18,6 +18,7 @@ const InventoryModal = ({ handleCloseItem, setItem }) => {
   const handleSelect = (post) => {
     setItem(post.itemName);
     localStorage.setItem("selectedItem", post.itemName);
+    localStorage.setItem("selectedItemCode", post.itemCode);
     localStorage.setItem("selectedItemPrice", post.sellPrice);
     handleCloseItem();
   };
@@ -54,11 +55,19 @@ const InventoryModal = ({ handleCloseItem, setItem }) => {
     }
   };
 
+  const handleCloseModal = () => {
+    setItem("");
+    localStorage.removeItem("selectedItem");
+    localStorage.removeItem("selectedItemCode");
+    localStorage.removeItem("selectedItemPrice");
+    handleCloseItem();
+  };
+
   // Close modal on Escape key press
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === "Escape") {
-        handleCloseItem();
+        handleCloseModal();
       }
     };
 
@@ -67,14 +76,14 @@ const InventoryModal = ({ handleCloseItem, setItem }) => {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [handleCloseItem]);
+  }, [handleCloseModal]);
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center ">
-      <div className="overflow-auto mt-6 bg-white p-4 text-black rounded-xl w-3/12">
+      <div className="overflow-auto mt-6 bg-white p-4 text-black rounded-xl w-7/12">
         <div className="flex justify-between py-2">
           <div className=" text-lg font-bold">Select Item </div>
-          <button onClick={handleCloseItem}>
+          <button onClick={handleCloseModal}>
             <X size={30} />
           </button>
         </div>
@@ -95,7 +104,13 @@ const InventoryModal = ({ handleCloseItem, setItem }) => {
             <table className="min-w-full text-sm text-left text-gray-700 ">
               <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
                 <tr>
-                  {["ID", "Name", "Price"].map((header) => (
+                  {[
+                    "S.No.",
+                    "Name",
+                    "Item Code",
+                    "Sell Price",
+                    "Current Stock",
+                  ].map((header) => (
                     <th
                       key={header}
                       className="px-4 py-3 border-r cursor-pointer"
@@ -121,7 +136,9 @@ const InventoryModal = ({ handleCloseItem, setItem }) => {
                     >
                       <td className="px-4 py-3 border-r">{index + 1}.</td>
                       <td className="px-4 py-3 border-r">{post.itemName}</td>
+                      <td className="px-4 py-3 border-r">{post.itemCode}</td>
                       <td className="px-4 py-3 border-r">{post.sellPrice}</td>
+                      <td className="px-4 py-3 border-r">{post.itemQty}</td>
                     </tr>
                   ))}
                 {filteredData.length === 0 && (
