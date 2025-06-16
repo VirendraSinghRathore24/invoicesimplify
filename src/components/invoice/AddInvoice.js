@@ -50,7 +50,6 @@ const AddInvoice = () => {
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
   const inventoryItems = JSON.parse(localStorage.getItem("inventoryItems"));
-  console.log(inventoryItems);
 
   // account information
   const [accountName, setAccountName] = useState("");
@@ -118,7 +117,9 @@ const AddInvoice = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   // item details
-  const [rows, setRows] = useState([{ desc: "", rate: "", qty: 1, amount: 0 }]);
+  const [rows, setRows] = useState([
+    { desc: "", rate: "", buyPrice: "", qty: 1, amount: 0 },
+  ]);
   const handleInputChange = (name, value, index) => {
     const values = [...rows];
     //const { name, value } = e.target;
@@ -131,15 +132,6 @@ const AddInvoice = () => {
       // Allow only numbers with up to 2 decimal places
       values[index].rate = value;
       values[index].amount = values[index].qty * values[index].rate;
-
-      // //const isValid = validateBuySellPrice(values[index].desc, value);
-      // // Example validation: check if input is empty
-      // if (!isValid) {
-      //   setErrorMessage("Sell price cannot be less than buy price.");
-      // } else {
-      //   setErrorMessage("");
-      // }
-      // setLoss(!isValid);
     }
 
     if (name === "quantity" && /^\d*$/.test(value)) {
@@ -209,9 +201,8 @@ const AddInvoice = () => {
   };
 
   const isLoss = (modifiedSellValue, itemName) => {
-    const existingItems = JSON.parse(localStorage.getItem("inventoryItems"));
-    if (existingItems) {
-      const item = existingItems.find((x) => x.itemName === itemName);
+    if (inventoryItems) {
+      const item = inventoryItems.find((x) => x.itemName === itemName);
       if (item) {
         if (item.buyPrice > parseInt(modifiedSellValue)) {
           return true;
