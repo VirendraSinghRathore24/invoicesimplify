@@ -122,10 +122,10 @@ function AddItem({ handleCloseItem, setItemAdded }) {
       <Header />
 
       <div className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50">
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-4/12 p-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
-              Add Inventory Item
+              Create New Item
             </h2>
             <button
               onClick={handleCloseItem}
@@ -139,30 +139,49 @@ function AddItem({ handleCloseItem, setItemAdded }) {
             onSubmit={handleSubmit}
             className="space-y-4 text-gray-800 dark:text-white mt-3"
           >
-            <div>
-              <label className="block font-medium mb-1">Item Name</label>
-              <input
-                type="text"
-                name="itemName"
-                autoFocus
-                value={inputs?.itemName}
-                onChange={handleChange}
-                required
-                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
+            <div className="flex justify-between w-full gap-x-4">
+              <div className="w-8/12">
+                <label className="block font-medium mb-1">Item Name</label>
+                <input
+                  type="text"
+                  name="itemName"
+                  autoFocus
+                  value={inputs?.itemName}
+                  onChange={handleChange}
+                  required
+                  className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+              <div className="w-4/12">
+                <div>
+                  <label className="block font-medium mb-1">Item Code</label>
+                  <input
+                    type="text"
+                    name="itemCode"
+                    required
+                    value={inputs?.itemCode}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+              </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block font-medium mb-1">Item Code</label>
-                <input
-                  type="text"
-                  name="itemCode"
-                  required
-                  value={inputs?.itemCode}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
+                <div className="w-full  mb-6">
+                  <label className="block font-medium mb-1">
+                    Measuring Unit
+                  </label>
+                  <select
+                    //onChange={handlePageChange}
+                    defaultValue=""
+                    className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  >
+                    <option value="reduce">Pieces(PCS)</option>
+                    <option value="add">Meters(MTR)</option>
+                  </select>
+                </div>
               </div>
               <div>
                 <label className="block font-medium mb-1">Quantity</label>
@@ -224,7 +243,7 @@ function AddItem({ handleCloseItem, setItemAdded }) {
                 type="submit"
                 className="px-5 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
               >
-                Save Item
+                Save
               </button>
             </div>
           </form>

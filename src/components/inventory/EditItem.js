@@ -135,28 +135,24 @@ function EditItem({ handleCloseEditModal, setItemAdded, editPost }) {
         </div>
 
         <hr />
-        <div>
-          <form
-            onSubmit={handleSubmit}
-            className="space-y-4 text-gray-800 dark:text-white mt-3"
-          >
-            <div>
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-4 text-gray-800 dark:text-white mt-3"
+        >
+          <div className="flex justify-between w-full gap-x-4">
+            <div className="w-8/12">
               <label className="block font-medium mb-1">Item Name</label>
               <input
                 type="text"
                 name="itemName"
                 autoFocus
                 value={inputs?.itemName}
-                onChange={(e) => {
-                  localStorage.setItem("itemName", e.target.value);
-                  handleChange(e);
-                }}
+                onChange={handleChange}
                 required
                 className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
-
-            <div className="grid grid-cols-2 gap-4">
+            <div className="w-4/12">
               <div>
                 <label className="block font-medium mb-1">Item Code</label>
                 <input
@@ -168,74 +164,87 @@ function EditItem({ handleCloseEditModal, setItemAdded, editPost }) {
                   className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
               </div>
-              <div>
-                <label className="block font-medium mb-1">Quantity</label>
-                <input
-                  type="number"
-                  name="itemQty"
-                  value={inputs?.itemQty}
-                  onChange={handleChange}
-                  required
-                  min="0"
-                  className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
             </div>
+          </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block font-medium mb-1">
-                  Buy Price (₹) / Unit
-                </label>
-                <input
-                  type="number"
-                  name="buyPrice"
-                  value={inputs?.buyPrice}
-                  onChange={handleChange}
-                  required
-                  min="0"
-                  step="0.01"
-                  className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-              <div>
-                <label className="block font-medium mb-1">
-                  Sell Price (₹) / Unit
-                </label>
-                <input
-                  type="number"
-                  name="sellPrice"
-                  value={inputs.sellPrice}
-                  onChange={(e) => {
-                    localStorage.setItem("sellPrice", e.target.value);
-                    handleChange(e);
-                  }}
-                  required
-                  min="0"
-                  step="0.01"
-                  className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <div className="w-full  mb-6">
+                <label className="block font-medium mb-1">Measuring Unit</label>
+                <select
+                  //onChange={handlePageChange}
+                  defaultValue=""
+                  className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                  <option value="reduce">Pieces(PCS)</option>
+                  <option value="add">Meters(MTR)</option>
+                </select>
               </div>
             </div>
+            <div>
+              <label className="block font-medium mb-1">Quantity</label>
+              <input
+                type="number"
+                name="itemQty"
+                value={inputs?.itemQty}
+                onChange={handleChange}
+                required
+                min="0"
+                className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+          </div>
 
-            <hr />
-            <div className="flex justify-end mt-4 gap-3">
-              <button
-                type="button"
-                onClick={handleCloseEditModal}
-                className="px-4 py-2 border border-gray-400 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="px-5 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
-              >
-                Update Item
-              </button>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block font-medium mb-1">
+                Buy Price (₹) / Unit
+              </label>
+              <input
+                type="number"
+                name="buyPrice"
+                value={inputs?.buyPrice}
+                onChange={handleChange}
+                required
+                min="0"
+                step="0.01"
+                className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
             </div>
-          </form>
-        </div>
+            <div>
+              <label className="block font-medium mb-1">
+                Sell Price (₹) / Unit
+              </label>
+              <input
+                type="number"
+                name="sellPrice"
+                value={inputs.sellPrice}
+                onChange={handleChange}
+                required
+                min="0"
+                step="0.01"
+                className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+          </div>
+
+          <hr />
+          <div className="flex justify-end mt-4 gap-3">
+            <button
+              type="button"
+              onClick={handleCloseEditModal}
+              className="px-4 py-2 border border-gray-400 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="px-5 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+            >
+              Update
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

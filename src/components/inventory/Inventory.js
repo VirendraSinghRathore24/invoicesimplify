@@ -3,10 +3,11 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { db } from "../../config/firebase";
 import AddItem from "./AddItem";
-import { Edit } from "lucide-react";
+import { Edit, Box } from "lucide-react";
 import EditItem from "./EditItem";
 import Header from "../Header";
 import Loader from "../Loader";
+import StockModal from "./StockModal";
 
 function Inventory() {
   const location = useLocation();
@@ -31,6 +32,11 @@ function Inventory() {
   const [openEditModal, setOpenEditModal] = useState(false);
   const handleCloseEditModal = () => {
     setOpenEditModal(false);
+  };
+
+  const [openStockModal, setOpenStockModal] = useState(false);
+  const handleCloseStockModal = () => {
+    setOpenStockModal(false);
   };
 
   const handleSubmit = async (event) => {
@@ -139,6 +145,13 @@ function Inventory() {
     setEditPost(post);
     setOpenEditModal(true);
   };
+
+  const handleStockModal = (post, index) => {
+    post.index = index;
+    setEditPost(post);
+    setOpenStockModal(true);
+  };
+
   const handleLogin = () => {
     const user = localStorage.getItem("user");
 
@@ -208,6 +221,7 @@ function Inventory() {
                         <th className="px-4 py-3 border-r">Quantity</th>
                         <th className="px-4 py-3 border-r">Buy Price</th>
                         <th className="px-4 py-3 border-r">Sell Price</th>
+                        <th className="px-4 py-3 border-r">Stock</th>
                         <th className="px-4 py-3 border-r">Edit</th>
                         <th className="px-4 py-3">Delete</th>
                       </tr>
@@ -239,6 +253,18 @@ function Inventory() {
                             </td>
                             <td className="px-4 py-3 border-r border-b">
                               {post?.sellPrice}
+                            </td>
+                            <td className="px-4 py-3 border-r border-b">
+                              <button
+                                onClick={() => handleStockModal(post, index)}
+                                className="text-blue-600 hover:text-red-800 font-semibold text-sm"
+                              >
+                                Update
+                                {/* Tooltip */}
+                                {/* <div className="absolute bottom-full mb-2 font-bold text-sm left-1/2 -translate-x-1/2 bg-black text-white rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition whitespace-nowrap z-10">
+                                  Add or reduce your stock for this item
+                                </div> */}
+                              </button>
                             </td>
                             <td className="px-4 py-3 cursor-pointer border-r border-b">
                               <button
@@ -295,6 +321,13 @@ function Inventory() {
               setItemAdded={setItemAdded}
               editPost={editPost}
             ></EditItem>
+          )}
+          {openStockModal && (
+            <StockModal
+              handleCloseStockModal={handleCloseStockModal}
+              setItemAdded={setItemAdded}
+              editPost={editPost}
+            ></StockModal>
           )}
         </div>
       </div>
