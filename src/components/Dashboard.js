@@ -110,6 +110,7 @@ const Dashboard = () => {
     updateAmountAfterSearch(result);
     updateBalanceAfterSearch(result);
     updatePaidAfterSearch(result);
+    updateTotalProfitAfterSearch(result);
 
     const totalSettled = result.filter(
       (item) => item.taxCalculatedInfo.balance === 0
@@ -146,6 +147,11 @@ const Dashboard = () => {
     }, 0);
 
     setPaid(totalPaid);
+  };
+
+  const updateTotalProfitAfterSearch = (result) => {
+    const totalProfit = calculateProfit(result);
+    setTotalProft(totalProfit);
   };
 
   const handleSort = (key) => {
