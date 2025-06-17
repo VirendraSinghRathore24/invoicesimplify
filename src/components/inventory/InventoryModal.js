@@ -29,7 +29,7 @@ const InventoryModal = ({ handleCloseItem, setItem }) => {
     handleCloseItem();
   };
 
-  const getInventoryList = async () => {
+  const getInventoryList = () => {
     setLoading(true);
     const existingItems = JSON.parse(localStorage.getItem("inventoryItems"));
     setPosts(existingItems);
@@ -142,7 +142,7 @@ const InventoryModal = ({ handleCloseItem, setItem }) => {
                         index % 2 === 0 ? "bg-white" : "bg-gray-50"
                       } ${
                         post.itemQty === 0
-                          ? "bg-rose-500 text-white"
+                          ? "bg-red-500 text-white"
                           : "hover:bg-amber-300 cursor-pointer"
                       } `}
                     >
