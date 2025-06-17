@@ -142,7 +142,7 @@ const InventoryModal = ({ handleCloseItem, setItem }) => {
                         index % 2 === 0 ? "bg-white" : "bg-gray-50"
                       } ${
                         post.itemQty === 0
-                          ? "bg-red-500 text-white"
+                          ? "bg-red-500 text-black cursor-not-allowed"
                           : "hover:bg-amber-300 cursor-pointer"
                       } `}
                     >
