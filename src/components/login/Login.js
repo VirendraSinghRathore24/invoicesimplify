@@ -53,6 +53,22 @@ const Login = () => {
     );
   };
 
+  const getInventoryList = async (loggedInUser) => {
+    const inventoryInfo_CollectionRef = collection(db, "Inventory_Info");
+    const data = await getDocs(inventoryInfo_CollectionRef);
+    const filteredData = data.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+    const inventoryInfo = filteredData.filter(
+      (x) => x.loggedInUser === loggedInUser
+    )[0];
+    localStorage.setItem(
+      "inventoryItems",
+      JSON.stringify(inventoryInfo?.inventory)
+    );
+  };
+
   const login_CollectionRef = collection(db, "Login_Info");
   const getBusinessType = async () => {
     const data = await getDocs(login_CollectionRef);
@@ -88,6 +104,8 @@ const Login = () => {
 
           // get all data and add to local storage
           await getAllData(code);
+
+          await getInventoryList(code);
 
           const info = localStorage.getItem("businessInfo");
 
@@ -130,6 +148,7 @@ const Login = () => {
 
       // get all data and add to local storage
       await getAllData();
+      await getInventoryList(code);
 
       const info = localStorage.getItem("businessInfo");
 
