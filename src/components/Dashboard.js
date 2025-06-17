@@ -24,6 +24,8 @@ const Dashboard = () => {
   const [settled, setSettled] = useState(0);
   const type = localStorage.getItem("type");
 
+  const [totalProfit, setTotalProft] = useState(0);
+
   const navigate = useNavigate();
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -302,6 +304,18 @@ const Dashboard = () => {
     return filteredData;
   }, [data, sortConfig]);
 
+  const calculateProfit = (invoiceInfo) => {
+    let totalProfit = 0;
+    invoiceInfo.forEach((item) => {
+      item.rows.forEach((row) => {
+        if (row.rate && row.buyPrice) {
+          totalProfit += (row.rate - row.buyPrice) * row.qty;
+        }
+      });
+    });
+    return totalProfit;
+  };
+
   const invoiceInfo_CollectionRef = collection(db, "Invoice_Info");
   const getInvoiceInfo = async () => {
     setLoading(true);
@@ -340,6 +354,8 @@ const Dashboard = () => {
     }, 0);
 
     setPaid(totalPaid);
+
+    setTotalProft(calculateProfit(invoiceInfo));
 
     // Calculate the settled count
     const totalSettled = invoiceInfo.filter(
@@ -399,8 +415,8 @@ const Dashboard = () => {
           </div>
 
           <div className={`p-5 rounded-lg shadow bg-purple-500 text-white`}>
-            <p className="text-md">Balance</p>
-            <h3 className="mt-2 text-2xl font-semibold">₹ {balance}</h3>
+            <p className="text-md">Profit</p>
+            <h3 className="mt-2 text-2xl font-semibold">₹ {totalProfit}</h3>
           </div>
         </div>
 
