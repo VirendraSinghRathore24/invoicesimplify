@@ -139,6 +139,7 @@ function Invoice() {
       inventory: updatedItems,
     });
 
+    localStorage.setItem("inventoryItems", JSON.stringify(updatedItems));
     await addDoc(invoiceInfo_CollectionRef, {
       invoiceInfo,
       amountInfo,
@@ -288,6 +289,11 @@ function Invoice() {
     localStorage.removeItem("rows");
     localStorage.removeItem("paymentType");
     localStorage.removeItem("advanceAmount");
+    localStorage.removeItem("selectedItem");
+    localStorage.removeItem("selectedItemCode");
+    localStorage.removeItem("selectedItemPrice");
+    localStorage.removeItem("selectedItemBuyPrice");
+    localStorage.removeItem("selectedItemQty");
   };
 
   const sendToWhatsapp = async () => {
