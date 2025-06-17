@@ -169,6 +169,18 @@ function AddItem({ handleCloseItem, setItemAdded }) {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
+                <label className="block font-medium mb-1">Quantity</label>
+                <input
+                  type="number"
+                  name="itemQty"
+                  value={inputs?.itemQty}
+                  onChange={handleChange}
+                  required
+                  min="0"
+                  className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+              <div>
                 <div className="w-full  mb-6">
                   <label className="block font-medium mb-1">
                     Measuring Unit
@@ -182,18 +194,6 @@ function AddItem({ handleCloseItem, setItemAdded }) {
                     <option value="add">Meters(MTR)</option>
                   </select>
                 </div>
-              </div>
-              <div>
-                <label className="block font-medium mb-1">Quantity</label>
-                <input
-                  type="number"
-                  name="itemQty"
-                  value={inputs?.itemQty}
-                  onChange={handleChange}
-                  required
-                  min="0"
-                  className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
               </div>
             </div>
 

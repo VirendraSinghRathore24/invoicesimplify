@@ -22,6 +22,7 @@ const Dashboard = () => {
   const [balance, setBalance] = useState(0);
   const [paid, setPaid] = useState(0);
   const [settled, setSettled] = useState(0);
+  const [paidInvoices, setPaidInvoices] = useState(0);
   const type = localStorage.getItem("type");
 
   const [totalProfit, setTotalProft] = useState(0);
@@ -112,10 +113,17 @@ const Dashboard = () => {
     updatePaidAfterSearch(result);
     updateTotalProfitAfterSearch(result);
 
-    const totalSettled = result.filter(
-      (item) => item.taxCalculatedInfo.balance === 0
+    const totalPaidInvoices = result.filter(
+      (item) =>
+        item.amountInfo.paymentType === "fullyPaid" ||
+        item.taxCalculatedInfo.balance === 0
     ).length;
-    setSettled(result.length - totalSettled);
+    setPaidInvoices(totalPaidInvoices);
+
+    // const totalSettled = result.filter(
+    //   (item) => item.taxCalculatedInfo.balance === 0
+    // ).length;
+    setSettled(result.length - totalPaidInvoices);
   };
 
   const updateAmountAfterSearch = (result) => {
@@ -364,10 +372,19 @@ const Dashboard = () => {
     setTotalProft(calculateProfit(invoiceInfo));
 
     // Calculate the settled count
-    const totalSettled = invoiceInfo.filter(
-      (item) => item.taxCalculatedInfo.balance === 0
+    // const totalSettled = invoiceInfo.filter(
+    //   (item) => item.taxCalculatedInfo.balance === 0
+    // ).length;
+    // setSettled(invoiceInfo.length - totalSettled);
+
+    const paidInvoices = invoiceInfo.filter(
+      (item) =>
+        item.amountInfo.paymentType === "fullyPaid" ||
+        item.taxCalculatedInfo.balance === 0
     ).length;
-    setSettled(invoiceInfo.length - totalSettled);
+    setPaidInvoices(paidInvoices);
+
+    setSettled(invoiceInfo.length - paidInvoices);
 
     const invoiceInfo1 = invoiceInfo.sort(
       (a, b) => b.invoiceInfo.invoiceNumber - a.invoiceInfo.invoiceNumber
@@ -409,10 +426,7 @@ const Dashboard = () => {
 
           <div className={`p-5 rounded-lg shadow bg-emerald-500 text-white`}>
             <p className="text-md">Paid</p>
-            <h3 className="mt-2 text-2xl font-semibold">
-              {" "}
-              {filteredData ? filteredData.length - settled : 0}
-            </h3>
+            <h3 className="mt-2 text-2xl font-semibold"> {paidInvoices}</h3>
           </div>
 
           <div className={`p-5 rounded-lg shadow bg-yellow-500 text-white`}>
