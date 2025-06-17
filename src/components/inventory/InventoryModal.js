@@ -16,10 +16,16 @@ const InventoryModal = ({ handleCloseItem, setItem }) => {
   const navigate = useNavigate();
 
   const handleSelect = (post) => {
+    if (post.itemQty === 0) {
+      alert("Item is out of stock");
+      return;
+    }
     setItem(post.itemName);
     localStorage.setItem("selectedItem", post.itemName);
     localStorage.setItem("selectedItemCode", post.itemCode);
     localStorage.setItem("selectedItemPrice", post.sellPrice);
+    localStorage.setItem("selectedItemBuyPrice", post.buyPrice);
+    localStorage.setItem("selectedItemQty", post.itemQty);
     handleCloseItem();
   };
 
@@ -60,6 +66,8 @@ const InventoryModal = ({ handleCloseItem, setItem }) => {
     localStorage.removeItem("selectedItem");
     localStorage.removeItem("selectedItemCode");
     localStorage.removeItem("selectedItemPrice");
+    localStorage.removeItem("selectedItemBuyPrice");
+    localStorage.removeItem("selectedItemQty");
     handleCloseItem();
   };
 
@@ -132,7 +140,11 @@ const InventoryModal = ({ handleCloseItem, setItem }) => {
                       key={post.id}
                       className={`border ${
                         index % 2 === 0 ? "bg-white" : "bg-gray-50"
-                      } hover:bg-amber-300 cursor-pointer`}
+                      } ${
+                        post.itemQty === 0
+                          ? "bg-gray-500 text-white"
+                          : "hover:bg-amber-300 cursor-pointer"
+                      } `}
                     >
                       <td className="px-4 py-3 border-r">{index + 1}.</td>
                       <td className="px-4 py-3 border-r">{post.itemName}</td>

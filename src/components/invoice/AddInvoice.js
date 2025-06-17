@@ -49,7 +49,6 @@ const AddInvoice = () => {
 
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
-  const inventoryItems = JSON.parse(localStorage.getItem("inventoryItems"));
 
   // account information
   const [accountName, setAccountName] = useState("");
@@ -135,7 +134,7 @@ const AddInvoice = () => {
     if (name === "quantity" && /^\d*$/.test(value)) {
       const isExceeded = isQuantityExceeded(
         value,
-        values[index].code,
+        values[index].totalQty,
         values[index].desc
       );
       if (!isExceeded) return;
@@ -212,28 +211,16 @@ const AddInvoice = () => {
     }
   };
 
-  const isLoss = (modifiedSellValue, itemCode) => {
-    if (inventoryItems) {
-      const item = inventoryItems.find((x) => x.itemCode === itemCode);
-      if (item) {
-        if (item.buyPrice > parseInt(modifiedSellValue)) {
-          return true;
-        }
-      }
-    }
-    return false;
+  const isLoss = (modifiedSellValue, buyPrice) => {
+    return parseInt(modifiedSellValue) < parseInt(buyPrice);
   };
 
-  const isQuantityExceeded = (qty, itemCode, itemName) => {
-    if (inventoryItems) {
-      const item = inventoryItems.find((x) => x.itemCode === itemCode);
-      if (item) {
-        if (item.itemQty < parseInt(qty)) {
-          alert(`Quantity of ${itemName} is not sufficient in stock !!!`);
-          return false;
-        }
-      }
+  const isQuantityExceeded = (qty, itemQty, itemName) => {
+    if (itemQty < parseInt(qty)) {
+      alert(`Quantity of ${itemName} is not sufficient in stock !!!`);
+      return false;
     }
+
     return true;
   };
 
@@ -543,6 +530,8 @@ const AddInvoice = () => {
     const item = {
       desc: localStorage.getItem("selectedItem"),
       code: localStorage.getItem("selectedItemCode"),
+      buyPrice: localStorage.getItem("selectedItemBuyPrice"),
+      totalQty: localStorage.getItem("selectedItemQty"),
       rate: price,
       qty: 1,
       amount: 1 * price,
@@ -833,7 +822,7 @@ const AddInvoice = () => {
                             <td className="w-[15%] text-center">
                               <input
                                 className={`w-full text-right block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600 ${
-                                  isLoss(row.rate, row.code)
+                                  isLoss(row.rate, row.buyPrice)
                                     ? "border-red-500 focus:ring-red-500 outline-red-500"
                                     : "border-gray-300 focus:ring-indigo-500"
                                 }`}
@@ -849,7 +838,7 @@ const AddInvoice = () => {
                                   )
                                 }
                               />
-                              {isLoss(row.rate, row.code) && (
+                              {isLoss(row.rate, row.buyPrice) && (
                                 <p className="text-sm text-red-600 mt-1">
                                   Selling at a loss for this item!
                                 </p>
