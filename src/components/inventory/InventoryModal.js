@@ -153,7 +153,7 @@ const InventoryModal = ({ handleCloseItem, setItem }) => {
                       <td className="px-4 py-3 border-r">{post.itemQty}</td>
                     </tr>
                   ))}
-                {filteredData.length === 0 && (
+                {filteredData && filteredData.length === 0 && (
                   <tr>
                     <td
                       colSpan="9"
