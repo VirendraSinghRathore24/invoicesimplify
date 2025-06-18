@@ -526,6 +526,7 @@ const AddInvoice = () => {
       setOpenItem(false);
       return;
     }
+
     const price = parseFloat(localStorage.getItem("selectedItemPrice"));
     const item = {
       desc: localStorage.getItem("selectedItem"),
@@ -538,6 +539,13 @@ const AddInvoice = () => {
     };
 
     setRows((prevRows) => {
+      if (prevRows.some((row) => row.code === item.code)) {
+        alert(
+          "Item already exists in the invoice. Please edit the existing item."
+        );
+        return prevRows;
+      }
+
       const updatedRows = [...prevRows, item];
       localStorage.setItem("rows", JSON.stringify(updatedRows));
       setAmount((prevAmount) => prevAmount + item.amount);

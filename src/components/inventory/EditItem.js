@@ -25,7 +25,6 @@ function EditItem({ handleCloseEditModal, setItemAdded, editPost }) {
     }
     // update item to db
     await updateInventoryItems(inputs);
-
     handleCloseEditModal();
     setItemAdded(true);
 

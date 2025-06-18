@@ -30,13 +30,15 @@ function Inventory() {
   };
 
   const [openEditModal, setOpenEditModal] = useState(false);
-  const handleCloseEditModal = () => {
+  const handleCloseEditModal = async () => {
     setOpenEditModal(false);
+    await checkIfListExists();
   };
 
   const [openStockModal, setOpenStockModal] = useState(false);
-  const handleCloseStockModal = () => {
+  const handleCloseStockModal = async () => {
     setOpenStockModal(false);
+    await checkIfListExists();
   };
 
   const handleSubmit = async (event) => {

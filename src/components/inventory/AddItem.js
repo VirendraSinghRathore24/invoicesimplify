@@ -26,12 +26,15 @@ function AddItem({ handleCloseItem, setItemAdded }) {
     }
 
     // update item to db
-    await updateInventoryItems(inputs);
+    if (await updateInventoryItems(inputs)) {
+      setItemAdded(true);
+      handleCloseItem();
 
-    setItemAdded(true);
-    handleCloseItem();
-
-    toast("Item added successfully!!!");
+      toast("Item added successfully!!!");
+    } else {
+      alert("Item already exists with same name and code.");
+      return;
+    }
 
     // sending  info to next screen
     //localStorage.setItem("inventory", JSON.stringify(data));
@@ -59,6 +62,17 @@ function AddItem({ handleCloseItem, setItemAdded }) {
 
     // get items list
     const existingItems = inventoryInfo.inventory;
+
+    if (
+      existingItems.length > 0 &&
+      existingItems.some(
+        (item) =>
+          item.itemCode === inputs.itemCode && item.itemName === inputs.itemName
+      )
+    ) {
+      return false;
+    }
+
     const newItem = {
       itemName: inputs.itemName,
       itemCode: inputs.itemCode,
@@ -75,6 +89,7 @@ function AddItem({ handleCloseItem, setItemAdded }) {
     await updateDoc(codeDoc, {
       inventory: inventoryData,
     });
+    return true;
   };
 
   const handleChange = (event) => {
