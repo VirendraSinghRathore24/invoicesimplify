@@ -313,7 +313,8 @@ function ViewInvoice() {
                   </div>
                 )}
                 <div className="border-b-2 border-dashed py-1"></div>
-                {invoiceInfo?.amountInfo?.paymentType === "advance" ? (
+                {invoiceInfo?.amountInfo?.paymentType === "advance" &&
+                invoiceInfo?.taxCalculatedInfo.balance > 0 ? (
                   <div className="w-full flex justify-end gap-x-10 mt-2">
                     <div className="w-11/12 flex justify-end mx-auto mt-1 px-2 text-sm font-bold rounded-md uppercase">
                       Balance

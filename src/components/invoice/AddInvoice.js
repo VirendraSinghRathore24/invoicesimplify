@@ -810,6 +810,7 @@ const AddInvoice = () => {
                                   placeholder="Item Description"
                                   className="w-full py-2 pr-10 pl-4 border border-gray-300 rounded-md "
                                   name="desc"
+                                  required
                                   value={row.desc || rows[index].desc}
                                   onChange={(e) =>
                                     handleInputChange(

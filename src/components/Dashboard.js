@@ -9,7 +9,7 @@ import React, { useEffect, useState } from "react";
 import { db } from "../config/firebase";
 import { useNavigate } from "react-router-dom";
 import Loader from "./Loader";
-import { SquareArrowOutUpRight } from "lucide-react";
+import { BanknoteArrowUp, ArrowUp, FileDigit } from "lucide-react";
 import Header from "./Header";
 import SettlePopup from "./SettlePopup";
 
@@ -418,14 +418,20 @@ const Dashboard = () => {
       <div className="p-6">
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-8 ">
           <div className={`p-5 rounded-lg shadow bg-indigo-500 text-white`}>
-            <p className="text-md">Total Invoices</p>
+            <div className="flex items-center justify-between">
+              <p className="text-md">Total Invoices</p>
+              <FileDigit />
+            </div>
             <h3 className="mt-2 text-2xl font-semibold">
               {filteredData ? filteredData.length : 0}
             </h3>
           </div>
 
-          <div className={`p-5 rounded-lg shadow bg-emerald-500 text-white`}>
-            <p className="text-md">Paid</p>
+          <div className={`p-5 rounded-lg shadow bg-purple-500 text-white`}>
+            <div className="flex items-center justify-between">
+              <p className="text-md">Paid</p>
+              <BanknoteArrowUp />
+            </div>
             <h3 className="mt-2 text-2xl font-semibold"> {paidInvoices}</h3>
           </div>
 
@@ -434,8 +440,11 @@ const Dashboard = () => {
             <h3 className="mt-2 text-2xl font-semibold">{settled}</h3>
           </div>
 
-          <div className={`p-5 rounded-lg shadow bg-purple-500 text-white`}>
-            <p className="text-md">Profit</p>
+          <div className={`p-5 rounded-lg shadow bg-emerald-500 text-white`}>
+            <div className="flex items-center justify-between">
+              <p className="text-md">Profit</p>
+              <ArrowUp />
+            </div>
             <h3 className="mt-2 text-2xl font-semibold">₹ {totalProfit}</h3>
           </div>
         </div>
