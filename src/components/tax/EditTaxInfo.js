@@ -82,7 +82,7 @@ function EditTaxInfo() {
       <div className="hidden lg:block">
         <Header />
       </div>
-      <div className="hidden max-lg:block">
+      <div className="hidden max-lg:block mb-16">
         <MobileMenu />
       </div>
 

@@ -8,6 +8,7 @@ import EditItem from "./EditItem";
 import Header from "../Header";
 import Loader from "../Loader";
 import StockModal from "./StockModal";
+import MobileMenu from "../MobileMenu";
 
 function Inventory() {
   const location = useLocation();
@@ -183,8 +184,12 @@ function Inventory() {
 
   return (
     <div>
-      <Header />
-
+      <div className="hidden lg:block">
+        <Header />
+      </div>
+      <div className="hidden max-lg:block mb-16">
+        <MobileMenu />
+      </div>
       <div className="p-6">
         <div className="flex flex-col w-full mx-auto font-bold text-2xl bg-gray-200 py-4 px-2 rounded-md">
           Inventory

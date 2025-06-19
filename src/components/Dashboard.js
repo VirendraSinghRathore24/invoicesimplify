@@ -416,7 +416,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="hidden max-lg:block">
+      <div className="hidden max-lg:block mb-16">
         <MobileMenu />
       </div>
 

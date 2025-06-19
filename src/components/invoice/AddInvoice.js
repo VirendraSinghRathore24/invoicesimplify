@@ -626,7 +626,7 @@ const AddInvoice = () => {
 
   return (
     <div>
-      <div className="hidden max-lg:block">
+      <div className="hidden max-lg:block mb-16">
         <MobileMenu />
       </div>
       <div className="top-0 mx-auto w-full h-[72px] text-white sticky bg-white shadow-lg">
