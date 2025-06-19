@@ -11,6 +11,7 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../config/firebase";
 
 import AlertModal from "../confirmModal/AlertModal";
+import MobileMenu from "../MobileMenu";
 //import CurrencyFlag from "react-currency-flags";
 //import "./Sign.css";
 //import { Textarea } from "@headlessui/react";
@@ -625,8 +626,11 @@ const AddInvoice = () => {
 
   return (
     <div>
+      <div className="hidden max-lg:block">
+        <MobileMenu />
+      </div>
       <div className="top-0 mx-auto w-full h-[72px] text-white sticky bg-white shadow-lg">
-        <div className="flex justify-between mx-auto font-bold text-md  py-4 px-2 rounded-md fixed w-[81.5%]">
+        <div className="flex justify-between mx-auto font-bold text-md  py-4 px-2 rounded-md fixed w-full lg:w-[81.5%]">
           <div className="text-2xl text-black">Create Invoice</div>
           <div className="flex gap-x-4">
             <button

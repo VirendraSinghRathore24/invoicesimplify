@@ -12,6 +12,7 @@ import Loader from "./Loader";
 import { BanknoteArrowUp, ArrowUp, FileDigit } from "lucide-react";
 import Header from "./Header";
 import SettlePopup from "./SettlePopup";
+import MobileMenu from "./MobileMenu";
 
 const Dashboard = () => {
   const [data, setData] = useState([]);
@@ -409,10 +410,14 @@ const Dashboard = () => {
 
   return (
     <div>
-      <div className="top-0 mx-auto w-full h-[72px] text-white sticky bg-white shadow-lg">
+      <div className="hidden lg:block top-0 mx-auto w-full h-[72px] text-white sticky bg-white shadow-lg">
         <div className="flex justify-between mx-auto font-bold text-md  py-4 px-2 rounded-md fixed w-[81.5%]">
           <div className="text-2xl text-black">Dashboard</div>
         </div>
+      </div>
+
+      <div className="hidden max-lg:block">
+        <MobileMenu />
       </div>
 
       <div className="p-6">

@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { db } from "../../config/firebase";
 import { toast } from "react-toastify";
 import Header from "../Header";
+import MobileMenu from "../MobileMenu";
 
 function EditBusinessInfo() {
   const navigate = useNavigate();
@@ -103,7 +104,12 @@ function EditBusinessInfo() {
 
   return (
     <div>
-      <Header />
+      <div className="hidden lg:block">
+        <Header />
+      </div>
+      <div className="hidden max-lg:block">
+        <MobileMenu />
+      </div>
 
       <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
         <main className="flex-grow container mx-auto px-4 py-10">
@@ -142,7 +148,7 @@ function EditBusinessInfo() {
                     />
                   </div>
                 </div>
-                <div className="flex w-full mx-auto justify-between gap-x-4">
+                <div className="flex flex-col lg:flex-row w-full gap-y-3 mx-auto justify-between gap-x-4">
                   <div className="flex flex-col w-full">
                     <div className="text-md font-medium leading-5 text-gray-700 mb-1">
                       Sub Title1
@@ -196,8 +202,8 @@ function EditBusinessInfo() {
                     />
                   </div>
                 </div>
-                <div className="flex w-full mx-auto justify-between gap-x-4">
-                  <div className="flex w-6/12 gap-x-4">
+                <div className="flex flex-col lg:flex-row w-full gap-y-3 mx-auto justify-between gap-x-4">
+                  <div className="flex flex-col lg:flex-row w-full gap-y-3 lg:w-6/12 gap-x-4">
                     <div className="flex flex-col ">
                       <div className="text-md font-bold leading-5 text-gray-700 mb-1">
                         Phone (Primary)

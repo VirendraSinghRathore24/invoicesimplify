@@ -5,6 +5,7 @@ import { MdDelete } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { db } from "../../config/firebase";
 import Header from "../Header";
+import MobileMenu from "../MobileMenu";
 
 const TaxInfo = () => {
   const [posts, setPosts] = useState([]);
@@ -63,7 +64,12 @@ const TaxInfo = () => {
 
   return (
     <div>
-      <Header />
+      <div className="hidden lg:block">
+        <Header />
+      </div>
+      <div className="hidden max-lg:block">
+        <MobileMenu />
+      </div>
 
       <div className="p-6">
         <div className="flex flex-col w-full mx-auto font-bold text-2xl bg-gray-200 py-4 px-2 rounded-md">

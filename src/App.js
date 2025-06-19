@@ -51,29 +51,36 @@ function App() {
 
   return (
     <div className="flex h-screen">
-      {showSidebar && showSidebar1 && <Sidebar />}
+      {showSidebar && showSidebar1 && (
+        <div>
+          <div className="hidden lg:block">
+            <Sidebar />
+          </div>
+        </div>
+      )}
 
-      <div className="flex-1  overflow-y-auto">
+      <div className="flex-1 overflow-y-auto">
         <Routes>
           <Route path="/" element={<Home />} />
-          // Login and Signup routes
+          <Route path="/home" element={<Home />} />
+          {/* Login and Signup routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/logout" element={<Logout />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgotpassword" element={<ForgotPassword />} />
-          // Business Info
+          {/* Business Info */}
           <Route path="/businessinfo" element={<BusinessInfo />} />
           <Route path="/editbusinessinfo" element={<EditBusinessInfo />} />
           <Route path="/addbusinessinfo" element={<AddBusinessInfo />} />
-          // Tax Info
+          {/* Tax Info */}
           <Route path="/edittaxinfo" element={<EditTaxInfo />} />
           <Route path="/taxinfo" element={<TaxInfo />} />
           <Route path="/addtaxinfo" element={<AddTaxInfo />} />
-          // Additional Info
+          {/* Additional Info */}
           <Route path="/editadditionalinfo" element={<AddtionalInfo />} />
           <Route path="/addadditionalinfo" element={<AddAddtionalInfo />} />
           <Route path="/additionalinfo" element={<AdditionalInformation />} />
-          // Invoice
+          {/* Invoice */}
           <Route path="/createinvoice" element={<AddInvoice />} />
           <Route path="/viewinvoice" element={<ViewInvoice />} />
           <Route path="/invoice" element={<Invoice />} />
@@ -91,7 +98,7 @@ function App() {
             path="/customerinvoice/:id"
             element={<ViewInvoiceByCustomer />}
           />
-          // about us
+          {/* About Us */}
           <Route path="/aboutus" element={<AboutUs />} />
           <Route path="/contactus" element={<ContactUs />} />
           <Route path="/privacypolicy" element={<PrivacyPolicy />} />
