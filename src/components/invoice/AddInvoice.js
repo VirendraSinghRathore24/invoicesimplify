@@ -629,10 +629,12 @@ const AddInvoice = () => {
       <div className="hidden max-lg:block mb-16">
         <MobileMenu />
       </div>
-      <div className="top-14 mx-auto w-full h-[72px] text-white sticky bg-white shadow-lg">
-        <div className="flex justify-between mx-auto font-bold text-md  py-4 px-2 rounded-md fixed w-full lg:w-[81.5%]">
-          <div className="text-2xl text-black">Create Invoice</div>
-          <div className="flex gap-x-4">
+      <div className="top-14 lg:top-0 mx-auto w-full h-[72px] text-white sticky bg-white shadow-lg">
+        <div className="flex justify-between mx-auto font-bold text-md p-2 rounded-md fixed w-full lg:w-[81.5%]">
+          <div className="text-2xl text-black hidden lg:block">
+            Create Invoice
+          </div>
+          <div className="flex justify-between gap-x-4">
             <button
               onClick={handleResetInvoice}
               className="bg-[#146eb4] text-white border-[1.4px] border-gray-400  py-2 px-6 font-semibold rounded-md  hover:scale-110 transition duration-300 ease-in cursor-pointer "
