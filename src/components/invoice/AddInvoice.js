@@ -629,7 +629,7 @@ const AddInvoice = () => {
       <div className="hidden max-lg:block mb-16">
         <MobileMenu />
       </div>
-      <div className="top-0 mx-auto w-full h-[72px] text-white sticky bg-white shadow-lg">
+      <div className="top-14 mx-auto w-full h-[72px] text-white sticky bg-white shadow-lg">
         <div className="flex justify-between mx-auto font-bold text-md  py-4 px-2 rounded-md fixed w-full lg:w-[81.5%]">
           <div className="text-2xl text-black">Create Invoice</div>
           <div className="flex gap-x-4">
@@ -659,8 +659,8 @@ const AddInvoice = () => {
         )}
         <div>
           <div className="flex flex-col w-full gap-y-3 mx-auto ">
-            <div className="flex justify-between gap-x-2 w-full mx-auto">
-              <div className="flex flex-col w-6/12 mx-auto justify-start items-left mt-4 shadow-lg border-[1.2px] p-5 bg-white gap-y-4 rounded-md">
+            <div className="flex flex-col lg:flex-row justify-between gap-x-2 w-full mx-auto">
+              <div className="flex flex-col w-full lg:w-6/12 mx-auto justify-start items-left mt-4 shadow-lg border-[1.2px] p-5 bg-white gap-y-4 rounded-md">
                 <div className="flex flex-col justify-start items-left gap-y-4 ">
                   <div className="flex ">
                     <div className="text-xl text-gray-600 font-medium">
@@ -674,7 +674,7 @@ const AddInvoice = () => {
                     </div>
                     <div>
                       <input
-                        className="form-input w-8/12 block font-semibold text-xs rounded border border-gray-400 p-2 leading-5 focus:text-gray-600"
+                        className="form-input w-full lg:w-8/12 block font-semibold text-xs rounded border border-gray-400 p-2 leading-5 focus:text-gray-600"
                         required
                         name="custname"
                         placeholder="Enter Customer Name"
@@ -709,7 +709,7 @@ const AddInvoice = () => {
                 </div>
               </div>
 
-              <div className="w-6/12 mx-auto flex flex-col mt-4 shadow-lg border-[1.2px] p-4 bg-white gap-y-4 rounded-md">
+              <div className="w-full lg:w-6/12 mx-auto flex flex-col mt-4 shadow-lg border-[1.2px] p-4 bg-white gap-y-4 rounded-md">
                 <div className="flex ">
                   <div className="text-xl text-gray-600 font-medium">
                     Invoice
@@ -722,7 +722,7 @@ const AddInvoice = () => {
                     </div>
                     <div>
                       <input
-                        className="w-6/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
+                        className="w-10/12 lg:w-6/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
                         required
                         name="invoiceNumber"
                         placeholder="10"
@@ -762,7 +762,7 @@ const AddInvoice = () => {
                       </div>
                       <div>
                         <input
-                          className="w-3/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
+                          className="w-12/12 lg:w-3/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
                           required
                           name="expecteddate"
                           placeholder="Date"
@@ -954,22 +954,22 @@ const AddInvoice = () => {
                                   ₹ {row.amount}
                                 </div>
                               </td>
-                              <td className="w-[20%]">
+                              <td className="w-[10%]">
                                 <div>
-                                  <button
+                                  {/* <button
                                     className="border-2 px-2 py-1 rounded-md bg-gray-700 text-white font-bold mt-2"
                                     onClick={handleAddRow}
                                   >
                                     +
-                                  </button>
-                                  {rows.length > 1 && (
-                                    <button
-                                      className="border-2 px-2 py-1 rounded-md bg-gray-700 text-white font-bold mt-2 "
+                                  </button> */}
+                                  <div className="mt-2">
+                                    <Trash2
+                                      color="red"
+                                      className="cursor-pointer text-red-500 hover:text-red-700"
+                                      size={20}
                                       onClick={(e) => handleDeleteRow(index, e)}
-                                    >
-                                      x
-                                    </button>
-                                  )}
+                                    />
+                                  </div>
                                 </div>
                               </td>
                             </div>
@@ -990,8 +990,8 @@ const AddInvoice = () => {
               </div>
               <hr className="w-full mt-2"></hr>
 
-              <div className="flex justify-between w-full mx-auto">
-                <div className="w-3/12 mt-2">
+              <div className="flex flex-col lg:flex-row justify-between w-full mx-auto">
+                <div className="w-full lg:w-3/12 mt-2">
                   <div className="w-full mx-auto p-6 bg-white shadow-md border-[1.4px] rounded-md">
                     <h2 className="text-xl font-semibold mb-4">Payment Type</h2>
 
@@ -1048,7 +1048,7 @@ const AddInvoice = () => {
                     )}
                   </div>
                 </div>
-                <div className="w-8/12">
+                <div className="w-full lg:w-8/12">
                   <div className="w-full flex justify-end gap-x-10 mt-2">
                     <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-sm font-bold rounded-md uppercase">
                       SubTotal

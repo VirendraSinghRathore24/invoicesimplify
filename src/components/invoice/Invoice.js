@@ -19,6 +19,7 @@ import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { toast } from "react-toastify";
 import Header from "../Header";
+import MobileMenu from "../MobileMenu";
 
 function Invoice() {
   const [businessInfo, setBusinessInfo] = useState({});
@@ -422,14 +423,16 @@ function Invoice() {
 
   return (
     <div>
-      <Header />
+      <div className="hidden max-lg:block mb-16">
+        <MobileMenu />
+      </div>
 
-      <div className="my-5 p-6">
-        <div className="flex justify-between w-8/12 mx-auto ">
+      <div className="my-5 p-1 lg:p-6">
+        <div className="flex flex-wrap justify-between w-full lg:w-8/12 mx-auto ">
           <div className="flex gap-x-2">
             <button
               onClick={() => navigate("/createinvoice")}
-              className="flex items-center bg-[#E5E7EB] cursor-pointer font-bold px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
+              className="flex items-center bg-[#E5E7EB] cursor-pointer font-bold px-2 lg:px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
             >
               <span className="mr-2">
                 <FaRegEdit size={22} />
@@ -440,7 +443,7 @@ function Invoice() {
           <div>
             <button
               onClick={handlePrint}
-              className="flex items-center bg-[#E5E7EB]  font-bold px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
+              className="flex items-center bg-[#E5E7EB]  font-bold px-2 lg:px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
             >
               <span className="mr-2">
                 <Printer />
@@ -464,7 +467,7 @@ function Invoice() {
           <div>
             <button
               onClick={() => handleWhatsApp()}
-              className="flex items-center bg-[#E5E7EB]  font-bold px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
+              className="flex items-center bg-[#E5E7EB]  font-bold px-2 lg:px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
             >
               <span className="mr-2">
                 <BsWhatsapp size={22} />
@@ -474,19 +477,21 @@ function Invoice() {
           </div>
         </div>
 
-        <div className="w-full md:w-8/12 mx-auto border-[1.7px] rounded-md m-2 mt-4">
-          <div id="invoice" ref={printRef} className="p-8 m-4">
+        <div className="w-full lg:w-8/12 mx-auto border-[1.7px] rounded-md m-2 mt-4">
+          <div id="invoice" ref={printRef} className="p-2 lg:p-8 m-4">
             <div className="flex justify-between">
               <div>
                 <img src="../images/matadi1.jpeg" className="h-20 w-20" />
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold">{businessInfo?.name}</div>
+                <div className="text-xl lg:text-3xl font-bold">
+                  {businessInfo?.name}
+                </div>
                 {/* <div className='text-3xl font-bold'>बाईसाराज पौशाक पैलेस</div> */}
-                <div className="text-lg font-medium">
+                <div className="text-md lg:text-lg font-medium">
                   {businessInfo?.subTitle1}
                 </div>
-                <div className="text-lg font-medium">
+                <div className="text-md lg:text-lg font-medium">
                   {businessInfo?.subTitle2}
                 </div>
               </div>
@@ -533,12 +538,13 @@ function Invoice() {
             <div className="flex justify-between border-b-[1.2px] border-black mt-6"></div>
             <div className="overflow-hidden mt-2">
               <table className=" w-full mx-auto text-center text-sm font-light">
-                <thead className="text-md uppercase">
+                <thead className="text-xs lg:text-md uppercase">
                   <tr className="flex justify-between w-full mx-auto gap-x-4">
                     <th className="w-[10%]">S.No.</th>
                     <th className="w-[40%] text-left">Description</th>
                     <th className="w-[20%]">Rate</th>
-                    <th className="w-[10%]">Quantity</th>
+                    <th className="w-[10%] hidden lg:block">Quantity</th>
+                    <th className="w-[10%] hidden max-lg:block">Qty</th>
                     <th className="w-[20%]">Amount</th>
                   </tr>
                   <tr className="flex justify-between border-b-[1.2px] border-black mt-2"></tr>
@@ -548,7 +554,7 @@ function Invoice() {
                     rows.length > 0 &&
                     rows.map((row, index) => (
                       <div>
-                        <tr className="flex justify-between text-md mt-1 font-light w-full mx-auto gap-x-4">
+                        <tr className="flex justify-between text-xs lg:text-md mt-1 font-light w-full mx-auto gap-x-4">
                           <td className="w-[10%] ">{index + 1}.</td>
                           <td className="w-[40%] text-left">{row.desc}</td>
                           <td className="w-[20%] ">{row.rate}</td>

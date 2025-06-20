@@ -79,7 +79,7 @@ const BusinessInfo = () => {
         <div className="flex flex-col w-full mx-auto font-bold text-2xl bg-gray-200 py-4 px-2 rounded-md">
           Business Information
         </div>
-        <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4">
+        <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4 hidden lg:block">
           {posts && (
             <table className="min-w-full text-sm text-left text-gray-700">
               <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
@@ -120,6 +120,46 @@ const BusinessInfo = () => {
                       className="text-red-600 hover:text-red-800 font-semibold text-sm"
                     >
                       Delete
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          )}
+
+          {!posts && (
+            <div className="flex h-screen items-center justify-center ">
+              <div onClick={() => navigate("/addbusinessinfo")}>
+                <button className="border-2 bg-[#444] text-white fond-bold text-lg py-4 px-8 rounded-md cursor-pointer">
+                  {" "}
+                  + Add Business Info
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+        <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4 hidden max-lg:block">
+          {posts && (
+            <table className="min-w-full text-sm text-left text-gray-700">
+              <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
+                <tr>
+                  <th className="px-4 py-3 border-r">Title</th>
+                  <th className="px-4 py-3 border-r">Address</th>
+                  <th className="px-4 py-3 border-r">Phone1</th>
+                  <th className="px-4 py-3 border-r">Edit</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="border-t bg-white">
+                  <td className="px-4 py-3 border-r">{posts?.name}</td>
+                  <td className="px-4 py-3 border-r">{posts?.address}</td>
+                  <td className="px-4 py-3 border-r">{posts?.phonePrimary}</td>
+                  <td className="px-4 py-3 border-r">
+                    <button
+                      onClick={() => navigate("/editbusinessinfo")}
+                      className="text-blue-600 hover:text-red-800 font-semibold text-sm"
+                    >
+                      Edit
                     </button>
                   </td>
                 </tr>
