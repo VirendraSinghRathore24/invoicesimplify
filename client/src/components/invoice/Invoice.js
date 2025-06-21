@@ -258,7 +258,7 @@ function Invoice() {
 
       //const response = await fetch("http://localhost:5001/send-sms"
       const response = await fetch(
-        "https://invoicesimplify.netlify.app/send-sms",
+        "https://invoicesimplify.onrender.com/send-sms",
         {
           method: "POST",
           headers: {
