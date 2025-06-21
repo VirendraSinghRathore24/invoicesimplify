@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Invoice</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  </head>
+  <body class="bg-white text-black">
+    <div class="w-full md:w-8/12 mx-auto border-2 rounded-md m-2 mt-4">
+      <div class="p-8 m-4">
+        <div class="flex justify-between">
+          <div>
+            <img src="/images/matadi1.jpeg" class="h-20 w-20" />
+          </div>
+          <div class="text-center">
+            <div class="text-3xl font-bold"><%= businessInfo.name %></div>
+            <div class="text-lg font-medium"><%= businessInfo.subTitle1 %></div>
+          </div>
+          <div class="flex flex-col font-semibold">
+            <% if (businessInfo.phonePrimary) { %>
+              <div>M: <%= businessInfo.phonePrimary %></div>
+            <% } %>
+            <div><%= businessInfo.phoneSecondary %></div>
+          </div>
+        </div>
+
+        <% if (taxInfo.gstNumber) { %>
+          <div class="text-sm font-medium text-center">GSTIN: <%= taxInfo.gstNumber %></div>
+        <% } %>
+
+        <hr class="w-full mt-4 border" />
+        <div class="py-2 text-center">
+          <%= businessInfo.address1 %>, <%= businessInfo.address2 %> - <%= businessInfo.address3 %>
+        </div>
+        <hr class="w-full mt-1 border" />
+
+        <div class="flex justify-between">
+          <div class="w-8/12 text-left font-semibold py-2">
+            <div class="mb-2">To:</div>
+            <div><%= customerInfo.customerName %></div>
+            <div><%= customerInfo.customerPhone %></div>
+          </div>
+          <div class="w-4/12 flex flex-col gap-y-3 font-bold py-2">
+            <div>
+              <div class="text-end text-sm">INVOICE</div>
+              <div class="text-end text-gray-500 text-sm"><%= invoiceInfo.invoiceNumber %></div>
+            </div>
+            <div>
+              <div class="text-end text-sm">DATE</div>
+              <div class="text-end text-gray-500 text-sm"><%= date %></div>
+            </div>
+          </div>
+        </div>
+
+        <table class="w-full text-center text-sm mt-6">
+          <thead class="uppercase">
+            <tr class="border-b">
+              <th>S.No.</th>
+              <th class="text-left">Description</th>
+              <th>Rate</th>
+              <th>Quantity</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% rows.forEach((row, index) => { %>
+              <tr class="border-b">
+                <td><%= index + 1 %>.</td>
+                <td class="text-left"><%= row.desc %></td>
+                <td><%= row.rate %></td>
+                <td><%= row.qty %></td>
+                <td><%= row.amount %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+
+        <div class="flex justify-end gap-x-10 mt-4">
+          <div class="w-3/12 text-right font-semibold">SubTotal</div>
+          <div class="w-3/12 text-right font-semibold">₹ <%= amountInfo.amount %></div>
+        </div>
+
+        <% if (taxInfo.cgstAmount) { %>
+          <div class="flex justify-end gap-x-10 mt-2">
+            <div class="w-3/12 text-right font-semibold">CGST <%= taxInfo.cgstAmount %>%</div>
+            <div class="w-3/12 text-right font-semibold">₹ <%= taxCalculatedInfo.cgst %></div>
+          </div>
+        <% } %>
+
+        <% if (taxInfo.sgstAmount) { %>
+          <div class="flex justify-end gap-x-10 mt-2">
+            <div class="w-3/12 text-right font-semibold">SGST <%= taxInfo.sgstAmount %>%</div>
+            <div class="w-3/12 text-right font-semibold">₹ <%= taxCalculatedInfo.sgst %></div>
+          </div>
+        <% } %>
+
+        <div class="flex justify-end gap-x-10 mt-2 border-t pt-2">
+          <div class="w-3/12 text-right font-bold">Total</div>
+          <div class="w-3/12 text-right font-bold">₹ <%= amountInfo.amount + taxCalculatedInfo.cgst + taxCalculatedInfo.sgst %></div>
+        </div>
+
+        <% if (amountInfo.advance > 0) { %>
+          <div class="flex justify-end gap-x-10 mt-2">
+            <div class="w-3/12 text-right font-bold">Advance</div>
+            <div class="w-3/12 text-right font-bold">₹ <%= amountInfo.advance %></div>
+          </div>
+        <% } %>
+
+        <div class="flex justify-end gap-x-10 mt-2">
+          <div class="w-3/12 text-right font-bold">Balance</div>
+          <div class="w-3/12 text-right font-bold">₹ <%= taxCalculatedInfo.balance %></div>
+        </div>
+
+        <hr class="mt-4" />
+
+        <div class="flex justify-between text-sm mt-4">
+          <div class="text-left text-red-900">
+            <div><%= additionalInfo.note1 %></div>
+            <div><%= additionalInfo.note2 %></div>
+            <div><%= additionalInfo.note3 %></div>
+            <div><%= additionalInfo.note4 %></div>
+          </div>
+          <div class="text-blue-700 font-bold">
+            <div><%= additionalInfo.middlenote1 %></div>
+            <div><%= additionalInfo.middlenote2 %></div>
+            <div><%= additionalInfo.middlenote3 %></div>
+            <div><%= additionalInfo.middlenote4 %></div>
+          </div>
+          <div class="text-blue-700 font-bold">
+            <div><%= additionalInfo.rnote1 %></div>
+            <div><%= additionalInfo.rnote2 %></div>
+            <div><%= additionalInfo.rnote3 %></div>
+            <div><%= additionalInfo.rnote4 %></div>
+            <div class="text-black mt-4">For: <%= businessInfo.name %></div>
+          </div>
+        </div>
+
+        <% if (invoiceInfo.expectedDate) { %>
+          <div class="text-sm font-semibold text-blue-700 text-center mt-4">
+            Expected Delivery Date : <%= invoiceInfo.expectedDate %>
+          </div>
+        <% } %>
+
+        <div class="text-sm text-gray-700 font-bold mt-2">
+          <div><%= additionalInfo.additionaldesc %></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
