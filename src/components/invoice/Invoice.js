@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FaRegEdit } from "react-icons/fa";
 import { BsWhatsapp } from "react-icons/bs";
 import { Printer } from "lucide-react";
-import { Download } from "lucide-react";
+import { Download, MessageCircle } from "lucide-react";
 import axios from "axios";
 
 import {
@@ -20,6 +20,7 @@ import html2canvas from "html2canvas";
 import { toast } from "react-toastify";
 import Header from "../Header";
 import MobileMenu from "../MobileMenu";
+import Loader from "../Loader";
 
 function Invoice() {
   const [businessInfo, setBusinessInfo] = useState({});
@@ -84,6 +85,7 @@ function Invoice() {
     expectedDate = month + " " + today.getDate() + ", " + today.getFullYear();
   }
 
+  const [loading, setLoading] = useState(false);
   const loggedInUser = localStorage.getItem("user");
   const invoiceInfo_CollectionRef = collection(db, "Invoice_Info");
   const handleDownload = async () => {
@@ -240,29 +242,45 @@ function Invoice() {
 
       // console.log("Cloudinary upload response:", response.data);
       // alert("PDF uploaded! URL:\n" + response.data.secure_url);
+      setLoading(true);
+
       const alreadyPrintedOnce = await checkIfInvoiceAlreadyPrintedOnce();
       if (alreadyPrintedOnce) {
         toast("Invoice sent successfully!", {
           position: "top-center",
         });
+        setLoading(false);
         return;
       }
 
       const linkStr = generateBase62String();
       await addInvoiceDataToDB(linkStr);
 
-      const response = await fetch("http://localhost:5001/send-message", {
+      const response = await fetch("http://localhost:5001/send-sms", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           name: customerInfo.customerName,
-          phone: customerInfo.customerPhone,
-          businessname: businessInfo.businessname,
+          to: "+91" + customerInfo.customerPhone,
+          businessname: businessInfo.name,
           amount: amountInfo?.amount,
+          message:
+            "Dear " +
+            customerInfo.customerName +
+            ",\n\nThank you for your purchase! Your invoice is ready.\n\n" +
+            "You can view your invoice using the link below:\n\n" +
+            "https://www.invoicesimplify.netlify.com/customerinvoice/" +
+            linkStr +
+            "\n\nIf you have any questions, feel free to contact us.\n\n" +
+            "Best regards,\n" +
+            businessInfo.name +
+            "\n" +
+            businessInfo.phonePrimary,
           urllink:
-            "http://www.invoicesimplify.netlify.com/customerinvoice/" + linkStr,
+            "https://www.invoicesimplify.netlify.com/customerinvoice/" +
+            linkStr,
           date: getCurrentDate(),
         }),
       });
@@ -276,11 +294,15 @@ function Invoice() {
       } else {
         alert("Failed to send message.");
       }
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.error("Error generating/uploading PDF", error);
       alert("Failed to generate or upload PDF.");
     }
   };
+
+  const sendInvoiceToNumber = async (phoneNumber) => {};
 
   const clearLocalStorage = () => {
     localStorage.removeItem("custname");
@@ -470,9 +492,9 @@ function Invoice() {
               className="flex items-center bg-[#E5E7EB]  font-bold px-2 lg:px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
             >
               <span className="mr-2">
-                <BsWhatsapp size={22} />
+                <MessageCircle size={22} />
               </span>
-              Whatsapp
+              Message
             </button>
           </div>
         </div>
@@ -538,7 +560,7 @@ function Invoice() {
             <div className="flex justify-between border-b-[1.2px] border-black mt-6"></div>
             <div className="overflow-hidden mt-2">
               <table className=" w-full mx-auto text-center text-sm font-light">
-                <thead className="text-xs lg:text-md uppercase">
+                <thead className="text-md uppercase">
                   <tr className="flex justify-between w-full mx-auto gap-x-4">
                     <th className="w-[10%]">S.No.</th>
                     <th className="w-[40%] text-left">Description</th>
@@ -698,6 +720,7 @@ function Invoice() {
           </div>
         </div>
       </div>
+      {loading && <Loader />}
     </div>
   );
 }
