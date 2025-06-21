@@ -22,8 +22,7 @@ app.use(cors());
 app.use(express.json());
 
 const accountSid = process.env.TWITTER_ACCOUNT_SID; // Use environment variables
-console.log("Account SID:", accountSid);
-console.log("Auth Token:", process.env.TWITTER_AUTH_TOKEN);
+
 const authToken = process.env.TWITTER_AUTH_TOKEN;
 const twilioPhoneNumber = "+18565175241"; // Your Twilio phone number;
 const client = new twilio(accountSid, authToken);
