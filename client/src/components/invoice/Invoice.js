@@ -256,34 +256,38 @@ function Invoice() {
       const linkStr = generateBase62String();
       await addInvoiceDataToDB(linkStr);
 
-      const response = await fetch("http://localhost:5001/send-sms", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: customerInfo.customerName,
-          to: "+91" + customerInfo.customerPhone,
-          businessname: businessInfo.name,
-          amount: amountInfo?.amount,
-          message:
-            "Dear " +
-            customerInfo.customerName +
-            ",\n\nThank you for your purchase! Your invoice is ready.\n\n" +
-            "You can view your invoice using the link below:\n\n" +
-            "https://www.invoicesimplify.netlify.com/customerinvoice/" +
-            linkStr +
-            "\n\nIf you have any questions, feel free to contact us.\n\n" +
-            "Best regards,\n" +
-            businessInfo.name +
-            "\n" +
-            businessInfo.phonePrimary,
-          urllink:
-            "https://www.invoicesimplify.netlify.com/customerinvoice/" +
-            linkStr,
-          date: getCurrentDate(),
-        }),
-      });
+      //const response = await fetch("http://localhost:5001/send-sms"
+      const response = await fetch(
+        "https://invoicesimplify.netlify.app/send-sms",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: customerInfo.customerName,
+            to: "+91" + customerInfo.customerPhone,
+            businessname: businessInfo.name,
+            amount: amountInfo?.amount,
+            message:
+              "Dear " +
+              customerInfo.customerName +
+              ",\n\nThank you for your purchase! Your invoice is ready.\n\n" +
+              "You can view your invoice using the link below:\n\n" +
+              "https://www.invoicesimplify.netlify.com/customerinvoice/" +
+              linkStr +
+              "\n\nIf you have any questions, feel free to contact us.\n\n" +
+              "Best regards,\n" +
+              businessInfo.name +
+              "\n" +
+              businessInfo.phonePrimary,
+            urllink:
+              "https://www.invoicesimplify.netlify.com/customerinvoice/" +
+              linkStr,
+            date: getCurrentDate(),
+          }),
+        }
+      );
 
       const result = await response.json();
 
