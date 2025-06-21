@@ -9,6 +9,8 @@ const app = express();
 const PDFDocument = require("pdfkit");
 const FormData = require("form-data");
 const ejs = require("ejs");
+const dotenv = require("dotenv");
+dotenv.config();
 
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
@@ -19,13 +21,14 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(cors());
 app.use(express.json());
 
-const accountSid = "ACb8f9e8d32e84878e51401eaa54c19dd9"; // Use environment variables
-const authToken = "c90f6607d8c9a4014782d0bd3dc1c8fa";
+const accountSid = process.env.TWITTER_ACCOUNT_SID; // Use environment variables
+console.log("Account SID:", accountSid);
+console.log("Auth Token:", process.env.TWITTER_AUTH_TOKEN);
+const authToken = process.env.TWITTER_AUTH_TOKEN;
 const twilioPhoneNumber = "+18565175241"; // Your Twilio phone number;
 const client = new twilio(accountSid, authToken);
 
-const WHATSAPP_TOKEN =
-  "EAAH58DVvw2MBOZB9raGNS0zetpOZA2dy7zbuk93TYXajKYQlBrOVrr3SqzlNEv5jpAknwkRSQl6HKGCzSqWrqxCMHO2IWCiZAOjaKKjXdPY090HvxxkLgJjAAGXPt9ZAIWDZApibUACecHGjqIKxnB7scLkmVjac92i4EjwPZCQDZC6sIWgztK7G3GfjrJeZBSwgQmhmB6RvExKWqDZADCusblIcsj8thiRdq";
+const WHATSAPP_TOKEN = process.env.WHATSAPP_TOKEN; // from WhatsApp Cloud API
 const PHONE_NUMBER_ID = "598950383311139"; // from WhatsApp Cloud API
 const SERVER_URL =
   "/Users/virendrasingh/Downloads/Amit Singh Rathore_invoice.pdf"; // public URL to serve PDFs
