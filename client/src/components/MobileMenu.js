@@ -1,9 +1,20 @@
 import React, { useState } from "react";
 import { Menu, X } from "lucide-react"; // optional: or use your own icons
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const MobileMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const loggedInUser = localStorage.getItem("user");
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    const res = window.confirm("Are you sure you want to logout?");
+
+    if (res) {
+      localStorage.clear();
+      navigate("/login");
+    }
+  };
 
   const menuItems = [
     "Home",
@@ -13,7 +24,6 @@ const MobileMenu = () => {
     "Business Info",
     "Tax Info",
     "Additional Info",
-    "Logout",
   ];
 
   return (
@@ -48,6 +58,14 @@ const MobileMenu = () => {
         <div className="p-4 border-b text-xl font-bold text-blue-600">
           InvoiceSimplify
         </div>
+        <hr />
+        <div className="text-sm font-bold py-2 border-b border-white text-center flex items-center justify-start px-6 break-words">
+          <div className="w-8 h-8 bg-amber-500 text-white rounded-full flex items-center justify-center mr-2">
+            {loggedInUser?.charAt(0).toUpperCase()}
+          </div>
+          {loggedInUser}
+        </div>
+        <hr />
         <nav className="p-4 space-y-4">
           {menuItems.map((item, index) => (
             <NavLink
@@ -59,6 +77,9 @@ const MobileMenu = () => {
             </NavLink>
           ))}
         </nav>
+        <div className="p-4 bottom-0 mt-auto border-t text-center">
+          <button onClick={handleLogout}>Logout</button>
+        </div>
       </div>
     </div>
   );

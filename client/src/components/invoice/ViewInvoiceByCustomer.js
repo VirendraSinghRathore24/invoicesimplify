@@ -352,11 +352,11 @@ function ViewInvoiceByCustomer() {
                 )}
                 <div className="border-b-2 border-dashed py-1"></div>
                 {invoiceInfo?.taxCalculatedInfo?.balance ? (
-                  <div className="w-full flex justify-end gap-x-10">
-                    <div className="w-11/12 flex justify-end mx-auto mt-1 px-2 text-xs lg:text-sm font-bold rounded-md uppercase text-center">
+                  <div className="w-full flex justify-end gap-x-10 text-red-700 ">
+                    <div className="w-11/12 flex justify-end mx-auto mt-1 px-2 text-xs lg:text-sm font-extrabold rounded-md uppercase text-center">
                       Balance{" "}
                     </div>
-                    <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-xs lg:text-sm font-bold rounded-md ">
+                    <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-xs lg:text-sm font-extrabold rounded-md ">
                       ₹ {invoiceInfo?.taxCalculatedInfo?.balance}
                     </div>
                   </div>
