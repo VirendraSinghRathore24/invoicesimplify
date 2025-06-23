@@ -584,7 +584,12 @@ function Invoice() {
                           <td className="w-[10%] ">{index + 1}.</td>
                           <td className="w-[40%] text-left">{row.desc}</td>
                           <td className="w-[20%] ">{row.rate}</td>
-                          <td className="w-[10%] ">{row.qty}</td>
+                          <td className="w-[10%] ">
+                            {row.qty}{" "}
+                            <span className="ml-1 uppercase">
+                              {row?.selectedUnit}
+                            </span>
+                          </td>
                           <td className="w-[20%]"> {row.amount}</td>
                         </tr>
                         {rows.length > index + 1 && (
