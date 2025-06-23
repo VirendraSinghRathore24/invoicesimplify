@@ -580,7 +580,7 @@ function Invoice() {
                     rows.length > 0 &&
                     rows.map((row, index) => (
                       <div>
-                        <tr className="flex justify-between text-xs lg:text-md mt-1 font-light w-full mx-auto gap-x-4">
+                        <tr className="flex justify-between text-md mt-1 font-light w-full mx-auto gap-x-4">
                           <td className="w-[10%] ">{index + 1}.</td>
                           <td className="w-[40%] text-left">{row.desc}</td>
                           <td className="w-[20%] ">{row.rate}</td>
