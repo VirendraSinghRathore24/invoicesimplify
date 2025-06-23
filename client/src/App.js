@@ -47,7 +47,7 @@ function App() {
     "/termsofuse",
   ].includes(location.pathname);
 
-  const showSidebar1 = !location.pathname.includes("/customerinvoice");
+  const showSidebar1 = !location.pathname.includes("/ci");
 
   return (
     <div className="flex h-screen">
@@ -94,10 +94,7 @@ function App() {
           <Route path="/upgrade" element={<Upgrade />} />
           <Route path="/success" element={<Success />} />
           <Route path="/paymenthistory" element={<PaymentHistory />} />
-          <Route
-            path="/customerinvoice/:id"
-            element={<ViewInvoiceByCustomer />}
-          />
+          <Route path="/ci/:id" element={<ViewInvoiceByCustomer />} />
           {/* About Us */}
           <Route path="/aboutus" element={<AboutUs />} />
           <Route path="/contactus" element={<ContactUs />} />
