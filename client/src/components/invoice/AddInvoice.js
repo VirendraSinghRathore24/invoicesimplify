@@ -264,6 +264,10 @@ const AddInvoice = () => {
       document.querySelector('input[name="advanceAmount"]').focus();
       return;
     }
+    if (rows.length === 0) {
+      alert("Atleast one item should be added !!!");
+      return;
+    }
     // validate each row before creating invoice
     for (let i = 0; i < rows.length; i++) {
       const row = rows[i];
