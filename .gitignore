@@ -1,5 +1,6 @@
 # Ignore all node_modules folders
 **/node_modules/
+**/.DS_Store
 
 # Ignore specific node_modules folders
 server/node_modules/
@@ -15,6 +16,7 @@ client/.env.development.local
 client/.env.production.local
 node_modules
 build
+.DS_Store
 .env
 /node_modules
 ./client/node_modules

@@ -534,6 +534,7 @@ const AddInvoice = () => {
       code: localStorage.getItem("selectedItemCode"),
       buyPrice: localStorage.getItem("selectedItemBuyPrice"),
       totalQty: localStorage.getItem("selectedItemQty"),
+      selectedUnit: localStorage.getItem("selectedItemUnit"),
       rate: price,
       qty: 1,
       amount: 1 * price,
@@ -860,20 +861,25 @@ const AddInvoice = () => {
                               )}
                             </td>
                             <td className="w-[10%] ">
-                              <input
-                                className="w-full text-right block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
-                                required
-                                name="quantity"
-                                placeholder="Quantity"
-                                value={row.qty}
-                                onChange={(e) =>
-                                  handleInputChange(
-                                    e.target.name,
-                                    e.target.value,
-                                    index
-                                  )
-                                }
-                              />
+                              <div className="relative w-full max-w-md">
+                                <input
+                                  className="w-full text-right pr-14 block text-xs rounded border border-gray-400 py-2 px-4 leading-5"
+                                  required
+                                  name="quantity"
+                                  placeholder="Quantity"
+                                  value={row.qty}
+                                  onChange={(e) =>
+                                    handleInputChange(
+                                      e.target.name,
+                                      e.target.value,
+                                      index
+                                    )
+                                  }
+                                />
+                                <div className="absolute right-0 top-1/2 transform -translate-y-1/2 text-white p-2 rounded-r bg-gray-600 uppercase">
+                                  {row.selectedUnit}
+                                </div>
+                              </div>
                             </td>
                             <td className="w-[20%] text-center">
                               <div className="w-full  mt-3 font-extrabold text-xs">

@@ -3,7 +3,7 @@ import { CheckCircle, Star, Moon, Sun } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 const features = [
   "Create invoices in seconds",
-  "Print or whatsapp with one click",
+  "Print or message with one click",
   "Works great on mobile and desktop",
   "Dashboard to track invoices",
 ];

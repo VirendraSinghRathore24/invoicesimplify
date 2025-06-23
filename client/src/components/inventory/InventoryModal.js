@@ -26,6 +26,7 @@ const InventoryModal = ({ handleCloseItem, setItem }) => {
     localStorage.setItem("selectedItemPrice", post.sellPrice);
     localStorage.setItem("selectedItemBuyPrice", post.buyPrice);
     localStorage.setItem("selectedItemQty", post.itemQty);
+    localStorage.setItem("selectedItemUnit", post.selectedUnit);
     handleCloseItem();
   };
 
@@ -68,6 +69,7 @@ const InventoryModal = ({ handleCloseItem, setItem }) => {
     localStorage.removeItem("selectedItemPrice");
     localStorage.removeItem("selectedItemBuyPrice");
     localStorage.removeItem("selectedItemQty");
+    localStorage.removeItem("selectedItemUnit");
     handleCloseItem();
   };
 
@@ -150,7 +152,12 @@ const InventoryModal = ({ handleCloseItem, setItem }) => {
                       <td className="px-4 py-3 border-r">{post.itemName}</td>
                       <td className="px-4 py-3 border-r">{post.itemCode}</td>
                       <td className="px-4 py-3 border-r">{post.sellPrice}</td>
-                      <td className="px-4 py-3 border-r">{post.itemQty}</td>
+                      <td className="px-4 py-3 border-r">
+                        {post.itemQty}{" "}
+                        <span className="ml-1 uppercase">
+                          {post.selectedUnit}
+                        </span>
+                      </td>
                     </tr>
                   ))}
                 {filteredData && filteredData.length === 0 && (

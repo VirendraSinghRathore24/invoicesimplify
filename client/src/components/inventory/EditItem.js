@@ -10,6 +10,9 @@ function EditItem({ handleCloseEditModal, setItemAdded, editPost }) {
   const [inputs, setInputs] = useState(editPost);
   const [showList, setShowList] = useState(false);
   const [posts, setPosts] = useState([]);
+  const [selectedUnit, setSelectedUnit] = useState(editPost.selectedUnit);
+
+  console.log("editPost", editPost);
 
   const navigate = useNavigate();
   const inventoryInfo_CollectionRef = collection(db, "Inventory_Info");
@@ -29,9 +32,6 @@ function EditItem({ handleCloseEditModal, setItemAdded, editPost }) {
     setItemAdded(true);
 
     toast("Item updated successfully!!!");
-
-    // sending  info to next screen
-    //localStorage.setItem("inventory", JSON.stringify(data));
   };
 
   const updateInventoryItems = async () => {
@@ -60,6 +60,7 @@ function EditItem({ handleCloseEditModal, setItemAdded, editPost }) {
     existingItems[editPost.index].itemQty = inputs.itemQty;
     existingItems[editPost.index].buyPrice = inputs.buyPrice;
     existingItems[editPost.index].sellPrice = inputs.sellPrice;
+    existingItems[editPost.index].selectedUnit = selectedUnit;
 
     // Find the item to update
     const updatedItems = existingItems.map((item) =>
@@ -87,30 +88,6 @@ function EditItem({ handleCloseEditModal, setItemAdded, editPost }) {
     const value = event.target.value;
     setInputs((values) => ({ ...values, [name]: value }));
   };
-  const handleBack = () => {
-    navigate(-1);
-  };
-
-  const checkIfListExists = async () => {
-    const data = await getDocs(inventoryInfo_CollectionRef);
-    const filteredData = data.docs.map((doc) => ({
-      ...doc.data(),
-      id: doc.id,
-    }));
-
-    const loggedInUser = localStorage.getItem("user");
-    const inventoryInfo = filteredData.filter(
-      (x) => x.loggedInUser === loggedInUser
-    )[0];
-
-    // get items list
-    const existingItems = inventoryInfo.inventory;
-
-    if (existingItems.length > 0) {
-      setShowList(true);
-      setPosts(inventoryInfo.inventory);
-    }
-  };
 
   const handleLogin = () => {
     const user = localStorage.getItem("user");
@@ -119,6 +96,13 @@ function EditItem({ handleCloseEditModal, setItemAdded, editPost }) {
       navigate("/login");
     }
   };
+
+  const handleUnitChange = (e) => {
+    // Handle unit change logic here if needed
+    const selectedUnit1 = e.target.value;
+    setSelectedUnit(selectedUnit1);
+  };
+
   useEffect(() => {
     handleLogin();
   }, []);
@@ -183,12 +167,12 @@ function EditItem({ handleCloseEditModal, setItemAdded, editPost }) {
               <div className="w-full  mb-6">
                 <label className="block font-medium mb-1">Measuring Unit</label>
                 <select
-                  //onChange={handlePageChange}
-                  defaultValue=""
+                  onChange={(e) => handleUnitChange(e)}
+                  defaultValue={selectedUnit}
                   className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
-                  <option value="reduce">Pieces(PCS)</option>
-                  <option value="add">Meters(MTR)</option>
+                  <option value="pcs">Pieces(PCS)</option>
+                  <option value="mtr">Meters(MTR)</option>
                 </select>
               </div>
             </div>

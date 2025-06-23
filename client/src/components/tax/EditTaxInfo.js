@@ -15,13 +15,17 @@ function EditTaxInfo() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Add to local storage
-    // sending  info to next screen
-    localStorage.setItem("taxInfo", JSON.stringify(inputs));
-    await addTaxData(inputs);
+    if (!inputs.gstNumber && (inputs.cgstAmount || inputs.sgstAmount)) {
+      alert("Please enter GST Number, tax cannot be saved without GST Number");
+    } else {
+      // Add to local storage
+      // sending  info to next screen
+      localStorage.setItem("taxInfo", JSON.stringify(inputs));
+      await addTaxData(inputs);
 
-    toast("Tax Info Saved Successfully !!!");
-    navigate("/taxinfo");
+      toast("Tax Info Saved Successfully !!!");
+      navigate("/taxinfo");
+    }
   };
   const basicInfo_CollectionRef = collection(db, "Basic_Info");
   const addTaxData = async (inputs) => {

@@ -11,6 +11,7 @@ function AddItem({ handleCloseItem, setItemAdded }) {
   const [inputs, setInputs] = useState({});
   const [showList, setShowList] = useState(false);
   const [posts, setPosts] = useState([]);
+  const [selectedUnit, setSelectedUnit] = useState("pcs");
 
   const navigate = useNavigate();
   const inventoryInfo_CollectionRef = collection(db, "Inventory_Info");
@@ -79,6 +80,7 @@ function AddItem({ handleCloseItem, setItemAdded }) {
       itemQty: inputs.itemQty,
       buyPrice: inputs.buyPrice,
       sellPrice: inputs.sellPrice,
+      selectedUnit: selectedUnit || "pcs",
     };
     const inventoryData = [...existingItems, newItem];
 
@@ -97,30 +99,7 @@ function AddItem({ handleCloseItem, setItemAdded }) {
     const value = event.target.value;
     setInputs((values) => ({ ...values, [name]: value }));
   };
-  const handleBack = () => {
-    navigate(-1);
-  };
 
-  const checkIfListExists = async () => {
-    const data = await getDocs(inventoryInfo_CollectionRef);
-    const filteredData = data.docs.map((doc) => ({
-      ...doc.data(),
-      id: doc.id,
-    }));
-
-    const loggedInUser = localStorage.getItem("user");
-    const inventoryInfo = filteredData.filter(
-      (x) => x.loggedInUser === loggedInUser
-    )[0];
-
-    // get items list
-    const existingItems = inventoryInfo.inventory;
-
-    if (existingItems.length > 0) {
-      setShowList(true);
-      setPosts(inventoryInfo.inventory);
-    }
-  };
   const handleLogin = () => {
     const user = localStorage.getItem("user");
 
@@ -128,16 +107,21 @@ function AddItem({ handleCloseItem, setItemAdded }) {
       navigate("/login");
     }
   };
+
+  const handleUnitChange = (e) => {
+    // Handle unit change logic here if needed
+    const selectedUnit1 = e.target.value;
+    setSelectedUnit(selectedUnit1);
+  };
+
   useEffect(() => {
     handleLogin();
   }, []);
 
   return (
     <div>
-      <Header />
-
       <div className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50">
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-4/12 p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl  p-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
               Create New Item
@@ -201,12 +185,12 @@ function AddItem({ handleCloseItem, setItemAdded }) {
                     Measuring Unit
                   </label>
                   <select
-                    //onChange={handlePageChange}
-                    defaultValue=""
+                    onChange={(e) => handleUnitChange(e)}
+                    defaultValue="pcs"
                     className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   >
-                    <option value="reduce">Pieces(PCS)</option>
-                    <option value="add">Meters(MTR)</option>
+                    <option value="pcs">Pieces(PCS)</option>
+                    <option value="mtr">Meters(MTR)</option>
                   </select>
                 </div>
               </div>

@@ -190,12 +190,12 @@ function Inventory() {
       <div className="hidden max-lg:block mb-16">
         <MobileMenu />
       </div>
-      <div className="p-6">
+      <div className="p-2 lg:p-6">
         <div className="flex flex-col w-full mx-auto font-bold text-2xl bg-gray-200 py-4 px-2 rounded-md">
           Inventory
         </div>
 
-        <div className="flex flex-col w-full m-auto p-4">
+        <div className="flex flex-col w-full m-auto p-2 lg:p-4">
           {showList ? (
             <div>
               <div className="flex justify-end">
@@ -230,7 +230,7 @@ function Inventory() {
                         <th className="px-4 py-3 border-r">Sell Price</th>
                         <th className="px-4 py-3 border-r">Stock</th>
                         <th className="px-4 py-3 border-r">Edit</th>
-                        <th className="px-4 py-3">Delete</th>
+                        <th className="px-4 py-3 max-lg:hidden">Delete</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -253,7 +253,10 @@ function Inventory() {
                               {post?.itemCode}
                             </td>
                             <td className="px-4 py-3 border-r border-b">
-                              {post?.itemQty}
+                              {post?.itemQty}{" "}
+                              <span className="ml-1 uppercase">
+                                {post.selectedUnit}
+                              </span>
                             </td>
                             <td className="px-4 py-3 border-r border-b">
                               {post?.buyPrice}
@@ -281,7 +284,7 @@ function Inventory() {
                                 Edit
                               </button>
                             </td>
-                            <td className="px-4 py-3 cursor-pointer border-b">
+                            <td className="px-4 py-3 cursor-pointer border-b max-lg:hidden">
                               <button
                                 onClick={() => handleDelete(post)}
                                 className="text-red-600 hover:text-red-800 font-semibold text-sm"
