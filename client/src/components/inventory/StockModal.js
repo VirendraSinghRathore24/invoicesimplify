@@ -135,8 +135,8 @@ function StockModal({ handleCloseStockModal, setItemAdded, editPost }) {
   }, []);
 
   return (
-    <div className=" w-full mx-auto fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center p-6">
-      <div className="overflow-auto mt-6 bg-white p-4 text-black rounded-xl w-7/12">
+    <div className=" w-full mx-auto fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center p-2">
+      <div className="overflow-auto mt-6 bg-white p-2 lg:p-4 text-black rounded-xl w-full lg:w-7/12">
         <div className="flex justify-between py-2">
           <div className=" text-lg font-bold">Adjust Stock Quantity </div>
           <button onClick={handleCloseStockModal}>
@@ -148,10 +148,10 @@ function StockModal({ handleCloseStockModal, setItemAdded, editPost }) {
         <div>
           <form
             onSubmit={handleSubmit}
-            className="space-y-4 text-gray-800 dark:text-white mt-3"
+            className="space-y-4 text-gray-800 dark:text-white mt-3 text-sm"
           >
-            <div className="w-full flex gap-x-10 mb-6">
-              <div className="w-7/12">
+            <div className="w-full flex flex-col lg:flex-row gap-x-10 mb-6">
+              <div className="w-full lg:w-7/12">
                 <div>
                   <label className="block font-medium mb-1">Date</label>
                   <input
@@ -166,7 +166,7 @@ function StockModal({ handleCloseStockModal, setItemAdded, editPost }) {
                   />
                 </div>
                 <div className="flex justify-between gap-4 mt-4">
-                  <div className="w-full  mb-6">
+                  <div className="w-full mb-6">
                     <label className="block font-medium mb-1">
                       Add or Reduce Stock
                     </label>
@@ -198,8 +198,8 @@ function StockModal({ handleCloseStockModal, setItemAdded, editPost }) {
                   </div>
                 </div>
               </div>
-              <div className="w-px h-64 bg-gray-300 mx-4" />
-              <div className="w-5/12">
+              <div className="w-px h-64 bg-gray-300 mx-4 hidden lg:block" />
+              <div className="w-full lg:w-5/12">
                 <div className="flex  justify-between gap-4 mb-6">
                   <div>
                     <div className="block mb-1 font-bold">Item Name</div>
@@ -215,7 +215,7 @@ function StockModal({ handleCloseStockModal, setItemAdded, editPost }) {
                   </div>
                 </div>
                 <hr className="w-full" />
-                <div className="block font-bold mb-1 mt-2 text-lg">
+                <div className="block font-bold mb-1 mt-2 text-md lg:text-lg">
                   {" "}
                   Stock Calculation
                 </div>
@@ -242,7 +242,7 @@ function StockModal({ handleCloseStockModal, setItemAdded, editPost }) {
                   </div>
                   {/* <hr /> */}
                   {added && (
-                    <div className="flex justify-between mt-6 font-bold text-lg border-t pt-2">
+                    <div className="flex justify-between mt-6 font-bold text-md lg:text-lg border-t pt-2">
                       <div className="block font-medium mb-1">
                         Updated Stocks
                       </div>
