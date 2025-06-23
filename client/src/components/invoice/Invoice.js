@@ -245,16 +245,19 @@ function Invoice() {
       setLoading(true);
 
       const alreadyPrintedOnce = await checkIfInvoiceAlreadyPrintedOnce();
-      if (alreadyPrintedOnce) {
-        toast("Invoice sent successfully!", {
-          position: "top-center",
-        });
-        setLoading(false);
-        return;
-      }
+      // if (alreadyPrintedOnce) {
+      //   toast("Invoice sent successfully!", {
+      //     position: "top-center",
+      //   });
+      //   setLoading(false);
+      //   return;
+      // }
+      let linkStr = "";
 
-      const linkStr = generateBase62String();
-      await addInvoiceDataToDB(linkStr);
+      if (!alreadyPrintedOnce) {
+        linkStr = generateBase62String();
+        await addInvoiceDataToDB(linkStr);
+      }
 
       //const response = await fetch("http://localhost:5001/send-sms"
       const response = await fetch(
@@ -299,8 +302,8 @@ function Invoice() {
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      console.error("Error generating/uploading PDF", error);
-      alert("Failed to generate or upload PDF.");
+      console.error("Error sending message", error);
+      alert("Error sending message.", error);
     }
   };
 
@@ -451,7 +454,7 @@ function Invoice() {
         <MobileMenu />
       </div>
 
-      <div className="my-5 p-1 lg:p-6">
+      <div className="my-1 lg:my-5 p-2 lg:p-6">
         <div className="flex flex-wrap justify-between w-full lg:w-8/12 mx-auto ">
           <div className="flex gap-x-2">
             <button
@@ -502,32 +505,37 @@ function Invoice() {
         </div>
 
         <div className="w-full lg:w-8/12 mx-auto border-[1.7px] rounded-md m-2 mt-4">
-          <div id="invoice" ref={printRef} className="p-2 lg:p-8 m-4">
+          <div id="invoice" ref={printRef} className="p-2 lg:p-8">
             <div className="flex justify-between">
               <div>
-                <img src="../images/matadi1.jpeg" className="h-20 w-20" />
+                <img
+                  src="../images/matadi1.jpeg"
+                  className="h-10 lg:h-20 w-10 lg:w-20"
+                />
               </div>
               <div className="text-center">
-                <div className="text-xl lg:text-3xl font-bold">
+                <div className="text-md lg:text-3xl font-bold">
                   {businessInfo?.name}
                 </div>
                 {/* <div className='text-3xl font-bold'>बाईसाराज पौशाक पैलेस</div> */}
-                <div className="text-md lg:text-lg font-medium">
+                <div className="text-sm lg:text-lg font-medium">
                   {businessInfo?.subTitle1}
                 </div>
-                <div className="text-md lg:text-md font-medium">
+                <div className="text-sm lg:text-md font-medium">
                   {businessInfo?.subTitle2}
                 </div>
-                <div className="text-md font-normal mt-1">
+                <div className="text-sm font-normal mt-1">
                   {businessInfo?.email}
                 </div>
               </div>
 
-              <div className="flex flex-col font-semibold">
+              <div className="flex flex-col font-semibold text-xs lg:text-md">
                 {businessInfo?.phonePrimary && (
                   <div>M: {businessInfo.phonePrimary}</div>
                 )}
-                <div className="ml-6">{businessInfo?.phoneSecondary}</div>
+                <div className="ml-4 lg:ml-6">
+                  {businessInfo?.phoneSecondary}
+                </div>
               </div>
             </div>
             {taxInfo?.gstNumber && (
@@ -537,76 +545,124 @@ function Invoice() {
             )}
             <hr className="w-full mt-4 border-[1.1px]"></hr>
             {businessInfo?.address && (
-              <div className="py-2 text-center">{businessInfo.address}</div>
+              <div className="py-2 text-sm lg:text-md text-center">
+                {businessInfo.address}
+              </div>
             )}
             <hr className="w-full mt-1 border-[1.1px]"></hr>
             <div className="flex justify-between">
-              <div className="w-8/12 mx-auto text-left font-semibold py-2">
-                <div className="mb-2">To:</div>
+              <div className="w-full lg:w-8/12 mx-auto text-left font-semibold py-2">
+                <div className="mb-2 text-sm lg:text-[16px]">To:</div>
 
-                <div>{customerInfo?.customerName}</div>
-                <div>{customerInfo?.customerPhone}</div>
+                <div className="text-sm lg:text-[16px]">
+                  {customerInfo?.customerName}
+                </div>
+                <div className="text-sm lg:text-[16px]">
+                  {customerInfo?.customerPhone}
+                </div>
               </div>
 
               <div className=" w-4/12 mx-auto flex flex-col gap-y-3 font-bold py-2">
                 <div className="w-full">
-                  <div className="text-end text-sm">INVOICE</div>
-                  <div className="text-end text-gray-500 text-sm">
+                  <div className="text-end text-xs lg:text-sm">INVOICE</div>
+                  <div className="text-end text-gray-500 text-xs lg:text-sm">
                     {invoiceInfo?.invoiceNumber}
                   </div>
                 </div>
 
                 <div className="w-full">
-                  <div className="text-end text-sm">DATE</div>
-                  <div className="text-end text-gray-500 text-sm">{date}</div>
+                  <div className="text-end text-xs lg:text-sm">DATE</div>
+                  <div className="text-end text-gray-500 text-xs lg:text-sm">
+                    {date}
+                  </div>
                 </div>
               </div>
             </div>
             <div className="flex justify-between border-b-[1.2px] border-black mt-6"></div>
-            <div className="overflow-hidden mt-2">
-              <table className=" w-full mx-auto text-center text-sm font-light">
-                <thead className="text-md uppercase">
-                  <tr className="flex justify-between w-full mx-auto gap-x-4">
-                    <th className="w-[10%]">S.No.</th>
-                    <th className="w-[40%] text-left">Description</th>
-                    <th className="w-[20%]">Rate</th>
-                    <th className="w-[10%] hidden lg:block">Quantity</th>
-                    <th className="w-[10%] hidden max-lg:block">Qty</th>
-                    <th className="w-[20%]">Amount</th>
-                  </tr>
-                  <tr className="flex justify-between border-b-[1.2px] border-black mt-2"></tr>
-                </thead>
-                <tbody>
-                  {rows &&
-                    rows.length > 0 &&
-                    rows.map((row, index) => (
-                      <div>
-                        <tr className="flex justify-between text-md mt-1 font-light w-full mx-auto gap-x-4">
-                          <td className="w-[10%] ">{index + 1}.</td>
-                          <td className="w-[40%] text-left">{row.desc}</td>
-                          <td className="w-[20%] ">{row.rate}</td>
-                          <td className="w-[10%] ">
-                            {row.qty}{" "}
-                            <span className="ml-1 uppercase">
-                              {row?.selectedUnit}
-                            </span>
-                          </td>
-                          <td className="w-[20%]"> {row.amount}</td>
-                        </tr>
-                        {rows.length > index + 1 && (
-                          <tr className="flex justify-between text-md mt-2 border-b-2 border-dashed"></tr>
-                        )}
-                      </div>
-                    ))}
-                </tbody>
-              </table>
+            <div className="overflow-hidden mt-2 ">
+              <div className="overflow-hidden mt-2 hidden lg:block">
+                <table className=" w-full mx-auto text-center text-sm font-light">
+                  <thead className="text-md uppercase">
+                    <tr className="flex justify-between w-full mx-auto gap-x-4">
+                      <th className="w-[10%]">S.No.</th>
+                      <th className="w-[40%] text-left">Description</th>
+                      <th className="w-[20%]">Rate</th>
+                      <th className="w-[10%] hidden lg:block">Quantity</th>
+                      <th className="w-[10%] hidden max-lg:block">Qty</th>
+                      <th className="w-[20%]">Amount</th>
+                    </tr>
+                    <tr className="flex justify-between border-b-[1.2px] border-black mt-2"></tr>
+                  </thead>
+                  <tbody>
+                    {rows &&
+                      rows.length > 0 &&
+                      rows.map((row, index) => (
+                        <div>
+                          <tr className="flex justify-between text-md mt-1 font-light w-full mx-auto gap-x-4">
+                            <td className="w-[10%] ">{index + 1}.</td>
+                            <td className="w-[40%] text-left">{row.desc}</td>
+                            <td className="w-[20%] ">{row.rate}</td>
+                            <td className="w-[10%] ">
+                              {row.qty}{" "}
+                              <span className="ml-1 uppercase">
+                                {row?.selectedUnit}
+                              </span>
+                            </td>
+                            <td className="w-[20%]"> {row.amount}</td>
+                          </tr>
+                          {rows.length > index + 1 && (
+                            <tr className="flex justify-between text-md mt-2 border-b-2 border-dashed"></tr>
+                          )}
+                        </div>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
+              <div className="overflow-hidden mt-2 hidden max-lg:block">
+                <table className=" w-full mx-auto text-center text-sm font-light">
+                  <thead className="text-sm lg:text-md uppercase">
+                    <tr className="flex justify-between w-full mx-auto gap-x-4">
+                      <th className="w-[40%] text-xs text-left">Desc</th>
+                      <th className="w-[20%] text-xs">Rate</th>
+                      <th className="w-[15%] text-xs">Qty</th>
+
+                      <th className="w-[25%] text-xs">Amount</th>
+                    </tr>
+                    <tr className="flex justify-between border-b-[1.2px] border-black mt-2"></tr>
+                  </thead>
+                  <tbody>
+                    {rows &&
+                      rows.length > 0 &&
+                      rows.map((row, index) => (
+                        <div>
+                          <tr className="flex justify-between text-sm lg:text-md mt-1 font-light w-full mx-auto gap-x-4">
+                            <td className="w-[40%] text-left text-xs">
+                              {row?.desc}
+                            </td>
+                            <td className="w-[20%] text-xs">{row?.rate}</td>
+                            <td className="w-[15%] text-xs">
+                              {row?.qty}{" "}
+                              <span className="ml-1 uppercase text-xs">
+                                {row?.selectedUnit}
+                              </span>
+                            </td>
+                            <td className="w-[25%] text-xs"> {row?.amount}</td>
+                          </tr>
+                          {rows.length > index + 1 && (
+                            <tr className="flex justify-between text-md mt-2 border-b-2 border-dashed"></tr>
+                          )}
+                        </div>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
               <div className="flex justify-between border-b-[1.2px] border-black  py-1"></div>
               <div className="flex flex-col w-full">
                 <div className="w-full flex justify-end gap-x-10 mt-2">
-                  <div className="w-11/12 flex justify-end mx-auto mt-1 px-2 text-sm font-semibold rounded-md uppercase">
+                  <div className="w-11/12 flex justify-end mx-auto mt-1 px-2 text-xs lg:text-sm font-semibold rounded-md uppercase">
                     SubTotal
                   </div>
-                  <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-sm font-semibold rounded-md">
+                  <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-xs lg:text-sm font-semibold rounded-md">
                     ₹ {amountInfo?.amount}
                   </div>
                 </div>
@@ -616,10 +672,10 @@ function Invoice() {
                 )}
                 {taxInfo?.cgstAmount && (
                   <div className="w-full flex justify-end gap-x-10 mt-2">
-                    <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-sm font-semibold rounded-md uppercase">
+                    <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs lg:text-sm font-semibold rounded-md uppercase">
                       CGST {taxInfo?.cgstAmount}%
                     </div>
-                    <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-sm font-semibold rounded-md">
+                    <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-xs lg:text-sm font-semibold rounded-md">
                       ₹ {taxCalculatedInfo?.cgst}
                     </div>
                   </div>
@@ -629,10 +685,10 @@ function Invoice() {
                 )}
                 {taxInfo?.sgstAmount && (
                   <div className="w-full flex justify-end gap-x-10 mt-2">
-                    <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-sm font-semibold rounded-md uppercase">
+                    <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs lg:text-sm font-semibold rounded-md uppercase">
                       SGST {taxInfo.sgstAmount}%
                     </div>
-                    <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-sm font-semibold rounded-md">
+                    <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-xs lg:text-sm font-semibold rounded-md">
                       ₹ {taxCalculatedInfo?.sgst}
                     </div>
                   </div>
@@ -641,31 +697,31 @@ function Invoice() {
                   <div className="border-b-2 border-dashed py-1"></div>
                 )}
                 <div className="w-full flex justify-end gap-x-10 mt-2">
-                  <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-sm font-bold rounded-md uppercase">
+                  <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs lg:text-sm font-bold rounded-md uppercase">
                     Total
                   </div>
-                  <div className="w-3/12 mx-auto flex justify-end mt-1 px-2  text-sm font-bold rounded-md">
+                  <div className="w-3/12 mx-auto flex justify-end mt-1 px-2  text-xs lg:text-sm font-bold rounded-md">
                     ₹ {total}
                   </div>
                 </div>
                 <div className="border-b-2 border-dashed py-1"></div>
                 {amountInfo?.paymentType === "advance" && (
                   <div className="w-full flex justify-end gap-x-10 mt-2">
-                    <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-sm font-bold rounded-md uppercase">
+                    <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs lg:text-sm font-bold rounded-md uppercase">
                       Advance
                     </div>
-                    <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-sm font-bold rounded-md">
+                    <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-xs lg:text-sm font-bold rounded-md">
                       ₹ {amountInfo?.advance}
                     </div>
                   </div>
                 )}
                 <div className="border-b-2 border-dashed py-1"></div>
                 {amountInfo?.paymentType === "advance" ? (
-                  <div className="w-full flex justify-end gap-x-10 mt-2">
-                    <div className="w-11/12 flex justify-end mx-auto mt-1 px-2 text-sm font-bold rounded-md uppercase">
+                  <div className="w-full flex justify-end gap-x-10 mt-2 text-red-700">
+                    <div className="w-11/12 flex justify-end mx-auto mt-1 px-2 text-xs lg:text-sm font-bold rounded-md uppercase">
                       Balance
                     </div>
-                    <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-sm font-bold rounded-md">
+                    <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-xs lg:text-sm font-bold rounded-md">
                       ₹{" "}
                       {Math.round(taxCalculatedInfo.balance) ??
                         Math.round(
@@ -678,53 +734,44 @@ function Invoice() {
                     </div>
                   </div>
                 ) : (
-                  <div className="w-full flex justify-end gap-x-10 mt-2 font-bold text-lg text-green-800">
+                  <div className="w-full flex justify-end gap-x-10 mt-2 font-bold text-md lg:text-xl text-green-800">
                     Fully Paid
                   </div>
                 )}
               </div>
               <div className="flex justify-between border-b-[1.2px] border-black mt-2"></div>
-              <div className="flex justify-between w-full mx-auto mt-2">
-                <div className="flex flex-col text-left text-sm text-red-900">
-                  {/* <div>बिका हुआ मॉल वापस नहीं होगा |</div>
-                      <div>कलर और जरी की गारंटी नहीं है |</div>
-                      <div>भूल चूक लेनी देनी |</div>
-                      <div>फैशन के दौर में गारंटी की इच्छा नहीं करे |</div> */}
-                  {/* <div>Terms & Conditions:</div>
-                      <div>1. Subject to Jaipur Jurisdiction.</div>
-                      <div>2. Goods once sold will not be taken back.</div>
-                      <div>3. E. & E.O.</div> */}
+              {invoiceInfo?.expectedDate && (
+                <div className="text-xs lg:text-sm font-semibold text-blue-700 text-center mt-2">
+                  Expected Delivery Date : {expectedDate}
+                </div>
+              )}
+              <div className="flex justify-between gap-x-2 w-full mx-auto mt-4">
+                <div className="flex flex-col text-left text-[10px] lg:text-sm text-red-900">
                   <div>{additionalInfo?.note1}</div>
                   <div>{additionalInfo?.note2}</div>
                   <div>{additionalInfo?.note3}</div>
                   <div>{additionalInfo?.note4}</div>
                 </div>
-                <div className="text-sm text-blue-700 font-bold">
+                <div className="text-[10px] lg:text-sm text-blue-700 font-bold">
                   <div>{additionalInfo?.middlenote1}</div>
                   <div>{additionalInfo?.middlenote2}</div>
                   <div>{additionalInfo?.middlenote3}</div>
                   <div>{additionalInfo?.middlenote4}</div>
                 </div>
-                <div className="text-sm text-blue-700 font-bold">
+                <div className="text-[10px] lg:text-sm text-blue-700 font-bold">
                   <div>{additionalInfo?.rnote1}</div>
                   <div>{additionalInfo?.rnote2}</div>
                   <div>{additionalInfo?.rnote3}</div>
                   <div>{additionalInfo?.rnote4}</div>
-                  <div className="text-sm text-black mt-4">
-                    For: {businessInfo?.name}
-                  </div>
                 </div>
               </div>
 
-              {invoiceInfo?.expectedDate && (
-                <div className="text-sm font-semibold text-blue-700 text-center">
-                  Expected Delivery Date : {expectedDate}
-                </div>
-              )}
-
-              <div className="mt-2"></div>
-              <div className="text-sm text-gray-700 font-bold">
+              <div className="mt-4"></div>
+              <div className="text-xs lg:text-sm text-gray-700 font-bold">
                 <div>{additionalInfo?.additionaldesc}</div>
+              </div>
+              <div className="text-xs lg:text-sm text-black mt-4 flex justify-end font-bold">
+                For: {businessInfo?.name}
               </div>
             </div>
           </div>

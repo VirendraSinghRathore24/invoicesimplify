@@ -499,6 +499,7 @@ const Dashboard = () => {
   useEffect(() => {
     handleLogin();
     getInvoiceInfo();
+    window.scroll(0, 0);
   }, []);
 
   return (

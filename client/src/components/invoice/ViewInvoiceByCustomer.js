@@ -208,43 +208,45 @@ function ViewInvoiceByCustomer() {
               </div>
             </div>
             <div className="flex justify-between border-b-[1.2px] border-black mt-2 lg:mt-6"></div>
-            <div className="overflow-hidden mt-2 hidden max-lg:block">
-              <table className=" w-full mx-auto text-center text-sm font-light ">
-                <thead className="text-sm lg:text-md uppercase">
-                  <tr className="flex justify-between w-full mx-auto gap-x-4">
-                    <th className="w-[40%] text-xs text-left">Desc</th>
-                    <th className="w-[20%] text-xs">Rate</th>
-                    <th className="w-[15%] text-xs">Qty</th>
+            <div className="overflow-hidden mt-2">
+              <div className="overflow-hidden mt-2 hidden max-lg:block">
+                <table className=" w-full mx-auto text-center text-sm font-light ">
+                  <thead className="text-sm lg:text-md uppercase">
+                    <tr className="flex justify-between w-full mx-auto gap-x-4">
+                      <th className="w-[40%] text-xs text-left">Desc</th>
+                      <th className="w-[20%] text-xs">Rate</th>
+                      <th className="w-[15%] text-xs">Qty</th>
 
-                    <th className="w-[25%] text-xs">Amount</th>
-                  </tr>
-                  <tr className="flex justify-between border-b-[1.2px] border-black mt-2"></tr>
-                </thead>
-                <tbody>
-                  {invoiceInfo?.rows &&
-                    invoiceInfo?.rows.length > 0 &&
-                    invoiceInfo?.rows.map((row, index) => (
-                      <div>
-                        <tr className="flex justify-between text-sm lg:text-md mt-1 font-light w-full mx-auto gap-x-4">
-                          <td className="w-[40%] text-left text-xs">
-                            {row?.desc}
-                          </td>
-                          <td className="w-[20%] text-xs">{row?.rate}</td>
-                          <td className="w-[15%] text-xs">
-                            {row?.qty}{" "}
-                            <span className="ml-1 uppercase text-xs">
-                              {row?.selectedUnit}
-                            </span>
-                          </td>
-                          <td className="w-[25%] text-xs"> {row?.amount}</td>
-                        </tr>
-                        {invoiceInfo?.rows.length > index + 1 && (
-                          <tr className="flex justify-between text-md mt-2 border-b-2 border-dashed"></tr>
-                        )}
-                      </div>
-                    ))}
-                </tbody>
-              </table>
+                      <th className="w-[25%] text-xs">Amount</th>
+                    </tr>
+                    <tr className="flex justify-between border-b-[1.2px] border-black mt-2"></tr>
+                  </thead>
+                  <tbody>
+                    {invoiceInfo?.rows &&
+                      invoiceInfo?.rows.length > 0 &&
+                      invoiceInfo?.rows.map((row, index) => (
+                        <div>
+                          <tr className="flex justify-between text-sm lg:text-md mt-1 font-light w-full mx-auto gap-x-4">
+                            <td className="w-[40%] text-left text-xs">
+                              {row?.desc}
+                            </td>
+                            <td className="w-[20%] text-xs">{row?.rate}</td>
+                            <td className="w-[15%] text-xs">
+                              {row?.qty}{" "}
+                              <span className="ml-1 uppercase text-xs">
+                                {row?.selectedUnit}
+                              </span>
+                            </td>
+                            <td className="w-[25%] text-xs"> {row?.amount}</td>
+                          </tr>
+                          {invoiceInfo?.rows.length > index + 1 && (
+                            <tr className="flex justify-between text-md mt-2 border-b-2 border-dashed"></tr>
+                          )}
+                        </div>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
               <div className="overflow-hidden mt-2 hidden lg:block">
                 <table className=" w-full mx-auto text-center text-sm font-light ">
                   <thead className="text-sm lg:text-md uppercase">
@@ -367,7 +369,12 @@ function ViewInvoiceByCustomer() {
                 )}
               </div>
               <div className="flex justify-between border-b-[1.2px] border-black mt-2"></div>
-              <div className="flex justify-between w-full mx-auto mt-2 gap-x-2">
+              {invoiceInfo?.invoiceInfo?.expectedDate && (
+                <div className="text-xs lg:text-sm font-semibold text-blue-700 text-center">
+                  Expected Delivery Date : {expectedDate}
+                </div>
+              )}
+              <div className="flex justify-between w-full mx-auto mt-2 gap-x-2 mt-4">
                 <div className="flex flex-col text-left text-[10px] lg:text-sm text-red-900">
                   <div>{invoiceInfo?.additionalInfo?.note1}</div>
                   <div>{invoiceInfo?.additionalInfo?.note2}</div>
@@ -385,18 +392,16 @@ function ViewInvoiceByCustomer() {
                   <div>{invoiceInfo?.additionalInfo?.rnote2}</div>
                   <div>{invoiceInfo?.additionalInfo?.rnote3}</div>
                   <div>{invoiceInfo?.additionalInfo?.rnote4}</div>
-                  <div className="text-xs lg:text-sm text-black mt-4">
-                    For: {invoiceInfo?.businessInfo?.name}
-                  </div>
                 </div>
               </div>
-              {invoiceInfo?.invoiceInfo?.expectedDate && (
-                <div className="text-xs lg:text-sm font-semibold text-blue-700 text-center">
-                  Expected Delivery Date : {expectedDate}
-                </div>
-              )}
 
               <div className="mt-2"></div>
+              <div className="text-xs lg:text-sm text-gray-700 font-bold">
+                <div>{invoiceInfo?.additionalInfo?.additionaldesc}</div>
+              </div>
+              <div className="text-xs lg:text-sm text-black mt-4 flex justify-end font-bold">
+                For: {invoiceInfo?.businessInfo?.name}
+              </div>
             </div>
           </div>
         </div>

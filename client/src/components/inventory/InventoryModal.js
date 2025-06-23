@@ -90,7 +90,7 @@ const InventoryModal = ({ handleCloseItem, setItem }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center ">
-      <div className="overflow-auto mt-6 bg-white p-4 text-black rounded-xl w-7/12">
+      <div className="overflow-auto mt-6 bg-white p-4 text-black rounded-xl w-full lg:w-7/12">
         <div className="flex justify-between py-2">
           <div className=" text-lg font-bold">Select Item </div>
           <button onClick={handleCloseModal}>
@@ -110,7 +110,7 @@ const InventoryModal = ({ handleCloseItem, setItem }) => {
               className="p-2 border border-gray-300 rounded-md mb-4 w-full"
             />
           </div>
-          <div className="overflow-auto h-[400px]">
+          <div className="overflow-auto h-[400px] hidden lg:block">
             <table className="min-w-full text-sm text-left text-gray-700 ">
               <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
                 <tr>
@@ -153,6 +153,68 @@ const InventoryModal = ({ handleCloseItem, setItem }) => {
                       <td className="px-4 py-3 border-r">{post.itemCode}</td>
                       <td className="px-4 py-3 border-r">{post.sellPrice}</td>
                       <td className="px-4 py-3 border-r">
+                        {post.itemQty}{" "}
+                        <span className="ml-1 uppercase">
+                          {post.selectedUnit}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                {filteredData && filteredData.length === 0 && (
+                  <tr>
+                    <td
+                      colSpan="9"
+                      className="text-center px-4 py-6 text-gray-500"
+                    >
+                      No data available.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+          <div className="overflow-auto h-[400px] hidden max-lg:block">
+            <table className="min-w-full text-xs text-left text-gray-700 ">
+              <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
+                <tr>
+                  {["Name", "Code", "Price", "Stock"].map((header) => (
+                    <th
+                      key={header}
+                      className="px-4 py-3 border-r cursor-pointer"
+                      //onClick={() => handleSort(header.toLowerCase())}
+                    >
+                      {header}
+                      {/* {sortConfig.key === header.toLowerCase() && (
+                  <span>{sortConfig.direction === "asc" ? " 🔼" : " 🔽"}</span>
+                )} */}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {filteredData &&
+                  filteredData.map((post, index) => (
+                    <tr
+                      onClick={() => handleSelect(post)}
+                      key={post.id}
+                      className={`border ${
+                        index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                      } ${
+                        post.itemQty === 0
+                          ? "bg-red-500 text-black cursor-not-allowed"
+                          : "hover:bg-amber-300 cursor-pointer"
+                      } `}
+                    >
+                      <td className="px-4 py-3 border-r w-[50%]">
+                        {post.itemName}
+                      </td>
+                      <td className="px-4 py-3 border-r w-[20%]">
+                        {post.itemCode}
+                      </td>
+                      <td className="px-4 py-3 border-r w-[10%]">
+                        {post.sellPrice}
+                      </td>
+                      <td className="px-4 py-3 border-r w-[20%]">
                         {post.itemQty}{" "}
                         <span className="ml-1 uppercase">
                           {post.selectedUnit}

@@ -187,6 +187,7 @@ function StockModal({ handleCloseStockModal, setItemAdded, editPost }) {
                       <input
                         type="number"
                         name="adjustQty"
+                        min="0"
                         required
                         autoFocus
                         value={inputs?.adjustQty}
