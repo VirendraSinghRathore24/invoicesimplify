@@ -174,6 +174,9 @@ function ViewInvoice() {
                 <div className="text-lg font-medium">
                   {invoiceInfo?.businessInfo?.subTitle2}
                 </div>
+                <div className="text-md font-normal mt-1">
+                  {invoiceInfo?.businessInfo?.email}
+                </div>
               </div>
 
               <div className="flex flex-col font-semibold">
@@ -184,7 +187,7 @@ function ViewInvoice() {
               </div>
             </div>
             {invoiceInfo?.taxInfo?.gstNumber && (
-              <div className="text-sm font-medium text-center mt-1">
+              <div className="text-sm font-medium text-center mt-2">
                 GSTIN: {invoiceInfo?.taxInfo?.gstNumber}
               </div>
             )}
