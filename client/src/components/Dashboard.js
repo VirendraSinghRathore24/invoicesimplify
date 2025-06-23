@@ -4,6 +4,8 @@ import {
   deleteDoc,
   doc,
   getDocs,
+  query,
+  where,
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { db } from "../config/firebase";
@@ -13,6 +15,7 @@ import { BanknoteArrowUp, ArrowUp, FileDigit } from "lucide-react";
 import Header from "./Header";
 import SettlePopup from "./SettlePopup";
 import MobileMenu from "./MobileMenu";
+import dayjs from "dayjs";
 
 const Dashboard = () => {
   const [data, setData] = useState([]);
@@ -28,6 +31,10 @@ const Dashboard = () => {
 
   const [totalProfit, setTotalProft] = useState(0);
 
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [quickOption, setQuickOption] = useState("any");
+
   const navigate = useNavigate();
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -37,6 +44,92 @@ const Dashboard = () => {
   const handleCloseSettlePopup = () => {
     setOpenSettlePopup(false);
     getInvoiceInfo();
+  };
+
+  const fetchData = async (from, to) => {
+    try {
+      setLoading(true);
+      const data = await getDocs(invoiceInfo_CollectionRef);
+      const filteredData = data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+
+      const loggedInUser = localStorage.getItem("user");
+      const invoiceInfo = filteredData.filter(
+        (x) => x.loggedInUser === loggedInUser
+      );
+      const result = invoiceInfo.filter(
+        (item) =>
+          new Date(item.invoiceInfo.date) >= from &&
+          new Date(item.invoiceInfo.date) <= to
+      );
+      setFilteredData(result);
+      updatedData(result);
+    } catch (err) {
+      console.error("Error fetching data:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRangeFilter = () => {
+    if (!startDate || !endDate) {
+      alert("Please select both start and end dates.");
+      return;
+    }
+    const from = dayjs(startDate).startOf("day").toDate();
+    const to = dayjs(endDate).endOf("day").toDate();
+    fetchData(from, to);
+    setQuickOption("range");
+  };
+
+  const handleQuickFilterChange = (value) => {
+    setQuickOption(value);
+
+    const now = dayjs();
+    let from, to;
+
+    switch (value) {
+      case "today":
+        from = now.startOf("day").toDate();
+        to = now.endOf("day").toDate();
+        fetchData(from, to);
+        break;
+      case "month":
+        from = now.startOf("month").toDate();
+        to = now.endOf("month").toDate();
+        fetchData(from, to);
+        break;
+      case "sixmonths":
+        from = now.subtract(6, "month").startOf("month").toDate();
+        to = now.endOf("day").toDate();
+        fetchData(from, to);
+        break;
+      case "range":
+        setStartDate("");
+        setEndDate("");
+        break;
+      case "any":
+      default:
+        getInvoiceInfo();
+        break;
+    }
+  };
+
+  const updatedData = (result) => {
+    updateAmountAfterSearch(result);
+    updateBalanceAfterSearch(result);
+    updatePaidAfterSearch(result);
+    updateTotalProfitAfterSearch(result);
+
+    const totalPaidInvoices = result.filter(
+      (item) =>
+        item.amountInfo.paymentType === "fullyPaid" ||
+        item.taxCalculatedInfo.balance === 0
+    ).length;
+    setPaidInvoices(totalPaidInvoices);
+    setSettled(result.length - totalPaidInvoices);
   };
 
   const handleDelete = async (user) => {
@@ -465,6 +558,60 @@ const Dashboard = () => {
               className="p-2 border border-gray-300 rounded-md mb-4 w-full"
             />
           </div>
+          <div className="w-6/12 px-4 -mt-2">
+            <div className="flex flex-col sm:flex-row gap-4 items-end mb-6">
+              {/* Dropdown */}
+              <div className="flex-1">
+                <label className="block font-medium mb-1">Date Filter</label>
+                <select
+                  className={`border px-3 py-2 rounded ${
+                    quickOption === "range" ? "w-full" : "w-3/12"
+                  }`}
+                  value={quickOption}
+                  onChange={(e) => handleQuickFilterChange(e.target.value)}
+                >
+                  <option value="any">Any Date</option>
+                  <option value="today">Today</option>
+                  <option value="month">This Month</option>
+                  <option value="sixmonths">Last 6 Months</option>
+                  <option value="range">Custom Range</option>
+                </select>
+              </div>
+
+              {/* Show range inputs only if 'range' is selected */}
+              {quickOption === "range" && (
+                <>
+                  <div className="flex-1">
+                    <label className="block font-medium mb-1">Start Date</label>
+                    <input
+                      type="date"
+                      className="border px-3 py-2 rounded w-full"
+                      value={startDate}
+                      onChange={(e) => setStartDate(e.target.value)}
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <label className="block font-medium mb-1">End Date</label>
+                    <input
+                      type="date"
+                      className="border px-3 py-2 rounded w-full"
+                      value={endDate}
+                      onChange={(e) => setEndDate(e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <button
+                      onClick={handleRangeFilter}
+                      className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition mt-6 cursor-pointer"
+                    >
+                      Filter
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+
           <table className="min-w-full text-sm text-left text-gray-700 ">
             <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
               {type === "Rajputi Poshak" ? (
