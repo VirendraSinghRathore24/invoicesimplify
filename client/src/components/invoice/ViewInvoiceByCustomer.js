@@ -147,14 +147,14 @@ function ViewInvoiceByCustomer() {
                 />
               </div>
               <div className="text-center">
-                <div className="text-xl lg:text-3xl font-bold">
+                <div className="text-md lg:text-3xl font-bold">
                   {invoiceInfo?.businessInfo?.name}
                 </div>
                 {/* <div className='text-3xl font-bold'>बाईसाराज पौशाक पैलेस</div> */}
-                <div className="text-md lg:text-lg font-medium">
+                <div className="text-sm lg:text-lg font-medium">
                   {invoiceInfo?.businessInfo?.subTitle1}
                 </div>
-                <div className="text-md lg:text-lg font-medium">
+                <div className="text-sm lg:text-lg font-medium">
                   {invoiceInfo?.businessInfo?.subTitle2}
                 </div>
                 <div className="text-sm lg:text-md font-normal mt-1">
@@ -162,9 +162,9 @@ function ViewInvoiceByCustomer() {
                 </div>
               </div>
 
-              <div className="flex flex-col font-semibold text-sm lg:text-md">
+              <div className="flex flex-col font-semibold text-xs lg:text-md">
                 <div>M: {invoiceInfo?.businessInfo?.phonePrimary}</div>
-                <div className="ml-1 lg:ml-6">
+                <div className="ml-4 lg:ml-6">
                   {invoiceInfo?.businessInfo?.phoneSecondary}
                 </div>
               </div>
@@ -208,20 +208,15 @@ function ViewInvoiceByCustomer() {
               </div>
             </div>
             <div className="flex justify-between border-b-[1.2px] border-black mt-2 lg:mt-6"></div>
-            <div className="overflow-hidden mt-2">
-              <table className=" w-full mx-auto text-center text-sm font-light">
+            <div className="overflow-hidden mt-2 hidden max-lg:block">
+              <table className=" w-full mx-auto text-center text-sm font-light ">
                 <thead className="text-sm lg:text-md uppercase">
                   <tr className="flex justify-between w-full mx-auto gap-x-4">
-                    <th className="w-[10%] max-lg:text-xs">S.No.</th>
-                    <th className="w-[40%] max-lg:text-xs text-left">
-                      Description
-                    </th>
-                    <th className="w-[20%] max-lg:text-xs">Rate</th>
-                    <th className="w-[10%] hidden max-lg:block text-xs">Qty</th>
-                    <th className="w-[10%] hidden lg:block text-xs">
-                      Quantity
-                    </th>
-                    <th className="w-[20%] max-lg:text-xs">Amount</th>
+                    <th className="w-[40%] text-xs text-left">Desc</th>
+                    <th className="w-[20%] text-xs">Rate</th>
+                    <th className="w-[15%] text-xs">Qty</th>
+
+                    <th className="w-[25%] text-xs">Amount</th>
                   </tr>
                   <tr className="flex justify-between border-b-[1.2px] border-black mt-2"></tr>
                 </thead>
@@ -231,25 +226,17 @@ function ViewInvoiceByCustomer() {
                     invoiceInfo?.rows.map((row, index) => (
                       <div>
                         <tr className="flex justify-between text-sm lg:text-md mt-1 font-light w-full mx-auto gap-x-4">
-                          <td className="w-[10%] max-lg:text-xs">
-                            {index + 1}.
-                          </td>
-                          <td className="w-[40%] text-left max-lg:text-xs">
+                          <td className="w-[40%] text-left text-xs">
                             {row?.desc}
                           </td>
-                          <td className="w-[20%] max-lg:text-xs">
-                            {row?.rate}
-                          </td>
-                          <td className="w-[10%] max-lg:text-xs">
+                          <td className="w-[20%] text-xs">{row?.rate}</td>
+                          <td className="w-[15%] text-xs">
                             {row?.qty}{" "}
-                            <span className="ml-1 uppercase max-lg:text-xs">
+                            <span className="ml-1 uppercase text-xs">
                               {row?.selectedUnit}
                             </span>
                           </td>
-                          <td className="w-[20%] max-lg:text-xs">
-                            {" "}
-                            {row?.amount}
-                          </td>
+                          <td className="w-[25%] text-xs"> {row?.amount}</td>
                         </tr>
                         {invoiceInfo?.rows.length > index + 1 && (
                           <tr className="flex justify-between text-md mt-2 border-b-2 border-dashed"></tr>
@@ -258,6 +245,46 @@ function ViewInvoiceByCustomer() {
                     ))}
                 </tbody>
               </table>
+              <div className="overflow-hidden mt-2 hidden lg:block">
+                <table className=" w-full mx-auto text-center text-sm font-light ">
+                  <thead className="text-sm lg:text-md uppercase">
+                    <tr className="flex justify-between w-full mx-auto gap-x-4">
+                      <th className="w-[10%]">S.No.</th>
+                      <th className="w-[40%] hidden lg:block text-xs text-left">
+                        Description
+                      </th>
+                      <th className="w-[20%]">Rate</th>
+
+                      <th className="w-[10%]">Quantity</th>
+                      <th className="w-[20%]">Amount</th>
+                    </tr>
+                    <tr className="flex justify-between border-b-[1.2px] border-black mt-2"></tr>
+                  </thead>
+                  <tbody>
+                    {invoiceInfo?.rows &&
+                      invoiceInfo?.rows.length > 0 &&
+                      invoiceInfo?.rows.map((row, index) => (
+                        <div>
+                          <tr className="flex justify-between text-sm lg:text-md mt-1 font-light w-full mx-auto gap-x-4">
+                            <td className="w-[10%]">{index + 1}.</td>
+                            <td className="w-[40%] text-left ">{row?.desc}</td>
+                            <td className="w-[10%] ">{row?.rate}</td>
+                            <td className="w-[15%] ">
+                              {row?.qty}{" "}
+                              <span className="ml-1 uppercase ">
+                                {row?.selectedUnit}
+                              </span>
+                            </td>
+                            <td className="w-[20%] "> {row?.amount}</td>
+                          </tr>
+                          {invoiceInfo?.rows.length > index + 1 && (
+                            <tr className="flex justify-between text-md mt-2 border-b-2 border-dashed"></tr>
+                          )}
+                        </div>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
               <div className="flex justify-between border-b-[1.2px] border-black mt-2 py-1"></div>
               <div className="flex flex-col w-full">
                 {
@@ -340,28 +367,20 @@ function ViewInvoiceByCustomer() {
                 )}
               </div>
               <div className="flex justify-between border-b-[1.2px] border-black mt-2"></div>
-              <div className="flex justify-between w-full mx-auto mt-2">
-                <div className="flex flex-col text-left text-xs lg:text-sm text-red-900">
-                  {/* <div>बिका हुआ मॉल वापस नहीं होगा |</div>
-                      <div>कलर और जरी की गारंटी नहीं है |</div>
-                      <div>भूल चूक लेनी देनी |</div>
-                      <div>फैशन के दौर में गारंटी की इच्छा नहीं करे |</div> */}
-                  {/* <div>Terms & Conditions:</div>
-                      <div>1. Subject to Jaipur Jurisdiction.</div>
-                      <div>2. Goods once sold will not be taken back.</div>
-                      <div>3. E. & E.O.</div> */}
+              <div className="flex justify-between w-full mx-auto mt-2 gap-x-2">
+                <div className="flex flex-col text-left text-[10px] lg:text-sm text-red-900">
                   <div>{invoiceInfo?.additionalInfo?.note1}</div>
                   <div>{invoiceInfo?.additionalInfo?.note2}</div>
                   <div>{invoiceInfo?.additionalInfo?.note3}</div>
                   <div>{invoiceInfo?.additionalInfo?.note4}</div>
                 </div>
-                <div className="text-xs lg:text-sm text-blue-700 font-bold">
+                <div className="text-[10px] lg:text-sm text-blue-700 font-bold">
                   <div>{invoiceInfo?.additionalInfo?.middlenote1}</div>
                   <div>{invoiceInfo?.additionalInfo?.middlenote2}</div>
                   <div>{invoiceInfo?.additionalInfo?.middlenote3}</div>
                   <div>{invoiceInfo?.additionalInfo?.middlenote4}</div>
                 </div>
-                <div className="text-xs lg:text-sm text-blue-700 font-bold">
+                <div className="text-[10px] lg:text-sm text-blue-700 font-bold">
                   <div>{invoiceInfo?.additionalInfo?.rnote1}</div>
                   <div>{invoiceInfo?.additionalInfo?.rnote2}</div>
                   <div>{invoiceInfo?.additionalInfo?.rnote3}</div>
