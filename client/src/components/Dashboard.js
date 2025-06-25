@@ -586,7 +586,7 @@ const Dashboard = () => {
                     <label className="block font-medium mb-1">Start Date</label>
                     <input
                       type="date"
-                      className="border px-3 py-2 rounded w-full"
+                      className="border px-3 py-1 rounded w-full"
                       value={startDate}
                       onChange={(e) => setStartDate(e.target.value)}
                     />
@@ -595,7 +595,7 @@ const Dashboard = () => {
                     <label className="block font-medium mb-1">End Date</label>
                     <input
                       type="date"
-                      className="border px-3 py-2 rounded w-full"
+                      className="border px-3 py-1 rounded w-full"
                       value={endDate}
                       onChange={(e) => setEndDate(e.target.value)}
                     />
@@ -603,7 +603,7 @@ const Dashboard = () => {
                   <div>
                     <button
                       onClick={handleRangeFilter}
-                      className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition mt-6 cursor-pointer"
+                      className="bg-blue-600 text-white px-5 py-1 rounded hover:bg-blue-700 transition mt-6 cursor-pointer"
                     >
                       Filter
                     </button>

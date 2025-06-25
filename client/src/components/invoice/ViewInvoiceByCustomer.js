@@ -11,9 +11,11 @@ import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { toast } from "react-toastify";
 import Header from "../Header";
+import Loader from "../Loader";
 
 function ViewInvoiceByCustomer() {
   const [invoiceInfo, setInvoiceInfo] = useState({});
+  const [loading, setLoading] = useState(false);
   const printRef = useRef(null);
 
   const location = useLocation();
@@ -89,18 +91,26 @@ function ViewInvoiceByCustomer() {
   });
 
   const getInvoiceData = async () => {
-    const data = await getDocs(invoiceInfo_CollectionRef);
-    const filteredData = data.docs.map((doc) => ({
-      ...doc.data(),
-      id: doc.id,
-    }));
+    try {
+      setLoading(true);
+      const data = await getDocs(invoiceInfo_CollectionRef);
+      const filteredData = data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
 
-    const allBrandsInfo = filteredData.filter((x) => x.linkStr === linkid);
-    console.log(allBrandsInfo);
+      const allBrandsInfo = filteredData.filter((x) => x.linkStr === linkid);
 
-    //const invoiceData = allBrandsInfo.filter((x) => x.id === id)[0];
-
-    setInvoiceInfo(allBrandsInfo[0]);
+      if (allBrandsInfo.length > 0) {
+        setInvoiceInfo(allBrandsInfo[0]);
+      } else {
+        alert("No invoice found for this link.");
+      }
+    } catch (error) {
+      alert("Failed to fetch invoice data.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -136,7 +146,7 @@ function ViewInvoiceByCustomer() {
         </div> */}
         <div
           id="invoice"
-          className="w-full lg:w-8/12 mx-auto  border-[1.7px] mt-4 rounded-md p-0 lg:p-4 "
+          className="w-full lg:w-8/12 mx-auto border-[1.7px] mt-4 rounded-md p-0 lg:p-4 "
         >
           <div ref={printRef} className="p-1 lg:p-4">
             <div className="flex justify-between">
@@ -406,6 +416,7 @@ function ViewInvoiceByCustomer() {
           </div>
         </div>
       </div>
+      {loading && <Loader />}
     </div>
   );
 }

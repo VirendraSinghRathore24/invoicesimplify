@@ -14,7 +14,7 @@ import { LuLayoutDashboard } from "react-icons/lu";
 import * as IoIcons from "react-icons/io";
 import { MdOutlineInventory } from "react-icons/md";
 import { MdLogout } from "react-icons/md";
-import { LogOutIcon } from "lucide-react";
+import { LogOutIcon, ShieldCheck, CircleCheckBig } from "lucide-react";
 
 const Sidebar = () => {
   const [openSubMenu, setOpenSubMenu] = useState(null);
@@ -132,7 +132,7 @@ const Sidebar = () => {
           isOpen={openSubMenu === "settings"}
           onClick={() => toggleSubMenu("settings")}
         >
-          <SubMenuItem text="Delete Account" />
+          {/* <SubMenuItem text="Delete Account" /> */}
           <SubMenuItem
             text="Archived Invoices"
             to="/archiveddashboard"
@@ -152,7 +152,16 @@ const Sidebar = () => {
           <SubMenuItem text="Edit Inventory" to="/editinventory" active={location.pathname === '/editinventory'}/> */}
         </SidebarItem>
       </nav>
-      <div className="text-2xl font-bold  border-b border-white"></div>
+      <div className="text-xs font-bold border-t border-white flex justify-evenly mb-2 py-2">
+        <div className="flex items-center space-x-1">
+          <ShieldCheck size={20} />
+          <div>100% Secure</div>
+        </div>
+        <div className="flex items-center space-x-1">
+          <CircleCheckBig size={20} />
+          <div>ISO Certified</div>
+        </div>
+      </div>
       {/* <div className='flex ml-10 mb-2 gap-x-2 py-4'>
         <MdLogout size={24}/>
         <div className="text-xl font-semibold ">Logout</div>

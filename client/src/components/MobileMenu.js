@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Menu, X } from "lucide-react"; // optional: or use your own icons
+import { Menu, X, CircleCheckBig, ShieldCheck } from "lucide-react"; // optional: or use your own icons
 import { NavLink, useNavigate } from "react-router-dom";
 
 const MobileMenu = () => {
@@ -79,6 +79,16 @@ const MobileMenu = () => {
         </nav>
         <div className="p-4 bottom-0 mt-auto border-t text-center">
           <button onClick={handleLogout}>Logout</button>
+        </div>
+        <div className="text-xs font-bold border-t border-white flex justify-evenly mb-2 py-2">
+          <div className="flex items-center space-x-1">
+            <ShieldCheck size={20} />
+            <div>100% Secure</div>
+          </div>
+          <div className="flex items-center space-x-1">
+            <CircleCheckBig size={20} />
+            <div>ISO Certified</div>
+          </div>
         </div>
       </div>
     </div>

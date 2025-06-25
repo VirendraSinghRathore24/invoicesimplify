@@ -454,7 +454,7 @@ function Invoice() {
         <MobileMenu />
       </div>
 
-      <div className="my-1 lg:my-5 p-2 lg:p-6">
+      <div className="my-1 lg:my-5 p-1 lg:p-6">
         <div className="flex flex-wrap justify-between w-full lg:w-8/12 mx-auto ">
           <div className="flex gap-x-2">
             <button
@@ -620,7 +620,7 @@ function Invoice() {
               </div>
               <div className="overflow-hidden mt-2 hidden max-lg:block">
                 <table className=" w-full mx-auto text-center text-sm font-light">
-                  <thead className="text-sm lg:text-md uppercase">
+                  <thead className="text-sm uppercase">
                     <tr className="flex justify-between w-full mx-auto gap-x-4">
                       <th className="w-[40%] text-xs text-left">Desc</th>
                       <th className="w-[20%] text-xs">Rate</th>
@@ -734,7 +734,7 @@ function Invoice() {
                     </div>
                   </div>
                 ) : (
-                  <div className="w-full flex justify-end gap-x-10 mt-2 font-bold text-md lg:text-xl text-green-800">
+                  <div className="w-full flex justify-end gap-x-10 mt-2 font-bold text-md lg:text-lg text-green-800">
                     Fully Paid
                   </div>
                 )}
