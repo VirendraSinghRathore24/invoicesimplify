@@ -109,7 +109,7 @@ function EditItem({ handleCloseEditModal, setItemAdded, editPost }) {
 
   return (
     <div className=" w-full mx-auto fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center p-6">
-      <div className="overflow-auto mt-6 bg-white p-4 text-black rounded-xl">
+      <div className="overflow-auto mt-6 bg-white p-6 text-black rounded-xl">
         <div className="flex justify-between py-2">
           <div className=" text-lg font-bold">Edit Item </div>
           <button onClick={handleCloseEditModal}>

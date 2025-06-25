@@ -647,13 +647,13 @@ const AddInvoice = () => {
           <div className="flex justify-between gap-x-4">
             <button
               onClick={handleResetInvoice}
-              className="bg-[#146eb4] text-white border-[1.4px] border-gray-400  py-2 px-6 font-semibold rounded-md  hover:scale-110 transition duration-300 ease-in cursor-pointer "
+              className="bg-[#146eb4] top-14 text-white border-[1.4px] border-gray-400  py-2 px-6 font-semibold rounded-md  hover:scale-110 transition duration-300 ease-in cursor-pointer "
             >
               Reset
             </button>
             <button
               onClick={handleCreateInvoice}
-              className="bg-amber-600 border-[1.4px] border-gray-400 text-white py-2 px-6 font-semibold rounded-md text-richblack-700 hover:scale-110 transition duration-300 ease-in cursor-pointer "
+              className="bg-amber-600 top-14 border-[1.4px] border-gray-400 text-white py-2 px-6 font-semibold rounded-md text-richblack-700 hover:scale-110 transition duration-300 ease-in cursor-pointer "
             >
               Create Invoice
             </button>

@@ -5,7 +5,7 @@ const AlertModal = ({ isOpen, onClose, title, message }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
-      <div className="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full">
+      <div className="bg-white rounded-2xl shadow-xl p-6 max-w-md w-11/12">
         <h2 className="text-xl font-semibold text-gray-800">{title}</h2>
         <p className="mt-2 text-sm text-gray-600">{message}</p>
         <div className="mt-6 flex justify-end gap-4">

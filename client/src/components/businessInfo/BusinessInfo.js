@@ -75,8 +75,8 @@ const BusinessInfo = () => {
       <div className="hidden max-lg:block mb-16">
         <MobileMenu />
       </div>
-      <div className="p-6">
-        <div className="flex flex-col w-full mx-auto font-bold text-2xl bg-gray-200 py-4 px-2 rounded-md">
+      <div className="p-2 lg:p-6">
+        <div className="flex flex-col w-full mx-auto font-bold text-lg lg:text-2xl bg-gray-200 py-4 px-2 rounded-md">
           Business Information
         </div>
         <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4 hidden lg:block">

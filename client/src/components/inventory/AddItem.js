@@ -121,9 +121,9 @@ function AddItem({ handleCloseItem, setItemAdded }) {
   return (
     <div>
       <div className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50">
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl  p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 max-lg:w-[96%]">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
+            <h2 className="text-lg lg:text-2xl font-bold text-gray-800 dark:text-white">
               Create New Item
             </h2>
             <button

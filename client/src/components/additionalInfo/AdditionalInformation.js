@@ -5,6 +5,7 @@ import { MdDelete } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { db } from "../../config/firebase";
 import Header from "../Header";
+import MobileMenu from "../MobileMenu";
 
 const AdditionalInformation = () => {
   const [posts, setPosts] = useState([]);
@@ -69,10 +70,15 @@ const AdditionalInformation = () => {
 
   return (
     <div>
-      <Header />
+      <div className="hidden lg:block">
+        <Header />
+      </div>
+      <div className="hidden max-lg:block mb-16">
+        <MobileMenu />
+      </div>
 
-      <div className="p-6">
-        <div className="flex justify-between w-full mx-auto font-bold text-2xl bg-gray-200 py-4 px-2 rounded-md">
+      <div className="p-2 lg:p-6">
+        <div className="flex justify-between w-full mx-auto font-bold text-lg lg:text-2xl bg-gray-200 py-2 lg:py-4 px-2 rounded-md">
           <div>Additional Information</div>
           {posts && (
             <div>

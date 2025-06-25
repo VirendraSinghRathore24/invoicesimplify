@@ -93,7 +93,7 @@ function EditTaxInfo() {
       <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
         <main className="flex-grow container mx-auto px-4 py-10">
           <div className="max-w-xl mx-auto bg-white dark:bg-gray-800 shadow-lg rounded-xl p-8">
-            <h2 className="text-2xl font-semibold mb-6 text-center">
+            <h2 className="text-lg lg:text-2xl font-semibold mb-6 text-center">
               Edit Tax Information
             </h2>
 

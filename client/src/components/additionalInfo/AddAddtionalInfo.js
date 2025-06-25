@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { db } from "../../config/firebase";
 import { toast } from "react-toastify";
 import Header from "../Header";
+import MobileMenu from "../MobileMenu";
 
 function AddAddtionalInfo() {
   const navigate = useNavigate();
@@ -87,10 +88,15 @@ function AddAddtionalInfo() {
   }, []);
   return (
     <div>
-      <Header />
+      <div className="hidden lg:block">
+        <Header />
+      </div>
+      <div className="hidden max-lg:block mb-16">
+        <MobileMenu />
+      </div>
 
-      <div className="p-6">
-        <div className="flex flex-col w-full mx-auto font-bold text-2xl bg-gray-200 py-4 px-2 rounded-md">
+      <div className="p2- lg:p-6">
+        <div className="flex flex-col w-full mx-auto font-bold text-lg lg:text-2xl bg-gray-200 py-4 px-2 rounded-md">
           Add Additional Information
         </div>
 
@@ -100,7 +106,7 @@ function AddAddtionalInfo() {
             className="w-full mx-auto flex flex-col md:flex-row justify-between "
           >
             <div className="flex flex-col w-full mx-auto gap-y-6">
-              <div className="flex justify-between w-full mx-auto gap-x-8">
+              <div className="flex flex-col lg:flex-row gap-y-4 justify-between w-full mx-auto gap-x-8">
                 <div className="flex flex-col gap-y-4 w-full mx-auto">
                   <div>Left Bottom Text</div>
                   <div>

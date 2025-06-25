@@ -71,8 +71,8 @@ const TaxInfo = () => {
         <MobileMenu />
       </div>
 
-      <div className="p-6">
-        <div className="flex flex-col w-full mx-auto font-bold text-2xl bg-gray-200 py-4 px-2 rounded-md">
+      <div className="p-2 lg:p-6">
+        <div className="flex flex-col w-full mx-auto font-bold text-lg lg:text-2xl bg-gray-200 py-4 px-2 rounded-md">
           Tax Information
         </div>
         <div>

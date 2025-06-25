@@ -17,7 +17,6 @@ const MobileMenu = () => {
   };
 
   const menuItems = [
-    "Home",
     "Create Invoice",
     "Dashboard",
     "Inventory",
