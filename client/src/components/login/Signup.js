@@ -167,6 +167,7 @@ const Signup = () => {
       userName: userName,
       invoiceNumber: 1,
       type: type,
+      loginDate: new Date().toISOString().slice(0, 10),
     });
 
     // also create db for business, tax and additional info

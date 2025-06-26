@@ -11,12 +11,14 @@ import { db } from "../../config/firebase";
 import { toast } from "react-toastify";
 import Header from "../Header";
 import MobileMenu from "../MobileMenu";
+import Loader from "../Loader";
 
 function EditBusinessInfo() {
   const navigate = useNavigate();
   const [inputs, setInputs] = useState({});
   const [infoExists, setInfoExists] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const delay = async (ms) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -38,11 +40,19 @@ function EditBusinessInfo() {
   };
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
+    try {
+      setLoading(true);
 
-    // Add to local storage
-    localStorage.setItem("businessInfo", JSON.stringify(inputs));
-    await addBusinessData(inputs);
+      event.preventDefault();
+
+      // Add to local storage
+      localStorage.setItem("businessInfo", JSON.stringify(inputs));
+      await addBusinessData(inputs);
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
   };
   const basicInfo_CollectionRef = collection(db, "Basic_Info");
   const addBusinessData = async (inputs) => {
@@ -296,6 +306,7 @@ function EditBusinessInfo() {
           </div>
         </main>
       </div>
+      {loading && <Loader />}
     </div>
   );
 }

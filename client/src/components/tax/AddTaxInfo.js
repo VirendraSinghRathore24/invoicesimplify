@@ -5,27 +5,36 @@ import { toast } from "react-toastify";
 import { db } from "../../config/firebase";
 import Header from "../Header";
 import MobileMenu from "../MobileMenu";
+import Loader from "../Loader";
 
 function AddTaxInfo() {
   const location = useLocation();
   const [inputs, setInputs] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
+    try {
+      setLoading(true);
 
-    if (!inputs?.gstNumber && !inputs?.cgstAmount && !inputs?.sgstAmount) {
-      alert("Please enter valid details to save the data !!!");
-      return;
+      event.preventDefault();
+
+      if (!inputs?.gstNumber && !inputs?.cgstAmount && !inputs?.sgstAmount) {
+        alert("Please enter valid details to save the data !!!");
+        return;
+      }
+
+      // Add to local storage
+      // sending  info to next screen
+      localStorage.setItem("taxInfo", JSON.stringify(inputs));
+      await addTaxData(inputs);
+      setLoading(false);
+      toast("Tax Info Saved Successfully !!!");
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
     }
-
-    // Add to local storage
-    // sending  info to next screen
-    localStorage.setItem("taxInfo", JSON.stringify(inputs));
-    await addTaxData(inputs);
-
-    toast("Tax Info Saved Successfully !!!");
   };
   const basicInfo_CollectionRef = collection(db, "Basic_Info");
   const addTaxData = async (inputs) => {
@@ -177,6 +186,7 @@ function AddTaxInfo() {
           </div>
         </main>
       </div>
+      {loading && <Loader />}
     </div>
   );
 }

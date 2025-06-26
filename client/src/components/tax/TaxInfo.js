@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { db } from "../../config/firebase";
 import Header from "../Header";
 import MobileMenu from "../MobileMenu";
+import Loader from "../Loader";
 
 const TaxInfo = () => {
   const [posts, setPosts] = useState([]);
@@ -28,6 +29,7 @@ const TaxInfo = () => {
     try {
       var res = window.confirm("Delete the item?");
       if (res) {
+        setLoading(true);
         const data = await getDocs(basicInfo_CollectionRef);
         const filteredData = data.docs.map((doc) => ({
           ...doc.data(),
@@ -43,10 +45,12 @@ const TaxInfo = () => {
         await updateDoc(codeDoc, {
           taxInfo: null,
         });
+        setLoading(false);
         return true;
       }
     } catch (er) {
       console.log(er);
+      setLoading(false);
       return false;
     }
   };
@@ -133,6 +137,7 @@ const TaxInfo = () => {
           </div>
         </div>
       </div>
+      {loading && <Loader />}
     </div>
   );
 };

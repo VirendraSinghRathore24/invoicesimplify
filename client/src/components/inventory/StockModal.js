@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { db } from "../../config/firebase";
 import { X } from "lucide-react";
 import { toast } from "react-toastify";
+import Loader from "../Loader";
 
 function StockModal({ handleCloseStockModal, setItemAdded, editPost }) {
   const location = useLocation();
@@ -14,6 +15,7 @@ function StockModal({ handleCloseStockModal, setItemAdded, editPost }) {
   const [addedDate, setAddedDate] = useState(
     new Date().toISOString().slice(0, 10)
   );
+  const [loading, setLoading] = useState(false);
 
   const [newQty, setNewQty] = useState(0);
   const [totalQty, setTotalQty] = useState(0);
@@ -22,21 +24,28 @@ function StockModal({ handleCloseStockModal, setItemAdded, editPost }) {
   const inventoryInfo_CollectionRef = collection(db, "Inventory_Info");
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
+    try {
+      setLoading(true);
 
-    // check if item is already added
+      event.preventDefault();
 
-    const isValid = validatePrices(inputs.buyPrice, inputs.sellPrice);
-    if (!isValid) {
-      return;
+      // check if item is already added
+
+      const isValid = validatePrices(inputs.buyPrice, inputs.sellPrice);
+      if (!isValid) {
+        return;
+      }
+      // update item to db
+      await updateInventoryItems(inputs);
+
+      handleCloseStockModal();
+      setItemAdded(true);
+      setLoading(false);
+      toast("Item updated successfully!!!");
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
     }
-    // update item to db
-    await updateInventoryItems(inputs);
-
-    handleCloseStockModal();
-    setItemAdded(true);
-
-    toast("Item updated successfully!!!");
   };
 
   const updateInventoryItems = async () => {
@@ -271,6 +280,7 @@ function StockModal({ handleCloseStockModal, setItemAdded, editPost }) {
           </form>
         </div>
       </div>
+      {loading && <Loader />}
     </div>
   );
 }

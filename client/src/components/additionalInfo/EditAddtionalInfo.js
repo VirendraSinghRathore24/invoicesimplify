@@ -5,22 +5,32 @@ import { db } from "../../config/firebase";
 import { toast } from "react-toastify";
 import Header from "../Header";
 import MobileMenu from "../MobileMenu";
+import Loader from "../Loader";
 
 function AddtionalInfo() {
   const navigate = useNavigate();
 
   const location = useLocation();
   const [inputs, setInputs] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
+    try {
+      setLoading(true);
 
-    // Add to local storage
-    // sending  info to next screen
-    localStorage.setItem("additionalInfo", JSON.stringify(inputs));
-    await addAdditionalData(inputs);
-    navigate("/additionalinfo");
-    toast("Additional Info Saved Successfully !!!");
+      event.preventDefault();
+
+      // Add to local storage
+      // sending  info to next screen
+      localStorage.setItem("additionalInfo", JSON.stringify(inputs));
+      await addAdditionalData(inputs);
+      navigate("/additionalinfo");
+      toast("Additional Info Saved Successfully !!!");
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
   };
   const additionalInfo_CollectionRef = collection(db, "Basic_Info");
   const addAdditionalData = async (inputs) => {
@@ -321,6 +331,7 @@ function AddtionalInfo() {
           </form>
         </div>
       </div>
+      {loading && <Loader />}
     </div>
   );
 }

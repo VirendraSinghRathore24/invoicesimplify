@@ -1,11 +1,12 @@
 import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { db, storage } from "../../config/firebase";
 import { toast } from "react-toastify";
 import ImageUpload from "./ImageUpload";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import Header from "../Header";
+import Loader from "../Loader";
 
 function AddBusinessInfo() {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ function AddBusinessInfo() {
   const [avatarURL, setAvatarURL] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (event) => {
     const name = event.target.name;
@@ -32,13 +34,21 @@ function AddBusinessInfo() {
   };
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
+    try {
+      setLoading(true);
 
-    // Add to local storage
-    localStorage.setItem("businessInfo", JSON.stringify(inputs));
-    await addBusinessData(inputs);
+      event.preventDefault();
 
-    toast("Business Info Saved Successfully !!!");
+      // Add to local storage
+      localStorage.setItem("businessInfo", JSON.stringify(inputs));
+      await addBusinessData(inputs);
+
+      toast("Business Info Saved Successfully !!!");
+      setLoading(false);
+    } catch (er) {
+      console.log(er);
+      setLoading(false);
+    }
   };
   const basicInfo_CollectionRef = collection(db, "Basic_Info");
   const addBusinessData = async (inputs) => {
@@ -311,6 +321,7 @@ function AddBusinessInfo() {
           </div>
         </main>
       </div>
+      {loading && <Loader />}
     </div>
   );
 }

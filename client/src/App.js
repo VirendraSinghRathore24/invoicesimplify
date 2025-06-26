@@ -33,6 +33,7 @@ import AboutUs from "./components/AboutUs";
 import ContactUs from "./components/ContactUs";
 import PrivacyPolicy from "./components/PrivacyPolicy";
 import TermsOfUse from "./components/TermsOfUse";
+import PhoneLogin from "./components/login/PhoneLogin";
 
 function App() {
   const location = useLocation();

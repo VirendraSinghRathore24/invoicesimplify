@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { db } from "../../config/firebase";
 import Header from "../Header";
 import MobileMenu from "../MobileMenu";
+import Loader from "../Loader";
 
 const AdditionalInformation = () => {
   const [posts, setPosts] = useState([]);
@@ -15,7 +16,6 @@ const AdditionalInformation = () => {
 
   const navigate = useNavigate();
   const handleDelete = async () => {
-    console.log(posts);
     const isDeleted = await deleteBusinessInfo();
     if (isDeleted) {
       localStorage.removeItem("additionalInfo");
@@ -27,6 +27,7 @@ const AdditionalInformation = () => {
     try {
       var res = window.confirm("Delete the item?");
       if (res) {
+        setLoading(true);
         const data = await getDocs(basicInfo_CollectionRef);
         const filteredData = data.docs.map((doc) => ({
           ...doc.data(),
@@ -42,10 +43,12 @@ const AdditionalInformation = () => {
         await updateDoc(codeDoc, {
           additionalInfo: null,
         });
+        setLoading(false);
         return true;
       }
     } catch (er) {
       console.log(er);
+      setLoading(false);
       return false;
     }
   };
@@ -254,6 +257,7 @@ const AdditionalInformation = () => {
           )}
         </div>
       </div>
+      {loading && <Loader />}
     </div>
   );
 };

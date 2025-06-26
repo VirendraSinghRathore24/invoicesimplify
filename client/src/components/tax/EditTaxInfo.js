@@ -5,26 +5,38 @@ import { toast } from "react-toastify";
 import { db } from "../../config/firebase";
 import Header from "../Header";
 import MobileMenu from "../MobileMenu";
+import Loader from "../Loader";
 
 function EditTaxInfo() {
   const location = useLocation();
   const [inputs, setInputs] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
+    try {
+      setLoading(true);
 
-    if (!inputs.gstNumber && (inputs.cgstAmount || inputs.sgstAmount)) {
-      alert("Please enter GST Number, tax cannot be saved without GST Number");
-    } else {
-      // Add to local storage
-      // sending  info to next screen
-      localStorage.setItem("taxInfo", JSON.stringify(inputs));
-      await addTaxData(inputs);
+      event.preventDefault();
 
-      toast("Tax Info Saved Successfully !!!");
-      navigate("/taxinfo");
+      if (!inputs.gstNumber && (inputs.cgstAmount || inputs.sgstAmount)) {
+        alert(
+          "Please enter GST Number, tax cannot be saved without GST Number"
+        );
+      } else {
+        // Add to local storage
+        // sending  info to next screen
+        localStorage.setItem("taxInfo", JSON.stringify(inputs));
+        await addTaxData(inputs);
+
+        toast("Tax Info Saved Successfully !!!");
+        navigate("/taxinfo");
+      }
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
     }
   };
   const basicInfo_CollectionRef = collection(db, "Basic_Info");
@@ -174,6 +186,7 @@ function EditTaxInfo() {
           </div>
         </main>
       </div>
+      {loading && <Loader />}
     </div>
   );
 }

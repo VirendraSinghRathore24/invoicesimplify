@@ -6,9 +6,12 @@ import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import Header from "../Header";
 import MobileMenu from "../MobileMenu";
+import Loader from "../Loader";
 
 const BusinessInfo = () => {
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const handleDelete = async () => {
@@ -24,6 +27,7 @@ const BusinessInfo = () => {
     try {
       var res = window.confirm("Are you sure to delete Business Info?");
       if (res) {
+        setLoading(true);
         const data = await getDocs(basicInfo_CollectionRef);
         const filteredData = data.docs.map((doc) => ({
           ...doc.data(),
@@ -39,10 +43,12 @@ const BusinessInfo = () => {
         await updateDoc(codeDoc, {
           businessInfo: null,
         });
+        setLoading(false);
         return true;
       }
     } catch (er) {
       console.log(er);
+      setLoading(false);
       return false;
     }
   };
@@ -179,6 +185,7 @@ const BusinessInfo = () => {
           )}
         </div>
       </div>
+      {loading && <Loader />}
     </div>
   );
 };
