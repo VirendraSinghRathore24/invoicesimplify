@@ -688,6 +688,7 @@ const AddInvoice = () => {
                       <input
                         className="form-input w-full lg:w-8/12 block font-semibold text-xs rounded border border-gray-400 p-2 leading-5 focus:text-gray-600"
                         required
+                        autoFocus
                         name="custname"
                         placeholder="Enter Customer Name"
                         value={customerName}
