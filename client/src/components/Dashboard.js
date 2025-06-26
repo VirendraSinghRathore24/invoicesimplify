@@ -566,7 +566,7 @@ const Dashboard = () => {
                 <label className="block font-medium mb-1">Date Filter</label>
                 <select
                   className={`border px-3 py-2 rounded ${
-                    quickOption === "range" ? "w-full" : "w-full lg:3/12"
+                    quickOption === "range" ? "w-full" : "w-full lg:w-3/12"
                   }`}
                   value={quickOption}
                   onChange={(e) => handleQuickFilterChange(e.target.value)}
