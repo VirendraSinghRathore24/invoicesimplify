@@ -14,12 +14,24 @@ import { LuLayoutDashboard } from "react-icons/lu";
 import * as IoIcons from "react-icons/io";
 import { MdOutlineInventory } from "react-icons/md";
 import { MdLogout } from "react-icons/md";
-import { LogOutIcon, ShieldCheck, CircleCheckBig } from "lucide-react";
+import {
+  LogOutIcon,
+  ShieldCheck,
+  CircleCheckBig,
+  RefreshCcw,
+  Trash2,
+} from "lucide-react";
+import { getAdditionalUserInfo } from "firebase/auth";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../config/firebase";
+import Loader from "./Loader";
+import { IoRemove } from "react-icons/io5";
 
 const Sidebar = () => {
   const [openSubMenu, setOpenSubMenu] = useState(null);
   const location = useLocation();
   const loggedInUser = localStorage.getItem("user");
+  const [loading, setLoading] = useState(false);
 
   const toggleSubMenu = (menuName) => {
     setOpenSubMenu(openSubMenu === menuName ? null : menuName);
@@ -33,6 +45,106 @@ const Sidebar = () => {
     if (res) {
       localStorage.clear();
       navigate("/login");
+    }
+  };
+
+  const handleSync = async () => {
+    // get all data from db and reload to local storage
+    try {
+      setLoading(true);
+      await getBusinessInfo();
+      await getTaxInfo();
+      await getAdditionalInfo();
+      await getInventoryItems();
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
+  };
+
+  const basicInfo_CollectionRef = collection(db, "Basic_Info");
+  const getBusinessInfo = async () => {
+    try {
+      const data = await getDocs(basicInfo_CollectionRef);
+      const filteredData = data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+
+      const loggedInUser = localStorage.getItem("user");
+      const basicInfo = filteredData.filter(
+        (x) => x.loggedInUser === loggedInUser
+      )[0];
+      localStorage.setItem(
+        "businessInfo",
+        JSON.stringify(basicInfo?.businessInfo)
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getTaxInfo = async () => {
+    try {
+      const data = await getDocs(basicInfo_CollectionRef);
+      const filteredData = data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+
+      const loggedInUser = localStorage.getItem("user");
+      const basicInfo = filteredData.filter(
+        (x) => x.loggedInUser === loggedInUser
+      )[0];
+      localStorage.setItem("taxInfo", JSON.stringify(basicInfo?.taxInfo));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getAdditionalInfo = async () => {
+    try {
+      const data = await getDocs(basicInfo_CollectionRef);
+      const filteredData = data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+
+      const loggedInUser = localStorage.getItem("user");
+      const basicInfo = filteredData.filter(
+        (x) => x.loggedInUser === loggedInUser
+      )[0];
+      localStorage.setItem(
+        "additionalInfo",
+        JSON.stringify(basicInfo?.additionalInfo)
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getInventoryItems = async () => {
+    try {
+      const inventoryInfo_CollectionRef = collection(db, "Inventory_Info");
+      const data = await getDocs(inventoryInfo_CollectionRef);
+      const filteredData = data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+
+      const loggedInUser = localStorage.getItem("user");
+      const inventoryInfo = filteredData.filter(
+        (x) => x.loggedInUser === loggedInUser
+      )[0];
+
+      // get items list
+      const inventoryItems = inventoryInfo.inventory.sort((a, b) =>
+        a.itemName.localeCompare(b.itemName)
+      );
+      localStorage.setItem("inventoryItems", JSON.stringify(inventoryItems));
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -132,8 +244,13 @@ const Sidebar = () => {
           isOpen={openSubMenu === "settings"}
           onClick={() => toggleSubMenu("settings")}
         >
-          {/* <SubMenuItem text="Delete Account" /> */}
           <SubMenuItem
+            icon={<RefreshCcw size={18} />}
+            text="Sync (Refresh)"
+            onClick={handleSync}
+          />
+          <SubMenuItem
+            icon={<Trash2 size={18} />}
             text="Archived Invoices"
             to="/archiveddashboard"
             active={location.pathname === "/archiveddashboard"}
@@ -162,10 +279,7 @@ const Sidebar = () => {
           <div>ISO Certified</div>
         </div>
       </div>
-      {/* <div className='flex ml-10 mb-2 gap-x-2 py-4'>
-        <MdLogout size={24}/>
-        <div className="text-xl font-semibold ">Logout</div>
-      </div> */}
+      {loading && <Loader />}
     </div>
   );
 };
@@ -218,15 +332,24 @@ const SidebarItem = ({
   );
 };
 
-const SubMenuItem = ({ text, to, active }) => {
-  const baseClasses = "block py-2 pl-4 text-sm rounded-md transition my-2";
+const SubMenuItem = ({ text, to, active, icon, onClick }) => {
+  const baseClasses =
+    "flex items-center space-x-3 px-3 py-3 rounded-md transition my-2 text-sm";
   const activeClasses = active
     ? "bg-amber-600 font-semibold"
     : "hover:bg-gray-600";
 
   return (
-    <Link to={to} className={`${baseClasses} ${activeClasses}`}>
-      {text}
+    <Link
+      to={to}
+      className={`${baseClasses} ${activeClasses} justify-between cursor-pointer`}
+    >
+      <div onClick={onClick}>
+        <div className="flex items-center space-x-3">
+          {icon}
+          <span>{text}</span>
+        </div>
+      </div>
     </Link>
   );
 };

@@ -562,11 +562,11 @@ const Dashboard = () => {
           <div className="w-6/12 px-4 -mt-2">
             <div className="flex flex-col sm:flex-row gap-4 items-end mb-6">
               {/* Dropdown */}
-              <div className="flex-1">
+              <div className="flex-1 text-sm">
                 <label className="block font-medium mb-1">Date Filter</label>
                 <select
                   className={`border px-3 py-2 rounded ${
-                    quickOption === "range" ? "w-full" : "w-3/12"
+                    quickOption === "range" ? "w-full" : "w-full lg:3/12"
                   }`}
                   value={quickOption}
                   onChange={(e) => handleQuickFilterChange(e.target.value)}
@@ -582,7 +582,7 @@ const Dashboard = () => {
               {/* Show range inputs only if 'range' is selected */}
               {quickOption === "range" && (
                 <>
-                  <div className="flex-1">
+                  <div className="flex-1 w-full text-sm">
                     <label className="block font-medium mb-1">Start Date</label>
                     <input
                       type="date"
@@ -591,7 +591,7 @@ const Dashboard = () => {
                       onChange={(e) => setStartDate(e.target.value)}
                     />
                   </div>
-                  <div className="flex-1">
+                  <div className="flex-1 w-full text-sm">
                     <label className="block font-medium mb-1">End Date</label>
                     <input
                       type="date"

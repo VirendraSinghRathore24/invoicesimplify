@@ -17,7 +17,6 @@ const TaxInfo = () => {
   const navigate = useNavigate();
 
   const handleDelete = async () => {
-    console.log(posts);
     const isDeleted = await deleteBusinessInfo();
     if (isDeleted) {
       localStorage.removeItem("taxInfo");
