@@ -681,12 +681,10 @@ const AddInvoice = () => {
                   </div>
 
                   <div className="flex flex-col justify-start items-left">
-                    <div className="text-xs font-bold leading-5 text-gray-700 mt-2">
-                      Name
-                    </div>
+                    <div className="text-md font-bold leading-5 mt-2">Name</div>
                     <div>
                       <input
-                        className="form-input w-full lg:w-8/12 block font-semibold text-xs rounded border border-gray-400 p-2 leading-5 focus:text-gray-600"
+                        className="form-input w-full lg:w-8/12 block font-semibold text-md rounded border border-gray-400 p-2 leading-5 "
                         required
                         autoFocus
                         name="custname"
@@ -702,15 +700,13 @@ const AddInvoice = () => {
                 </div>
 
                 <div className="flex flex-col ">
-                  <div className="text-xs font-bold leading-5 text-gray-700 mt-2">
-                    Mobile
-                  </div>
+                  <div className="text-md font-bold leading-5 mt-2">Mobile</div>
                   <div className="flex justify-start items-left -ml-4">
-                    <span className="p-[7px] bg-[#eee] border border-[#ccc] border-r-0 rounded-l font-normal text-sm">
+                    <span className="p-[7px] bg-[#eee] border border-[#ccc] border-r-0 rounded-l font-normal text-md">
                       +91
                     </span>
                     <input
-                      className="p-[5px] pl-[10px] border border-[#ccc] rounded-r w-[120px] text-sm text-left"
+                      className="p-[5px] pl-[10px] border border-[#ccc] rounded-r w-[120px] text-md text-left"
                       type="text"
                       name="custphone"
                       value={customerPhone}
@@ -730,12 +726,12 @@ const AddInvoice = () => {
                 </div>
                 <div className="flex justify-between w-full mx-auto">
                   <div className="flex flex-col">
-                    <div className="text-xs font-medium leading-5 text-gray-700 mt-2">
+                    <div className="text-xs font-medium leading-5 mt-2">
                       Invoice #
                     </div>
                     <div>
                       <input
-                        className="w-10/12 lg:w-6/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
+                        className="w-10/12 lg:w-6/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5"
                         required
                         name="invoiceNumber"
                         placeholder="10"
@@ -748,12 +744,12 @@ const AddInvoice = () => {
                     </div>
                   </div>
                   <div className="flex flex-col">
-                    <div className="text-xs font-medium leading-5 text-gray-700 mt-2">
+                    <div className="text-xs font-medium leading-5 mt-2">
                       Date
                     </div>
                     <div>
                       <input
-                        className="w-12/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
+                        className="w-12/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5 "
                         required
                         name="date"
                         placeholder="Date"
@@ -770,12 +766,12 @@ const AddInvoice = () => {
                 {type === "Rajputi Poshak" && (
                   <div className="flex flex-col">
                     <div className="flex flex-col">
-                      <div className="text-xs font-medium leading-5 text-gray-700 mt-2">
+                      <div className="text-xs font-medium leading-5 mt-2">
                         Expected Delivery
                       </div>
                       <div>
                         <input
-                          className="w-12/12 lg:w-3/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
+                          className="w-12/12 lg:w-3/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5 "
                           required
                           name="expecteddate"
                           placeholder="Date"
