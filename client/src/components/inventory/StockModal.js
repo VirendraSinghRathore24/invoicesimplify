@@ -9,6 +9,7 @@ import Loader from "../Loader";
 function StockModal({ handleCloseStockModal, setItemAdded, editPost }) {
   const location = useLocation();
   const [added, setAdded] = useState(false);
+  const [reduced, setReduced] = useState(false);
   const [inputs, setInputs] = useState(editPost);
   const [showList, setShowList] = useState(false);
   const [posts, setPosts] = useState([]);
@@ -16,6 +17,7 @@ function StockModal({ handleCloseStockModal, setItemAdded, editPost }) {
     new Date().toISOString().slice(0, 10)
   );
   const [loading, setLoading] = useState(false);
+  const [stockType, setStockType] = useState("add");
 
   const [newQty, setNewQty] = useState(0);
   const [totalQty, setTotalQty] = useState(0);
@@ -102,9 +104,21 @@ function StockModal({ handleCloseStockModal, setItemAdded, editPost }) {
     setInputs((values) => ({ ...values, [name]: value }));
 
     if (name === "adjustQty") {
-      setAdded(true);
-      setNewQty(value);
-      setTotalQty(parseInt(editPost.itemQty) + parseInt(value));
+      if (stockType === "add") {
+        setAdded(true);
+        setReduced(false);
+        setNewQty(value);
+        setTotalQty(parseInt(editPost.itemQty) + parseInt(value));
+      } else {
+        if (parseInt(editPost.itemQty) - parseInt(value) < 0) {
+          alert("Stock can not be negative !!!");
+          return;
+        }
+        setAdded(false);
+        setReduced(true);
+        setNewQty(value);
+        setTotalQty(parseInt(editPost.itemQty) - parseInt(value));
+      }
     }
   };
   const handleBack = () => {
@@ -130,6 +144,11 @@ function StockModal({ handleCloseStockModal, setItemAdded, editPost }) {
       setShowList(true);
       setPosts(inventoryInfo.inventory);
     }
+  };
+
+  const handleStockTypeChange = (e) => {
+    const selectedStockType = e.target.value;
+    setStockType(selectedStockType);
   };
 
   const handleLogin = () => {
@@ -180,9 +199,9 @@ function StockModal({ handleCloseStockModal, setItemAdded, editPost }) {
                       Add or Reduce Stock
                     </label>
                     <select
-                      //onChange={handlePageChange}
-                      defaultValue=""
-                      className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      onChange={(e) => handleStockTypeChange(e)}
+                      defaultValue={stockType}
+                      className="w-full p-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     >
                       <option value="add">Add (+)</option>
                       <option value="reduce">Reduce (-)</option>
@@ -248,9 +267,27 @@ function StockModal({ handleCloseStockModal, setItemAdded, editPost }) {
                         </div>
                       </div>
                     )}
+                    {reduced && (
+                      <div className="flex justify-between font-bold">
+                        <div className="block font-medium mb-1 text-red-600">
+                          Stock Reduced
+                        </div>
+                        <div className="block font-medium mb-1 text-red-600">
+                          - {newQty}
+                        </div>
+                      </div>
+                    )}
                   </div>
                   {/* <hr /> */}
                   {added && (
+                    <div className="flex justify-between mt-6 font-bold text-md lg:text-lg border-t pt-2">
+                      <div className="block font-medium mb-1">
+                        Updated Stocks
+                      </div>
+                      <div className="block font-medium mb-1">{totalQty}</div>
+                    </div>
+                  )}
+                  {reduced && (
                     <div className="flex justify-between mt-6 font-bold text-md lg:text-lg border-t pt-2">
                       <div className="block font-medium mb-1">
                         Updated Stocks

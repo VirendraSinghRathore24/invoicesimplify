@@ -681,10 +681,12 @@ const AddInvoice = () => {
                   </div>
 
                   <div className="flex flex-col justify-start items-left">
-                    <div className="text-md font-bold leading-5 mt-2">Name</div>
+                    <div className="text-[14px] font-bold leading-5 mt-2">
+                      Name
+                    </div>
                     <div>
                       <input
-                        className="form-input w-full lg:w-8/12 block font-semibold text-md rounded border border-gray-400 p-2 leading-5 "
+                        className="form-input w-full lg:w-8/12 block font-semibold text-[14px] rounded border border-gray-400 p-2 leading-5 "
                         required
                         autoFocus
                         name="custname"
@@ -700,13 +702,15 @@ const AddInvoice = () => {
                 </div>
 
                 <div className="flex flex-col ">
-                  <div className="text-md font-bold leading-5 mt-2">Mobile</div>
+                  <div className="text-[14px] font-bold leading-5 mt-2">
+                    Mobile
+                  </div>
                   <div className="flex justify-start items-left -ml-4">
-                    <span className="p-[7px] bg-[#eee] border border-[#ccc] border-r-0 rounded-l font-normal text-md">
+                    <span className="p-[7px] bg-[#eee] border border-[#ccc] border-r-0 rounded-l font-medium text-[14px]">
                       +91
                     </span>
                     <input
-                      className="p-[5px] pl-[10px] border border-[#ccc] rounded-r w-[120px] text-md text-left"
+                      className="p-[5px] pl-[10px] border border-[#ccc] rounded-r w-[120px] text-[14px] text-left"
                       type="text"
                       name="custphone"
                       value={customerPhone}
