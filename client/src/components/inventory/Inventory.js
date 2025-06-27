@@ -88,29 +88,10 @@ function Inventory() {
 
   const checkIfListExists = async () => {
     setLoading(true);
-    const data = await getDocs(inventoryInfo_CollectionRef);
-    const filteredData = data.docs.map((doc) => ({
-      ...doc.data(),
-      id: doc.id,
-    }));
-
-    const loggedInUser = localStorage.getItem("user");
-    const inventoryInfo = filteredData.filter(
-      (x) => x.loggedInUser === loggedInUser
-    )[0];
-
-    // get items list
-    const existingItems = inventoryInfo.inventory.sort((a, b) =>
-      a.itemName.localeCompare(b.itemName)
-    );
-
-    localStorage.setItem("inventoryItems", JSON.stringify(existingItems));
-
-    if (existingItems.length > 0) {
-      setShowList(true);
-      setPosts(inventoryInfo.inventory);
-      setFilteredData(inventoryInfo.inventory);
-    }
+    const existingItems = JSON.parse(localStorage.getItem("inventoryItems"));
+    setShowList(true);
+    setPosts(existingItems);
+    setFilteredData(existingItems);
     setLoading(false);
   };
 
@@ -167,8 +148,10 @@ function Inventory() {
     const val = e.target.value;
     setSearchTerm(val);
 
-    const result = posts.filter((x) =>
-      x.itemName.toLowerCase().includes(val.toLowerCase())
+    const result = posts.filter(
+      (x) =>
+        x.itemName.toLowerCase().includes(val.toLowerCase()) ||
+        x.itemCode.toLowerCase().includes(val.toLowerCase())
     );
     setFilteredData(result);
   };

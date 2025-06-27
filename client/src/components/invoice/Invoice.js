@@ -169,6 +169,21 @@ function Invoice() {
       linkStr,
     });
 
+    // update dashboard
+    const dashboardInfo = JSON.parse(localStorage.getItem("dashboardInfo"));
+    dashboardInfo.push({
+      invoiceInfo,
+      amountInfo,
+      customerInfo,
+      rows,
+      businessInfo,
+      taxInfo,
+      additionalInfo,
+      taxCalculatedInfo,
+      loggedInUser,
+    });
+    localStorage.setItem("dashboardInfo", JSON.stringify(dashboardInfo));
+
     clearLocalStorage();
     await updateInvoiceNumber();
   };

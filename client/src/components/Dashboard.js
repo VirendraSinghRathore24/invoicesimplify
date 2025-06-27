@@ -49,16 +49,17 @@ const Dashboard = () => {
   const fetchData = async (from, to) => {
     try {
       setLoading(true);
-      const data = await getDocs(invoiceInfo_CollectionRef);
-      const filteredData = data.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
+      // const data = await getDocs(invoiceInfo_CollectionRef);
+      // const filteredData = data.docs.map((doc) => ({
+      //   ...doc.data(),
+      //   id: doc.id,
+      // }));
 
-      const loggedInUser = localStorage.getItem("user");
-      const invoiceInfo = filteredData.filter(
-        (x) => x.loggedInUser === loggedInUser
-      );
+      // const loggedInUser = localStorage.getItem("user");
+      // const invoiceInfo = filteredData.filter(
+      //   (x) => x.loggedInUser === loggedInUser
+      // );
+      const invoiceInfo = JSON.parse(localStorage.getItem("dashboardInfo"));
       const result = invoiceInfo.filter(
         (item) =>
           new Date(item.invoiceInfo.date) >= from &&
@@ -134,7 +135,10 @@ const Dashboard = () => {
 
   const handleDelete = async (user) => {
     if (window.confirm("Are you sure you want to delete this entry?")) {
-      setData(data.filter((item) => item.id !== user.id));
+      const items = data.filter((item) => item.id !== user.id);
+      setData(items);
+
+      localStorage.setItem("dashboardInfo", JSON.stringify(items));
 
       // archive before deleting
       await archiveInvoice(user);
@@ -424,20 +428,21 @@ const Dashboard = () => {
     return totalProfit;
   };
 
-  const invoiceInfo_CollectionRef = collection(db, "Invoice_Info");
+  //const invoiceInfo_CollectionRef = collection(db, "Invoice_Info");
   const getInvoiceInfo = async () => {
     setLoading(true);
-    const data = await getDocs(invoiceInfo_CollectionRef);
-    const filteredData = data.docs.map((doc) => ({
-      ...doc.data(),
-      id: doc.id,
-    }));
+    // const data = await getDocs(invoiceInfo_CollectionRef);
+    // const filteredData = data.docs.map((doc) => ({
+    //   ...doc.data(),
+    //   id: doc.id,
+    // }));
 
-    const loggedInUser = localStorage.getItem("user");
-    const invoiceInfo = filteredData.filter(
-      (x) => x.loggedInUser === loggedInUser
-    );
+    // const loggedInUser = localStorage.getItem("user");
+    // const invoiceInfo = filteredData.filter(
+    //   (x) => x.loggedInUser === loggedInUser
+    // );
 
+    const invoiceInfo = JSON.parse(localStorage.getItem("dashboardInfo"));
     const totalAmount = invoiceInfo.reduce((acc, item) => {
       const amount = Math.round(
         item.amountInfo.amount +

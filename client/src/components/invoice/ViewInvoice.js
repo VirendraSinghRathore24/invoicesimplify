@@ -100,9 +100,11 @@ function ViewInvoice() {
         id: doc.id,
       }));
 
-      const allBrandsInfo = filteredData.filter(
-        (x) => x.loggedInUser === loggedInUser
-      );
+      // const allBrandsInfo = filteredData.filter(
+      //   (x) => x.loggedInUser === loggedInUser
+      // );
+
+      const allBrandsInfo = JSON.parse(localStorage.getItem("dashboardInfo"));
 
       const invoiceData = allBrandsInfo.filter((x) => x.id === id)[0];
 

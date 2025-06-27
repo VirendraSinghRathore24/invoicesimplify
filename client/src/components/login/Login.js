@@ -83,6 +83,20 @@ const Login = () => {
     localStorage.setItem("type", loginInfo.type);
   };
 
+  const invoiceInfo_CollectionRef = collection(db, "Invoice_Info");
+  const getInvoiceInfo = async (loggedInUser) => {
+    const data = await getDocs(invoiceInfo_CollectionRef);
+    const filteredData = data.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+
+    const invoiceInfo = filteredData.filter(
+      (x) => x.loggedInUser === loggedInUser
+    );
+    localStorage.setItem("dashboardInfo", JSON.stringify(invoiceInfo));
+  };
+
   const signInWithUsernameAndPassword = async (e) => {
     try {
       e.preventDefault();
@@ -106,6 +120,9 @@ const Login = () => {
           await getAllData(code);
 
           await getInventoryList(code);
+
+          // this is dashboard data
+          await getInvoiceInfo(code);
 
           const info = localStorage.getItem("businessInfo");
 
