@@ -509,7 +509,10 @@ const Dashboard = () => {
       result = origionalData.filter((x) => x.taxCalculatedInfo.balance > 0);
     }
 
-    setFilteredData(result);
+    const invoiceInfo1 = result?.sort(
+      (a, b) => b.invoiceInfo.invoiceNumber - a.invoiceInfo.invoiceNumber
+    );
+    setFilteredData(invoiceInfo1);
     updateAmountAfterSearch(result);
     updateBalanceAfterSearch(result);
     updatePaidAfterSearch(result);
