@@ -34,6 +34,7 @@ const Dashboard = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [quickOption, setQuickOption] = useState("any");
+  const [statusFilter, setStatusFilter] = useState("All");
 
   const navigate = useNavigate();
 
@@ -46,19 +47,12 @@ const Dashboard = () => {
     getInvoiceInfo();
   };
 
+  const origionalData = JSON.parse(localStorage.getItem("dashboardInfo"));
+
   const fetchData = async (from, to) => {
     try {
       setLoading(true);
-      // const data = await getDocs(invoiceInfo_CollectionRef);
-      // const filteredData = data.docs.map((doc) => ({
-      //   ...doc.data(),
-      //   id: doc.id,
-      // }));
 
-      // const loggedInUser = localStorage.getItem("user");
-      // const invoiceInfo = filteredData.filter(
-      //   (x) => x.loggedInUser === loggedInUser
-      // );
       const invoiceInfo = JSON.parse(localStorage.getItem("dashboardInfo"));
       const result = invoiceInfo.filter(
         (item) =>
@@ -493,6 +487,59 @@ const Dashboard = () => {
     setLoading(false);
   };
 
+  const handleCustomRangeFilter = (e) => {
+    if (e.target.name === "startdate") {
+      setStartDate(e.target.value);
+
+      if (endDate) {
+        const from = dayjs(e.target.value).startOf("day").toDate();
+        const to = dayjs(endDate).endOf("day").toDate();
+        fetchData(from, to);
+        setQuickOption("range");
+      }
+    }
+    if (e.target.name === "enddate") {
+      setEndDate(e.target.value);
+
+      if (startDate) {
+        const from = dayjs(startDate).startOf("day").toDate();
+        const to = dayjs(e.target.value).endOf("day").toDate();
+        fetchData(from, to);
+        setQuickOption("range");
+      }
+    }
+  };
+
+  const handleStatusFilter = (status) => {
+    setStatusFilter(status);
+
+    let result = origionalData;
+    if (status === "Paid") {
+      result = origionalData.filter(
+        (x) => x.amountInfo.paymentType === "fullyPaid"
+      );
+    } else if (status === "Unpaid") {
+      result = origionalData.filter((x) => x.taxCalculatedInfo.balance > 0);
+    }
+
+    setFilteredData(result);
+    updateAmountAfterSearch(result);
+    updateBalanceAfterSearch(result);
+    updatePaidAfterSearch(result);
+    updateTotalProfitAfterSearch(result);
+
+    const totalPaidInvoices = result.filter(
+      (item) =>
+        item.amountInfo.paymentType === "fullyPaid" ||
+        item.taxCalculatedInfo.balance === 0
+    ).length;
+    setPaidInvoices(totalPaidInvoices);
+
+    // const totalSettled = result.filter(
+    //   (item) => item.taxCalculatedInfo.balance === 0
+    // ).length;
+    setSettled(result.length - totalPaidInvoices);
+  };
   const handleLogin = () => {
     const user = localStorage.getItem("user");
 
@@ -520,7 +567,7 @@ const Dashboard = () => {
       </div>
 
       <div className="p-6">
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-8 ">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-8  p-3 rounded-md">
           <div className={`p-5 rounded-lg shadow bg-indigo-500 text-white`}>
             <div className="flex items-center justify-between">
               <p className="text-md">Total Invoices</p>
@@ -552,72 +599,65 @@ const Dashboard = () => {
             <h3 className="mt-2 text-2xl font-semibold">₹ {totalProfit}</h3>
           </div>
         </div>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+          <input
+            type="text"
+            placeholder="Search..."
+            autoFocus
+            value={searchTerm}
+            onChange={handleSearch}
+            className="px-4 py-2 border rounded-lg w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
 
+          <select
+            className="px-4 py-2 border rounded-lg w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+            value={quickOption}
+            onChange={(e) => handleQuickFilterChange(e.target.value)}
+          >
+            <option value="any">Any Date</option>
+            <option value="today">Today</option>
+            <option value="month">This Month</option>
+            <option value="sixmonths">Last 6 Months</option>
+            <option value="range">Custom Range</option>
+          </select>
+
+          {/* Show range inputs only if 'range' is selected */}
+          {quickOption === "range" && (
+            <>
+              <input
+                type="date"
+                name="startdate"
+                className="border px-3 py-1 rounded w-full"
+                value={startDate}
+                onChange={(e) => handleCustomRangeFilter(e)}
+              />
+
+              <input
+                type="date"
+                name="enddate"
+                className="border px-3 py-1 rounded w-full"
+                value={endDate}
+                onChange={(e) => handleCustomRangeFilter(e)}
+              />
+            </>
+          )}
+        </div>
+        <div className="flex gap-2">
+          {["All", "Paid", "Unpaid"].map((status) => (
+            <button
+              key={status}
+              onClick={() => handleStatusFilter(status)}
+              className={`px-4 py-2 rounded-md text-sm font-medium ${
+                statusFilter === status
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-200 text-gray-700"
+              }`}
+            >
+              {status}
+            </button>
+          ))}
+        </div>
         <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4 shadow-lg border-2 bg-white gap-y-4 rounded-md">
-          <div className="p-4">
-            <input
-              type="text"
-              placeholder="Search..."
-              autoFocus
-              value={searchTerm}
-              onChange={handleSearch}
-              className="p-2 border border-gray-300 rounded-md mb-4 w-full"
-            />
-          </div>
-          <div className="w-6/12 px-4 -mt-2">
-            <div className="flex flex-col sm:flex-row gap-4 items-end mb-6">
-              {/* Dropdown */}
-              <div className="flex-1 text-sm">
-                <label className="block font-medium mb-1">Date Filter</label>
-                <select
-                  className={`border px-3 py-2 rounded ${
-                    quickOption === "range" ? "w-full" : "w-full lg:w-3/12"
-                  }`}
-                  value={quickOption}
-                  onChange={(e) => handleQuickFilterChange(e.target.value)}
-                >
-                  <option value="any">Any Date</option>
-                  <option value="today">Today</option>
-                  <option value="month">This Month</option>
-                  <option value="sixmonths">Last 6 Months</option>
-                  <option value="range">Custom Range</option>
-                </select>
-              </div>
-
-              {/* Show range inputs only if 'range' is selected */}
-              {quickOption === "range" && (
-                <>
-                  <div className="flex-1 w-full text-sm">
-                    <label className="block font-medium mb-1">Start Date</label>
-                    <input
-                      type="date"
-                      className="border px-3 py-1 rounded w-full"
-                      value={startDate}
-                      onChange={(e) => setStartDate(e.target.value)}
-                    />
-                  </div>
-                  <div className="flex-1 w-full text-sm">
-                    <label className="block font-medium mb-1">End Date</label>
-                    <input
-                      type="date"
-                      className="border px-3 py-1 rounded w-full"
-                      value={endDate}
-                      onChange={(e) => setEndDate(e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <button
-                      onClick={handleRangeFilter}
-                      className="bg-blue-600 text-white px-5 py-1 rounded hover:bg-blue-700 transition mt-6 cursor-pointer"
-                    >
-                      Filter
-                    </button>
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
-
           <table className="min-w-full text-sm text-left text-gray-700 ">
             <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
               {type === "Rajputi Poshak" ? (
