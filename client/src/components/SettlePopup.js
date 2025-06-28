@@ -54,6 +54,23 @@ const SettlePopup = ({ handleCloseSettlePopup }) => {
       "taxCalculatedInfo.balance": updatedBalance,
       "invoiceInfo.settledDate": new Date().toISOString().slice(0, 10),
     });
+
+    // update dashboard info back
+    await getUpdatedInvoiceInfo();
+  };
+
+  const invoiceInfo_CollectionRef = collection(db, "Invoice_Info");
+  const getUpdatedInvoiceInfo = async () => {
+    const data = await getDocs(invoiceInfo_CollectionRef);
+    const filteredData = data.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+    const loggedInUser = localStorage.getItem("user");
+    const invoiceInfo = filteredData.filter(
+      (x) => x.loggedInUser === loggedInUser
+    );
+    localStorage.setItem("dashboardInfo", JSON.stringify(invoiceInfo));
   };
 
   const updateInvoiceLinkInfo = async () => {
