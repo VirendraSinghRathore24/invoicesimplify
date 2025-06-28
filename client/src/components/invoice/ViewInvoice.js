@@ -94,16 +94,6 @@ function ViewInvoice() {
   const getInvoiceData = async () => {
     try {
       setLoading(true);
-      const data = await getDocs(invoiceInfo_CollectionRef);
-      const filteredData = data.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
-
-      // const allBrandsInfo = filteredData.filter(
-      //   (x) => x.loggedInUser === loggedInUser
-      // );
-
       const allBrandsInfo = JSON.parse(localStorage.getItem("dashboardInfo"));
 
       const invoiceData = allBrandsInfo.filter((x) => x.id === id)[0];
@@ -113,6 +103,88 @@ function ViewInvoice() {
       toast.error("Failed to load invoice data. Please try again later.");
     } finally {
       setLoading(false);
+    }
+  };
+  const getCurrentDate = () => {
+    const now = new Date();
+
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+    const hours = String(now.getHours()).padStart(2, "0");
+    const minutes = String(now.getMinutes()).padStart(2, "0");
+
+    const formatted = `${day}/${month}/${year}  ${hours}:${minutes}`;
+    return formatted;
+  };
+  const getLinkStr = async (invoiceNumber) => {
+    const invoiceInfo_CollectionRef2 = collection(db, "Invoice_Info");
+    const data = await getDocs(invoiceInfo_CollectionRef2);
+    const filteredData = data.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+
+    const allBrandsInfo = filteredData.filter(
+      (x) => x.loggedInUser === loggedInUser
+    );
+
+    const invoiceData = allBrandsInfo.filter(
+      (x) => x.invoiceInfo.invoiceNumber === parseInt(invoiceNumber)
+    )[0];
+
+    return invoiceData.linkStr;
+  };
+  const handleWhatsApp = async () => {
+    try {
+      setLoading(true);
+
+      const linkStr = await getLinkStr(invoiceInfo.invoiceInfo.invoiceNumber);
+
+      const response = await fetch(
+        "https://invoicesimplify.onrender.com/send-sms",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: invoiceInfo.customerInfo.customerName,
+            to: "+91" + invoiceInfo.customerInfo.customerPhone,
+            businessname: invoiceInfo.businessInfo.name,
+            amount: invoiceInfo.amountInfo?.amount,
+            message:
+              "Dear " +
+              invoiceInfo.customerInfo.customerName +
+              ",\n\nThank you for your purchase! Your invoice is ready.\n\n" +
+              "You can view your invoice using the link below:\n\n" +
+              "https://invoicesimplify.netlify.app/ci/" +
+              linkStr +
+              "\n\nIf you have any questions, feel free to contact us.\n\n" +
+              "Best regards,\n" +
+              invoiceInfo.businessInfo.name +
+              "\n" +
+              invoiceInfo.businessInfo.phonePrimary,
+            urllink: "https://invoicesimplify.netlify.app/ci/" + linkStr,
+            date: getCurrentDate(),
+          }),
+        }
+      );
+
+      const result = await response.json();
+
+      //const res = await fetch("http://localhost:5001/send-message");
+      //const data = await res.json();
+      if (result.success) {
+        alert("Message sent successfully!");
+      } else {
+        alert("Failed to send message.");
+      }
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.error("Error sending message", error);
+      alert("Error sending message.", error);
     }
   };
   const handleLogin = () => {
@@ -159,7 +231,10 @@ function ViewInvoice() {
           </div> */}
 
           <div>
-            <button className="flex items-center bg-[#E5E7EB]  font-bold px-2 lg:px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300">
+            <button
+              onClick={() => handleWhatsApp()}
+              className="flex items-center bg-[#E5E7EB]  font-bold px-2 lg:px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
+            >
               <span className="mr-2">
                 <MessageCircle size={22} />
               </span>
@@ -195,10 +270,20 @@ function ViewInvoice() {
                 </div>
               </div>
 
-              <div className="flex flex-col font-semibold text-xs lg:text-md">
-                <div>M: {invoiceInfo?.businessInfo?.phonePrimary}</div>
+              <div className="flex flex-col font-semibold text-md hidden lg:block">
+                {invoiceInfo.businessInfo?.phonePrimary && (
+                  <div>M: {invoiceInfo.businessInfo.phonePrimary}</div>
+                )}
                 <div className="ml-4 lg:ml-6">
-                  {invoiceInfo?.businessInfo?.phoneSecondary}
+                  {invoiceInfo.businessInfo?.phoneSecondary}
+                </div>
+              </div>
+              <div className="flex flex-col font-semibold text-xs hidden max-lg:block">
+                {invoiceInfo.businessInfo?.phonePrimary && (
+                  <div>M: {invoiceInfo.businessInfo.phonePrimary}</div>
+                )}
+                <div className="ml-4 lg:ml-6">
+                  {invoiceInfo.businessInfo?.phoneSecondary}
                 </div>
               </div>
             </div>
@@ -208,9 +293,16 @@ function ViewInvoice() {
               </div>
             )}
             <hr className="w-full mt-4 border-[1.1px]"></hr>
-            <div className="py-2 text-center text-sm lg:text-md">
-              {invoiceInfo?.businessInfo?.address}
-            </div>
+            {invoiceInfo.businessInfo?.address && (
+              <div className="py-2 text-sm lg:text-md text-center hidden max-lg:block">
+                {invoiceInfo.businessInfo.address}
+              </div>
+            )}
+            {invoiceInfo.businessInfo?.address && (
+              <div className="py-2 text-md lg:text-md text-center hidden lg:block">
+                {invoiceInfo.businessInfo.address}
+              </div>
+            )}
             <hr className="w-full mt-1 border-[1.1px]"></hr>
             <div className="flex justify-between">
               <div className="w-full lg:w-8/12 mx-auto text-left font-semibold py-2">
