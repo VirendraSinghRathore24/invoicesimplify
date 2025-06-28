@@ -135,7 +135,9 @@ function AddTaxInfo() {
                   CGST%
                 </label>
                 <input
-                  type="text"
+                  type="number"
+                  min={0}
+                  max={100}
                   id="cgstAmount"
                   name="cgstAmount"
                   placeholder="Enter CGST%"
@@ -153,7 +155,9 @@ function AddTaxInfo() {
                   SGST%
                 </label>
                 <input
-                  type="text"
+                  type="number"
+                  min={0}
+                  max={100}
                   id="sgstAmount"
                   name="sgstAmount"
                   placeholder="Enter SGST%"

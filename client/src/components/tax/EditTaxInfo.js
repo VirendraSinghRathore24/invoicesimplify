@@ -135,7 +135,9 @@ function EditTaxInfo() {
                   CGST%
                 </label>
                 <input
-                  type="text"
+                  type="number"
+                  min={0}
+                  max={100}
                   id="cgstAmount"
                   name="cgstAmount"
                   placeholder="Enter CGST%"
@@ -153,8 +155,10 @@ function EditTaxInfo() {
                   SGST%
                 </label>
                 <input
-                  type="text"
+                  type="number"
                   id="sgstAmount"
+                  min={0}
+                  max={100}
                   name="sgstAmount"
                   placeholder="Enter SGST%"
                   value={inputs?.sgstAmount || ""}
