@@ -568,7 +568,12 @@ function Invoice() {
             )}
             <hr className="w-full mt-4 border-[1.1px]"></hr>
             {businessInfo?.address && (
-              <div className="py-2 text-sm lg:text-md text-center">
+              <div className="py-2 text-sm lg:text-md text-center hidden max-lg:block">
+                {businessInfo.address}
+              </div>
+            )}
+            {businessInfo?.address && (
+              <div className="py-2 text-md lg:text-md text-center hidden lg:block">
                 {businessInfo.address}
               </div>
             )}
