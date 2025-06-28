@@ -28,6 +28,7 @@ const MobileMenu = () => {
       await getTaxInfo();
       await getAdditionalInfo();
       await getInventoryItems();
+      await getAllInvoices();
       setLoading(false);
     } catch (err) {
       console.log(err);
@@ -118,6 +119,20 @@ const MobileMenu = () => {
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const invoiceInfo_CollectionRef = collection(db, "Invoice_Info");
+  const getAllInvoices = async (loggedInUser) => {
+    const data = await getDocs(invoiceInfo_CollectionRef);
+    const filteredData = data.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+
+    const invoiceInfo = filteredData.filter(
+      (x) => x.loggedInUser === loggedInUser
+    );
+    localStorage.setItem("dashboardInfo", JSON.stringify(invoiceInfo));
   };
 
   const menuItems = [

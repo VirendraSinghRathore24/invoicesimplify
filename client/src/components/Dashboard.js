@@ -412,7 +412,7 @@ const Dashboard = () => {
 
   const calculateProfit = (invoiceInfo) => {
     let totalProfit = 0;
-    invoiceInfo.forEach((item) => {
+    invoiceInfo?.forEach((item) => {
       item.rows.forEach((row) => {
         if (row.rate && row.buyPrice) {
           totalProfit += (row.rate - row.buyPrice) * row.qty;
