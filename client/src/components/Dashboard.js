@@ -425,19 +425,9 @@ const Dashboard = () => {
   //const invoiceInfo_CollectionRef = collection(db, "Invoice_Info");
   const getInvoiceInfo = async () => {
     setLoading(true);
-    // const data = await getDocs(invoiceInfo_CollectionRef);
-    // const filteredData = data.docs.map((doc) => ({
-    //   ...doc.data(),
-    //   id: doc.id,
-    // }));
-
-    // const loggedInUser = localStorage.getItem("user");
-    // const invoiceInfo = filteredData.filter(
-    //   (x) => x.loggedInUser === loggedInUser
-    // );
 
     const invoiceInfo = JSON.parse(localStorage.getItem("dashboardInfo"));
-    const totalAmount = invoiceInfo.reduce((acc, item) => {
+    const totalAmount = invoiceInfo?.reduce((acc, item) => {
       const amount = Math.round(
         item.amountInfo.amount +
           item.taxCalculatedInfo.cgst +
@@ -448,14 +438,14 @@ const Dashboard = () => {
 
     setAmount(totalAmount);
 
-    const totalBalance = invoiceInfo.reduce((acc, item) => {
+    const totalBalance = invoiceInfo?.reduce((acc, item) => {
       const balance = Math.round(item.taxCalculatedInfo.balance);
       return acc + balance;
     }, 0);
 
     setBalance(totalBalance);
 
-    const totalPaid = invoiceInfo.reduce((acc, item) => {
+    const totalPaid = invoiceInfo?.reduce((acc, item) => {
       const paid = Math.round(item.amountInfo.advance);
       return acc + paid;
     }, 0);
@@ -464,22 +454,16 @@ const Dashboard = () => {
 
     setTotalProft(calculateProfit(invoiceInfo));
 
-    // Calculate the settled count
-    // const totalSettled = invoiceInfo.filter(
-    //   (item) => item.taxCalculatedInfo.balance === 0
-    // ).length;
-    // setSettled(invoiceInfo.length - totalSettled);
-
-    const paidInvoices = invoiceInfo.filter(
+    const paidInvoices = invoiceInfo?.filter(
       (item) =>
         item.amountInfo.paymentType === "fullyPaid" ||
         item.taxCalculatedInfo.balance === 0
     ).length;
     setPaidInvoices(paidInvoices);
 
-    setSettled(invoiceInfo.length - paidInvoices);
+    setSettled(invoiceInfo?.length - paidInvoices);
 
-    const invoiceInfo1 = invoiceInfo.sort(
+    const invoiceInfo1 = invoiceInfo?.sort(
       (a, b) => b.invoiceInfo.invoiceNumber - a.invoiceInfo.invoiceNumber
     );
     setData(invoiceInfo1);
