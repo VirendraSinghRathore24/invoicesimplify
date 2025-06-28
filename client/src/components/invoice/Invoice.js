@@ -153,6 +153,7 @@ function Invoice() {
       additionalInfo,
       taxCalculatedInfo,
       loggedInUser,
+      linkStr,
     });
 
     const invoiceInfo_CollectionRef1 = collection(db, "Invoice_LinkInfo");
@@ -274,6 +275,7 @@ function Invoice() {
         await addInvoiceDataToDB(linkStr);
       }
 
+      linkStr = await getLinkStr(invoiceInfo.invoiceNumber);
       //const response = await fetch("http://localhost:5001/send-sms"
       const response = await fetch(
         "https://invoicesimplify.onrender.com/send-sms",
@@ -416,6 +418,25 @@ function Invoice() {
     )[0];
 
     return invoiceData !== undefined;
+  };
+
+  const getLinkStr = async (invoiceNumber) => {
+    const invoiceInfo_CollectionRef2 = collection(db, "Invoice_Info");
+    const data = await getDocs(invoiceInfo_CollectionRef2);
+    const filteredData = data.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+
+    const allBrandsInfo = filteredData.filter(
+      (x) => x.loggedInUser === loggedInUser
+    );
+
+    const invoiceData = allBrandsInfo.filter(
+      (x) => x.invoiceInfo.invoiceNumber === parseInt(invoiceNumber)
+    )[0];
+
+    return invoiceData.linkStr;
   };
 
   useEffect(() => {

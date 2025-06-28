@@ -33,6 +33,7 @@ import AboutUs from "./components/AboutUs";
 import ContactUs from "./components/ContactUs";
 import PrivacyPolicy from "./components/PrivacyPolicy";
 import TermsOfUse from "./components/TermsOfUse";
+import FirebasePhoneAuth from "./components/login/FirebasePhoneAuth";
 
 function App() {
   const location = useLocation();
@@ -100,6 +101,7 @@ function App() {
           <Route path="/contactus" element={<ContactUs />} />
           <Route path="/privacypolicy" element={<PrivacyPolicy />} />
           <Route path="/termsofuse" element={<TermsOfUse />} />
+          <Route path="/b" element={<FirebasePhoneAuth />} />
         </Routes>
 
         <ToastContainer />

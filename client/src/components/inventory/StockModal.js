@@ -31,6 +31,13 @@ function StockModal({ handleCloseStockModal, setItemAdded, editPost }) {
 
       event.preventDefault();
 
+      if (parseInt(inputs?.adjustQty) === 0) {
+        alert("Adjust Qunatity can not be zero !!!");
+        setLoading(false);
+        document.querySelector('input[name="adjustQty"]').focus();
+        return;
+      }
+
       // check if item is already added
 
       const isValid = validatePrices(inputs.buyPrice, inputs.sellPrice);
@@ -149,6 +156,9 @@ function StockModal({ handleCloseStockModal, setItemAdded, editPost }) {
   const handleStockTypeChange = (e) => {
     const selectedStockType = e.target.value;
     setStockType(selectedStockType);
+    setInputs((values) => ({ ...values, ["adjustQty"]: 0 }));
+    setAdded(false);
+    setReduced(false);
   };
 
   const handleLogin = () => {
