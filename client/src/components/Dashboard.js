@@ -516,7 +516,10 @@ const Dashboard = () => {
     let result = origionalData;
     if (status === "Paid") {
       result = origionalData.filter(
-        (x) => x.amountInfo.paymentType === "fullyPaid"
+        (x) =>
+          x.amountInfo.paymentType === "fullyPaid" ||
+          x.taxCalculatedInfo.balance === 0 ||
+          x.taxCalculatedInfo.balance === null
       );
     } else if (status === "Unpaid") {
       result = origionalData.filter((x) => x.taxCalculatedInfo.balance > 0);

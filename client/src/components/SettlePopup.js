@@ -53,6 +53,7 @@ const SettlePopup = ({ handleCloseSettlePopup }) => {
       "amountInfo.advance": updatedAdvance,
       "taxCalculatedInfo.balance": updatedBalance,
       "invoiceInfo.settledDate": new Date().toISOString().slice(0, 10),
+      "amountInfo.paymentType": updatedBalance === 0 ? "fullyPaid" : "advance",
     });
 
     // update dashboard info back
@@ -93,6 +94,8 @@ const SettlePopup = ({ handleCloseSettlePopup }) => {
     await updateDoc(codeDoc, {
       "amountInfo.advance": updatedAdvance,
       "taxCalculatedInfo.balance": updatedBalance,
+      "invoiceInfo.settledDate": new Date().toISOString().slice(0, 10),
+      "amountInfo.paymentType": updatedBalance === 0 ? "fullyPaid" : "advance",
     });
   };
 
