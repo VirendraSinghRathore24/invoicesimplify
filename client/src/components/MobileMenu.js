@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import { Menu, X, CircleCheckBig, ShieldCheck } from "lucide-react"; // optional: or use your own icons
 import { NavLink, useNavigate } from "react-router-dom";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../config/firebase";
+import Loader from "./Loader";
 
 const MobileMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
   const loggedInUser = localStorage.getItem("user");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -13,6 +17,106 @@ const MobileMenu = () => {
     if (res) {
       localStorage.clear();
       navigate("/login");
+    }
+  };
+
+  const handleSync = async () => {
+    // get all data from db and reload to local storage
+    try {
+      setLoading(true);
+      await getBusinessInfo();
+      await getTaxInfo();
+      await getAdditionalInfo();
+      await getInventoryItems();
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
+  };
+
+  const basicInfo_CollectionRef = collection(db, "Basic_Info");
+  const getBusinessInfo = async () => {
+    try {
+      const data = await getDocs(basicInfo_CollectionRef);
+      const filteredData = data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+
+      const loggedInUser = localStorage.getItem("user");
+      const basicInfo = filteredData.filter(
+        (x) => x.loggedInUser === loggedInUser
+      )[0];
+      localStorage.setItem(
+        "businessInfo",
+        JSON.stringify(basicInfo?.businessInfo)
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getTaxInfo = async () => {
+    try {
+      const data = await getDocs(basicInfo_CollectionRef);
+      const filteredData = data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+
+      const loggedInUser = localStorage.getItem("user");
+      const basicInfo = filteredData.filter(
+        (x) => x.loggedInUser === loggedInUser
+      )[0];
+      localStorage.setItem("taxInfo", JSON.stringify(basicInfo?.taxInfo));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getAdditionalInfo = async () => {
+    try {
+      const data = await getDocs(basicInfo_CollectionRef);
+      const filteredData = data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+
+      const loggedInUser = localStorage.getItem("user");
+      const basicInfo = filteredData.filter(
+        (x) => x.loggedInUser === loggedInUser
+      )[0];
+      localStorage.setItem(
+        "additionalInfo",
+        JSON.stringify(basicInfo?.additionalInfo)
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getInventoryItems = async () => {
+    try {
+      const inventoryInfo_CollectionRef = collection(db, "Inventory_Info");
+      const data = await getDocs(inventoryInfo_CollectionRef);
+      const filteredData = data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+
+      const loggedInUser = localStorage.getItem("user");
+      const inventoryInfo = filteredData.filter(
+        (x) => x.loggedInUser === loggedInUser
+      )[0];
+
+      // get items list
+      const inventoryItems = inventoryInfo.inventory.sort((a, b) =>
+        a.itemName.localeCompare(b.itemName)
+      );
+      localStorage.setItem("inventoryItems", JSON.stringify(inventoryItems));
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -76,6 +180,9 @@ const MobileMenu = () => {
             </NavLink>
           ))}
         </nav>
+        <div className="px-4 mb-2 bottom-0 mt-auto ">
+          <button onClick={handleSync}>Sync (Refresh)</button>
+        </div>
         <div className="p-4 bottom-0 mt-auto border-t text-center">
           <button onClick={handleLogout}>Logout</button>
         </div>
@@ -90,6 +197,7 @@ const MobileMenu = () => {
           </div>
         </div>
       </div>
+      {loading && <Loader />}
     </div>
   );
 };
