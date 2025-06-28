@@ -544,7 +544,15 @@ function Invoice() {
                 </div>
               </div>
 
-              <div className="flex flex-col font-semibold text-xs lg:text-md">
+              <div className="flex flex-col font-semibold text-md hidden lg:block">
+                {businessInfo?.phonePrimary && (
+                  <div>M: {businessInfo.phonePrimary}</div>
+                )}
+                <div className="ml-4 lg:ml-6">
+                  {businessInfo?.phoneSecondary}
+                </div>
+              </div>
+              <div className="flex flex-col font-semibold text-xs hidden max-lg:block">
                 {businessInfo?.phonePrimary && (
                   <div>M: {businessInfo.phonePrimary}</div>
                 )}
