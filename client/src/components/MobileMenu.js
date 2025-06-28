@@ -24,11 +24,12 @@ const MobileMenu = () => {
     // get all data from db and reload to local storage
     try {
       setLoading(true);
-      await getBusinessInfo();
-      await getTaxInfo();
-      await getAdditionalInfo();
-      await getInventoryItems();
-      await getAllInvoices();
+      const loggedInUser = localStorage.getItem("user");
+      await getBusinessInfo(loggedInUser);
+      await getTaxInfo(loggedInUser);
+      await getAdditionalInfo(loggedInUser);
+      await getInventoryItems(loggedInUser);
+      await getAllInvoices(loggedInUser);
       setLoading(false);
     } catch (err) {
       console.log(err);
@@ -37,7 +38,7 @@ const MobileMenu = () => {
   };
 
   const basicInfo_CollectionRef = collection(db, "Basic_Info");
-  const getBusinessInfo = async () => {
+  const getBusinessInfo = async (loggedInUser) => {
     try {
       const data = await getDocs(basicInfo_CollectionRef);
       const filteredData = data.docs.map((doc) => ({
@@ -45,7 +46,6 @@ const MobileMenu = () => {
         id: doc.id,
       }));
 
-      const loggedInUser = localStorage.getItem("user");
       const basicInfo = filteredData.filter(
         (x) => x.loggedInUser === loggedInUser
       )[0];
@@ -58,7 +58,7 @@ const MobileMenu = () => {
     }
   };
 
-  const getTaxInfo = async () => {
+  const getTaxInfo = async (loggedInUser) => {
     try {
       const data = await getDocs(basicInfo_CollectionRef);
       const filteredData = data.docs.map((doc) => ({
@@ -66,7 +66,6 @@ const MobileMenu = () => {
         id: doc.id,
       }));
 
-      const loggedInUser = localStorage.getItem("user");
       const basicInfo = filteredData.filter(
         (x) => x.loggedInUser === loggedInUser
       )[0];
@@ -76,7 +75,7 @@ const MobileMenu = () => {
     }
   };
 
-  const getAdditionalInfo = async () => {
+  const getAdditionalInfo = async (loggedInUser) => {
     try {
       const data = await getDocs(basicInfo_CollectionRef);
       const filteredData = data.docs.map((doc) => ({
@@ -84,7 +83,6 @@ const MobileMenu = () => {
         id: doc.id,
       }));
 
-      const loggedInUser = localStorage.getItem("user");
       const basicInfo = filteredData.filter(
         (x) => x.loggedInUser === loggedInUser
       )[0];
@@ -97,7 +95,7 @@ const MobileMenu = () => {
     }
   };
 
-  const getInventoryItems = async () => {
+  const getInventoryItems = async (loggedInUser) => {
     try {
       const inventoryInfo_CollectionRef = collection(db, "Inventory_Info");
       const data = await getDocs(inventoryInfo_CollectionRef);
@@ -106,7 +104,6 @@ const MobileMenu = () => {
         id: doc.id,
       }));
 
-      const loggedInUser = localStorage.getItem("user");
       const inventoryInfo = filteredData.filter(
         (x) => x.loggedInUser === loggedInUser
       )[0];

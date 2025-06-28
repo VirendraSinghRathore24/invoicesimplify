@@ -52,10 +52,12 @@ const Sidebar = () => {
     // get all data from db and reload to local storage
     try {
       setLoading(true);
-      await getBusinessInfo();
-      await getTaxInfo();
-      await getAdditionalInfo();
-      await getInventoryItems();
+      const loggedInUser = localStorage.getItem("user");
+      await getBusinessInfo(loggedInUser);
+      await getTaxInfo(loggedInUser);
+      await getAdditionalInfo(loggedInUser);
+      await getInventoryItems(loggedInUser);
+      await getAllInvoices(loggedInUser);
       setLoading(false);
     } catch (err) {
       console.log(err);
@@ -64,7 +66,7 @@ const Sidebar = () => {
   };
 
   const basicInfo_CollectionRef = collection(db, "Basic_Info");
-  const getBusinessInfo = async () => {
+  const getBusinessInfo = async (loggedInUser) => {
     try {
       const data = await getDocs(basicInfo_CollectionRef);
       const filteredData = data.docs.map((doc) => ({
@@ -72,7 +74,6 @@ const Sidebar = () => {
         id: doc.id,
       }));
 
-      const loggedInUser = localStorage.getItem("user");
       const basicInfo = filteredData.filter(
         (x) => x.loggedInUser === loggedInUser
       )[0];
@@ -85,7 +86,7 @@ const Sidebar = () => {
     }
   };
 
-  const getTaxInfo = async () => {
+  const getTaxInfo = async (loggedInUser) => {
     try {
       const data = await getDocs(basicInfo_CollectionRef);
       const filteredData = data.docs.map((doc) => ({
@@ -93,7 +94,6 @@ const Sidebar = () => {
         id: doc.id,
       }));
 
-      const loggedInUser = localStorage.getItem("user");
       const basicInfo = filteredData.filter(
         (x) => x.loggedInUser === loggedInUser
       )[0];
@@ -103,7 +103,7 @@ const Sidebar = () => {
     }
   };
 
-  const getAdditionalInfo = async () => {
+  const getAdditionalInfo = async (loggedInUser) => {
     try {
       const data = await getDocs(basicInfo_CollectionRef);
       const filteredData = data.docs.map((doc) => ({
@@ -111,7 +111,6 @@ const Sidebar = () => {
         id: doc.id,
       }));
 
-      const loggedInUser = localStorage.getItem("user");
       const basicInfo = filteredData.filter(
         (x) => x.loggedInUser === loggedInUser
       )[0];
@@ -124,7 +123,7 @@ const Sidebar = () => {
     }
   };
 
-  const getInventoryItems = async () => {
+  const getInventoryItems = async (loggedInUser) => {
     try {
       const inventoryInfo_CollectionRef = collection(db, "Inventory_Info");
       const data = await getDocs(inventoryInfo_CollectionRef);
@@ -133,7 +132,6 @@ const Sidebar = () => {
         id: doc.id,
       }));
 
-      const loggedInUser = localStorage.getItem("user");
       const inventoryInfo = filteredData.filter(
         (x) => x.loggedInUser === loggedInUser
       )[0];
@@ -148,6 +146,19 @@ const Sidebar = () => {
     }
   };
 
+  const invoiceInfo_CollectionRef = collection(db, "Invoice_Info");
+  const getAllInvoices = async (loggedInUser) => {
+    const data = await getDocs(invoiceInfo_CollectionRef);
+    const filteredData = data.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+
+    const invoiceInfo = filteredData.filter(
+      (x) => x.loggedInUser === loggedInUser
+    );
+    localStorage.setItem("dashboardInfo", JSON.stringify(invoiceInfo));
+  };
   return (
     <div className="w-64 h-screen bg-[#014459] text-white flex flex-col shadow-lg">
       <NavLink
