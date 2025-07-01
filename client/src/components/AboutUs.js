@@ -3,6 +3,18 @@ import Footer1 from "./Footer1";
 import Header1 from "./Header1";
 
 const AboutUs = () => {
+  const handleCreateInvoice = () => {
+    const user = localStorage.getItem("user");
+
+    if (user && user !== "undefined" && user !== "null") {
+      const newWindow = window.open("/createinvoice", "_blank");
+      if (newWindow) newWindow.opener = null;
+    } else {
+      const newWindow = window.open("/login", "_blank");
+      if (newWindow) newWindow.opener = null;
+    }
+  };
+
   useEffect(() => {
     window.scroll(0, 0);
   }, []);
@@ -103,12 +115,12 @@ const AboutUs = () => {
           <h3 className="text-xl font-bold mb-2">
             Ready to simplify invoicing?
           </h3>
-          <a
-            href="/signup"
+          <button
+            onClick={handleCreateInvoice}
             className="inline-block bg-indigo-600 text-white px-6 py-3 rounded-full hover:bg-indigo-700 transition"
           >
             Get Started Today
-          </a>
+          </button>
         </div>
       </div>
       <Footer1 />

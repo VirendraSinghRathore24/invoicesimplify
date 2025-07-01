@@ -218,7 +218,7 @@ function Inventory() {
                     </thead>
                     <tbody>
                       {filteredData &&
-                        filteredData.length > 0 &&
+                        filteredData?.length > 0 &&
                         filteredData.map((post, index) => (
                           <tr
                             key={index}
@@ -277,7 +277,7 @@ function Inventory() {
                             </td>
                           </tr>
                         ))}
-                      {filteredData.length === 0 && (
+                      {filteredData?.length === 0 && (
                         <tr>
                           <td
                             colSpan="9"

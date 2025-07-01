@@ -251,7 +251,7 @@ const AddInvoice = () => {
     }
 
     let info1 = localStorage.getItem("businessInfo");
-    if (info1 === null) {
+    if (info1 === "null") {
       alert("Please add business name to create invoice !!!");
       return;
     }
