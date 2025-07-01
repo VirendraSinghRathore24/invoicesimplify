@@ -1,28 +1,15 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import React, { useEffect } from "react";
+import Footer1 from "./Footer1";
+import Header1 from "./Header1";
 
 const AboutUs = () => {
+  useEffect(() => {
+    window.scroll(0, 0);
+  }, []);
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-white transition-colors duration-300">
       {/* Header */}
-      <header className="bg-white dark:bg-gray-800 shadow-md fixed top-0 left-0 w-full z-50">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-          <NavLink
-            to={"/"}
-            className="text-xl font-bold text-indigo-600 dark:text-white"
-          >
-            InvoiceSimplify
-          </NavLink>
-          <div className="flex items-center gap-4">
-            <button
-              //onClick={handleCreateInvoice}
-              className="bg-indigo-600 text-white px-4 py-2 rounded-xl hover:bg-indigo-700 transition"
-            >
-              Create Invoice
-            </button>
-          </div>
-        </div>
-      </header>
+      <Header1 />
       <div className="max-w-5xl mx-auto py-12 mt-20">
         {/* Heading */}
         <h1 className="text-4xl font-extrabold mb-6 text-center">
@@ -85,7 +72,7 @@ const AboutUs = () => {
                 Founder & Design Lead
               </p>
             </div>
-            <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md text-center">
+            {/* <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md text-center">
               <img
                 src="../images/sanju2.png"
                 alt="Team Member"
@@ -95,7 +82,7 @@ const AboutUs = () => {
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 Marketing Head
               </p>
-            </div>
+            </div> */}
             {/* Add more team members here */}
           </div>
         </div>
@@ -124,22 +111,7 @@ const AboutUs = () => {
           </a>
         </div>
       </div>
-      <footer className="bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 py-6 px-4 text-center border-t border-gray-200 dark:border-gray-700">
-        <div className="flex flex-col sm:flex-row justify-center gap-6 text-sm">
-          <NavLink to={"/aboutus"} className="hover:underline">
-            About Us
-          </NavLink>
-          <NavLink to={"/contactus"} className="hover:underline">
-            Contact Us
-          </NavLink>
-          <NavLink to={"/"} className="hover:underline">
-            Home
-          </NavLink>
-        </div>
-        <div className="mt-4 text-xs text-gray-500 dark:text-gray-400">
-          © {new Date().getFullYear()} InvoiceSimplify. All rights reserved.
-        </div>
-      </footer>
+      <Footer1 />
     </div>
   );
 };

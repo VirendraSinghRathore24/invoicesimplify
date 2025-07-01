@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { CheckCircle, Star, Moon, Sun } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
+import Footer1 from "./Footer1";
 const features = [
   "Create invoices in seconds",
   "Print or message with one click",
@@ -175,7 +176,8 @@ const Home = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-800 text-white py-8 px-6">
+      <Footer1 />
+      {/* <footer className="bg-gray-800 text-white py-8 px-6">
         <div className="max-w-6xl mx-auto grid gap-6 md:grid-cols-2">
           <div>
             <h4 className="text-lg font-semibold mb-2">About Us</h4>
@@ -189,15 +191,20 @@ const Home = () => {
             <h4 className="text-lg font-semibold mb-2">Contact Us</h4>
             <p className="text-sm text-gray-300">
               Email: support@invoicesimplify.com <br />
-              Phone: +91-9876543210
+              Phone: +91-9110674036
             </p>
           </div>
+        </div>
+        <div className="flex justify-center mt-6 text-sm gap-x-5">
+          <div>About Us</div>
+          <div>Privacy Policy</div>
+          <div>Terms of Use</div>
         </div>
         <div className="text-center mt-6 text-sm text-gray-400">
           &copy; {new Date().getFullYear()} InvoiceSimplify. All rights
           reserved.
         </div>
-      </footer>
+      </footer> */}
     </div>
   );
 };

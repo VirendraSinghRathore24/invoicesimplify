@@ -13,7 +13,7 @@ import { GrNotes } from "react-icons/gr";
 import { LuLayoutDashboard } from "react-icons/lu";
 import * as IoIcons from "react-icons/io";
 import { MdOutlineInventory } from "react-icons/md";
-import { MdLogout } from "react-icons/md";
+import { MdLogout, MdOutlineMessage } from "react-icons/md";
 import {
   LogOutIcon,
   ShieldCheck,
@@ -260,6 +260,12 @@ const Sidebar = () => {
             text="Sync (Refresh)"
             onClick={handleSync}
           />
+          {/* <SubMenuItem
+            icon={<MdOutlineMessage size={20} />}
+            text="SMS"
+            to="/sms"
+            active={location.pathname === "/sms"}
+          /> */}
           <SubMenuItem
             icon={<Trash2 size={18} />}
             text="Archived Invoices"

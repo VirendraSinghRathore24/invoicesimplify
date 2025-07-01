@@ -545,10 +545,11 @@ function Invoice() {
             <div className="flex justify-between">
               <div>
                 <img
-                  src="../images/matadi1.jpeg"
+                  src="../images/inv1.png"
                   className="h-10 lg:h-20 w-10 lg:w-20"
                 />
               </div>
+
               <div className="text-center">
                 <div className="text-md lg:text-3xl font-bold">
                   {businessInfo?.name}
@@ -823,6 +824,9 @@ function Invoice() {
                 For: {businessInfo?.name}
               </div>
             </div>
+          </div>
+          <div className="text-blue-600 text-xs m-2">
+            Powered & Secured by www.invoicesimplify.com
           </div>
         </div>
       </div>
