@@ -294,14 +294,14 @@ function Invoice() {
               customerInfo.customerName +
               ",\n\nThank you for your purchase! Your invoice is ready.\n\n" +
               "You can view your invoice using the link below:\n\n" +
-              "https://invoicesimplify.netlify.app/ci/" +
+              "https://invoicesimplify.com/ci/" +
               linkStr +
               "\n\nIf you have any questions, feel free to contact us.\n\n" +
               "Best regards,\n" +
               businessInfo.name +
               "\n" +
               businessInfo.phonePrimary,
-            urllink: "https://invoicesimplify.netlify.app/ci/" + linkStr,
+            urllink: "https://invoicesimplify.com/ci/" + linkStr,
             date: getCurrentDate(),
           }),
         }
