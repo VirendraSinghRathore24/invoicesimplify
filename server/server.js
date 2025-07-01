@@ -56,7 +56,7 @@ app.use(express.json());
 app.use(
   cors({
     //origin: "http://localhost:3000",
-    origin: "https://invoicesimplify.netlify.app",
+    origin: "https://invoicesimplify.com",
     credentials: true,
   })
 );
