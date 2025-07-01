@@ -466,7 +466,14 @@ function Invoice() {
     setTaxCalculatedInfo(JSON.parse(info7));
 
     let info8 = localStorage.getItem("rows");
-    setRows(JSON.parse(info8));
+    if (info8 !== null) {
+      const rowdata = JSON.parse(info8);
+      localStorage.setItem("addedRows", JSON.stringify(rowdata));
+      setRows(rowdata);
+    } else {
+      const addedRows = localStorage.getItem("addedRows");
+      setRows(JSON.parse(addedRows));
+    }
 
     let info9 = localStorage.getItem("total");
     setTotal(info9);
@@ -645,8 +652,8 @@ function Invoice() {
                   </thead>
                   <tbody>
                     {rows &&
-                      rows.length > 0 &&
-                      rows.map((row, index) => (
+                      rows?.length > 0 &&
+                      rows?.map((row, index) => (
                         <div>
                           <tr className="flex justify-between text-md mt-1 font-light w-full mx-auto gap-x-4">
                             <td className="w-[10%] ">{index + 1}.</td>
@@ -682,8 +689,8 @@ function Invoice() {
                   </thead>
                   <tbody>
                     {rows &&
-                      rows.length > 0 &&
-                      rows.map((row, index) => (
+                      rows?.length > 0 &&
+                      rows?.map((row, index) => (
                         <div>
                           <tr className="flex justify-between text-sm lg:text-md mt-1 font-light w-full mx-auto gap-x-4">
                             <td className="w-[40%] text-left text-xs">
