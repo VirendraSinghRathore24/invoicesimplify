@@ -171,7 +171,13 @@ function Invoice() {
     });
 
     // update dashboard
-    const dashboardInfo = JSON.parse(localStorage.getItem("dashboardInfo"));
+    // if it is first time then it will be null
+    const info = localStorage.getItem("dashboardInfo");
+    let dashboardInfo = [];
+    if (info !== null) {
+      dashboardInfo = JSON.parse(info);
+    }
+
     dashboardInfo.push({
       invoiceInfo,
       amountInfo,
@@ -183,6 +189,7 @@ function Invoice() {
       taxCalculatedInfo,
       loggedInUser,
     });
+
     localStorage.setItem("dashboardInfo", JSON.stringify(dashboardInfo));
 
     clearLocalStorage();
