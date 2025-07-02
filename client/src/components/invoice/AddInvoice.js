@@ -641,10 +641,10 @@ const AddInvoice = () => {
       </div>
       <div className="top-14 lg:top-0 mx-auto w-full h-[72px] text-white sticky bg-white shadow-lg">
         <div className="flex justify-between mx-auto font-bold text-md p-2 rounded-md fixed w-full lg:w-[81.5%]">
-          <div className="text-2xl text-black hidden lg:block">
+          <div className="text-xl text-black hidden lg:block">
             Create Invoice
           </div>
-          <div className="flex justify-between gap-x-4">
+          <div className="flex justify-between gap-x-4 text-sm">
             <button
               onClick={handleResetInvoice}
               className="bg-[#146eb4] top-14 text-white border-[1.4px] border-gray-400  py-2 px-6 font-semibold rounded-md  hover:scale-110 transition duration-300 ease-in cursor-pointer "
@@ -675,18 +675,18 @@ const AddInvoice = () => {
               <div className="flex flex-col w-full lg:w-6/12 mx-auto justify-start items-left mt-4 shadow-lg border-[1.2px] p-5 bg-white gap-y-4 rounded-md">
                 <div className="flex flex-col justify-start items-left gap-y-4 ">
                   <div className="flex ">
-                    <div className="text-xl text-gray-600 font-medium">
+                    <div className="text-lg text-gray-600 font-medium">
                       Customer
                     </div>
                   </div>
 
                   <div className="flex flex-col justify-start items-left">
-                    <div className="text-[14px] font-bold leading-5 mt-2">
+                    <div className="text-[13px] font-bold leading-5 mt-2">
                       Name
                     </div>
                     <div>
                       <input
-                        className="form-input w-full lg:w-8/12 block font-semibold text-[14px] rounded border border-gray-400 p-2 leading-5 "
+                        className="form-input w-full lg:w-8/12 block font-semibold text-[13px] rounded border border-gray-400 p-2 leading-5 "
                         required
                         autoFocus
                         name="custname"
@@ -702,15 +702,15 @@ const AddInvoice = () => {
                 </div>
 
                 <div className="flex flex-col ">
-                  <div className="text-[14px] font-bold leading-5 mt-2">
+                  <div className="text-[13px] font-bold leading-5 mt-2">
                     Mobile
                   </div>
                   <div className="flex justify-start items-left -ml-4">
-                    <span className="p-[7px] bg-[#eee] border border-[#ccc] border-r-0 rounded-l font-medium text-[14px]">
+                    <span className="p-[7px] bg-[#eee] border border-[#ccc] border-r-0 rounded-l font-medium text-[13px]">
                       +91
                     </span>
                     <input
-                      className="p-[5px] pl-[10px] border border-[#ccc] rounded-r w-[120px] text-[14px] text-left"
+                      className="p-[5px] pl-[10px] border border-[#ccc] rounded-r w-[120px] text-[13px] text-left"
                       type="text"
                       name="custphone"
                       value={customerPhone}
@@ -1025,10 +1025,10 @@ const AddInvoice = () => {
               <div className="flex flex-col lg:flex-row justify-between w-full mx-auto">
                 <div className="w-full lg:w-3/12 mt-2">
                   <div className="w-full mx-auto p-6 bg-white shadow-md border-[1.4px] rounded-md">
-                    <h2 className="text-xl font-semibold mb-4">Payment Type</h2>
+                    <h2 className="text-lg font-semibold mb-4">Payment Type</h2>
 
                     {/* Radio Options */}
-                    <div className="flex flex-col gap-6 mb-4">
+                    <div className="flex flex-col gap-6 mb-4 text-sm">
                       <label className="flex items-center gap-2">
                         <input
                           type="radio"
@@ -1059,7 +1059,7 @@ const AddInvoice = () => {
 
                     {/* Input field for Advance */}
                     {paymentType === "advance" && (
-                      <div className="mt-2">
+                      <div className="mt-2 text-sm">
                         <label className="block mb-1 font-medium">
                           Enter Advance Amount (₹)
                         </label>
@@ -1080,7 +1080,7 @@ const AddInvoice = () => {
                     )}
                   </div>
                 </div>
-                <div className="w-full lg:w-8/12">
+                <div className="w-full lg:w-8/12 text-sm">
                   <div className="w-full flex justify-end gap-x-10 mt-2">
                     <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-sm font-bold rounded-md uppercase">
                       SubTotal

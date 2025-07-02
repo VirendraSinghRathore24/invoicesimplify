@@ -184,13 +184,13 @@ function Inventory() {
               <div className="flex justify-end">
                 <button
                   onClick={() => setOpenItem(true)}
-                  className="border-1 px-4 py-2 bg-[#444] text-white font-bold rounded-md hover:bg-amber-800"
+                  className="border-1 px-4 py-2 bg-[#444] text-white font-bold rounded-md hover:bg-amber-800 text-sm"
                 >
                   {" "}
                   + Add Item
                 </button>
               </div>
-              <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4">
+              <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4 text-sm">
                 <div className="p-4">
                   <input
                     type="text"
@@ -224,12 +224,12 @@ function Inventory() {
                             key={index}
                             className={`border-t ${
                               index % 2 === 0 ? "bg-white" : "bg-gray-50"
-                            } hover:bg-gray-200`}
+                            } hover:bg-gray-200 text-xs`}
                           >
                             <td className="px-4 py-3 border-r border-b">
                               {index + 1}.
                             </td>
-                            <td className="px-4 py-3 border-r border-b">
+                            <td className="px-4 py-3 border-r border-b text-[13px]">
                               {post?.itemName}
                             </td>
                             <td className="px-4 py-3 border-r border-b">
@@ -250,7 +250,7 @@ function Inventory() {
                             <td className="px-4 py-3 border-r border-b">
                               <button
                                 onClick={() => handleStockModal(post, index)}
-                                className="text-blue-600 hover:text-red-800 font-semibold text-sm"
+                                className="text-blue-600 hover:text-red-800 font-semibold text-xs"
                               >
                                 Update
                                 {/* Tooltip */}
@@ -262,7 +262,7 @@ function Inventory() {
                             <td className="px-4 py-3 cursor-pointer border-r border-b">
                               <button
                                 onClick={() => handleEdit(post, index)}
-                                className="text-blue-600 hover:text-red-800 font-semibold text-sm"
+                                className="text-blue-600 hover:text-red-800 font-semibold text-xs"
                               >
                                 Edit
                               </button>
@@ -270,7 +270,7 @@ function Inventory() {
                             <td className="px-4 py-3 cursor-pointer border-b max-lg:hidden">
                               <button
                                 onClick={() => handleDelete(post)}
-                                className="text-red-600 hover:text-red-800 font-semibold text-sm"
+                                className="text-red-600 hover:text-red-800 font-semibold text-xs"
                               >
                                 Delete
                               </button>

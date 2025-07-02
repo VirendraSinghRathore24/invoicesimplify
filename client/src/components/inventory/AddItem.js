@@ -132,7 +132,7 @@ function AddItem({ handleCloseItem, setItemAdded }) {
       <div className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50">
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 max-lg:w-[96%]">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg lg:text-2xl font-bold text-gray-800 dark:text-white">
+            <h2 className="text-lg lg:text-xl font-bold text-gray-800 dark:text-white">
               Create New Item
             </h2>
             <button
@@ -145,7 +145,7 @@ function AddItem({ handleCloseItem, setItemAdded }) {
           <hr />
           <form
             onSubmit={handleSubmit}
-            className="space-y-4 text-gray-800 dark:text-white mt-3"
+            className="space-y-4 text-gray-800 dark:text-white mt-3 text-sm"
           >
             <div className="flex justify-between w-full gap-x-4">
               <div className="w-8/12">

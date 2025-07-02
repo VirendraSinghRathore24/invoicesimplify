@@ -109,7 +109,7 @@ function EditTaxInfo() {
               Edit Tax Information
             </h2>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6 text-sm">
               {/* GST */}
               <div>
                 <label htmlFor="gstNumber" className="block font-medium mb-1">

@@ -130,7 +130,7 @@ function EditItem({ handleCloseEditModal, setItemAdded, editPost }) {
         <hr />
         <form
           onSubmit={handleSubmit}
-          className="space-y-4 text-gray-800 dark:text-white mt-3"
+          className="space-y-4 text-gray-800 dark:text-white mt-3 text-sm"
         >
           <div className="flex justify-between w-full gap-x-4">
             <div className="w-8/12">

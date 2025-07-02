@@ -106,10 +106,10 @@ function AddTaxInfo() {
         <main className="flex-grow container mx-auto px-4 py-10">
           <div className="max-w-xl mx-auto bg-white dark:bg-gray-800 shadow-lg rounded-xl p-8">
             <h2 className="text-lg lg:text-2xl font-semibold mb-6 text-center">
-              Edit Tax Information
+              Add Tax Information
             </h2>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6 text-sm">
               {/* GST */}
               <div>
                 <label htmlFor="gstNumber" className="block font-medium mb-1">

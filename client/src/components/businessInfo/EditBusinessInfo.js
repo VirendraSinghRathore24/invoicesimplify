@@ -124,13 +124,13 @@ function EditBusinessInfo() {
       <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
         <main className="flex-grow container mx-auto px-4 py-10">
           <div className="max-w-10xl mx-auto bg-white dark:bg-gray-800 shadow-lg rounded-xl p-8">
-            <div className="text-2xl font-semibold mb-6 text-center">
+            <div className="text-xl font-semibold mb-6 text-center">
               Edit Business Information
             </div>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="flex flex-col gap-y-4 w-full md:w-7/12 mx-auto">
                 <div className="flex flex-col">
-                  <div className="text-md font-medium leading-5 text-gray-700 mb-1">
+                  <div className="text-sm font-medium leading-5 text-gray-700 mb-1">
                     Logo
                   </div>
                   <div>
@@ -140,10 +140,8 @@ function EditBusinessInfo() {
                   </div>
                 </div>
 
-                <div className="flex flex-col">
-                  <div className="text-md font-medium leading-5 mb-1">
-                    Title
-                  </div>
+                <div className="flex flex-col text-sm">
+                  <div className=" font-medium leading-5 mb-1">Title</div>
                   <div>
                     <input
                       className="w-full dark:bg-gray-700 border border-gray-400 border-[1.4px] dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -158,9 +156,9 @@ function EditBusinessInfo() {
                     />
                   </div>
                 </div>
-                <div className="flex flex-col lg:flex-row w-full gap-y-3 mx-auto justify-between gap-x-4">
+                <div className="flex text-sm flex-col lg:flex-row w-full gap-y-3 mx-auto justify-between gap-x-4">
                   <div className="flex flex-col w-full">
-                    <div className="text-md font-medium leading-5 text-gray-700 mb-1">
+                    <div className="font-medium leading-5 text-gray-700 mb-1">
                       Sub Title1
                     </div>
                     <div>
@@ -177,7 +175,7 @@ function EditBusinessInfo() {
                     </div>
                   </div>
                   <div className="flex flex-col w-full">
-                    <div className="text-md font-medium leading-5 text-gray-700 mb-1">
+                    <div className="font-medium leading-5 text-gray-700 mb-1">
                       Sub Title2
                     </div>
                     <div>
@@ -195,8 +193,8 @@ function EditBusinessInfo() {
                   </div>
                 </div>
 
-                <div className="flex flex-col">
-                  <div className="text-md font-medium leading-5 text-gray-700 mb-1">
+                <div className="flex flex-col text-sm">
+                  <div className="font-medium leading-5 text-gray-700 mb-1">
                     Address
                   </div>
                   <div>
@@ -212,10 +210,10 @@ function EditBusinessInfo() {
                     />
                   </div>
                 </div>
-                <div className="flex flex-col lg:flex-row w-full gap-y-3 mx-auto justify-between gap-x-4">
+                <div className="flex flex-col text-sm lg:flex-row w-full gap-y-3 mx-auto justify-between gap-x-4">
                   <div className="flex flex-col lg:flex-row w-full gap-y-3 lg:w-6/12 gap-x-4">
                     <div className="flex flex-col ">
-                      <div className="text-md font-bold leading-5 text-gray-700 mb-1">
+                      <div className="font-bold leading-5 text-gray-700 mb-1">
                         Phone (Primary)
                       </div>
                       <div className="flex justify-start items-left -ml-4">
@@ -235,7 +233,7 @@ function EditBusinessInfo() {
                     </div>
 
                     <div className="flex flex-col ">
-                      <div className="text-md font-bold leading-5 text-gray-700 mb-1">
+                      <div className="font-bold leading-5 text-gray-700 mb-1">
                         Phone (Secondary)
                       </div>
                       <div className="flex justify-start items-left -ml-4">
@@ -256,7 +254,7 @@ function EditBusinessInfo() {
                   </div>
 
                   <div className="flex flex-col w-8/12">
-                    <div className="text-md font-medium leading-5 text-gray-700 mb-1">
+                    <div className="font-medium leading-5 text-gray-700 mb-1">
                       Email
                     </div>
                     <div>
@@ -275,7 +273,7 @@ function EditBusinessInfo() {
                   </div>
                 </div>
                 <div>
-                  <div className="rounded-md flex justify-between gap-x-20 w-full mx-auto">
+                  <div className="rounded-md flex justify-between gap-x-20 w-full mx-auto text-sm">
                     <button
                       type="button"
                       onClick={() => navigate("/businessinfo")}

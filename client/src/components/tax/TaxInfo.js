@@ -126,7 +126,7 @@ const TaxInfo = () => {
             {!posts && (
               <div className="h-screen flex items-center justify-center ">
                 <div onClick={() => navigate("/addtaxinfo")}>
-                  <button className="border-2 bg-[#444] text-white fond-bold text-lg py-4 px-8 rounded-md cursor-pointer">
+                  <button className="border-2 bg-[#444] text-white fond-bold text-md py-4 px-8 rounded-md cursor-pointer">
                     {" "}
                     + Add Tax Info
                   </button>

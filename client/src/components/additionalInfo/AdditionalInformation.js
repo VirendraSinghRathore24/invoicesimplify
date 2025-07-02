@@ -94,7 +94,7 @@ const AdditionalInformation = () => {
             </div>
           )}
         </div>
-        <div>
+        <div className="text-sm">
           {posts && <div className="mt-4">Left Bottom Text</div>}
           {posts && (
             <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4">
@@ -248,7 +248,7 @@ const AdditionalInformation = () => {
           {!posts && (
             <div className="flex h-screen items-center justify-center ">
               <div onClick={() => navigate("/addadditionalinfo")}>
-                <button className="border-2 bg-[#444] text-white fond-bold text-lg py-4 px-8 rounded-md cursor-pointer">
+                <button className="border-2 bg-[#444] text-white fond-bold text-md py-4 px-8 rounded-md cursor-pointer">
                   {" "}
                   + Add Additional Info
                 </button>

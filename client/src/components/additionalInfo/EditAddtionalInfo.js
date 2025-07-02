@@ -110,7 +110,7 @@ function AddtionalInfo() {
           Edit Additional Information
         </div>
 
-        <div className="flex flex-col w-full my-auto px-4 shadow-lg border-2 p-5 bg-white gap-y-4 rounded-md mt-4">
+        <div className="flex flex-col w-full my-auto px-4 shadow-lg border-2 p-5 bg-white gap-y-4 rounded-md mt-4 text-sm">
           <form
             onSubmit={handleSubmit}
             className="w-full mx-auto flex flex-col md:flex-row justify-between "

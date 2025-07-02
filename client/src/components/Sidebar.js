@@ -161,10 +161,7 @@ const Sidebar = () => {
   };
   return (
     <div className="w-64 h-screen bg-[#014459] text-white flex flex-col shadow-lg">
-      <NavLink
-        className="text-2xl font-bold p-5 border-b border-white"
-        to={"/"}
-      >
+      <NavLink className="text-xl font-bold p-5 border-b border-white" to={"/"}>
         Invoice Simplify
       </NavLink>
       <div className="text-sm font-bold py-2 border-b border-white text-center flex items-center justify-start px-6 break-words">
@@ -174,7 +171,7 @@ const Sidebar = () => {
         {loggedInUser}
       </div>
 
-      <nav className="flex-1 px-4 py-2 overflow-y-auto">
+      <nav className="flex-1 px-4 py-2 overflow-y-auto text-sm">
         <SidebarItem
           icon={<LuLayoutDashboard size={20} />}
           text="Dashboard"

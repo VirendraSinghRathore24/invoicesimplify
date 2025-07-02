@@ -549,7 +549,7 @@ const Dashboard = () => {
 
   return (
     <div>
-      <div className="hidden lg:block top-0 mx-auto w-full h-[72px] text-white sticky bg-white shadow-lg">
+      <div className="hidden lg:block top-0 mx-auto w-full h-[68px] text-white sticky bg-white shadow-lg">
         <div className="flex justify-between mx-auto font-bold text-md  py-4 px-2 rounded-md fixed w-[81.5%]">
           <div className="text-2xl text-black">Dashboard</div>
         </div>
@@ -592,7 +592,7 @@ const Dashboard = () => {
             <h3 className="mt-2 text-2xl font-semibold">₹ {totalProfit}</h3>
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 text-xs">
           <input
             type="text"
             placeholder="Search..."
@@ -603,7 +603,7 @@ const Dashboard = () => {
           />
 
           <select
-            className="px-4 py-2 border rounded-lg w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="px-4 py-2 border rounded-lg text-xs w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
             value={quickOption}
             onChange={(e) => handleQuickFilterChange(e.target.value)}
           >
@@ -640,7 +640,7 @@ const Dashboard = () => {
             <button
               key={status}
               onClick={() => handleStatusFilter(status)}
-              className={`px-4 py-2 rounded-md text-sm font-medium ${
+              className={`px-4 py-2 rounded-md text-xs font-medium ${
                 statusFilter === status
                   ? "bg-blue-600 text-white"
                   : "bg-gray-200 text-gray-700"
@@ -651,8 +651,8 @@ const Dashboard = () => {
           ))}
         </div>
         <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4 shadow-lg border-2 bg-white gap-y-4 rounded-md">
-          <table className="min-w-full text-sm text-left text-gray-700 ">
-            <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
+          <table className="min-w-full text-xs text-left text-gray-700 ">
+            <thead className="bg-gray-100 text-xs text-gray-600 border-b">
               {type === "Rajputi Poshak" ? (
                 <tr>
                   {[
@@ -805,7 +805,7 @@ const Dashboard = () => {
                         <td className="px-4 py-3 border-r w-[10%] text-center">
                           <button
                             onClick={() => handleSettle(user)}
-                            className="text-blue-600 hover:text-blue-800 font-semibold text-sm"
+                            className="text-blue-600 hover:text-blue-800 font-semibold text-xs"
                           >
                             Settle
                           </button>
@@ -821,7 +821,7 @@ const Dashboard = () => {
                       <td className="px-4 py-3 border-r w-[8%]">
                         <button
                           onClick={() => handleView(user.id)}
-                          className="text-blue-600 hover:text-blue-800 font-semibold text-sm"
+                          className="text-blue-600 hover:text-blue-800 font-semibold text-xs"
                         >
                           View
                         </button>
@@ -829,7 +829,7 @@ const Dashboard = () => {
                       <td className="px-4 py-3 w-[8%]">
                         <button
                           onClick={() => handleDelete(user)}
-                          className="text-red-600 hover:text-red-800 font-semibold text-sm"
+                          className="text-red-600 hover:text-red-800 font-semibold text-xs"
                         >
                           Delete
                         </button>
