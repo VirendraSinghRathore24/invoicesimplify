@@ -10,12 +10,14 @@ const PrivacyPolicy = () => {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-white transition-colors duration-300">
       <Header1 />
       <div className="max-w-5xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 mt-20 mb-10">
-        <h1 className="text-4xl font-bold mb-6 text-center">Privacy Policy</h1>
+        <h1 className="text-2xl lg:text-3xl font-bold mb-6 text-center">
+          Privacy Policy
+        </h1>
         <p className="mb-6 text-center text-gray-600 dark:text-gray-400">
           Effective Date: June 11, 2025
         </p>
 
-        <section className="space-y-6 text-justify text-lg leading-relaxed">
+        <section className="space-y-6 text-justify text-md leading-relaxed">
           <p>
             At <strong>InvoiceSimplify</strong>, your privacy is our priority.
             This Privacy Policy describes how we collect, use, and protect your
@@ -23,7 +25,7 @@ const PrivacyPolicy = () => {
           </p>
 
           <div>
-            <h2 className="text-2xl font-semibold mb-2">
+            <h2 className="text-xl font-semibold mb-2">
               1. Information We Collect
             </h2>
             <ul className="list-disc list-inside">
@@ -39,7 +41,7 @@ const PrivacyPolicy = () => {
           </div>
 
           <div>
-            <h2 className="text-2xl font-semibold mb-2">
+            <h2 className="text-xl font-semibold mb-2">
               2. How We Use Your Information
             </h2>
             <p>We use your information to:</p>
@@ -52,7 +54,7 @@ const PrivacyPolicy = () => {
           </div>
 
           <div>
-            <h2 className="text-2xl font-semibold mb-2">
+            <h2 className="text-xl font-semibold mb-2">
               3. Sharing of Information
             </h2>
             <p>
@@ -63,7 +65,7 @@ const PrivacyPolicy = () => {
           </div>
 
           <div>
-            <h2 className="text-2xl font-semibold mb-2">4. Data Security</h2>
+            <h2 className="text-xl font-semibold mb-2">4. Data Security</h2>
             <p>
               We implement strong encryption and secure hosting environments to
               protect your data from unauthorized access.
@@ -71,7 +73,7 @@ const PrivacyPolicy = () => {
           </div>
 
           <div>
-            <h2 className="text-2xl font-semibold mb-2">5. Cookies</h2>
+            <h2 className="text-xl font-semibold mb-2">5. Cookies</h2>
             <p>
               We use cookies to improve user experience and analyze website
               traffic. You can control cookie preferences through your browser.
@@ -79,7 +81,7 @@ const PrivacyPolicy = () => {
           </div>
 
           <div>
-            <h2 className="text-2xl font-semibold mb-2">6. Your Rights</h2>
+            <h2 className="text-xl font-semibold mb-2">6. Your Rights</h2>
             <p>
               You can request to access, correct, or delete your personal data.
               Contact us at
@@ -94,7 +96,7 @@ const PrivacyPolicy = () => {
           </div>
 
           <div>
-            <h2 className="text-2xl font-semibold mb-2">
+            <h2 className="text-xl font-semibold mb-2">
               7. Changes to This Policy
             </h2>
             <p>

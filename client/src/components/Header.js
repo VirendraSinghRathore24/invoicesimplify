@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { User, LogOutIcon, IndianRupee } from "lucide-react";
 
-function Header() {
+function Header({ title }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
   const userCode = localStorage.getItem("user");
@@ -32,7 +32,7 @@ function Header() {
           <div
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             //onMouseLeave={() => setIsMenuOpen(false)}
-            className="cursor-pointer"
+            className="cursor-pointer flex justify-between"
           >
             <User color="black" size={32} />
           </div>

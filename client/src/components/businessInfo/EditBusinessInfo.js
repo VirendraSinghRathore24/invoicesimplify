@@ -114,14 +114,19 @@ function EditBusinessInfo() {
 
   return (
     <div>
-      <div className="hidden lg:block">
-        <Header />
+      <div className="hidden lg:block mb-12">
+        <div className="top-0 mx-auto w-full h-[68px] text-white fixed bg-white shadow-lg">
+          <div className="flex justify-between mx-auto font-bold text-md  py-4 px-2 rounded-md fixed w-[81.5%]">
+            <div className="text-xl text-black">Business Information</div>
+          </div>
+        </div>
       </div>
+
       <div className="hidden max-lg:block mb-16">
         <MobileMenu />
       </div>
 
-      <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+      <div className="flex flex-col  bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
         <main className="flex-grow container mx-auto px-4 py-10">
           <div className="max-w-10xl mx-auto bg-white dark:bg-gray-800 shadow-lg rounded-xl p-8">
             <div className="text-xl font-semibold mb-6 text-center">

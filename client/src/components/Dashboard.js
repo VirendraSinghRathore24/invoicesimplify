@@ -185,7 +185,7 @@ const Dashboard = () => {
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
 
-    const result = data.filter(
+    const result = data?.filter(
       (item) =>
         item.customerInfo.customerName
           .toLowerCase()
@@ -205,21 +205,21 @@ const Dashboard = () => {
     updatePaidAfterSearch(result);
     updateTotalProfitAfterSearch(result);
 
-    const totalPaidInvoices = result.filter(
+    const totalPaidInvoices = result?.filter(
       (item) =>
         item.amountInfo.paymentType === "fullyPaid" ||
         item.taxCalculatedInfo.balance === 0
     ).length;
-    setPaidInvoices(totalPaidInvoices);
+    setPaidInvoices(result ? totalPaidInvoices : 0);
 
     // const totalSettled = result.filter(
     //   (item) => item.taxCalculatedInfo.balance === 0
     // ).length;
-    setSettled(result.length - totalPaidInvoices);
+    setSettled(result ? result.length - totalPaidInvoices : 0);
   };
 
   const updateAmountAfterSearch = (result) => {
-    const totalAmount = result.reduce((acc, item) => {
+    const totalAmount = result?.reduce((acc, item) => {
       const amount = Math.round(
         item.amountInfo.amount +
           item.taxCalculatedInfo.cgst +
@@ -228,25 +228,25 @@ const Dashboard = () => {
       return acc + amount;
     }, 0);
 
-    setAmount(totalAmount);
+    setAmount(result ? totalAmount : 0);
   };
 
   const updateBalanceAfterSearch = (result) => {
-    const totalBalance = result.reduce((acc, item) => {
+    const totalBalance = result?.reduce((acc, item) => {
       const balance = Math.round(item.taxCalculatedInfo.balance);
       return acc + balance;
     }, 0);
 
-    setBalance(totalBalance);
+    setBalance(result ? totalBalance : 0);
   };
 
   const updatePaidAfterSearch = (result) => {
-    const totalPaid = result.reduce((acc, item) => {
+    const totalPaid = result?.reduce((acc, item) => {
       const paid = Math.round(item.amountInfo.advance);
       return acc + paid;
     }, 0);
 
-    setPaid(totalPaid);
+    setPaid(result ? totalPaid : 0);
   };
 
   const updateTotalProfitAfterSearch = (result) => {
@@ -383,31 +383,31 @@ const Dashboard = () => {
         : filteredData;
 
     if (sortConfig.key === "invoice") {
-      sortableData.sort(sortInvoiceNumber);
+      sortableData?.sort(sortInvoiceNumber);
       setFilteredData(sortableData);
     } else if (sortConfig.key === "name") {
-      sortableData.sort(sortCustomerName);
+      sortableData?.sort(sortCustomerName);
       setFilteredData(sortableData);
     } else if (sortConfig.key === "phone") {
-      sortableData.sort(sortCustomerPhone);
+      sortableData?.sort(sortCustomerPhone);
       setFilteredData(sortableData);
     } else if (sortConfig.key === "date") {
-      sortableData.sort(sortDate);
+      sortableData?.sort(sortDate);
       setFilteredData(sortableData);
     } else if (sortConfig.key === "delivery") {
-      sortableData.sort(sortDelivery);
+      sortableData?.sort(sortDelivery);
       setFilteredData(sortableData);
     } else if (sortConfig.key === "amount") {
-      sortableData.sort(sortAmount);
+      sortableData?.sort(sortAmount);
       setFilteredData(sortableData);
     } else if (sortConfig.key === "paid") {
-      sortableData.sort(sortPaid);
+      sortableData?.sort(sortPaid);
       setFilteredData(sortableData);
     } else if (sortConfig.key === "balance") {
-      sortableData.sort(sortBalance);
+      sortableData?.sort(sortBalance);
       setFilteredData(sortableData);
     } else if (sortConfig.key === "settle") {
-      sortableData.sort(sortSettle);
+      sortableData?.sort(sortSettle);
       setFilteredData(sortableData);
     }
     return filteredData;
@@ -453,7 +453,7 @@ const Dashboard = () => {
       return acc + paid;
     }, 0);
 
-    setPaid(totalPaid);
+    setPaid(invoiceInfo === null ? 0 : totalPaid);
 
     setTotalProft(calculateProfit(invoiceInfo));
 
@@ -462,15 +462,15 @@ const Dashboard = () => {
         item.amountInfo.paymentType === "fullyPaid" ||
         item.taxCalculatedInfo.balance === 0
     ).length;
-    setPaidInvoices(paidInvoices);
+    setPaidInvoices(invoiceInfo === null ? 0 : paidInvoices);
 
-    setSettled(invoiceInfo?.length - paidInvoices);
+    setSettled(invoiceInfo === null ? 0 : invoiceInfo?.length - paidInvoices);
 
     const invoiceInfo1 = invoiceInfo?.sort(
       (a, b) => b.invoiceInfo.invoiceNumber - a.invoiceInfo.invoiceNumber
     );
-    setData(invoiceInfo1);
-    setFilteredData(invoiceInfo1);
+    setData(invoiceInfo1 ?? []);
+    setFilteredData(invoiceInfo1 ?? []);
     setLoading(false);
   };
 
@@ -502,14 +502,14 @@ const Dashboard = () => {
 
     let result = origionalData;
     if (status === "Paid") {
-      result = origionalData.filter(
+      result = origionalData?.filter(
         (x) =>
           x.amountInfo.paymentType === "fullyPaid" ||
           x.taxCalculatedInfo.balance === 0 ||
           x.taxCalculatedInfo.balance === null
       );
     } else if (status === "Unpaid") {
-      result = origionalData.filter((x) => x.taxCalculatedInfo.balance > 0);
+      result = origionalData?.filter((x) => x.taxCalculatedInfo.balance > 0);
     }
 
     const invoiceInfo1 = result?.sort(
@@ -521,17 +521,17 @@ const Dashboard = () => {
     updatePaidAfterSearch(result);
     updateTotalProfitAfterSearch(result);
 
-    const totalPaidInvoices = result.filter(
+    const totalPaidInvoices = result?.filter(
       (item) =>
         item.amountInfo.paymentType === "fullyPaid" ||
         item.taxCalculatedInfo.balance === 0
     ).length;
-    setPaidInvoices(totalPaidInvoices);
+    setPaidInvoices(result ? totalPaidInvoices : 0);
 
     // const totalSettled = result.filter(
     //   (item) => item.taxCalculatedInfo.balance === 0
     // ).length;
-    setSettled(result.length - totalPaidInvoices);
+    setSettled(result ? result.length - totalPaidInvoices : 0);
   };
   const handleLogin = () => {
     const user = localStorage.getItem("user");
@@ -551,7 +551,7 @@ const Dashboard = () => {
     <div>
       <div className="hidden lg:block top-0 mx-auto w-full h-[68px] text-white sticky bg-white shadow-lg">
         <div className="flex justify-between mx-auto font-bold text-md  py-4 px-2 rounded-md fixed w-[81.5%]">
-          <div className="text-2xl text-black">Dashboard</div>
+          <div className="text-xl text-black">Dashboard</div>
         </div>
       </div>
 

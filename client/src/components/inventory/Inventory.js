@@ -90,8 +90,8 @@ function Inventory() {
     setLoading(true);
     const existingItems = JSON.parse(localStorage.getItem("inventoryItems"));
     setShowList(true);
-    setPosts(existingItems);
-    setFilteredData(existingItems);
+    setPosts(existingItems ?? []);
+    setFilteredData(existingItems ?? []);
     setLoading(false);
   };
 
@@ -167,17 +167,17 @@ function Inventory() {
 
   return (
     <div>
-      <div className="hidden lg:block">
-        <Header />
+      <div className="hidden lg:block mb-12">
+        <div className="top-0 mx-auto w-full h-[68px] text-white fixed bg-white shadow-lg">
+          <div className="flex justify-between mx-auto font-bold text-md  py-4 px-2 rounded-md fixed w-[81.5%]">
+            <div className="text-xl text-black">Inventory</div>
+          </div>
+        </div>
       </div>
       <div className="hidden max-lg:block mb-16">
         <MobileMenu />
       </div>
       <div className="p-2 lg:p-6">
-        <div className="flex flex-col w-full mx-auto font-bold text-2xl bg-gray-200 py-4 px-2 rounded-md">
-          Inventory
-        </div>
-
         <div className="flex flex-col w-full m-auto p-2 lg:p-4">
           {showList ? (
             <div>
@@ -203,7 +203,7 @@ function Inventory() {
                 </div>
                 <div className="overflow-auto h-[485px]">
                   <table className="min-w-full text-sm text-left text-gray-700">
-                    <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
+                    <thead className="bg-gray-100 text-xs  text-gray-600 border-b">
                       <tr>
                         <th className="px-4 py-3 border-r">S.No.</th>
                         <th className="px-4 py-3 border-r">Item Name</th>

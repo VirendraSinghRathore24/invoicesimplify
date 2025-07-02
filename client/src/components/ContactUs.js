@@ -40,7 +40,9 @@ const ContactUs = () => {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-white transition-colors duration-300">
       <Header1 />
       <div className="max-w-4xl mx-auto bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md mt-20 mb-5">
-        <h2 className="text-3xl font-bold mb-4 text-center">Contact Us</h2>
+        <h2 className="text-xl lg:text-2xl font-bold mb-4 text-center">
+          Contact Us
+        </h2>
         <p className="text-center mb-8 text-gray-600 dark:text-gray-300">
           Have questions or feedback? We’d love to hear from you.
         </p>
@@ -86,7 +88,7 @@ const ContactUs = () => {
 
             <button
               type="submit"
-              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded-md transition"
+              className="w-full bg-indigo-600 text-sm hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded-md transition"
             >
               Send Message
             </button>
@@ -95,27 +97,27 @@ const ContactUs = () => {
           {/* Contact Info */}
           <div className="flex flex-col justify-center space-y-6">
             <div>
-              <h4 className="text-lg font-semibold">📧 Email</h4>
-              <p className="text-gray-600 dark:text-gray-400">
+              <h4 className="text-md font-semibold">📧 Email</h4>
+              <p className="text-gray-600 dark:text-gray-400 text-sm">
                 support@invoicesimplify.com
               </p>
             </div>
             <div>
-              <h4 className="text-lg font-semibold">📍 Address</h4>
-              <p className="text-gray-600 dark:text-gray-400">
+              <h4 className="text-md font-semibold">📍 Address</h4>
+              <p className="text-gray-600 dark:text-gray-400 text-sm">
                 InvoiceSimplify HQ, <br />
                 Bhartiya City, Bengaluru, India - 560064
               </p>
             </div>
             <div>
-              <h4 className="text-lg font-semibold">📱 Phone</h4>
-              <p className="text-gray-600 dark:text-gray-400">
+              <h4 className="text-md font-semibold">📱 Phone</h4>
+              <p className="text-gray-600 dark:text-gray-400 text-sm">
                 +91 91106 74036
               </p>
             </div>
             <div>
-              <h4 className="text-lg font-semibold">🕒 Working Hours</h4>
-              <p className="text-gray-600 dark:text-gray-400">
+              <h4 className="text-md font-semibold">🕒 Working Hours</h4>
+              <p className="text-gray-600 dark:text-gray-400 text-sm">
                 Mon - Fri: 9 AM to 6 PM IST
               </p>
             </div>

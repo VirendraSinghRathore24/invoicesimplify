@@ -10,12 +10,14 @@ const TermsOfUse = () => {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-white transition-colors duration-300">
       <Header1 />
       <div className="max-w-5xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 mt-20 mb-10">
-        <h1 className="text-4xl font-bold mb-6 text-center">Terms of Use</h1>
+        <h1 className="text-2xl lg:text-3xl font-bold mb-6 text-center">
+          Terms of Use
+        </h1>
         <p className="text-center text-gray-600 dark:text-gray-400 mb-8">
           Last updated: June 11, 2025
         </p>
 
-        <section className="space-y-6 text-lg leading-relaxed text-justify">
+        <section className="space-y-6 text-md leading-relaxed text-justify">
           <p>
             Welcome to <strong>InvoiceSimplify</strong>. By using our website
             and services, you agree to be bound by the following terms and
@@ -23,7 +25,7 @@ const TermsOfUse = () => {
           </p>
 
           <div>
-            <h2 className="text-2xl font-semibold mb-2">
+            <h2 className="text-xl font-semibold mb-2">
               1. Acceptance of Terms
             </h2>
             <p>
@@ -34,7 +36,7 @@ const TermsOfUse = () => {
           </div>
 
           <div>
-            <h2 className="text-2xl font-semibold mb-2">2. Services Offered</h2>
+            <h2 className="text-xl font-semibold mb-2">2. Services Offered</h2>
             <p>
               InvoiceSimplify provides tools for creating, managing, and sending
               invoices. We reserve the right to modify or discontinue any part
@@ -43,7 +45,7 @@ const TermsOfUse = () => {
           </div>
 
           <div>
-            <h2 className="text-2xl font-semibold mb-2">
+            <h2 className="text-xl font-semibold mb-2">
               3. User Responsibilities
             </h2>
             <ul className="list-disc list-inside">
@@ -54,7 +56,7 @@ const TermsOfUse = () => {
           </div>
 
           <div>
-            <h2 className="text-2xl font-semibold mb-2">
+            <h2 className="text-xl font-semibold mb-2">
               4. Prohibited Activities
             </h2>
             <p>You may not:</p>
@@ -66,7 +68,7 @@ const TermsOfUse = () => {
           </div>
 
           <div>
-            <h2 className="text-2xl font-semibold mb-2">5. Termination</h2>
+            <h2 className="text-xl font-semibold mb-2">5. Termination</h2>
             <p>
               We reserve the right to suspend or terminate your access to our
               services at any time for violation of these terms or misuse of the
@@ -75,7 +77,7 @@ const TermsOfUse = () => {
           </div>
 
           <div>
-            <h2 className="text-2xl font-semibold mb-2">
+            <h2 className="text-xl font-semibold mb-2">
               6. Intellectual Property
             </h2>
             <p>
@@ -86,7 +88,7 @@ const TermsOfUse = () => {
           </div>
 
           <div>
-            <h2 className="text-2xl font-semibold mb-2">
+            <h2 className="text-xl font-semibold mb-2">
               7. Limitation of Liability
             </h2>
             <p>
@@ -96,7 +98,7 @@ const TermsOfUse = () => {
           </div>
 
           <div>
-            <h2 className="text-2xl font-semibold mb-2">8. Changes to Terms</h2>
+            <h2 className="text-xl font-semibold mb-2">8. Changes to Terms</h2>
             <p>
               We may update these Terms of Use from time to time. Continued use
               of the platform after such updates constitutes acceptance of the
@@ -105,7 +107,7 @@ const TermsOfUse = () => {
           </div>
 
           <div>
-            <h2 className="text-2xl font-semibold mb-2">9. Contact Us</h2>
+            <h2 className="text-xl font-semibold mb-2">9. Contact Us</h2>
             <p>
               If you have any questions about these Terms, please contact us at:
               <br />

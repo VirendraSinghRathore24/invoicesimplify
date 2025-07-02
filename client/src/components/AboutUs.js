@@ -24,12 +24,12 @@ const AboutUs = () => {
       <Header1 />
       <div className="max-w-5xl mx-auto py-12 mt-20">
         {/* Heading */}
-        <h1 className="text-4xl font-extrabold mb-6 text-center">
+        <h1 className="text-xl lg:text-3xl font-extrabold mb-6 text-center">
           About InvoiceSimplify
         </h1>
 
         {/* Intro Section */}
-        <p className="text-lg leading-7 mb-10 text-center max-w-3xl mx-auto">
+        <p className="text-md  leading-7 mb-10 text-center max-w-3xl mx-auto">
           At InvoiceSimplify, we are dedicated to making your invoicing process
           seamless, fast, and stress-free. Whether you're a freelancer, small
           business owner, or entrepreneur — our tool lets you create and manage
