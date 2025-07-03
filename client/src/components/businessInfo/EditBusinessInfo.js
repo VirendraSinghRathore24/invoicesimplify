@@ -298,7 +298,7 @@ function EditBusinessInfo() {
                             <div className="h-3 w-3 bg-[#d6f539] rounded-full animate-bounce"></div>
                           </div>
                         ) : (
-                          <div>Update Changes</div>
+                          <div>Update</div>
                         )}
                       </span>
                     </button>

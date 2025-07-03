@@ -238,8 +238,8 @@ function AddBusinessInfo() {
                     />
                   </div>
                 </div>
-                <div className="flex w-full mx-auto justify-between gap-x-4 text-sm">
-                  <div className="flex w-6/12 gap-x-4">
+                <div className="flex flex-col text-sm lg:flex-row w-full gap-y-3 mx-auto justify-between gap-x-4">
+                  <div className="flex flex-col lg:flex-row w-full gap-y-3 lg:w-6/12 gap-x-4">
                     <div className="flex flex-col ">
                       <div className="font-bold leading-5 text-gray-700 mb-1">
                         Phone (Primary)
@@ -321,7 +321,7 @@ function AddBusinessInfo() {
                             <div className="h-3 w-3 bg-[#d6f539] rounded-full animate-bounce"></div>
                           </div>
                         ) : (
-                          <div>Save Changes</div>
+                          <div>Save</div>
                         )}
                       </span>
                     </button>
