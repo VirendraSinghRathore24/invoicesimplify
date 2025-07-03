@@ -163,6 +163,7 @@ function Inventory() {
 
     let info1 = localStorage.getItem("inventory");
     setInputs(JSON.parse(info1));
+    window.scroll(0, 0);
   }, []);
 
   return (

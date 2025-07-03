@@ -198,6 +198,7 @@ function ViewInvoice() {
   useEffect(() => {
     handleLogin();
     getInvoiceData();
+    window.scroll(0, 0);
   }, []);
   return (
     <div>

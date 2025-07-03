@@ -93,6 +93,13 @@ function ViewInvoiceByCustomer() {
   const getInvoiceData = async () => {
     try {
       setLoading(true);
+
+      const infoData = localStorage.getItem(linkid);
+      if (infoData) {
+        const infoData1 = JSON.parse(infoData);
+        setInvoiceInfo(infoData1);
+        return;
+      }
       const data = await getDocs(invoiceInfo_CollectionRef);
       const filteredData = data.docs.map((doc) => ({
         ...doc.data(),
@@ -103,6 +110,7 @@ function ViewInvoiceByCustomer() {
 
       if (allBrandsInfo.length > 0) {
         setInvoiceInfo(allBrandsInfo[0]);
+        localStorage.setItem(linkid, JSON.stringify(allBrandsInfo[0]));
       } else {
         alert("No invoice found for this link.");
       }
@@ -115,6 +123,7 @@ function ViewInvoiceByCustomer() {
 
   useEffect(() => {
     getInvoiceData();
+    window.scroll(0, 0);
   }, []);
   return (
     <div>

@@ -496,6 +496,7 @@ function Invoice() {
 
   useEffect(() => {
     handleLogin();
+    window.scroll(0, 0);
   }, []);
 
   return (

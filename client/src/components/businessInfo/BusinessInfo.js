@@ -71,6 +71,7 @@ const BusinessInfo = () => {
       const data = JSON.parse(info);
       setPosts(data);
     }
+    window.scroll(0, 0);
   }, []);
 
   return (
