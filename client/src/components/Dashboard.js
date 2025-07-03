@@ -158,7 +158,7 @@ const Dashboard = () => {
     await addDoc(archiveCollectionRef, archivedInvoice);
   };
 
-  const    = (post) => {
+  const handleSettle = (post) => {
     let settleInfo = {};
     if (post.taxCalculatedInfo === "alltax") {
       settleInfo = {
