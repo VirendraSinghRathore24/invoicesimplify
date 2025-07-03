@@ -270,7 +270,7 @@ function ViewInvoice() {
                 </div>
               </div>
 
-              <div className="flex flex-col font-semibold text-md hidden lg:block">
+              <div className="flex flex-col font-semibold text-sm hidden lg:block">
                 {invoiceInfo.businessInfo?.phonePrimary && (
                   <div>M: {invoiceInfo.businessInfo.phonePrimary}</div>
                 )}
@@ -299,33 +299,33 @@ function ViewInvoice() {
               </div>
             )}
             {invoiceInfo.businessInfo?.address && (
-              <div className="py-1 text-md lg:text-md text-center hidden lg:block">
+              <div className="py-1 text-sm lg:text-md text-center hidden lg:block">
                 {invoiceInfo.businessInfo.address}
               </div>
             )}
             <hr className="w-full mt-1 border-[1.1px]"></hr>
             <div className="flex justify-between">
               <div className="w-full lg:w-8/12 mx-auto text-left font-semibold py-2">
-                <div className="mb-2 text-sm lg:text-[16px]">To:</div>
+                <div className="mb-2 text-sm lg:text-[15px]">To:</div>
 
-                <div className="text-sm lg:text-[16px]">
+                <div className="text-sm lg:text-[15px]">
                   {invoiceInfo?.customerInfo?.customerName}
                 </div>
-                <div className="text-sm lg:text-[16px]">
+                <div className="text-sm lg:text-[14px]">
                   {invoiceInfo?.customerInfo?.customerPhone}
                 </div>
               </div>
 
               <div className=" w-4/12 mx-auto flex flex-col gap-y-3 font-bold py-2">
                 <div className="w-full">
-                  <div className="text-end text-xs lg:text-sm">INVOICE</div>
+                  <div className="text-end text-xs ">INVOICE</div>
                   <div className="text-end text-gray-500 text-xs lg:text-sm">
                     {invoiceInfo?.invoiceInfo?.invoiceNumber}
                   </div>
                 </div>
 
                 <div className="w-full">
-                  <div className="text-end text-xs lg:text-sm">DATE</div>
+                  <div className="text-end text-xs ">DATE</div>
                   <div className="text-end text-gray-500 text-xs lg:text-sm">
                     {date}
                   </div>
@@ -336,7 +336,7 @@ function ViewInvoice() {
             <div className="overflow-hidden">
               <div className="overflow-hidden mt-2 hidden lg:block">
                 <table className=" w-full mx-auto text-center text-sm font-light">
-                  <thead className="text-md uppercase">
+                  <thead className="text-xs uppercase">
                     <tr className="flex justify-between w-full mx-auto gap-x-4">
                       <th className="w-[10%]">S.No.</th>
                       <th className="w-[40%] text-left">Description</th>
@@ -373,7 +373,7 @@ function ViewInvoice() {
               </div>
               <div className="overflow-hidden mt-2 hidden max-lg:block">
                 <table className=" w-full mx-auto text-center text-sm font-light">
-                  <thead className="text-sm uppercase">
+                  <thead className="text-xs uppercase">
                     <tr className="flex justify-between w-full mx-auto gap-x-4">
                       <th className="w-[40%] text-xs text-left">Desc</th>
                       <th className="w-[20%] text-xs">Rate</th>
@@ -412,63 +412,120 @@ function ViewInvoice() {
               <div className="flex flex-col w-full">
                 {
                   <div className="w-full flex justify-end gap-x-10">
-                    <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs lg:text-sm font-semibold rounded-md uppercase ">
+                    <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs font-semibold rounded-md uppercase ">
                       SubTotal{" "}
                     </div>
-                    <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-xs lg:text-sm font-semibold rounded-md ">
+                    <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-xs font-semibold rounded-md ">
                       ₹ {invoiceInfo?.amountInfo?.amount}
                     </div>
                   </div>
                 }
-                {invoiceInfo?.taxInfo?.cgstAmount && (
-                  <div className="border-b-2 border-dashed py-1"></div>
-                )}
-                {invoiceInfo?.taxInfo?.cgstAmount && (
-                  <div className="w-full flex justify-end gap-x-10">
-                    <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs lg:text-sm font-semibold rounded-md uppercase ">
-                      CGST {invoiceInfo?.taxInfo?.cgstAmount}%
+                {invoiceInfo?.taxInfo?.taxType === "alltax" &&
+                  invoiceInfo?.taxInfo?.cgstAmount && (
+                    <div className="border-b-2 border-dashed py-1"></div>
+                  )}
+                {invoiceInfo?.taxInfo?.taxType === "alltax" &&
+                  invoiceInfo?.taxInfo?.cgstAmount && (
+                    <div className="w-full flex justify-end gap-x-10">
+                      <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs  font-semibold rounded-md uppercase ">
+                        CGST {invoiceInfo?.taxInfo?.cgstAmount}%
+                      </div>
+                      <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-xs font-semibold rounded-md">
+                        ₹ {Math.round(invoiceInfo?.taxCalculatedInfo?.cgst)}
+                      </div>
                     </div>
-                    <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-xs lg:text-sm font-semibold rounded-md">
-                      ₹ {Math.round(invoiceInfo?.taxCalculatedInfo?.cgst)}
+                  )}
+                {invoiceInfo?.taxInfo?.taxType === "alltax" &&
+                  invoiceInfo?.taxInfo?.cgstAmount && (
+                    <div className="border-b-2 border-dashed py-1"></div>
+                  )}
+                {invoiceInfo?.taxInfo?.taxType === "alltax" &&
+                  invoiceInfo?.taxInfo?.sgstAmount && (
+                    <div className="w-full flex justify-end gap-x-10">
+                      <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs  font-semibold rounded-md uppercase ">
+                        SGST {invoiceInfo?.taxInfo?.sgstAmount}%
+                      </div>
+                      <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-xs  font-semibold rounded-md ">
+                        ₹ {Math.round(invoiceInfo?.taxCalculatedInfo?.sgst)}
+                      </div>
                     </div>
-                  </div>
-                )}
-                {invoiceInfo?.taxInfo?.cgstAmount && (
-                  <div className="border-b-2 border-dashed py-1"></div>
-                )}
-                {invoiceInfo?.taxInfo?.sgstAmount && (
-                  <div className="w-full flex justify-end gap-x-10">
-                    <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs lg:text-sm font-semibold rounded-md uppercase ">
-                      SGST {invoiceInfo?.taxInfo?.sgstAmount}%
+                  )}
+                {invoiceInfo?.taxInfo?.taxType === "alltax" &&
+                  invoiceInfo?.taxInfo?.sgstAmount && (
+                    <div className="border-b-2 border-dashed py-1"></div>
+                  )}
+                {invoiceInfo?.taxInfo?.taxType === "alltax" &&
+                  invoiceInfo?.taxInfo?.igstAmount && (
+                    <div className="w-full flex justify-end gap-x-10">
+                      <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs  font-semibold rounded-md uppercase ">
+                        IGST {invoiceInfo?.taxInfo?.igstAmount}%
+                      </div>
+                      <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-xs  font-semibold rounded-md ">
+                        ₹ {Math.round(invoiceInfo?.taxCalculatedInfo?.igst)}
+                      </div>
                     </div>
-                    <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-xs lg:text-sm font-semibold rounded-md ">
-                      ₹ {Math.round(invoiceInfo?.taxCalculatedInfo?.sgst)}
+                  )}
+                {invoiceInfo?.taxInfo?.taxType === "alltax" &&
+                  invoiceInfo?.taxInfo?.igstAmount && (
+                    <div className="border-b-2 border-dashed py-1"></div>
+                  )}
+                {invoiceInfo?.taxInfo?.taxType === "alltax" &&
+                  invoiceInfo?.taxInfo?.ugstAmount && (
+                    <div className="w-full flex justify-end gap-x-10">
+                      <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs  font-semibold rounded-md uppercase ">
+                        UGST {invoiceInfo?.taxInfo?.ugstAmount}%
+                      </div>
+                      <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-xs  font-semibold rounded-md ">
+                        ₹ {Math.round(invoiceInfo?.taxCalculatedInfo?.ugst)}
+                      </div>
                     </div>
-                  </div>
-                )}
-                {invoiceInfo?.taxInfo?.sgstAmount && (
-                  <div className="border-b-2 border-dashed py-1"></div>
-                )}
+                  )}
+                {invoiceInfo?.taxInfo?.taxType === "alltax" &&
+                  invoiceInfo?.taxInfo?.ugstAmount && (
+                    <div className="border-b-2 border-dashed py-1"></div>
+                  )}
+                {invoiceInfo?.taxInfo?.taxType === "tax" &&
+                  invoiceInfo?.taxInfo?.taxAmount && (
+                    <div className="w-full flex justify-end gap-x-10">
+                      <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs  font-semibold rounded-md uppercase ">
+                        Tax {invoiceInfo?.taxInfo?.taxAmount}%
+                      </div>
+                      <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-xs  font-semibold rounded-md ">
+                        ₹ {Math.round(invoiceInfo?.taxCalculatedInfo?.tax)}
+                      </div>
+                    </div>
+                  )}
+                {invoiceInfo?.taxInfo?.taxType === "tax" &&
+                  invoiceInfo?.taxInfo?.taxAmount && (
+                    <div className="border-b-2 border-dashed py-1"></div>
+                  )}
                 <div className="w-full flex justify-end gap-x-12">
                   <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs lg:text-sm font-bold rounded-md uppercase text-center">
                     Total{" "}
                   </div>
                   <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-xs lg:text-sm font-bold rounded-md ">
                     ₹{" "}
-                    {Math.round(
-                      invoiceInfo?.amountInfo?.amount +
-                        invoiceInfo?.taxCalculatedInfo?.sgst +
-                        invoiceInfo?.taxCalculatedInfo?.cgst
-                    )}
+                    {invoiceInfo?.taxCalculatedInfo?.taxType === "alltax"
+                      ? Math.round(
+                          invoiceInfo?.amountInfo?.amount +
+                            invoiceInfo?.taxCalculatedInfo?.sgst +
+                            invoiceInfo?.taxCalculatedInfo?.cgst +
+                            invoiceInfo?.taxCalculatedInfo?.igst +
+                            invoiceInfo?.taxCalculatedInfo?.ugst
+                        )
+                      : Math.round(
+                          invoiceInfo?.amountInfo?.amount +
+                            invoiceInfo?.taxCalculatedInfo?.tax
+                        )}
                   </div>
                 </div>
                 <div className="border-b-2 border-dashed py-1"></div>
                 {invoiceInfo?.amountInfo?.paymentType === "advance" && (
                   <div className="w-full flex justify-end gap-x-10 mt-2">
-                    <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs lg:text-sm font-bold rounded-md uppercase">
+                    <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs  font-bold rounded-md uppercase">
                       Advance
                     </div>
-                    <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-xs lg:text-sm font-bold rounded-md">
+                    <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-xs  font-bold rounded-md">
                       ₹ {invoiceInfo?.amountInfo?.advance}
                     </div>
                   </div>
@@ -483,17 +540,26 @@ function ViewInvoice() {
                     <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-xs lg:text-sm font-bold rounded-md">
                       ₹{" "}
                       {Math.round(invoiceInfo?.taxCalculatedInfo.balance) ??
-                        Math.round(
-                          parseInt(
-                            invoiceInfo?.amountInfo.amount +
-                              invoiceInfo?.taxCalculatedInfo?.cgst +
-                              invoiceInfo?.taxCalculatedInfo?.sgst
+                      invoiceInfo?.taxCalculatedInfo?.taxType === "alltax"
+                        ? Math.round(
+                            parseInt(
+                              invoiceInfo?.amountInfo.amount +
+                                invoiceInfo?.taxCalculatedInfo?.cgst +
+                                invoiceInfo?.taxCalculatedInfo?.sgst +
+                                invoiceInfo?.taxCalculatedInfo?.igst +
+                                invoiceInfo?.taxCalculatedInfo?.ugst
+                            )
                           )
-                        )}
+                        : Math.round(
+                            parseInt(
+                              invoiceInfo?.amountInfo.amount +
+                                invoiceInfo?.taxCalculatedInfo?.tax
+                            )
+                          )}
                     </div>
                   </div>
                 ) : (
-                  <div className="w-full flex justify-end gap-x-10 mt-2 font-bold text-md lg:text-lg text-green-800">
+                  <div className="w-full flex justify-end gap-x-10 mt-2 font-bold text-sm lg:text-md text-green-800">
                     Fully Paid
                   </div>
                 )}

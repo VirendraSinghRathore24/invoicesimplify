@@ -684,7 +684,7 @@ function Invoice() {
               </div>
               <div className="overflow-hidden mt-2 hidden max-lg:block">
                 <table className=" w-full mx-auto text-center text-sm font-light">
-                  <thead className="text-sm uppercase">
+                  <thead className="text-xs uppercase">
                     <tr className="flex justify-between w-full mx-auto gap-x-4">
                       <th className="w-[40%] text-xs text-left">Desc</th>
                       <th className="w-[20%] text-xs">Rate</th>
@@ -827,13 +827,19 @@ function Invoice() {
                     <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-xs lg:text-sm  font-bold rounded-md">
                       ₹{" "}
                       {Math.round(taxCalculatedInfo.balance) ??
-                        Math.round(
-                          parseInt(
-                            amountInfo.amount +
-                              taxCalculatedInfo?.cgst +
-                              taxCalculatedInfo?.sgst
+                      taxCalculatedInfo?.taxType === "alltax"
+                        ? Math.round(
+                            parseInt(
+                              amountInfo.amount +
+                                taxCalculatedInfo?.cgst +
+                                taxCalculatedInfo?.sgst +
+                                taxCalculatedInfo?.igst +
+                                taxCalculatedInfo?.ugst
+                            )
                           )
-                        )}
+                        : Math.round(
+                            parseInt(amountInfo.amount + taxCalculatedInfo?.tax)
+                          )}
                     </div>
                   </div>
                 ) : (
