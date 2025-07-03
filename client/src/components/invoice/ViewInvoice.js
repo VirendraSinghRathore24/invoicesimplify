@@ -553,13 +553,13 @@ function ViewInvoice() {
                                 invoiceInfo?.taxCalculatedInfo?.sgst +
                                 invoiceInfo?.taxCalculatedInfo?.igst +
                                 invoiceInfo?.taxCalculatedInfo?.ugst
-                            )
+                            ) - parseInt(invoiceInfo?.amountInfo?.advance)
                           )
                         : Math.round(
                             parseInt(
                               invoiceInfo?.amountInfo.amount +
                                 invoiceInfo?.taxCalculatedInfo?.tax
-                            )
+                            ) - parseInt(invoiceInfo?.amountInfo?.advance)
                           )}
                     </div>
                   </div>

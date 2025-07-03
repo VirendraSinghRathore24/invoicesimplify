@@ -834,16 +834,10 @@ function Invoice() {
                       {Math.round(taxCalculatedInfo.balance) ??
                       taxCalculatedInfo?.taxType === "alltax"
                         ? Math.round(
-                            parseInt(
-                              amountInfo.amount +
-                                taxCalculatedInfo?.cgst +
-                                taxCalculatedInfo?.sgst +
-                                taxCalculatedInfo?.igst +
-                                taxCalculatedInfo?.ugst
-                            )
+                            parseInt(total) - parseInt(amountInfo?.advance)
                           )
                         : Math.round(
-                            parseInt(amountInfo.amount + taxCalculatedInfo?.tax)
+                            parseInt(total) - parseInt(amountInfo?.advance)
                           )}
                     </div>
                   </div>
