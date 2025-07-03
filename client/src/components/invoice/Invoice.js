@@ -172,28 +172,24 @@ function Invoice() {
 
     // update dashboard
     // if it is first time then it will be null
-    const info = localStorage.getItem("dashboardInfo");
-    let dashboardInfo = [];
-    if (info !== null) {
-      dashboardInfo = JSON.parse(info);
-    }
 
-    dashboardInfo.push({
-      invoiceInfo,
-      amountInfo,
-      customerInfo,
-      rows,
-      businessInfo,
-      taxInfo,
-      additionalInfo,
-      taxCalculatedInfo,
-      loggedInUser,
-    });
-
-    localStorage.setItem("dashboardInfo", JSON.stringify(dashboardInfo));
+    await getInvoiceInfo();
 
     clearLocalStorage();
     await updateInvoiceNumber();
+  };
+
+  const getInvoiceInfo = async () => {
+    const data = await getDocs(invoiceInfo_CollectionRef);
+    const filteredData = data.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+
+    const invoiceInfo = filteredData.filter(
+      (x) => x.loggedInUser === loggedInUser
+    );
+    localStorage.setItem("dashboardInfo", JSON.stringify(invoiceInfo));
   };
 
   function generateBase62String(length = 35) {
