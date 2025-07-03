@@ -559,7 +559,7 @@ function Invoice() {
             <div className="flex justify-between">
               <div>
                 <img
-                  src="../images/inv1.png"
+                  src="../images/matadi1.jpeg"
                   className="h-10 lg:h-20 w-10 lg:w-20"
                 />
               </div>
@@ -668,9 +668,11 @@ function Invoice() {
                             <td className="w-[20%] ">{row.rate}</td>
                             <td className="w-[10%] ">
                               {row.qty}{" "}
-                              <span className="ml-1 uppercase">
-                                {row?.selectedUnit}
-                              </span>
+                              {row?.selectedUnit !== "none" && (
+                                <span className="ml-1 uppercase">
+                                  {row?.selectedUnit}
+                                </span>
+                              )}
                             </td>
                             <td className="w-[20%]"> {row.amount}</td>
                           </tr>
@@ -706,9 +708,11 @@ function Invoice() {
                             <td className="w-[20%] text-xs">{row?.rate}</td>
                             <td className="w-[15%] text-xs">
                               {row?.qty}{" "}
-                              <span className="ml-1 uppercase text-xs">
-                                {row?.selectedUnit}
-                              </span>
+                              {row.selectedUnit !== "none" && (
+                                <span className="ml-1 uppercase text-xs">
+                                  {row?.selectedUnit}
+                                </span>
+                              )}
                             </td>
                             <td className="w-[25%] text-xs"> {row?.amount}</td>
                           </tr>

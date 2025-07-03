@@ -164,7 +164,7 @@ const Sidebar = () => {
       <NavLink className="text-xl font-bold p-5 border-b border-white" to={"/"}>
         Invoice Simplify
       </NavLink>
-      <div className="text-sm font-bold py-2 border-b border-white text-center flex items-center justify-start px-6 break-words">
+      <div className="text-sm font-bold break-all py-2 border-b border-white text-center flex items-center justify-start px-6 break-words">
         <div className="w-8 h-8 bg-amber-500 text-white rounded-full flex items-center justify-center mr-2">
           {loggedInUser?.charAt(0).toUpperCase()}
         </div>

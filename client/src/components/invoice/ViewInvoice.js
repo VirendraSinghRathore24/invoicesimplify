@@ -357,9 +357,11 @@ function ViewInvoice() {
                             <td className="w-[20%] ">{row?.rate}</td>
                             <td className="w-[10%] ">
                               {row?.qty}{" "}
-                              <span className="ml-1 uppercase">
-                                {row?.selectedUnit}
-                              </span>
+                              {row.selectedUnit !== "none" && (
+                                <span className="ml-1 uppercase">
+                                  {row?.selectedUnit}
+                                </span>
+                              )}
                             </td>
                             <td className="w-[20%]"> {row?.amount}</td>
                           </tr>
@@ -394,9 +396,11 @@ function ViewInvoice() {
                             <td className="w-[20%] text-xs ">{row?.rate}</td>
                             <td className="w-[15%] text-xs ">
                               {row?.qty}{" "}
-                              <span className="ml-1 uppercase">
-                                {row?.selectedUnit}
-                              </span>
+                              {row.selectedUnit !== "none" && (
+                                <span className="ml-1 uppercase">
+                                  {row?.selectedUnit}
+                                </span>
+                              )}
                             </td>
                             <td className="w-[25%] text-xs"> {row?.amount}</td>
                           </tr>

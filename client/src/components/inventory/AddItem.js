@@ -200,6 +200,8 @@ function AddItem({ handleCloseItem, setItemAdded }) {
                   >
                     <option value="pcs">Pieces(PCS)</option>
                     <option value="mtr">Meters(MTR)</option>
+                    <option value="hour">Hours(HRS)</option>
+                    <option value="none">None(None)</option>
                   </select>
                 </div>
               </div>

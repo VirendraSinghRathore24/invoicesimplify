@@ -781,32 +781,33 @@ const AddInvoice = () => {
                     </div>
                   </div>
                 </div>
-                {type === "Rajputi Poshak" && (
-                  <div className="flex flex-col">
+                {type === "Rajputi Poshak" ||
+                  (type === "Service Center" && (
                     <div className="flex flex-col">
-                      <div className="text-xs font-medium leading-5 mt-2">
-                        Expected Delivery
-                      </div>
-                      <div>
-                        <input
-                          className="w-12/12 lg:w-3/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5 "
-                          required
-                          name="expecteddate"
-                          placeholder="Date"
-                          type="date"
-                          value={expectedDate}
-                          onChange={(e) => {
-                            setExpectedDate(e.target.value);
-                            localStorage.setItem(
-                              "expecteddate",
-                              e.target.value
-                            );
-                          }}
-                        />
+                      <div className="flex flex-col">
+                        <div className="text-xs font-medium leading-5 mt-2">
+                          Expected Delivery
+                        </div>
+                        <div>
+                          <input
+                            className="w-12/12 lg:w-3/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5 "
+                            required
+                            name="expecteddate"
+                            placeholder="Date"
+                            type="date"
+                            value={expectedDate}
+                            onChange={(e) => {
+                              setExpectedDate(e.target.value);
+                              localStorage.setItem(
+                                "expecteddate",
+                                e.target.value
+                              );
+                            }}
+                          />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                )}
+                  ))}
               </div>
             </div>
 
@@ -825,7 +826,7 @@ const AddInvoice = () => {
                     </tr>
                   </thead>
 
-                  <tbody className="max-md:hidden ">
+                  <tbody className="max-lg:hidden ">
                     {rows &&
                       rows.length > 0 &&
                       rows.map((row, index) => (
@@ -900,9 +901,11 @@ const AddInvoice = () => {
                                     )
                                   }
                                 />
-                                <div className="absolute right-0 top-1/2 transform -translate-y-1/2 text-white p-2 rounded-r bg-gray-600 uppercase">
-                                  {row.selectedUnit}
-                                </div>
+                                {row.selectedUnit !== "none" && (
+                                  <div className="absolute right-0 top-1/2 transform -translate-y-1/2 text-white p-2 rounded-r bg-gray-600 uppercase">
+                                    {row.selectedUnit}
+                                  </div>
+                                )}
                               </div>
                             </td>
                             <td className="w-[20%] text-center">
@@ -951,7 +954,7 @@ const AddInvoice = () => {
                             <div className="w-full mx-auto flex gap-x-2">
                               <td className="w-[30%] text-center">
                                 <input
-                                  className={`w-full text-right block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600  ${
+                                  className={`w-full text-right block text-xs rounded border border-gray-400 py-1 px-4 leading-5 focus:text-gray-600  ${
                                     isLoss(row.rate, row.buyPrice)
                                       ? "border-red-500 focus:ring-red-500 outline-red-500"
                                       : "border-gray-300 focus:ring-indigo-500"
@@ -977,7 +980,7 @@ const AddInvoice = () => {
                               <td className="w-[30%] ">
                                 <div className="relative w-full max-w-md">
                                   <input
-                                    className="w-full text-left block px-4 text-xs rounded border border-gray-400 py-2  leading-5 focus:text-gray-600"
+                                    className="w-full text-left block px-4 text-xs rounded border border-gray-400 py-1 leading-5 focus:text-gray-600"
                                     required
                                     name="quantity"
                                     placeholder="Quantity"
@@ -990,13 +993,15 @@ const AddInvoice = () => {
                                       )
                                     }
                                   />
-                                  <div className="absolute right-0 top-1/2 transform -translate-y-1/2 text-white p-2 rounded-r bg-gray-600 uppercase">
-                                    {row.selectedUnit}
-                                  </div>
+                                  {row?.selectedUnit !== "none" && (
+                                    <div className="absolute right-0 top-1/2 transform -translate-y-1/2 text-white p-1 rounded-r bg-gray-600 uppercase">
+                                      {row?.selectedUnit}
+                                    </div>
+                                  )}
                                 </div>
                               </td>
                               <td className="w-[30%] text-center">
-                                <div className="w-full text-xs mt-3 ">
+                                <div className="w-full text-xs mt-2 ">
                                   ₹ {row.amount}
                                 </div>
                               </td>
@@ -1008,7 +1013,7 @@ const AddInvoice = () => {
                                   >
                                     +
                                   </button> */}
-                                  <div className="mt-2">
+                                  <div className="mt-1">
                                     <Trash2
                                       color="red"
                                       className="cursor-pointer text-red-500 hover:text-red-700"

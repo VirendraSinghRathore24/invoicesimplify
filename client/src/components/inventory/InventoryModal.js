@@ -154,9 +154,11 @@ const InventoryModal = ({ handleCloseItem, setItem }) => {
                       <td className="px-4 py-3 border-r">{post.sellPrice}</td>
                       <td className="px-4 py-3 border-r">
                         {post.itemQty}{" "}
-                        <span className="ml-1 uppercase">
-                          {post.selectedUnit}
-                        </span>
+                        {post?.selectedUnit !== "none" && (
+                          <span className="ml-1 uppercase">
+                            {post.selectedUnit}
+                          </span>
+                        )}
                       </td>
                     </tr>
                   ))}
@@ -216,9 +218,11 @@ const InventoryModal = ({ handleCloseItem, setItem }) => {
                       </td>
                       <td className="px-4 py-3 border-r w-[20%]">
                         {post.itemQty}{" "}
-                        <span className="ml-1 uppercase">
-                          {post.selectedUnit}
-                        </span>
+                        {post?.selectedUnit !== "none" && (
+                          <span className="ml-1 uppercase">
+                            {post.selectedUnit}
+                          </span>
+                        )}
                       </td>
                     </tr>
                   ))}

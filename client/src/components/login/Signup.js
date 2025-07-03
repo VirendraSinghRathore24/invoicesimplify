@@ -295,8 +295,8 @@ const Signup = () => {
                 >
                   <option value="notselected">Select your business type</option>
                   <option value="Rajputi Poshak">Rajputi Poshak</option>
-                  {/* <option value="contentcreator">Content Creator</option>
-                  <option value="digitalstudio">Digital Studio</option> */}
+                  <option value="Service Center">Service Center</option>
+                  {/* <option value="digitalstudio">Digital Studio</option> */}
                   <option value="Others">Others</option>
                 </select>
               </div>

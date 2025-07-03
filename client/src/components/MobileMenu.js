@@ -174,8 +174,8 @@ const MobileMenu = () => {
           InvoiceSimplify
         </div>
         <hr />
-        <div className="text-sm font-bold py-2 border-b border-white text-center flex items-center justify-start px-6 break-words">
-          <div className="w-8 h-8 bg-amber-500 text-white rounded-full flex items-center justify-center mr-2">
+        <div className="text-sm font-bold py-2 border-b border-white text-center flex items-center break-all justify-start px-6 break-words">
+          <div className="w-8 h-8 bg-amber-500 text-white rounded-full flex items-center justify-center mr-2 ">
             {loggedInUser?.charAt(0).toUpperCase()}
           </div>
           {loggedInUser}

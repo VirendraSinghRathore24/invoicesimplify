@@ -690,7 +690,7 @@ const Dashboard = () => {
         <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4 shadow-lg border-2 bg-white gap-y-4 rounded-md">
           <table className="min-w-full text-xs text-left text-gray-700 ">
             <thead className="bg-gray-100 text-xs text-gray-600 border-b">
-              {type === "Rajputi Poshak" ? (
+              {type === "Rajputi Poshak" || type === "Service Center" ? (
                 <tr>
                   {[
                     "S.No.",
@@ -799,13 +799,14 @@ const Dashboard = () => {
                       <td className="px-4 py-3 border-r w-[10%]">
                         {formatDate(user.invoiceInfo.date)}
                       </td>
-                      {type === "Rajputi Poshak" && (
-                        <td className="px-4 py-3 border-r w-[10%]">
-                          {user.invoiceInfo.expectedDate
-                            ? formatDate(user.invoiceInfo.expectedDate)
-                            : ""}
-                        </td>
-                      )}
+                      {type === "Rajputi Poshak" ||
+                        (type === "Service Center" && (
+                          <td className="px-4 py-3 border-r w-[10%]">
+                            {user.invoiceInfo.expectedDate
+                              ? formatDate(user.invoiceInfo.expectedDate)
+                              : ""}
+                          </td>
+                        ))}
                       <td className="px-4 py-3 border-r text-right w-[10%]">
                         {user.taxCalculatedInfo.taxType === "alltax"
                           ? Math.round(

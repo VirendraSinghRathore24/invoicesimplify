@@ -237,9 +237,11 @@ function Inventory() {
                             </td>
                             <td className="px-4 py-3 border-r border-b">
                               {post?.itemQty}{" "}
-                              <span className="ml-1 uppercase">
-                                {post.selectedUnit}
-                              </span>
+                              {post?.selectedUnit !== "none" && (
+                                <span className="ml-1 uppercase">
+                                  {post.selectedUnit}
+                                </span>
+                              )}
                             </td>
                             <td className="px-4 py-3 border-r border-b">
                               {post?.buyPrice}
