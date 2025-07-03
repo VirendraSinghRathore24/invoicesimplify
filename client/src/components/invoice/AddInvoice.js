@@ -653,7 +653,7 @@ const AddInvoice = () => {
       <div className="hidden max-lg:block mb-16">
         <MobileMenu />
       </div>
-      <div className="top-14 lg:top-0 mx-auto w-full h-[72px] text-white sticky bg-white shadow-lg">
+      <div className="top-14 lg:top-0 mx-auto w-full h-[56px] lg:h-[72px] text-white fixed lg:sticky bg-white shadow-lg">
         <div className="flex justify-between mx-auto font-bold text-md p-2 rounded-md fixed w-full lg:w-[81.5%]">
           <div className="text-xl text-black hidden lg:block">
             Create Invoice
@@ -684,9 +684,9 @@ const AddInvoice = () => {
           </>
         )}
         <div>
-          <div className="flex flex-col w-full gap-y-3 mx-auto ">
+          <div className="flex flex-col w-full gap-y-3 mx-auto">
             <div className="flex flex-col lg:flex-row justify-between gap-x-2 w-full mx-auto">
-              <div className="flex flex-col w-full lg:w-6/12 mx-auto justify-start items-left mt-4 shadow-lg border-[1.2px] p-5 bg-white gap-y-4 rounded-md">
+              <div className="flex flex-col w-full lg:w-6/12 mx-auto justify-start items-left mt-16 lg:mt-4 shadow-lg border-[1.2px] p-5 bg-white gap-y-4 rounded-md">
                 <div className="flex flex-col justify-start items-left gap-y-4 ">
                   <div className="flex ">
                     <div className="text-lg text-gray-600 font-medium">
@@ -1101,11 +1101,11 @@ const AddInvoice = () => {
                 </div>
                 <div className="w-full lg:w-8/12 text-sm">
                   <div className="w-full flex justify-end gap-x-10 mt-2">
-                    <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-sm font-bold rounded-md uppercase">
+                    <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs lg:text-sm font-bold rounded-md uppercase">
                       SubTotal
                     </div>
                     <div
-                      className="w-3/12 mx-auto flex justify-end mt-1 px-2  text-sm font-bold rounded-md"
+                      className="w-3/12 mx-auto flex justify-end mt-1 px-2 text-xs lg:text-sm font-bold rounded-md"
                       name="amount"
                     >
                       ₹ {amount}
@@ -1114,11 +1114,11 @@ const AddInvoice = () => {
 
                   {taxInfo?.taxType === "alltax" && taxInfo?.cgstAmount && (
                     <div className="w-full flex justify-end gap-x-10 mt-2">
-                      <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-sm font-bold rounded-md uppercase">
+                      <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs lg:text-sm font-bold rounded-md uppercase">
                         CGST ({taxInfo?.cgstAmount}%)
                       </div>
                       <div
-                        className="w-3/12 mx-auto flex justify-end mt-1 px-2  text-sm font-bold rounded-md"
+                        className="w-3/12 mx-auto flex justify-end mt-1 px-2 text-xs lg:text-sm font-bold rounded-md"
                         name="cgst"
                       >
                         ₹{" "}
@@ -1129,11 +1129,11 @@ const AddInvoice = () => {
 
                   {taxInfo?.taxType === "alltax" && taxInfo?.sgstAmount && (
                     <div className="w-full flex justify-end gap-x-10 mt-2">
-                      <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-sm font-bold rounded-md uppercase">
+                      <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs lg:text-sm font-bold rounded-md uppercase">
                         SGST ({taxInfo?.sgstAmount}%)
                       </div>
                       <div
-                        className="w-3/12 mx-auto flex justify-end mt-1 px-2  text-sm font-bold rounded-md"
+                        className="w-3/12 mx-auto flex justify-end mt-1 px-2 text-xs lg:text-sm font-bold rounded-md"
                         name="sgst"
                       >
                         ₹{" "}
@@ -1144,11 +1144,11 @@ const AddInvoice = () => {
 
                   {taxInfo?.taxType === "alltax" && taxInfo?.igstAmount && (
                     <div className="w-full flex justify-end gap-x-10 mt-2">
-                      <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-sm font-bold rounded-md uppercase">
+                      <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs lg:text-sm font-bold rounded-md uppercase">
                         IGST ({taxInfo?.igstAmount}%)
                       </div>
                       <div
-                        className="w-3/12 mx-auto flex justify-end mt-1 px-2  text-sm font-bold rounded-md"
+                        className="w-3/12 mx-auto flex justify-end mt-1 px-2 text-xs lg:text-sm font-bold rounded-md"
                         name="igst"
                       >
                         ₹{" "}
@@ -1159,11 +1159,11 @@ const AddInvoice = () => {
 
                   {taxInfo?.taxType === "alltax" && taxInfo?.ugstAmount && (
                     <div className="w-full flex justify-end gap-x-10 mt-2">
-                      <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-sm font-bold rounded-md uppercase">
+                      <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs lg:text-sm font-bold rounded-md uppercase">
                         UGST ({taxInfo?.ugstAmount}%)
                       </div>
                       <div
-                        className="w-3/12 mx-auto flex justify-end mt-1 px-2  text-sm font-bold rounded-md"
+                        className="w-3/12 mx-auto flex justify-end mt-1 px-2 text-xs lg:text-sm font-bold rounded-md"
                         name="ugst"
                       >
                         ₹{" "}
@@ -1174,11 +1174,11 @@ const AddInvoice = () => {
 
                   {taxInfo?.taxType === "tax" && taxInfo?.taxAmount && (
                     <div className="w-full flex justify-end gap-x-10 mt-2">
-                      <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-sm font-bold rounded-md uppercase">
+                      <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs lg:text-sm font-bold rounded-md uppercase">
                         Tax ({taxInfo?.taxAmount}%)
                       </div>
                       <div
-                        className="w-3/12 mx-auto flex justify-end mt-1 px-2  text-sm font-bold rounded-md"
+                        className="w-3/12 mx-auto flex justify-end mt-1 px-2 text-xs lg:text-sm font-bold rounded-md"
                         name="tax"
                       >
                         ₹ {Math.round((taxInfo?.taxAmount ?? 0) * amount) / 100}
