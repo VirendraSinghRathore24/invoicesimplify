@@ -152,7 +152,7 @@ function EditBusinessInfo() {
                       className="w-full dark:bg-gray-700 border border-gray-400 border-[1.4px] dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                       required
                       name="name"
-                      placeholder="बाईसाराज पौशाक पैलेस"
+                      placeholder="Enter business name"
                       value={inputs?.name || ""}
                       onChange={(e) => {
                         localStorage.setItem("name", e.target.value);
@@ -170,7 +170,7 @@ function EditBusinessInfo() {
                       <input
                         className="w-full dark:bg-gray-700 border border-gray-400 border-[1.4px] dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         name="subTitle1"
-                        placeholder="Poshak | Sarees | Cotton Suites"
+                        placeholder="Business desc"
                         value={inputs?.subTitle1 || ""}
                         onChange={(e) => {
                           localStorage.setItem("subTitle1", e.target.value);
@@ -187,7 +187,7 @@ function EditBusinessInfo() {
                       <input
                         className="w-full dark:bg-gray-700 border border-gray-400 border-[1.4px] dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         name="subTitle2"
-                        placeholder="Business Name"
+                        placeholder="Business desc"
                         value={inputs?.subTitle2 || ""}
                         onChange={(e) => {
                           localStorage.setItem("subTitle2", e.target.value);
@@ -206,7 +206,7 @@ function EditBusinessInfo() {
                     <textarea
                       className="w-full dark:bg-gray-700 border border-gray-400 border-[1.4px] dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                       name="address"
-                      placeholder="Ground Floor, Gordhan Sky Mall, Khatipura Road, Jaipur - 302023"
+                      placeholder="Enter business address"
                       value={inputs?.address || ""}
                       onChange={(e) => {
                         localStorage.setItem("address", e.target.value);
@@ -267,7 +267,7 @@ function EditBusinessInfo() {
                         className="w-full dark:bg-gray-700 border border-gray-400 border-[1.4px] dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         name="email"
                         type="email"
-                        placeholder="baisarajjaipur@gmail.com"
+                        placeholder="Enter email"
                         value={inputs?.email || ""}
                         onChange={(e) => {
                           localStorage.setItem("email", e.target.value);
