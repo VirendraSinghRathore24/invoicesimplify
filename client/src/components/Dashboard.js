@@ -158,17 +158,30 @@ const Dashboard = () => {
     await addDoc(archiveCollectionRef, archivedInvoice);
   };
 
-  const handleSettle = (post) => {
-    const settleInfo = {
-      amount:
-        post.amountInfo.amount +
-        post.taxCalculatedInfo.cgst +
-        post.taxCalculatedInfo.sgst,
-      advance: post.amountInfo.advance,
-      balance: post.taxCalculatedInfo.balance,
-      docid: post.id,
-      invoicenumber: post.invoiceInfo.invoiceNumber,
-    };
+  const    = (post) => {
+    let settleInfo = {};
+    if (post.taxCalculatedInfo === "alltax") {
+      settleInfo = {
+        amount:
+          post.amountInfo.amount +
+          post.taxCalculatedInfo.cgst +
+          post.taxCalculatedInfo.sgst +
+          post.taxCalculatedInfo.igst +
+          post.taxCalculatedInfo.ugst,
+        advance: post.amountInfo.advance,
+        balance: post.taxCalculatedInfo.balance,
+        docid: post.id,
+        invoicenumber: post.invoiceInfo.invoiceNumber,
+      };
+    } else {
+      settleInfo = {
+        amount: post.amountInfo.amount + post.taxCalculatedInfo.tax,
+        advance: post.amountInfo.advance,
+        balance: post.taxCalculatedInfo.balance,
+        docid: post.id,
+        invoicenumber: post.invoiceInfo.invoiceNumber,
+      };
+    }
 
     localStorage.setItem("settleInfo", JSON.stringify(settleInfo));
     setOpenSettlePopup(true);
@@ -220,11 +233,16 @@ const Dashboard = () => {
 
   const updateAmountAfterSearch = (result) => {
     const totalAmount = result?.reduce((acc, item) => {
-      const amount = Math.round(
-        item.amountInfo.amount +
-          item.taxCalculatedInfo.cgst +
-          item.taxCalculatedInfo.sgst
-      );
+      const amount =
+        item.taxCalculatedInfo.taxType === "alltax"
+          ? Math.round(
+              item.amountInfo.amount +
+                item.taxCalculatedInfo.cgst +
+                item.taxCalculatedInfo.sgst +
+                item.taxCalculatedInfo.igst +
+                item.taxCalculatedInfo.ugst
+            )
+          : Math.round(item.amountInfo.amount + item.taxCalculatedInfo.tax);
       return acc + amount;
     }, 0);
 
@@ -325,12 +343,26 @@ const Dashboard = () => {
   };
 
   const sortAmount = (a, b) => {
-    const amountA = Math.round(
-      a.amountInfo.amount + a.taxCalculatedInfo.cgst + a.taxCalculatedInfo.sgst
-    );
-    const amountB = Math.round(
-      b.amountInfo.amount + b.taxCalculatedInfo.cgst + b.taxCalculatedInfo.sgst
-    );
+    const amountA =
+      a.taxCalculatedInfo.taxType === "alltax"
+        ? Math.round(
+            a.amountInfo.amount +
+              a.taxCalculatedInfo.cgst +
+              a.taxCalculatedInfo.sgst +
+              a.taxCalculatedInfo.igst +
+              a.taxCalculatedInfo.ugst
+          )
+        : Math.round(a.amountInfo.amount + a.taxCalculatedInfo.tax);
+    const amountB =
+      b.taxCalculatedInfo.taxType === "alltax"
+        ? Math.round(
+            b.amountInfo.amount +
+              b.taxCalculatedInfo.cgst +
+              b.taxCalculatedInfo.sgst +
+              b.taxCalculatedInfo.igst +
+              b.taxCalculatedInfo.ugst
+          )
+        : Math.round(b.amountInfo.amount + b.taxCalculatedInfo.tax);
     if (amountA < amountB) {
       return sortConfig.direction === "asc" ? -1 : 1;
     }
@@ -431,11 +463,16 @@ const Dashboard = () => {
 
     const invoiceInfo = JSON.parse(localStorage.getItem("dashboardInfo"));
     const totalAmount = invoiceInfo?.reduce((acc, item) => {
-      const amount = Math.round(
-        item.amountInfo.amount +
-          item.taxCalculatedInfo.cgst +
-          item.taxCalculatedInfo.sgst
-      );
+      const amount =
+        item.taxCalculatedInfo.taxType === "alltax"
+          ? Math.round(
+              item.amountInfo.amount +
+                item.taxCalculatedInfo.cgst +
+                item.taxCalculatedInfo.sgst +
+                item.taxCalculatedInfo.igst +
+                item.taxCalculatedInfo.ugst
+            )
+          : Math.round(item.amountInfo.amount + item.taxCalculatedInfo.tax);
       return acc + amount;
     }, 0);
 
@@ -770,19 +807,33 @@ const Dashboard = () => {
                         </td>
                       )}
                       <td className="px-4 py-3 border-r text-right w-[10%]">
-                        {Math.round(
-                          user.amountInfo.amount +
-                            user.taxCalculatedInfo.cgst +
-                            user.taxCalculatedInfo.sgst
-                        )}
+                        {user.taxCalculatedInfo.taxType === "alltax"
+                          ? Math.round(
+                              user.amountInfo.amount +
+                                user.taxCalculatedInfo.cgst +
+                                user.taxCalculatedInfo.sgst +
+                                user.taxCalculatedInfo.igst +
+                                user.taxCalculatedInfo.ugst
+                            )
+                          : Math.round(
+                              user.amountInfo.amount +
+                                user.taxCalculatedInfo.tax
+                            )}
                       </td>
                       {user.amountInfo.paymentType === "fullyPaid" ? (
                         <td className="px-4 py-3 border-r text-right w-[8%]">
-                          {Math.round(
-                            user.amountInfo.amount +
-                              user.taxCalculatedInfo.cgst +
-                              user.taxCalculatedInfo.sgst
-                          )}
+                          {user.taxCalculatedInfo.taxType === "alltax"
+                            ? Math.round(
+                                user.amountInfo.amount +
+                                  user.taxCalculatedInfo.cgst +
+                                  user.taxCalculatedInfo.sgst +
+                                  user.taxCalculatedInfo.igst +
+                                  user.taxCalculatedInfo.ugst
+                              )
+                            : Math.round(
+                                user.amountInfo.amount +
+                                  user.taxCalculatedInfo.tax
+                              )}
                         </td>
                       ) : (
                         <td className="px-4 py-3 border-r text-right w-[8%]">

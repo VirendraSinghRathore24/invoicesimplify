@@ -329,14 +329,28 @@ const AddInvoice = () => {
 
     const cgst = Math.round((taxData?.cgstAmount ?? 0) * amount) / 100;
     const sgst = Math.round((taxData?.sgstAmount ?? 0) * amount) / 100;
-    const balance = Math.round(amount + cgst + sgst - parseInt(advanceAmount));
+    const igst = Math.round((taxData?.igstAmount ?? 0) * amount) / 100;
+    const ugst = Math.round((taxData?.ugstAmount ?? 0) * amount) / 100;
+    const tax = Math.round((taxData?.taxAmount ?? 0) * amount) / 100;
+    const balance =
+      taxData?.taxType === "alltax"
+        ? Math.round(
+            amount + cgst + sgst + igst + ugst - parseInt(advanceAmount)
+          )
+        : Math.round(amount + tax - parseInt(advanceAmount));
     const taxCalculatedInfo = {
       cgst: cgst,
       sgst: sgst,
+      igst: igst,
+      ugst: ugst,
+      tax: tax,
       balance: balance,
     };
 
-    const total = Math.round(amount + cgst + sgst);
+    const total =
+      taxData?.taxType === "alltax"
+        ? Math.round(amount + cgst + sgst + igst + ugst)
+        : Math.round(amount + tax);
     localStorage.setItem("total", total);
 
     if (paymentType === "advance" && parseInt(advanceAmount) > total) {
@@ -1093,7 +1107,7 @@ const AddInvoice = () => {
                     </div>
                   </div>
 
-                  {taxInfo?.cgstAmount && (
+                  {taxInfo?.taxType === "alltax" && taxInfo?.cgstAmount && (
                     <div className="w-full flex justify-end gap-x-10 mt-2">
                       <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-sm font-bold rounded-md uppercase">
                         CGST ({taxInfo?.cgstAmount}%)
@@ -1108,7 +1122,7 @@ const AddInvoice = () => {
                     </div>
                   )}
 
-                  {taxInfo?.sgstAmount && (
+                  {taxInfo?.taxType === "alltax" && taxInfo?.sgstAmount && (
                     <div className="w-full flex justify-end gap-x-10 mt-2">
                       <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-sm font-bold rounded-md uppercase">
                         SGST ({taxInfo?.sgstAmount}%)
@@ -1123,21 +1137,79 @@ const AddInvoice = () => {
                     </div>
                   )}
 
+                  {taxInfo?.taxType === "alltax" && taxInfo?.igstAmount && (
+                    <div className="w-full flex justify-end gap-x-10 mt-2">
+                      <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-sm font-bold rounded-md uppercase">
+                        IGST ({taxInfo?.igstAmount}%)
+                      </div>
+                      <div
+                        className="w-3/12 mx-auto flex justify-end mt-1 px-2  text-sm font-bold rounded-md"
+                        name="igst"
+                      >
+                        ₹{" "}
+                        {Math.round((taxInfo?.igstAmount ?? 0) * amount) / 100}
+                      </div>
+                    </div>
+                  )}
+
+                  {taxInfo?.taxType === "alltax" && taxInfo?.ugstAmount && (
+                    <div className="w-full flex justify-end gap-x-10 mt-2">
+                      <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-sm font-bold rounded-md uppercase">
+                        UGST ({taxInfo?.ugstAmount}%)
+                      </div>
+                      <div
+                        className="w-3/12 mx-auto flex justify-end mt-1 px-2  text-sm font-bold rounded-md"
+                        name="ugst"
+                      >
+                        ₹{" "}
+                        {Math.round((taxInfo?.ugstAmount ?? 0) * amount) / 100}
+                      </div>
+                    </div>
+                  )}
+
+                  {taxInfo?.taxType === "tax" && taxInfo?.taxAmount && (
+                    <div className="w-full flex justify-end gap-x-10 mt-2">
+                      <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-sm font-bold rounded-md uppercase">
+                        Tax ({taxInfo?.taxAmount}%)
+                      </div>
+                      <div
+                        className="w-3/12 mx-auto flex justify-end mt-1 px-2  text-sm font-bold rounded-md"
+                        name="tax"
+                      >
+                        ₹ {Math.round((taxInfo?.taxAmount ?? 0) * amount) / 100}
+                      </div>
+                    </div>
+                  )}
+
                   <div className="w-full flex justify-end gap-x-10 mt-2">
                     <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-md font-bold rounded-md uppercase">
                       Total
                     </div>
-                    <div
-                      className="w-3/12 mx-auto flex justify-end mt-1 px-2  text-sm font-bold rounded-md"
-                      name="total"
-                    >
-                      ₹{" "}
-                      {Math.round(
-                        amount +
-                          ((taxInfo?.cgstAmount ?? 0) * amount) / 100 +
-                          ((taxInfo?.sgstAmount ?? 0) * amount) / 100
-                      )}
-                    </div>
+                    {taxInfo?.taxType === "alltax" ? (
+                      <div
+                        className="w-3/12 mx-auto flex justify-end mt-1 px-2  text-sm font-bold rounded-md"
+                        name="total"
+                      >
+                        ₹{" "}
+                        {Math.round(
+                          amount +
+                            ((taxInfo?.cgstAmount ?? 0) * amount) / 100 +
+                            ((taxInfo?.sgstAmount ?? 0) * amount) / 100 +
+                            ((taxInfo?.igstAmount ?? 0) * amount) / 100 +
+                            ((taxInfo?.ugstAmount ?? 0) * amount) / 100
+                        )}
+                      </div>
+                    ) : (
+                      <div
+                        className="w-3/12 mx-auto flex justify-end mt-1 px-2  text-sm font-bold rounded-md"
+                        name="total"
+                      >
+                        ₹{" "}
+                        {Math.round(
+                          amount + ((taxInfo?.taxAmount ?? 0) * amount) / 100
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

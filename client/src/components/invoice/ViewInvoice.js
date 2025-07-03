@@ -158,14 +158,14 @@ function ViewInvoice() {
               invoiceInfo.customerInfo.customerName +
               ",\n\nThank you for your purchase! Your invoice is ready.\n\n" +
               "You can view your invoice using the link below:\n\n" +
-              "https://invoicesimplify.netlify.app/ci/" +
+              "https://invoicesimplify.com/ci/" +
               linkStr +
               "\n\nIf you have any questions, feel free to contact us.\n\n" +
               "Best regards,\n" +
               invoiceInfo.businessInfo.name +
               "\n" +
               invoiceInfo.businessInfo.phonePrimary,
-            urllink: "https://invoicesimplify.netlify.app/ci/" + linkStr,
+            urllink: "https://invoicesimplify.com/ci/" + linkStr,
             date: getCurrentDate(),
           }),
         }
@@ -255,7 +255,7 @@ function ViewInvoice() {
                 />
               </div>
               <div className="text-center">
-                <div className="text-md lg:text-3xl font-bold">
+                <div className="text-md lg:text-2xl font-bold">
                   {invoiceInfo?.businessInfo?.name}
                 </div>
                 {/* <div className='text-3xl font-bold'>बाईसाराज पौशाक पैलेस</div> */}
@@ -294,12 +294,12 @@ function ViewInvoice() {
             )}
             <hr className="w-full mt-4 border-[1.1px]"></hr>
             {invoiceInfo.businessInfo?.address && (
-              <div className="py-2 text-sm lg:text-md text-center hidden max-lg:block">
+              <div className="py-1 text-sm lg:text-md text-center hidden max-lg:block">
                 {invoiceInfo.businessInfo.address}
               </div>
             )}
             {invoiceInfo.businessInfo?.address && (
-              <div className="py-2 text-md lg:text-md text-center hidden lg:block">
+              <div className="py-1 text-md lg:text-md text-center hidden lg:block">
                 {invoiceInfo.businessInfo.address}
               </div>
             )}
@@ -333,7 +333,7 @@ function ViewInvoice() {
               </div>
             </div>
             <div className="flex justify-between border-b-[1.2px] border-black mt-6"></div>
-            <div className="overflow-hidden mt-2">
+            <div className="overflow-hidden">
               <div className="overflow-hidden mt-2 hidden lg:block">
                 <table className=" w-full mx-auto text-center text-sm font-light">
                   <thead className="text-md uppercase">

@@ -10,8 +10,6 @@ import Loader from "../Loader";
 
 const TaxInfo = () => {
   const [posts, setPosts] = useState([]);
-  const [allCategory, setAllCategory] = useState([]);
-  const [searchText, setSearchText] = useState("");
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -87,8 +85,22 @@ const TaxInfo = () => {
                 <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
                   <tr>
                     <th className="px-4 py-3 border-r">GSTIN</th>
-                    <th className="px-4 py-3 border-r">CGST %</th>
-                    <th className="px-4 py-3 border-r">SGST %</th>
+                    {posts[0]?.taxType === "tax" && (
+                      <th className="px-4 py-3 border-r">Tax %</th>
+                    )}
+                    {posts[0]?.taxType === "alltax" && (
+                      <th className="px-4 py-3 border-r">CGST %</th>
+                    )}
+                    {posts[0]?.taxType === "alltax" && (
+                      <th className="px-4 py-3 border-r">SGST %</th>
+                    )}
+                    {posts[0]?.taxType === "alltax" && (
+                      <th className="px-4 py-3 border-r">IGST %</th>
+                    )}
+                    {posts[0]?.taxType === "alltax" && (
+                      <th className="px-4 py-3 border-r">UGST %</th>
+                    )}
+
                     <th className="px-4 py-3 border-r">Edit</th>
                     <th className="px-4 py-3">Delete</th>
                   </tr>
@@ -98,12 +110,32 @@ const TaxInfo = () => {
                     <td className="px-4 py-3 border-r">
                       {posts[0]?.gstNumber}
                     </td>
-                    <td className="px-4 py-3 border-r">
-                      {posts[0]?.cgstAmount}
-                    </td>
-                    <td className="px-4 py-3 border-r">
-                      {posts[0]?.sgstAmount}
-                    </td>
+                    {posts[0]?.taxType === "tax" && (
+                      <td className="px-4 py-3 border-r">
+                        {posts[0]?.taxAmount}
+                      </td>
+                    )}
+                    {posts[0]?.taxType === "alltax" && (
+                      <td className="px-4 py-3 border-r">
+                        {posts[0]?.cgstAmount}
+                      </td>
+                    )}
+                    {posts[0]?.taxType === "alltax" && (
+                      <td className="px-4 py-3 border-r">
+                        {posts[0]?.sgstAmount}
+                      </td>
+                    )}
+                    {posts[0]?.taxType === "alltax" && (
+                      <td className="px-4 py-3 border-r">
+                        {posts[0]?.igstAmount}
+                      </td>
+                    )}
+                    {posts[0]?.taxType === "alltax" && (
+                      <td className="px-4 py-3 border-r">
+                        {posts[0]?.ugstAmount}
+                      </td>
+                    )}
+
                     <td className="px-4 py-3 border-r">
                       <button
                         onClick={() => navigate("/edittaxinfo")}

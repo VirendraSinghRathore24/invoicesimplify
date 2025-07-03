@@ -35,6 +35,7 @@ import PrivacyPolicy from "./components/PrivacyPolicy";
 import TermsOfUse from "./components/TermsOfUse";
 import FirebasePhoneAuth from "./components/login/FirebasePhoneAuth";
 import SMS from "./components/SMS";
+import TaxSelector from "./components/TaxSelector";
 
 function App() {
   const location = useLocation();
@@ -103,7 +104,7 @@ function App() {
           <Route path="/privacypolicy" element={<PrivacyPolicy />} />
           <Route path="/termsofuse" element={<TermsOfUse />} />
           <Route path="/sms" element={<SMS />} />
-          <Route path="/b" element={<FirebasePhoneAuth />} />
+          <Route path="/t" element={<TaxSelector />} />
         </Routes>
 
         <ToastContainer />
