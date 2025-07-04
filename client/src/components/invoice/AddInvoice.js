@@ -731,6 +731,7 @@ const AddInvoice = () => {
                       name="custphone"
                       value={customerPhone}
                       onChange={handleCustomerPhoneChange}
+                      minLength={10}
                       maxLength={10}
                       placeholder="Mobile number..."
                     />

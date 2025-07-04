@@ -255,6 +255,7 @@ function AddBusinessInfo() {
                           required
                           value={inputs?.phonePrimary || ""}
                           onChange={(e) => handlePhoneChange(e)}
+                          minLength={10}
                           maxLength={10}
                           placeholder="Mobile number..."
                         />
@@ -275,6 +276,7 @@ function AddBusinessInfo() {
                           name="phoneSecondary"
                           value={inputs?.phoneSecondary || ""}
                           onChange={(e) => handlePhoneChange(e)}
+                          minLength={10}
                           maxLength={10}
                           placeholder="Mobile number..."
                         />

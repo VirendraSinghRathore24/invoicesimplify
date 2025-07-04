@@ -13,6 +13,7 @@ import { toast } from "react-toastify";
 import Header from "../Header";
 import MobileMenu from "../MobileMenu";
 import Loader from "../Loader";
+import MessagePopup from "../MessagePopup";
 
 function ViewInvoice() {
   const [invoiceInfo, setInvoiceInfo] = useState({});
@@ -135,6 +136,16 @@ function ViewInvoice() {
 
     return invoiceData.linkStr;
   };
+
+  const [openMessagePopup, setOpenMessagePopup] = useState(false);
+  const handleCloseMessagePopup = () => {
+    setOpenMessagePopup(false);
+  };
+
+  const handleMessage = () => {
+    setOpenMessagePopup(true);
+  };
+
   const handleWhatsApp = async () => {
     try {
       setLoading(true);
@@ -233,7 +244,7 @@ function ViewInvoice() {
 
           <div>
             <button
-              onClick={() => handleWhatsApp()}
+              onClick={() => handleMessage()}
               className="flex items-center bg-[#E5E7EB]  font-bold px-2 lg:px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
             >
               <span className="mr-2">
@@ -614,6 +625,17 @@ function ViewInvoice() {
           </div>
         </div>
       </div>
+      {openMessagePopup && (
+        <MessagePopup
+          handleCloseMessagePopup={handleCloseMessagePopup}
+          customerPhone={invoiceInfo.customerInfo.customerPhone}
+          customerName={invoiceInfo.customerInfo.customerName}
+          businessName={invoiceInfo.businessInfo.name}
+          businessPhone={invoiceInfo.businessInfo.phonePrimary}
+          invoiceNumber={invoiceInfo.invoiceInfo.invoiceNumber}
+          amount={invoiceInfo.amountInfo?.amount}
+        ></MessagePopup>
+      )}
       {loading && <Loader />}
     </div>
   );
