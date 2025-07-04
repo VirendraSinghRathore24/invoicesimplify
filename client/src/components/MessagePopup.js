@@ -52,12 +52,12 @@ const MessagePopup = ({
     try {
       e.preventDefault();
 
-      if (!customerName || !customerName || !businessName || !businessPhone) {
+      if (!customerName || !phone || !businessName || !businessPhone) {
         alert("Required information is missing to send message !!!");
         return;
       }
 
-      if (customerPhone.length !== 10) {
+      if (phone.length !== 10) {
         alert("Customer phone number is not valid !!!");
         return;
       }
@@ -75,7 +75,7 @@ const MessagePopup = ({
           },
           body: JSON.stringify({
             name: customerName,
-            to: "+91" + customerPhone,
+            to: "+91" + phone,
             businessname: businessName,
             amount: amount,
             message:
@@ -146,7 +146,6 @@ const MessagePopup = ({
               value={phone}
               onChange={(e) => {
                 setPhone(e.target.value);
-                localStorage.setItem("customerPhone", e.target.value);
               }}
               placeholder="10 digit phone number"
               className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 text-base mb-4"
