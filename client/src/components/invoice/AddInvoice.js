@@ -251,7 +251,7 @@ const AddInvoice = () => {
     }
 
     let info1 = localStorage.getItem("businessInfo");
-    if (info1 === "null") {
+    if (!info1 || info1 === null || info1 === undefined || info1 === "null") {
       alert("Please add business name to create invoice !!!");
       return;
     }
@@ -684,7 +684,7 @@ const AddInvoice = () => {
           </>
         )}
         <div>
-          <div className="flex flex-col w-full gap-y-3 mx-auto">
+          <div className="flex flex-col w-full gap-y-3 mx-auto mb-10">
             <div className="flex flex-col lg:flex-row justify-between gap-x-2 w-full mx-auto">
               <div className="flex flex-col w-full lg:w-6/12 mx-auto justify-start items-left mt-16 lg:mt-4 shadow-lg border-[1.2px] p-5 bg-white gap-y-4 rounded-md">
                 <div className="flex flex-col justify-start items-left gap-y-4 ">

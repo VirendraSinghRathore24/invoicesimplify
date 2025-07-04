@@ -252,6 +252,7 @@ function AddBusinessInfo() {
                           className=" w-[120px] dark:bg-gray-700 border border-gray-400 border-[1.4px] px-4 py-2 dark:border-gray-600 pl-[10px] rounded-r focus:outline-none focus:ring-2 focus:ring-indigo-500"
                           type="text"
                           name="phonePrimary"
+                          required
                           value={inputs?.phonePrimary || ""}
                           onChange={(e) => handlePhoneChange(e)}
                           maxLength={10}

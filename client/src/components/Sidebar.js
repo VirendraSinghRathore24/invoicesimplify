@@ -263,12 +263,12 @@ const Sidebar = () => {
             to="/sms"
             active={location.pathname === "/sms"}
           /> */}
-          <SubMenuItem
+          {/* <SubMenuItem
             icon={<Trash2 size={18} />}
             text="Archived Invoices"
             to="/archiveddashboard"
             active={location.pathname === "/archiveddashboard"}
-          />
+          /> */}
         </SidebarItem>
 
         <SidebarItem
