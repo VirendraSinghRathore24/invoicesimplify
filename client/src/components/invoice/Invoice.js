@@ -127,7 +127,9 @@ function Invoice() {
     );
     // Prepare the updated item
     const updatedItems = existingItems.map((item) => {
-      const row = rows.find((r) => r.desc === item.itemName);
+      const row = rows.find(
+        (r) => r.desc === item.itemName && r.code === item.itemCode
+      );
       if (row) {
         return {
           ...item,

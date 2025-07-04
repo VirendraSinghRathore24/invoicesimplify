@@ -32,12 +32,19 @@ function EditItem({ handleCloseEditModal, setItemAdded, editPost }) {
         return;
       }
       // update item to db
-      await updateInventoryItems(inputs);
-      handleCloseEditModal();
-      setItemAdded(true);
+      if (await updateInventoryItems(inputs)) {
+        handleCloseEditModal();
+        setItemAdded(true);
 
-      toast("Item updated successfully!!!");
-      setLoading(false);
+        toast("Item updated successfully!!!");
+        setLoading(false);
+      } else {
+        alert(
+          "Item already added with same name and code, please use different !!!"
+        );
+        setLoading(false);
+        return;
+      }
     } catch (err) {
       console.log(err);
       setLoading(false);
@@ -62,6 +69,16 @@ function EditItem({ handleCloseEditModal, setItemAdded, editPost }) {
       a.itemName.localeCompare(b.itemName)
     );
 
+    const duplicateItem = existingItems.filter(
+      (item) =>
+        item.itemCode === inputs.itemCode &&
+        item.itemName.toLowerCase().trim() ===
+          inputs.itemName.toLowerCase().trim()
+    );
+
+    if (duplicateItem.length > 0) {
+      return false;
+    }
     // Prepare the updated item
 
     // Update the item name at index 2
@@ -83,6 +100,7 @@ function EditItem({ handleCloseEditModal, setItemAdded, editPost }) {
     await updateDoc(codeDoc, {
       inventory: updatedItems,
     });
+    return true;
   };
 
   const validatePrices = (buyPrice, sellPrice) => {

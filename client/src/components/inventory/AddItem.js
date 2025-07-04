@@ -27,6 +27,7 @@ function AddItem({ handleCloseItem, setItemAdded }) {
 
       const isValid = validatePrices(inputs.buyPrice, inputs.sellPrice);
       if (!isValid) {
+        setLoading(false);
         return;
       }
 
@@ -38,6 +39,7 @@ function AddItem({ handleCloseItem, setItemAdded }) {
         toast("Item added successfully!!!");
       } else {
         alert("Item already exists with same name and code.");
+        setLoading(false);
         return;
       }
       setLoading(false);
@@ -53,6 +55,7 @@ function AddItem({ handleCloseItem, setItemAdded }) {
   const validatePrices = (buyPrice, sellPrice) => {
     if (parseInt(sellPrice) < parseInt(buyPrice)) {
       alert("Sell price cannot be less than buy price.");
+      setLoading(false);
       return false;
     }
     return true;
@@ -77,7 +80,9 @@ function AddItem({ handleCloseItem, setItemAdded }) {
       existingItems.length > 0 &&
       existingItems.some(
         (item) =>
-          item.itemCode === inputs.itemCode && item.itemName === inputs.itemName
+          item.itemCode === inputs.itemCode &&
+          item.itemName.toLowerCase().trim() ===
+            inputs.itemName.toLowerCase().trim()
       )
     ) {
       return false;

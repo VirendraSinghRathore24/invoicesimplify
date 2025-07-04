@@ -112,7 +112,8 @@ function Inventory() {
 
     const existingItems = inventoryInfo.inventory;
     const updatedItems = existingItems.filter(
-      (item) => item.itemName !== post.itemName
+      (item) =>
+        item.itemName !== post.itemName || item.itemCode !== post.itemCode
     );
 
     const codeDoc = doc(db, "Inventory_Info", inventoryInfo.id);
