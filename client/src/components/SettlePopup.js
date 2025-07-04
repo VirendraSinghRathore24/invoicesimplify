@@ -99,36 +99,13 @@ const SettlePopup = ({ handleCloseSettlePopup }) => {
     });
   };
 
-  const getRecordId = async (invoicenumber) => {
-    const invoiceInfo_CollectionRef = collection(db, "Invoice_Info");
-    const data = await getDocs(invoiceInfo_CollectionRef);
-    const filteredData = data.docs.map((doc) => ({
-      ...doc.data(),
-      id: doc.id,
-    }));
-
-    if (!filteredData) return;
-
-    const loggedInUser = localStorage.getItem("user");
-
-    const allBrandsInfo = filteredData.filter(
-      (x) =>
-        x.loggedInUser === loggedInUser &&
-        x.invoiceInfo.invoiceNumber === invoicenumber
-    );
-
-    setDocId(allBrandsInfo[0].id);
-  };
-
   useEffect(() => {
     const settleInfo = JSON.parse(localStorage.getItem("settleInfo"));
     setAmount(settleInfo.amount);
     setBalance(settleInfo.balance);
     setAdvance(settleInfo.advance);
-
     setInvoiceNumber(settleInfo.invoicenumber);
-
-    getRecordId(settleInfo.invoicenumber);
+    setDocId(settleInfo.docid);
   }, []);
 
   return (
