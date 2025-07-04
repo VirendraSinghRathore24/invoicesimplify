@@ -564,7 +564,9 @@ const AddInvoice = () => {
     }
 
     setRows((prevRows) => {
-      if (prevRows.some((row) => row.code === item.code)) {
+      if (
+        prevRows.some((row) => row.code === item.code && row.desc === item.desc)
+      ) {
         alert(
           "Item already exists in the invoice. Please edit the existing item."
         );
