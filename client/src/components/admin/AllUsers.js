@@ -28,6 +28,13 @@ const AllUsers = () => {
   };
 
   useEffect(() => {
+    const user = localStorage.getItem("user");
+
+    if (user !== "virendrasinghrathore24@gmail.com") {
+      alert("You are not authorized !!!");
+      return;
+    }
+
     getLoginInfo();
     window.scroll(0, 0);
   }, []);
