@@ -78,7 +78,7 @@ const AddInvoice = () => {
   const [paymentType, setPaymentType] = useState("fullyPaid");
   const [advanceAmount, setAdvanceAmount] = useState("");
 
-  const type = localStorage.getItem("type");
+  const [businessType, setBusinessType] = useState("Rajputi Poshak");
 
   // invoice details
   const [invoiceNumber, setInvoiceNumber] = useState("");
@@ -584,6 +584,8 @@ const AddInvoice = () => {
 
   useEffect(() => {
     setLoading(true);
+    const businessType = localStorage.getItem("type");
+    setBusinessType(businessType);
     getUserSettingsData(loggedInUser);
     getInvoiceNumber();
 
@@ -604,8 +606,8 @@ const AddInvoice = () => {
     }
 
     const payType = localStorage.getItem("paymentType");
-    const type = payType === null ? "fullyPaid" : payType;
-    setPaymentType(type);
+    const type1 = payType === null ? "fullyPaid" : payType;
+    setPaymentType(type1);
 
     const advAmount = localStorage.getItem("advanceAmount");
     const amt = advAmount === null ? "" : advAmount;
@@ -784,33 +786,32 @@ const AddInvoice = () => {
                     </div>
                   </div>
                 </div>
-                {type === "Rajputi Poshak" ||
-                  (type === "Service Center" && (
+                {
+                  <div className="flex flex-col">
                     <div className="flex flex-col">
-                      <div className="flex flex-col">
-                        <div className="text-xs font-medium leading-5 mt-2">
-                          Expected Delivery
-                        </div>
-                        <div>
-                          <input
-                            className="w-12/12 lg:w-3/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5 "
-                            required
-                            name="expecteddate"
-                            placeholder="Date"
-                            type="date"
-                            value={expectedDate}
-                            onChange={(e) => {
-                              setExpectedDate(e.target.value);
-                              localStorage.setItem(
-                                "expecteddate",
-                                e.target.value
-                              );
-                            }}
-                          />
-                        </div>
+                      <div className="text-xs font-medium leading-5 mt-2">
+                        Expected Delivery
+                      </div>
+                      <div>
+                        <input
+                          className="w-12/12 lg:w-3/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5 "
+                          required
+                          name="expecteddate"
+                          placeholder="Date"
+                          type="date"
+                          value={expectedDate}
+                          onChange={(e) => {
+                            setExpectedDate(e.target.value);
+                            localStorage.setItem(
+                              "expecteddate",
+                              e.target.value
+                            );
+                          }}
+                        />
                       </div>
                     </div>
-                  ))}
+                  </div>
+                }
               </div>
             </div>
 
