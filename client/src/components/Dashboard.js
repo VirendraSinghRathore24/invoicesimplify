@@ -690,80 +690,42 @@ const Dashboard = () => {
         <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4 shadow-lg border-2 bg-white gap-y-4 rounded-md">
           <table className="min-w-full text-xs text-left text-gray-700 ">
             <thead className="bg-gray-100 text-xs text-gray-600 border-b">
-              {type === "Rajputi Poshak" || type === "Service Center" ? (
-                <tr>
-                  {[
-                    "S.No.",
-                    "Invoice",
-                    "Name",
-                    "Phone",
-                    "Date",
-                    "Delivery",
-                    "Amount",
-                    "Paid",
-                    "Balance",
-                    "Settle",
-                    "View",
-                    "Delete",
-                  ].map((header) => (
-                    <th
-                      key={header}
-                      className="px-4 py-3 border-r cursor-pointer"
-                      onClick={() =>
-                        !["S.No.", "View", "Delete"].includes(header) &&
-                        handleSort(header)
-                      }
-                    >
-                      {header}
-                      {!["S.No.", "View", "Delete"].includes(header) && (
-                        <span>
-                          {sortConfig.key === header.toLowerCase()
-                            ? sortConfig.direction === "asc"
-                              ? " 🔼"
-                              : " 🔽"
-                            : " ⬍"}
-                        </span>
-                      )}
-                    </th>
-                  ))}
-                </tr>
-              ) : (
-                <tr>
-                  {[
-                    "S.No.",
-                    "Invoice",
-                    "Name",
-                    "Phone",
-                    "Date",
-                    "Amount",
-                    "Paid",
-                    "Balance",
-                    "Settle",
-                    "View",
-                    "Delete",
-                  ].map((header) => (
-                    <th
-                      key={header}
-                      className="px-4 py-3 border-r cursor-pointer"
-                      onClick={() =>
-                        !["S.No.", "View", "Delete"].includes(header) &&
-                        handleSort(header)
-                      }
-                    >
-                      {header}
-                      {!["S.No.", "View", "Delete"].includes(header) && (
-                        <span>
-                          {sortConfig.key === header.toLowerCase()
-                            ? sortConfig.direction === "asc"
-                              ? " 🔼"
-                              : " 🔽"
-                            : " ⬍"}
-                        </span>
-                      )}
-                    </th>
-                  ))}
-                </tr>
-              )}
+              <tr>
+                {[
+                  "S.No.",
+                  "Invoice",
+                  "Name",
+                  "Phone",
+                  "Date",
+                  "Delivery",
+                  "Amount",
+                  "Paid",
+                  "Balance",
+                  "Settle",
+                  "View",
+                  "Delete",
+                ].map((header) => (
+                  <th
+                    key={header}
+                    className="px-4 py-3 border-r cursor-pointer"
+                    onClick={() =>
+                      !["S.No.", "View", "Delete"].includes(header) &&
+                      handleSort(header)
+                    }
+                  >
+                    {header}
+                    {!["S.No.", "View", "Delete"].includes(header) && (
+                      <span>
+                        {sortConfig.key === header.toLowerCase()
+                          ? sortConfig.direction === "asc"
+                            ? " 🔼"
+                            : " 🔽"
+                          : " ⬍"}
+                      </span>
+                    )}
+                  </th>
+                ))}
+              </tr>
             </thead>
 
             <tbody>
@@ -799,14 +761,13 @@ const Dashboard = () => {
                       <td className="px-4 py-3 border-r w-[10%]">
                         {formatDate(user.invoiceInfo.date)}
                       </td>
-                      {type === "Rajputi Poshak" ||
-                        (type === "Service Center" && (
-                          <td className="px-4 py-3 border-r w-[10%]">
-                            {user.invoiceInfo.expectedDate
-                              ? formatDate(user.invoiceInfo.expectedDate)
-                              : ""}
-                          </td>
-                        ))}
+
+                      <td className="px-4 py-3 border-r w-[10%]">
+                        {user.invoiceInfo.expectedDate
+                          ? formatDate(user.invoiceInfo.expectedDate)
+                          : ""}
+                      </td>
+
                       <td className="px-4 py-3 border-r text-right w-[10%]">
                         {user.taxCalculatedInfo.taxType === "alltax"
                           ? Math.round(
@@ -841,7 +802,6 @@ const Dashboard = () => {
                           {user.amountInfo.advance}
                         </td>
                       )}
-
                       {user.amountInfo.paymentType === "fullyPaid" ||
                       user.taxCalculatedInfo.balance === 0 ? (
                         <td className="px-4 py-3 text-green-600 border-r text-right w-[10%]">
@@ -852,7 +812,6 @@ const Dashboard = () => {
                           {user.taxCalculatedInfo.balance}
                         </td>
                       )}
-
                       {user.taxCalculatedInfo.balance > 0 ? (
                         <td className="px-4 py-3 border-r w-[10%] text-center">
                           <button
@@ -869,7 +828,6 @@ const Dashboard = () => {
                             : ""}
                         </td>
                       )}
-
                       <td className="px-4 py-3 border-r w-[8%]">
                         <button
                           onClick={() => handleView(user.id)}
