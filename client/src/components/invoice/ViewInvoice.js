@@ -1,16 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { FaRegEdit } from "react-icons/fa";
-import { BsWhatsapp } from "react-icons/bs";
 import { Printer, MessageCircle } from "lucide-react";
-import { Download } from "lucide-react";
-import { addDoc, collection, getDocs } from "firebase/firestore";
+import { collection } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import { useReactToPrint } from "react-to-print";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { toast } from "react-toastify";
-import Header from "../Header";
 import MobileMenu from "../MobileMenu";
 import Loader from "../Loader";
 import MessagePopup from "../MessagePopup";
@@ -106,36 +102,6 @@ function ViewInvoice() {
       setLoading(false);
     }
   };
-  const getCurrentDate = () => {
-    const now = new Date();
-
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, "0");
-    const day = String(now.getDate()).padStart(2, "0");
-    const hours = String(now.getHours()).padStart(2, "0");
-    const minutes = String(now.getMinutes()).padStart(2, "0");
-
-    const formatted = `${day}/${month}/${year}  ${hours}:${minutes}`;
-    return formatted;
-  };
-  const getLinkStr = async (invoiceNumber) => {
-    const invoiceInfo_CollectionRef2 = collection(db, "Invoice_Info");
-    const data = await getDocs(invoiceInfo_CollectionRef2);
-    const filteredData = data.docs.map((doc) => ({
-      ...doc.data(),
-      id: doc.id,
-    }));
-
-    const allBrandsInfo = filteredData.filter(
-      (x) => x.loggedInUser === loggedInUser
-    );
-
-    const invoiceData = allBrandsInfo.filter(
-      (x) => x.invoiceInfo.invoiceNumber === parseInt(invoiceNumber)
-    )[0];
-
-    return invoiceData.linkStr;
-  };
 
   const [openMessagePopup, setOpenMessagePopup] = useState(false);
   const handleCloseMessagePopup = () => {
@@ -146,58 +112,6 @@ function ViewInvoice() {
     setOpenMessagePopup(true);
   };
 
-  const handleWhatsApp = async () => {
-    try {
-      setLoading(true);
-
-      const linkStr = await getLinkStr(invoiceInfo.invoiceInfo.invoiceNumber);
-
-      const response = await fetch(
-        "https://invoicesimplify.onrender.com/send-sms",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: invoiceInfo.customerInfo.customerName,
-            to: "+91" + invoiceInfo.customerInfo.customerPhone,
-            businessname: invoiceInfo.businessInfo.name,
-            amount: invoiceInfo.amountInfo?.amount,
-            message:
-              "Dear " +
-              invoiceInfo.customerInfo.customerName +
-              ",\n\nThank you for your purchase! Your invoice is ready.\n\n" +
-              "You can view your invoice using the link below:\n\n" +
-              "https://invoicesimplify.com/ci/" +
-              linkStr +
-              "\n\nIf you have any questions, feel free to contact us.\n\n" +
-              "Best regards,\n" +
-              invoiceInfo.businessInfo.name +
-              "\n" +
-              invoiceInfo.businessInfo.phonePrimary,
-            urllink: "https://invoicesimplify.com/ci/" + linkStr,
-            date: getCurrentDate(),
-          }),
-        }
-      );
-
-      const result = await response.json();
-
-      //const res = await fetch("http://localhost:5001/send-message");
-      //const data = await res.json();
-      if (result.success) {
-        alert("Message sent successfully!");
-      } else {
-        alert("Failed to send message.");
-      }
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      console.error("Error sending message", error);
-      alert("Error sending message.", error);
-    }
-  };
   const handleLogin = () => {
     const user = localStorage.getItem("user");
 

@@ -103,8 +103,10 @@ const MessagePopup = ({
       } else {
         alert("Failed to send message.");
       }
+      handleCloseMessagePopup(true);
       setLoading(false);
     } catch (error) {
+      handleCloseMessagePopup(true);
       setLoading(false);
       console.error("Error sending message", error);
       alert("Error sending message.", error);
