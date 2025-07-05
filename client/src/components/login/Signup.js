@@ -165,6 +165,7 @@ const Signup = () => {
       orgCode: orgCode,
       code: code,
       userName: userName,
+      name: name,
       invoiceNumber: 1,
       type: type,
       loginDate: new Date().toISOString().slice(0, 10),
