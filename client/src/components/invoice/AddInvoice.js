@@ -706,7 +706,6 @@ const AddInvoice = () => {
                       <input
                         className="form-input w-full lg:w-8/12 block font-semibold text-[13px] rounded border border-gray-400 p-2 leading-5 "
                         required
-                        autoFocus
                         name="custname"
                         placeholder="Enter Customer Name"
                         value={customerName}
@@ -1090,7 +1089,6 @@ const AddInvoice = () => {
                           name="advanceAmount"
                           type="text"
                           pattern="[0-9]*"
-                          autoFocus
                           value={advanceAmount}
                           onChange={(e) => {
                             const val = e.target.value;

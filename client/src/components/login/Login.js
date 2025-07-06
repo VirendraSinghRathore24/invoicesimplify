@@ -224,7 +224,6 @@ const Login = () => {
                 <input
                   type="email"
                   name="email"
-                  autoFocus
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);

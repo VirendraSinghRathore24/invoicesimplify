@@ -104,7 +104,6 @@ const InventoryModal = ({ handleCloseItem, setItem }) => {
             <input
               type="text"
               placeholder="Search..."
-              autoFocus
               value={searchTerm}
               onChange={(e) => handleSearch(e)}
               className="p-2 border border-gray-300 rounded-md mb-4 w-full"

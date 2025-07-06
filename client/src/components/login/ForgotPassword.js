@@ -80,7 +80,6 @@ const ForgotPassword = () => {
                 </label>
                 <input
                   type="email"
-                  autoFocus
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}

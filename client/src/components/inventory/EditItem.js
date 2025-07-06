@@ -156,7 +156,6 @@ function EditItem({ handleCloseEditModal, setItemAdded, editPost }) {
               <input
                 type="text"
                 name="itemName"
-                autoFocus
                 value={inputs?.itemName}
                 onChange={handleChange}
                 required

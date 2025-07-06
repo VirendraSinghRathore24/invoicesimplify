@@ -158,7 +158,6 @@ function AddItem({ handleCloseItem, setItemAdded }) {
                 <input
                   type="text"
                   name="itemName"
-                  autoFocus
                   value={inputs?.itemName}
                   onChange={handleChange}
                   required

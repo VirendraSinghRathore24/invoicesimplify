@@ -168,6 +168,7 @@ const Signup = () => {
       name: name,
       invoiceNumber: 1,
       type: type,
+      subscription: "Free",
       loginDate: new Date().toISOString().slice(0, 10),
     });
 
@@ -251,7 +252,6 @@ const Signup = () => {
                 <input
                   type="text"
                   name="name"
-                  autoFocus
                   value={name}
                   onChange={(e) => {
                     setName(e.target.value);

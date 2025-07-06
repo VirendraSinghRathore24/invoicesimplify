@@ -56,7 +56,6 @@ const AllUsers = () => {
           <input
             type="text"
             placeholder="Search..."
-            autoFocus
             //value={searchTerm}
             //onChange={handleSearch}
             className="px-4 py-2 border rounded-lg w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -70,6 +69,7 @@ const AllUsers = () => {
                   "S.No.",
                   "Name",
                   "Email",
+                  "Subscription",
                   "Org Code",
                   "Login Date",
                   "Type",
@@ -125,6 +125,9 @@ const AllUsers = () => {
                       </td>
                       <td className="px-4 py-3 border-r w-[18%]">
                         {user.code}
+                      </td>
+                      <td className="px-4 py-3 border-r w-[18%]">
+                        {user.subscription}
                       </td>
                       <td className="px-4 py-3 border-r w-[10%]">
                         {user.orgCode}
