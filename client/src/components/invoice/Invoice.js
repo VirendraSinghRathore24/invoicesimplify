@@ -504,56 +504,64 @@ function Invoice() {
       </div>
 
       <div className="my-1 lg:my-5 p-1 lg:p-6">
-        <div className="flex flex-wrap justify-between w-full lg:w-8/12 mx-auto text-sm ">
-          <div className="flex gap-x-2">
-            <button
-              onClick={() => navigate("/createinvoice")}
-              className="flex items-center bg-[#E5E7EB] cursor-pointer font-bold px-2 lg:px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
-            >
-              <span className="mr-2">
-                <FaRegEdit size={22} />
-              </span>
-              Edit
-            </button>
-          </div>
-          <div>
-            <button
-              onClick={handlePrint}
-              className="flex items-center bg-[#E5E7EB]  font-bold px-2 lg:px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
-            >
-              <span className="mr-2">
-                <Printer />
-              </span>
-              Print
-            </button>
-          </div>
-
-          {/* <div>
-            <button
-              onClick={() => handleDownload()}
-              className="flex items-center bg-[#E5E7EB]  font-bold px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
-            >
-              <span className="mr-2">
-                <Download />
-              </span>
-              Download
-            </button>
-          </div> */}
-
-          <div>
-            <button
-              onClick={() => handleWhatsApp()}
-              className="flex items-center bg-[#E5E7EB]  font-bold px-2 lg:px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
-            >
-              <span className="mr-2">
-                <MessageCircle size={22} />
-              </span>
-              Message
-            </button>
+        <div className="hidden lg:block">
+          <div className="flex flex-wrap justify-between w-full lg:w-8/12 mx-auto text-sm ">
+            <div className="flex gap-x-2">
+              <button
+                onClick={() => navigate("/createinvoice")}
+                className="flex items-center bg-[#E5E7EB] cursor-pointer font-bold px-2 lg:px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
+              >
+                <span className="mr-2">
+                  <FaRegEdit size={22} />
+                </span>
+                Edit
+              </button>
+            </div>
+            <div>
+              <button
+                onClick={handlePrint}
+                className="flex items-center bg-[#E5E7EB]  font-bold px-2 lg:px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
+              >
+                <span className="mr-2">
+                  <Printer />
+                </span>
+                Print
+              </button>
+            </div>
+            <div>
+              <button
+                onClick={() => handleWhatsApp()}
+                className="flex items-center bg-[#E5E7EB]  font-bold px-2 lg:px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
+              >
+                <span className="mr-2">
+                  <MessageCircle size={22} />
+                </span>
+                Message
+              </button>
+            </div>
           </div>
         </div>
 
-        <div className="w-full lg:w-8/12 mx-auto border-[1.7px] rounded-md m-2 mt-4">
+        <div className="hidden max-lg:block">
+          <div className="flex flex-wrap justify-between w-full lg:w-8/12 mx-auto text-sm px-2">
+            <div className="flex gap-x-2">
+              <button onClick={() => navigate("/createinvoice")}>
+                <FaRegEdit size={22} />
+              </button>
+            </div>
+            <div>
+              <button onClick={handlePrint}>
+                <Printer />
+              </button>
+            </div>
+            <div>
+              <button onClick={() => handleWhatsApp()}>
+                <MessageCircle size={22} />
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className="w-full lg:w-8/12 mx-auto border-[1.7px] rounded-md m-2 mt-1 lg:mt-4">
           <div id="invoice" ref={printRef} className="p-2 lg:p-8">
             <div className="flex justify-between">
               <div>

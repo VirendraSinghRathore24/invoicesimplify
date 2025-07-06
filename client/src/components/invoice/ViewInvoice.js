@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Printer, MessageCircle } from "lucide-react";
+import { Printer, MessageCircle, ChevronLeft } from "lucide-react";
 import { collection } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import { useReactToPrint } from "react-to-print";
@@ -131,46 +131,69 @@ function ViewInvoice() {
         <MobileMenu />
       </div>
       <div className="my-1 lg:my-5 p-1 lg:p-6">
-        <div className="flex justify-between w-full lg:w-8/12 mx-auto">
-          <div>
-            <button
-              onClick={handlePrint}
-              className="flex items-center bg-[#E5E7EB]  font-bold px-2 lg:px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
-            >
-              <span className="mr-2">
+        <div className="hidden max-lg:block">
+          <div className="flex justify-between w-full lg:w-8/12 mx-auto px-2">
+            <div>
+              <button onClick={() => navigate(-1)}>
+                <ChevronLeft />
+              </button>
+            </div>
+            <div>
+              <button onClick={handlePrint}>
                 <Printer />
-              </span>
-              Print
-            </button>
-          </div>
+              </button>
+            </div>
 
-          {/* <div>
-            <button
-              onClick={() => handleDownload()}
-              className="flex items-center bg-[#E5E7EB]  font-bold px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
-            >
-              <span className="mr-2">
-                <Download />
-              </span>
-              Download
-            </button>
-          </div> */}
-
-          <div>
-            <button
-              onClick={() => handleMessage()}
-              className="flex items-center bg-[#E5E7EB]  font-bold px-2 lg:px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
-            >
-              <span className="mr-2">
+            <div>
+              <button onClick={() => handleMessage()}>
                 <MessageCircle size={22} />
-              </span>
-              Message
-            </button>
+              </button>
+            </div>
           </div>
         </div>
+
+        <div className="hidden lg:block">
+          <div className="flex justify-between w-full lg:w-8/12 mx-auto ">
+            <div>
+              <button
+                onClick={() => navigate(-1)}
+                className="flex items-center bg-[#E5E7EB]  font-bold px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
+              >
+                <span className="mr-2">
+                  <ChevronLeft />
+                </span>
+                Back
+              </button>
+            </div>
+            <div>
+              <button
+                onClick={handlePrint}
+                className="flex items-center bg-[#E5E7EB]  font-bold px-2 lg:px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
+              >
+                <span className="mr-2">
+                  <Printer />
+                </span>
+                Print
+              </button>
+            </div>
+
+            <div>
+              <button
+                onClick={() => handleMessage()}
+                className="flex items-center bg-[#E5E7EB] font-bold px-2 lg:px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
+              >
+                <span className="mr-2">
+                  <MessageCircle size={22} />
+                </span>
+                Message
+              </button>
+            </div>
+          </div>
+        </div>
+
         <div
           id="invoice"
-          className="w-full lg:w-8/12 mx-auto border-[1.7px] mt-4 rounded-md"
+          className="w-full lg:w-8/12 mx-auto border-[1.7px] mt-1 lg:mt-4 rounded-md"
         >
           <div ref={printRef} className="p-2 lg:p-8">
             <div className="flex justify-between">

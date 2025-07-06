@@ -741,9 +741,10 @@ const Dashboard = () => {
                   return (
                     <tr
                       key={user.id}
+                      onClick={() => handleView(user.id)}
                       className={`border-t ${
                         index % 2 === 0 ? "bg-white" : "bg-gray-50"
-                      } hover:bg-gray-200`}
+                      } hover:bg-gray-200 cursor-pointer`}
                     >
                       <td className="px-4 py-3 border-r w-[4%]">
                         {index + 1}.
