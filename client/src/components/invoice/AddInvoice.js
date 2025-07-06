@@ -691,10 +691,10 @@ const AddInvoice = () => {
         <div>
           <div className="flex flex-col w-full gap-y-3 mx-auto mb-10">
             <div className="flex flex-col lg:flex-row justify-between gap-x-2 w-full mx-auto">
-              <div className="flex flex-col w-full lg:w-6/12 mx-auto justify-start items-left mt-16 lg:mt-4 shadow-lg border-[1.2px] p-5 bg-white gap-y-4 rounded-md">
-                <div className="flex flex-col justify-start items-left gap-y-4 ">
+              <div className="flex flex-col w-full lg:w-6/12 mx-auto justify-start items-left mt-16 lg:mt-4 shadow-lg border-[1.2px] p-2 lg:p-5 bg-white gap-y-2 lg:gap-y-4 rounded-md">
+                <div className="flex flex-col justify-start items-left gap-y-0 lg:gap-y-4 ">
                   <div className="flex ">
-                    <div className="text-lg text-gray-600 font-medium">
+                    <div className="text-md lg:text-lg text-gray-600 font-medium">
                       Customer
                     </div>
                   </div>
@@ -741,8 +741,8 @@ const AddInvoice = () => {
                 </div>
               </div>
 
-              <div className="w-full lg:w-6/12 mx-auto flex flex-col mt-4 shadow-lg border-[1.2px] p-4 bg-white gap-y-4 rounded-md">
-                <div className="flex ">
+              <div className="w-full lg:w-6/12 mx-auto flex flex-col mt-4 shadow-lg border-[1.2px] p-2 lg:p-4 bg-white gap-y-2 lg:gap-y-4 rounded-md">
+                <div className="flex hidden lg:block">
                   <div className="text-xl text-gray-600 font-medium">
                     Invoice
                   </div>
@@ -754,7 +754,7 @@ const AddInvoice = () => {
                     </div>
                     <div>
                       <input
-                        className="w-10/12 lg:w-6/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5"
+                        className="w-6/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5"
                         required
                         name="invoiceNumber"
                         placeholder="10"
@@ -815,7 +815,7 @@ const AddInvoice = () => {
               </div>
             </div>
 
-            <div className="w-full mx-auto shadow-lg border-[1.2px] p-4 bg-white gap-y-4 rounded-md">
+            <div className="w-full mx-auto shadow-lg border-[1.2px] p-2 lg:p-4 bg-white gap-y-4 rounded-md">
               <div className="overflow-hidden ">
                 <table className="w-full mx-auto text-center text-sm font-light">
                   <thead className="text-[12px] md:text-md uppercase max-md:hidden">
@@ -1047,7 +1047,7 @@ const AddInvoice = () => {
 
               <div className="flex flex-col lg:flex-row justify-between w-full mx-auto">
                 <div className="w-full lg:w-3/12 mt-2">
-                  <div className="w-full mx-auto p-6 bg-white shadow-md border-[1.4px] rounded-md">
+                  <div className="w-full mx-auto p-2 lg:p-6 bg-white shadow-md border-[1.4px] rounded-md">
                     <h2 className="text-lg font-semibold mb-4">Payment Type</h2>
 
                     {/* Radio Options */}
