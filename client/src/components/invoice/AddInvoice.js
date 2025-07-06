@@ -506,6 +506,7 @@ const AddInvoice = () => {
     localStorage.removeItem("date");
     localStorage.removeItem("expecteddate");
     localStorage.removeItem("advance");
+    localStorage.removeItem("paymentType");
   };
 
   const getUserSettingsData = async (loggedInUser) => {

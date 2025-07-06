@@ -596,37 +596,39 @@ const Dashboard = () => {
         <MobileMenu />
       </div>
 
-      <div className="p-6">
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-8  p-3 rounded-md">
-          <div className={`p-5 rounded-lg shadow bg-indigo-500 text-white`}>
-            <div className="flex items-center justify-between">
-              <p className="text-md">Total Invoices</p>
-              <FileDigit />
+      <div className="p-2 lg:p-6">
+        <div className="hidden lg:block">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-8  p-3 rounded-md">
+            <div className={`p-5 rounded-lg shadow bg-indigo-500 text-white`}>
+              <div className="flex items-center justify-between">
+                <p className="text-md">Total Invoices</p>
+                <FileDigit />
+              </div>
+              <h3 className="mt-2 text-2xl font-semibold">
+                {filteredData ? filteredData.length : 0}
+              </h3>
             </div>
-            <h3 className="mt-2 text-2xl font-semibold">
-              {filteredData ? filteredData.length : 0}
-            </h3>
-          </div>
 
-          <div className={`p-5 rounded-lg shadow bg-purple-500 text-white`}>
-            <div className="flex items-center justify-between">
-              <p className="text-md">Paid</p>
-              <BanknoteArrowUp />
+            <div className={`p-5 rounded-lg shadow bg-purple-500 text-white`}>
+              <div className="flex items-center justify-between">
+                <p className="text-md">Paid</p>
+                <BanknoteArrowUp />
+              </div>
+              <h3 className="mt-2 text-2xl font-semibold"> {paidInvoices}</h3>
             </div>
-            <h3 className="mt-2 text-2xl font-semibold"> {paidInvoices}</h3>
-          </div>
 
-          <div className={`p-5 rounded-lg shadow bg-yellow-500 text-white`}>
-            <p className="text-md">Outstanding</p>
-            <h3 className="mt-2 text-2xl font-semibold">{settled}</h3>
-          </div>
-
-          <div className={`p-5 rounded-lg shadow bg-emerald-500 text-white`}>
-            <div className="flex items-center justify-between">
-              <p className="text-md">Profit</p>
-              <ArrowUp />
+            <div className={`p-5 rounded-lg shadow bg-yellow-500 text-white`}>
+              <p className="text-md">Outstanding</p>
+              <h3 className="mt-2 text-2xl font-semibold">{settled}</h3>
             </div>
-            <h3 className="mt-2 text-2xl font-semibold">₹ {totalProfit}</h3>
+
+            <div className={`p-5 rounded-lg shadow bg-emerald-500 text-white`}>
+              <div className="flex items-center justify-between">
+                <p className="text-md">Profit</p>
+                <ArrowUp />
+              </div>
+              <h3 className="mt-2 text-2xl font-semibold">₹ {totalProfit}</h3>
+            </div>
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 text-xs">
@@ -758,11 +760,11 @@ const Dashboard = () => {
                       <td className="px-4 py-3 border-r w-[10%]">
                         {user.customerInfo.customerPhone}
                       </td>
-                      <td className="px-4 py-3 border-r w-[10%]">
+                      <td className="px-1 lg:px-4 py-3 border-r w-[10%]">
                         {formatDate(user.invoiceInfo.date)}
                       </td>
 
-                      <td className="px-4 py-3 border-r w-[10%]">
+                      <td className="px-1 lg:px-4 py-3 border-r w-[10%]">
                         {user.invoiceInfo.expectedDate
                           ? formatDate(user.invoiceInfo.expectedDate)
                           : ""}
@@ -822,7 +824,7 @@ const Dashboard = () => {
                           </button>
                         </td>
                       ) : (
-                        <td className="px-4 py-3 border-r w-[10%] text-center">
+                        <td className="px-1 lg:px-4 py-3 border-r w-[10%] text-center">
                           {user.invoiceInfo.settledDate
                             ? formatDate(user.invoiceInfo.settledDate)
                             : ""}
