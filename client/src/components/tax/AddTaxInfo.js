@@ -23,7 +23,7 @@ function AddTaxInfo() {
       localStorage.setItem("taxInfo", JSON.stringify(inputs));
       await addTaxData(inputs);
       setLoading(false);
-      toast("Tax Info Saved Successfully !!!");
+      alert("Tax Info Saved Successfully !!!");
     } catch (err) {
       console.log(err);
       setLoading(false);

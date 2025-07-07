@@ -87,7 +87,7 @@ function EditBusinessInfo() {
       setSaving(true);
       await delay(2000);
       setSaving(false);
-      toast("Business Info Updated Successfully !!!");
+      alert("Business Info Updated Successfully !!!");
     } catch (er) {
       console.log(er);
     }

@@ -44,7 +44,8 @@ function AddBusinessInfo() {
       localStorage.setItem("businessInfo", JSON.stringify(inputs));
       await addBusinessData(inputs);
 
-      toast("Business Info Saved Successfully !!!");
+      alert("Business Info Saved Successfully !!!");
+
       setLoading(false);
     } catch (er) {
       console.log(er);

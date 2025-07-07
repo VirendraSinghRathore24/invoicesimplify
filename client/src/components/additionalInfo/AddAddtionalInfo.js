@@ -24,7 +24,7 @@ function AddAddtionalInfo() {
       localStorage.setItem("additionalInfo", JSON.stringify(inputs));
       await addAdditionalData(inputs);
       navigate("/additionalinfo");
-      toast("Additional Info Saved Successfully !!!");
+      alert("Additional Info Saved Successfully !!!");
       setLoading(false);
     } catch (err) {
       alert(err);
