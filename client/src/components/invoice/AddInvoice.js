@@ -522,7 +522,7 @@ const AddInvoice = () => {
 
   useEffect(() => {
     getLocalStoragePersonalInfo();
-    getLocalStorageInvoiceInfo();
+    //getLocalStorageInvoiceInfo();
     getAllRowsFromLocalStorage();
 
     getLocalStorageSignInfo();
