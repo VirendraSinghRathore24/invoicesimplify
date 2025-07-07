@@ -564,10 +564,10 @@ function Invoice() {
         <div className="w-full lg:w-8/12 mx-auto border-[1.7px] rounded-md m-2 mt-1 lg:mt-4">
           <div id="invoice" ref={printRef} className="p-2 lg:p-8">
             <div className="flex justify-between">
-              <div>
+              <div className="-ml-4">
                 <img
-                  src="../images/matadi1.jpeg"
-                  className="h-10 lg:h-20 w-10 lg:w-20"
+                  src="../images/logo12.png"
+                  className="h-10 lg:h-20 w-16 lg:w-36"
                 />
               </div>
 
