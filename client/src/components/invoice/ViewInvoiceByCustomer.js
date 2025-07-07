@@ -161,7 +161,7 @@ function ViewInvoiceByCustomer() {
             <div className="flex justify-between">
               <div>
                 <img
-                  src="../images/logo12.png"
+                  src="../images/logo14.webp"
                   className="h-10 lg:h-20 w-16 lg:w-[155px]"
                 />
               </div>

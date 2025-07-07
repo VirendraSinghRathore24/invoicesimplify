@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import {
-  FaHome,
-  FaUser,
-  FaChevronDown,
-  FaChevronRight,
-  FaCog,
-} from "react-icons/fa";
+import { FaChevronDown, FaChevronRight, FaCog } from "react-icons/fa";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { TbReceiptTax } from "react-icons/tb";
 import { TbFileInvoice } from "react-icons/tb";
@@ -13,25 +7,18 @@ import { GrNotes } from "react-icons/gr";
 import { LuLayoutDashboard } from "react-icons/lu";
 import * as IoIcons from "react-icons/io";
 import { MdOutlineInventory } from "react-icons/md";
-import { MdLogout, MdOutlineMessage } from "react-icons/md";
 import {
   LogOutIcon,
   ShieldCheck,
   CircleCheckBig,
   RefreshCcw,
-  Trash2,
 } from "lucide-react";
-import { getAdditionalUserInfo } from "firebase/auth";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../config/firebase";
 import Loader from "./Loader";
-import { IoRemove } from "react-icons/io5";
 
 const Sidebar = () => {
   const [openSubMenu, setOpenSubMenu] = useState(null);
   const location = useLocation();
   const loggedInUser = localStorage.getItem("user");
-  const [loading, setLoading] = useState(false);
 
   const toggleSubMenu = (menuName) => {
     setOpenSubMenu(openSubMenu === menuName ? null : menuName);
@@ -48,117 +35,6 @@ const Sidebar = () => {
     }
   };
 
-  const handleSync = async () => {
-    // get all data from db and reload to local storage
-    try {
-      setLoading(true);
-      const loggedInUser = localStorage.getItem("user");
-      await getBusinessInfo(loggedInUser);
-      await getTaxInfo(loggedInUser);
-      await getAdditionalInfo(loggedInUser);
-      await getInventoryItems(loggedInUser);
-      await getAllInvoices(loggedInUser);
-      setLoading(false);
-    } catch (err) {
-      console.log(err);
-      setLoading(false);
-    }
-  };
-
-  const basicInfo_CollectionRef = collection(db, "Basic_Info");
-  const getBusinessInfo = async (loggedInUser) => {
-    try {
-      const data = await getDocs(basicInfo_CollectionRef);
-      const filteredData = data.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
-
-      const basicInfo = filteredData.filter(
-        (x) => x.loggedInUser === loggedInUser
-      )[0];
-      localStorage.setItem(
-        "businessInfo",
-        JSON.stringify(basicInfo?.businessInfo)
-      );
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const getTaxInfo = async (loggedInUser) => {
-    try {
-      const data = await getDocs(basicInfo_CollectionRef);
-      const filteredData = data.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
-
-      const basicInfo = filteredData.filter(
-        (x) => x.loggedInUser === loggedInUser
-      )[0];
-      localStorage.setItem("taxInfo", JSON.stringify(basicInfo?.taxInfo));
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const getAdditionalInfo = async (loggedInUser) => {
-    try {
-      const data = await getDocs(basicInfo_CollectionRef);
-      const filteredData = data.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
-
-      const basicInfo = filteredData.filter(
-        (x) => x.loggedInUser === loggedInUser
-      )[0];
-      localStorage.setItem(
-        "additionalInfo",
-        JSON.stringify(basicInfo?.additionalInfo)
-      );
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const getInventoryItems = async (loggedInUser) => {
-    try {
-      const inventoryInfo_CollectionRef = collection(db, "Inventory_Info");
-      const data = await getDocs(inventoryInfo_CollectionRef);
-      const filteredData = data.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
-
-      const inventoryInfo = filteredData.filter(
-        (x) => x.loggedInUser === loggedInUser
-      )[0];
-
-      // get items list
-      const inventoryItems = inventoryInfo.inventory.sort((a, b) =>
-        a.itemName.localeCompare(b.itemName)
-      );
-      localStorage.setItem("inventoryItems", JSON.stringify(inventoryItems));
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const invoiceInfo_CollectionRef = collection(db, "Invoice_Info");
-  const getAllInvoices = async (loggedInUser) => {
-    const data = await getDocs(invoiceInfo_CollectionRef);
-    const filteredData = data.docs.map((doc) => ({
-      ...doc.data(),
-      id: doc.id,
-    }));
-
-    const invoiceInfo = filteredData.filter(
-      (x) => x.loggedInUser === loggedInUser
-    );
-    localStorage.setItem("dashboardInfo", JSON.stringify(invoiceInfo));
-  };
   return (
     <div className="w-64 h-screen bg-[#014459] text-white flex flex-col shadow-lg">
       <NavLink className="text-xl font-bold p-5 border-b border-white" to={"/"}>
@@ -255,7 +131,8 @@ const Sidebar = () => {
           <SubMenuItem
             icon={<RefreshCcw size={18} />}
             text="Sync (Refresh)"
-            onClick={handleSync}
+            to="/refresh"
+            active={location.pathname === "/refresh"}
           />
           {/* <SubMenuItem
             icon={<MdOutlineMessage size={20} />}
@@ -293,7 +170,6 @@ const Sidebar = () => {
           <div>ISO Certified</div>
         </div>
       </div>
-      {loading && <Loader />}
     </div>
   );
 };

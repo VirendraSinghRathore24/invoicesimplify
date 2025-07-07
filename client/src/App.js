@@ -37,6 +37,7 @@ import FirebasePhoneAuth from "./components/login/FirebasePhoneAuth";
 import SMS from "./components/SMS";
 import TaxSelector from "./components/TaxSelector";
 import AllUsers from "./components/admin/AllUsers";
+import Refresh from "./components/Refresh";
 
 function App() {
   const location = useLocation();
@@ -105,6 +106,7 @@ function App() {
           <Route path="/privacypolicy" element={<PrivacyPolicy />} />
           <Route path="/termsofuse" element={<TermsOfUse />} />
           <Route path="/sms" element={<SMS />} />
+          <Route path="/refresh" element={<Refresh />} />
 
           <Route path="/admin/allusers" element={<AllUsers />} />
         </Routes>
