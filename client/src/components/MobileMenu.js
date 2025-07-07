@@ -7,6 +7,7 @@ import Loader from "./Loader";
 const MobileMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
   const loggedInUser = localStorage.getItem("user");
+  const name = localStorage.getItem("name");
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -60,14 +61,17 @@ const MobileMenu = () => {
         <div className="p-4 border-b text-xl font-bold text-blue-600">
           InvoiceSimplify
         </div>
-        <hr />
+
         <div className="text-sm font-bold py-2 border-b border-white text-center flex items-center break-all justify-start px-6 break-words">
           <div className="w-8 h-8 bg-amber-500 text-white rounded-full flex items-center justify-center mr-2 ">
-            {loggedInUser?.charAt(0).toUpperCase()}
+            {name?.charAt(0).toUpperCase()}
           </div>
-          {loggedInUser}
+          {name}
         </div>
         <hr />
+        <div className="text-[12px] text-center mt-2">{loggedInUser}</div>
+        <hr className="mt-2" />
+
         <nav className="p-4 space-y-4">
           {menuItems.map((item, index) => (
             <NavLink

@@ -18,11 +18,34 @@ const Refresh = () => {
       await getAdditionalInfo(loggedInUser);
       await getInventoryItems(loggedInUser);
       await getAllInvoices(loggedInUser);
+      await getLoginInfo(loggedInUser);
       navigate(-1);
       setLoading(false);
     } catch (err) {
       console.log(err);
       setLoading(false);
+    }
+  };
+
+  const login_CollectionRef = collection(db, "Login_Info");
+  const getLoginInfo = async (loggedInUser) => {
+    try {
+      const data = await getDocs(login_CollectionRef);
+      const filteredData = data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+
+      const loginInfo = filteredData.filter(
+        (x) => x.loggedInUser === loggedInUser
+      )[0];
+
+      localStorage.setItem("user", loginInfo.code);
+      localStorage.setItem("userName", loginInfo.userName);
+      localStorage.setItem("name", loginInfo.name);
+      localStorage.setItem("type", loginInfo.type);
+    } catch (err) {
+      console.log(err);
     }
   };
 

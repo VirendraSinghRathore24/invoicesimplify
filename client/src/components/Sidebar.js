@@ -13,11 +13,11 @@ import {
   CircleCheckBig,
   RefreshCcw,
 } from "lucide-react";
-import Loader from "./Loader";
 
 const Sidebar = () => {
   const [openSubMenu, setOpenSubMenu] = useState(null);
   const location = useLocation();
+  const name = localStorage.getItem("name");
   const loggedInUser = localStorage.getItem("user");
 
   const toggleSubMenu = (menuName) => {
@@ -42,10 +42,12 @@ const Sidebar = () => {
       </NavLink>
       <div className="text-sm font-bold break-all py-2 border-b border-white text-center flex items-center justify-start px-6 break-words">
         <div className="w-8 h-8 bg-amber-500 text-white rounded-full flex items-center justify-center mr-2">
-          {loggedInUser?.charAt(0).toUpperCase()}
+          {name?.charAt(0).toUpperCase()}
         </div>
-        {loggedInUser}
+        {name}
       </div>
+      <div className="text-[12px] text-center mt-2">{loggedInUser}</div>
+      <hr className="mt-2" />
 
       <nav className="flex-1 px-4 py-2 overflow-y-auto text-sm">
         <SidebarItem
