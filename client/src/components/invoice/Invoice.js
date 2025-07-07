@@ -567,7 +567,7 @@ function Invoice() {
               <div className="-ml-4">
                 <img
                   src="../images/logo12.png"
-                  className="h-10 lg:h-20 w-16 lg:w-36"
+                  className="h-10 lg:h-20 w-16 lg:w-[155px]"
                 />
               </div>
 
