@@ -381,7 +381,7 @@ function ViewInvoice() {
                   invoiceInfo?.taxInfo?.cgstAmount && (
                     <div className="w-full flex justify-end gap-x-10">
                       <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs  font-semibold rounded-md uppercase ">
-                        CGST {invoiceInfo?.taxInfo?.cgstAmount}%
+                        CGST ({invoiceInfo?.taxInfo?.cgstAmount}%)
                       </div>
                       <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-xs font-semibold rounded-md">
                         ₹ {Math.round(invoiceInfo?.taxCalculatedInfo?.cgst)}
@@ -396,7 +396,7 @@ function ViewInvoice() {
                   invoiceInfo?.taxInfo?.sgstAmount && (
                     <div className="w-full flex justify-end gap-x-10">
                       <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs  font-semibold rounded-md uppercase ">
-                        SGST {invoiceInfo?.taxInfo?.sgstAmount}%
+                        SGST ({invoiceInfo?.taxInfo?.sgstAmount}%)
                       </div>
                       <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-xs  font-semibold rounded-md ">
                         ₹ {Math.round(invoiceInfo?.taxCalculatedInfo?.sgst)}
@@ -411,7 +411,7 @@ function ViewInvoice() {
                   invoiceInfo?.taxInfo?.igstAmount && (
                     <div className="w-full flex justify-end gap-x-10">
                       <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs  font-semibold rounded-md uppercase ">
-                        IGST {invoiceInfo?.taxInfo?.igstAmount}%
+                        IGST ({invoiceInfo?.taxInfo?.igstAmount}%)
                       </div>
                       <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-xs  font-semibold rounded-md ">
                         ₹ {Math.round(invoiceInfo?.taxCalculatedInfo?.igst)}
@@ -426,7 +426,7 @@ function ViewInvoice() {
                   invoiceInfo?.taxInfo?.ugstAmount && (
                     <div className="w-full flex justify-end gap-x-10">
                       <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs  font-semibold rounded-md uppercase ">
-                        UGST {invoiceInfo?.taxInfo?.ugstAmount}%
+                        UGST ({invoiceInfo?.taxInfo?.ugstAmount}%)
                       </div>
                       <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-xs  font-semibold rounded-md ">
                         ₹ {Math.round(invoiceInfo?.taxCalculatedInfo?.ugst)}
@@ -441,7 +441,7 @@ function ViewInvoice() {
                   invoiceInfo?.taxInfo?.taxAmount && (
                     <div className="w-full flex justify-end gap-x-10">
                       <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs  font-semibold rounded-md uppercase ">
-                        Tax {invoiceInfo?.taxInfo?.taxAmount}%
+                        Tax ({invoiceInfo?.taxInfo?.taxAmount}%)
                       </div>
                       <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-xs  font-semibold rounded-md ">
                         ₹ {Math.round(invoiceInfo?.taxCalculatedInfo?.tax)}

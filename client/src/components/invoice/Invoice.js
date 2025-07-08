@@ -566,7 +566,7 @@ function Invoice() {
             <div className="flex justify-between">
               <div className="-ml-4">
                 <img
-                  src="../images/logo14.webp"
+                  src="../images/logo12.png"
                   className="h-10 lg:h-20 w-16 lg:w-[155px]"
                 />
               </div>
@@ -748,7 +748,7 @@ function Invoice() {
                 {taxInfo?.taxType === "alltax" && taxInfo?.cgstAmount && (
                   <div className="w-full flex justify-end gap-x-10 mt-2">
                     <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs  font-semibold rounded-md uppercase">
-                      CGST {taxInfo?.cgstAmount}%
+                      CGST ({taxInfo?.cgstAmount}%)
                     </div>
                     <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-xs  font-semibold rounded-md">
                       ₹ {taxCalculatedInfo?.cgst}
@@ -761,7 +761,7 @@ function Invoice() {
                 {taxInfo?.taxType === "alltax" && taxInfo?.sgstAmount && (
                   <div className="w-full flex justify-end gap-x-10 mt-2">
                     <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs  font-semibold rounded-md uppercase">
-                      SGST {taxInfo.sgstAmount}%
+                      SGST ({taxInfo.sgstAmount}%)
                     </div>
                     <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-xs  font-semibold rounded-md">
                       ₹ {taxCalculatedInfo?.sgst}
@@ -774,7 +774,7 @@ function Invoice() {
                 {taxInfo?.taxType === "alltax" && taxInfo?.igstAmount && (
                   <div className="w-full flex justify-end gap-x-10 mt-2">
                     <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs  font-semibold rounded-md uppercase">
-                      IGST {taxInfo.igstAmount}%
+                      IGST ({taxInfo.igstAmount}%)
                     </div>
                     <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-xs  font-semibold rounded-md">
                       ₹ {taxCalculatedInfo?.igst}
@@ -787,7 +787,7 @@ function Invoice() {
                 {taxInfo?.taxType === "alltax" && taxInfo?.ugstAmount && (
                   <div className="w-full flex justify-end gap-x-10 mt-2">
                     <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs  font-semibold rounded-md uppercase">
-                      UGST {taxInfo.ugstAmount}%
+                      UGST ({taxInfo.ugstAmount}%)
                     </div>
                     <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-xs  font-semibold rounded-md">
                       ₹ {taxCalculatedInfo?.ugst}
@@ -800,7 +800,7 @@ function Invoice() {
                 {taxInfo?.taxType === "tax" && taxInfo?.taxAmount && (
                   <div className="w-full flex justify-end gap-x-10 mt-2">
                     <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs  font-semibold rounded-md uppercase">
-                      Tax {taxInfo.taxAmount}%
+                      Tax ({taxInfo.taxAmount}%)
                     </div>
                     <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-xs  font-semibold rounded-md">
                       ₹ {taxCalculatedInfo?.tax}

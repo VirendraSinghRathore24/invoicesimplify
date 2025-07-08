@@ -250,6 +250,16 @@ const AddInvoice = () => {
       return;
     }
 
+    if (!invoiceNumber) {
+      alert("Please add invoice number !!!");
+      return;
+    }
+
+    if (!date) {
+      alert("Please add invoice date !!!");
+      return;
+    }
+
     let info1 = localStorage.getItem("businessInfo");
     if (!info1 || info1 === null || info1 === undefined || info1 === "null") {
       alert("Please add business name to create invoice !!!");
@@ -290,6 +300,11 @@ const AddInvoice = () => {
       return;
     }
 
+    // verify invoice number
+    if (await isInvoiceNumberExists(invoiceNumber)) {
+      alert("Invoice number is already exists, Please change it !!!");
+      return;
+    }
     const customerInfo = {
       customerName: customerName,
       customerPhone: customerPhone,
@@ -405,6 +420,23 @@ const AddInvoice = () => {
     refreshPage();
   };
 
+  const isInvoiceNumberExists = async (invoiceNumber) => {
+    const invoiceInfo_CollectionRef = collection(db, "Invoice_Info");
+    const data = await getDocs(invoiceInfo_CollectionRef);
+    const filteredData = data.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+
+    const invoiceExists = filteredData.some(
+      (invoice) =>
+        parseInt(invoice?.invoiceInfo?.invoiceNumber) ===
+        parseInt(invoiceNumber)
+    );
+
+    return invoiceExists;
+  };
+
   const [sign, setSign] = useState(false);
 
   const [open, setOpen] = React.useState(false);
@@ -453,13 +485,13 @@ const AddInvoice = () => {
   };
 
   const getLocalStorageInvoiceInfo = async () => {
-    if (localStorage.getItem("invoiceNumber")) {
-      setInvoiceNumber(localStorage.getItem("invoiceNumber"));
-    } else {
-      const newInvoiceNumber = 0; //await getInvoiceNumber(loggedInUser);
-      setInvoiceNumber(newInvoiceNumber);
-      localStorage.setItem("invoiceNumber", newInvoiceNumber);
-    }
+    // if (localStorage.getItem("invoiceNumber")) {
+    //   setInvoiceNumber(localStorage.getItem("invoiceNumber"));
+    // } else {
+    //   const newInvoiceNumber = 0; //await getInvoiceNumber(loggedInUser);
+    //   setInvoiceNumber(newInvoiceNumber);
+    //   localStorage.setItem("invoiceNumber", newInvoiceNumber);
+    // }
 
     const dat = localStorage.getItem("date");
     if (dat) {
@@ -522,7 +554,7 @@ const AddInvoice = () => {
 
   useEffect(() => {
     getLocalStoragePersonalInfo();
-    //getLocalStorageInvoiceInfo();
+    getLocalStorageInvoiceInfo();
     getAllRowsFromLocalStorage();
 
     getLocalStorageSignInfo();
