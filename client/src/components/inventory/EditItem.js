@@ -13,6 +13,8 @@ function EditItem({ handleCloseEditModal, setItemAdded, editPost }) {
   const [posts, setPosts] = useState([]);
   const [selectedUnit, setSelectedUnit] = useState(editPost.selectedUnit);
   const [loading, setLoading] = useState(false);
+  const [itemNameUpdated, setItemNameUpdated] = useState(false);
+  const [itemCodeUpdated, setItemCodeUpdated] = useState(false);
 
   console.log("editPost", editPost);
 
@@ -71,6 +73,7 @@ function EditItem({ handleCloseEditModal, setItemAdded, editPost }) {
 
     const duplicateItem = existingItems.filter(
       (item) =>
+        (itemNameUpdated || itemCodeUpdated) &&
         item.itemCode === inputs.itemCode &&
         item.itemName.toLowerCase().trim() ===
           inputs.itemName.toLowerCase().trim()
@@ -114,6 +117,16 @@ function EditItem({ handleCloseEditModal, setItemAdded, editPost }) {
   const handleChange = (event) => {
     const name = event.target.name;
     const value = event.target.value;
+
+    setItemNameUpdated(false);
+    setItemCodeUpdated(false);
+
+    if (name === "itemName") {
+      setItemNameUpdated(true);
+    }
+    if (name === "itemCode") {
+      setItemCodeUpdated(true);
+    }
     setInputs((values) => ({ ...values, [name]: value }));
   };
 
