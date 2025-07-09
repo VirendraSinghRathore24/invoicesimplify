@@ -503,7 +503,7 @@ function Invoice() {
         <MobileMenu />
       </div>
 
-      <div className="my-1 lg:my-5 p-1 lg:p-6">
+      <div className="my-1 lg:my-2 p-1">
         <div className="hidden lg:block">
           <div className="flex flex-wrap justify-between w-full lg:w-8/12 mx-auto text-sm ">
             <div className="flex gap-x-2">
