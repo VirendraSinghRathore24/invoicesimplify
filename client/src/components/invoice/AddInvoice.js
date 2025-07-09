@@ -689,7 +689,7 @@ const AddInvoice = () => {
       <div className="hidden max-lg:block mb-16">
         <MobileMenu />
       </div>
-      <div className="top-14 lg:top-0 mx-auto w-full h-[56px] lg:h-[68px] text-white fixed lg:sticky bg-white shadow-lg">
+      <div className="top-14 lg:top-0 mx-auto w-full h-[56px] lg:h-[68px] text-white fixed lg:sticky bg-white border-[1.4px]">
         <div className="flex justify-between mx-auto font-bold text-md p-2 rounded-md fixed w-full lg:w-[81.5%]">
           <div className="text-xl text-black hidden lg:block">
             Create Invoice

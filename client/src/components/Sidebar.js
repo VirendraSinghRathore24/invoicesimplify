@@ -37,7 +37,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="w-64 h-screen bg-[#014459] text-white flex flex-col shadow-lg">
+    <div className="w-60 h-screen bg-[#014459] text-white flex flex-col shadow-lg">
       <NavLink className="text-xl font-bold p-5 border-b border-white" to={"/"}>
         Invoice Simplify
       </NavLink>
