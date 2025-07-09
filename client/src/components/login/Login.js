@@ -80,7 +80,8 @@ const Login = () => {
     const loginInfo = filteredData.filter((x) => x.code === loggedInUser)[0];
 
     localStorage.setItem("type", loginInfo.type);
-    localStorage.setItem("name", loginInfo.name);
+    localStorage.setItem("name1", loginInfo.name);
+    localStorage.setItem("subscription", loginInfo.subscription);
   };
 
   const invoiceInfo_CollectionRef = collection(db, "Invoice_Info");

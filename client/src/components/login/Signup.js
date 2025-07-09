@@ -100,9 +100,10 @@ const Signup = () => {
           localStorage.setItem("auth", "Logged In");
           localStorage.setItem("user", code);
           localStorage.setItem("userName", userName);
-          localStorage.setItem("name", name);
+          localStorage.setItem("name1", name);
           localStorage.setItem("invoiceNumber", 1);
           localStorage.setItem("type", type);
+          localStorage.setItem("subscription", "Free");
 
           setLoading(false);
           navigate("/businessinfo");

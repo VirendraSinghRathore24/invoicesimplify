@@ -7,7 +7,8 @@ import Loader from "./Loader";
 const MobileMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
   const loggedInUser = localStorage.getItem("user");
-  const name = localStorage.getItem("name");
+  const subscription = localStorage.getItem("subscription");
+  const name = localStorage.getItem("name1");
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -83,6 +84,18 @@ const MobileMenu = () => {
             </NavLink>
           ))}
         </nav>
+        <div className="bg-white rounded-xl p-4 m-2 text-gray-800 shadow-inner">
+          <h3 className="text-sm font-medium text-gray-600 mb-1">
+            Plan Type :
+            <span className="inline-block bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full">
+              {subscription}
+            </span>
+          </h3>
+
+          <button className="mt-4 w-full bg-indigo-600 hover:bg-indigo-700 text-white text-xs py-2 rounded-lg transition-all duration-200 font-semibold">
+            Upgrade Plan
+          </button>
+        </div>
 
         <div className="p-4 bottom-0 mt-auto border-t text-center">
           <button onClick={handleLogout}>Logout</button>

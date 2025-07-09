@@ -42,7 +42,7 @@ const Refresh = () => {
 
       localStorage.setItem("user", loginInfo.code);
       localStorage.setItem("userName", loginInfo.userName);
-      localStorage.setItem("name", loginInfo.name);
+      localStorage.setItem("name1", loginInfo.name);
       localStorage.setItem("type", loginInfo.type);
     } catch (err) {
       console.log(err);

@@ -17,8 +17,9 @@ import {
 const Sidebar = () => {
   const [openSubMenu, setOpenSubMenu] = useState(null);
   const location = useLocation();
-  const name = localStorage.getItem("name");
+  const name = localStorage.getItem("name1");
   const loggedInUser = localStorage.getItem("user");
+  const subscription = localStorage.getItem("subscription");
 
   const toggleSubMenu = (menuName) => {
     setOpenSubMenu(openSubMenu === menuName ? null : menuName);
@@ -59,41 +60,29 @@ const Sidebar = () => {
 
         <SidebarItem
           icon={<IoIcons.IoIosPaper size={20} />}
-          text="Business Info"
-          //hasSubMenu
-          //isOpen={openSubMenu === 'businessinfo'}
-          //onClick={() => toggleSubMenu('businessinfo')}
-          link="/businessinfo"
-          active={location.pathname === "/businessinfo"}
+          text="Basic Info"
+          hasSubMenu
+          isOpen={openSubMenu === "basicinfo"}
+          onClick={() => toggleSubMenu("basicinfo")}
         >
-          {/* <SubMenuItem text="Add Business Info" to="/businessinfo" active={location.pathname === '/businessinfo'}/>
-          <SubMenuItem text="Edit Business Info" to="/editbusinessinfo" active={location.pathname === '/editbusinessinfo'}/> */}
-        </SidebarItem>
-
-        <SidebarItem
-          icon={<TbReceiptTax size={24} />}
-          text="Tax Info"
-          link="/taxinfo"
-          active={location.pathname === "/taxinfo"}
-          // hasSubMenu
-          //isOpen={openSubMenu === 'taxinfo'}
-          //onClick={() => toggleSubMenu('taxinfo')}
-        >
-          {/* <SubMenuItem text="Add Tax Info" to="/taxinfo" active={location.pathname === '/taxinfo'}/>
-          <SubMenuItem text="Edit Tax Info" to="/edittaxinfo" active={location.pathname === '/edittaxinfo'} /> */}
-        </SidebarItem>
-
-        <SidebarItem
-          icon={<TbFileInvoice size={24} />}
-          text="Additional Info"
-          link="/additionalinfo"
-          active={location.pathname === "/additionalinfo"}
-          //hasSubMenu
-          //isOpen={openSubMenu === 'additionalinfo'}
-          //onClick={() => toggleSubMenu('additionalinfo')}
-        >
-          {/* <SubMenuItem text="Add Additional Info" to="/additionalinfo" active={location.pathname === '/additionalinfo'}/>
-          <SubMenuItem text="Edit Additional Info" to="/editadditionalinfo" active={location.pathname === '/editadditionalinfo'}/> */}
+          <SubMenuItem
+            icon={<IoIcons.IoIosPaper size={20} />}
+            text="Business Info"
+            to="/businessinfo"
+            active={location.pathname === "/businessinfo"}
+          />
+          <SubMenuItem
+            icon={<TbReceiptTax size={24} />}
+            text="Tax Info"
+            to="/taxinfo"
+            active={location.pathname === "/taxinfo"}
+          />
+          <SubMenuItem
+            icon={<TbFileInvoice size={24} />}
+            text="Additional Info"
+            to="/additionalinfo"
+            active={location.pathname === "/additionalinfo"}
+          />
         </SidebarItem>
 
         <SidebarItem
@@ -162,6 +151,19 @@ const Sidebar = () => {
           <SubMenuItem text="Edit Inventory" to="/editinventory" active={location.pathname === '/editinventory'}/> */}
         </SidebarItem>
       </nav>
+      <div className="bg-white rounded-xl p-4 m-2 text-gray-800 shadow-inner">
+        <h3 className="text-sm font-medium text-gray-600 mb-1">
+          Plan Type :
+          <span className="inline-block bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full">
+            {subscription}
+          </span>
+        </h3>
+
+        <button className="mt-4 w-full bg-indigo-600 hover:bg-indigo-700 text-white text-sm py-2 rounded-lg transition-all duration-200 font-semibold">
+          Upgrade Plan
+        </button>
+      </div>
+
       <div className="text-xs font-bold border-t border-white flex justify-evenly mb-2 py-2">
         <div className="flex items-center space-x-1">
           <ShieldCheck size={20} />
