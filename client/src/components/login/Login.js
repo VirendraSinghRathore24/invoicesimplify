@@ -70,17 +70,17 @@ const Login = () => {
   };
 
   const login_CollectionRef = collection(db, "Login_Info");
-  const getBusinessType = async () => {
+  const getBusinessType = async (loggedInUser) => {
     const data = await getDocs(login_CollectionRef);
     const filteredData = data.docs.map((doc) => ({
       ...doc.data(),
       id: doc.id,
     }));
 
-    const loggedInUser = localStorage.getItem("user");
     const loginInfo = filteredData.filter((x) => x.code === loggedInUser)[0];
 
     localStorage.setItem("type", loginInfo.type);
+    localStorage.setItem("name", loginInfo.name);
   };
 
   const invoiceInfo_CollectionRef = collection(db, "Invoice_Info");
@@ -114,7 +114,7 @@ const Login = () => {
           localStorage.setItem("user", code);
           localStorage.setItem("userName", userName);
 
-          await getBusinessType();
+          await getBusinessType(code);
 
           // get all data and add to local storage
           await getAllData(code);
@@ -150,6 +150,7 @@ const Login = () => {
     }
   };
 
+  const getLoginInfo = async () => {};
   const signInWithGoogle = async () => {
     try {
       await signInWithPopup(auth, googleProvider);

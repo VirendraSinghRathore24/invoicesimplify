@@ -170,11 +170,10 @@ const AddInvoice = () => {
   };
 
   const AddTotal = () => {
-    var total = 0;
-    for (let i = 0; i < rows?.length; i++) {
-      total += parseInt(rows[i].amount);
-    }
-
+    const total = rows.reduce(
+      (acc, row) => acc + (parseInt(row.amount) || 0),
+      0
+    );
     setAmount(total);
   };
 

@@ -130,6 +130,27 @@ function AddItem({ handleCloseItem, setItemAdded }) {
 
   useEffect(() => {
     handleLogin();
+    var today = new Date();
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "July",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    let month = months[today.getMonth()];
+    const code =
+      month.substring(0, 3).toUpperCase() +
+      today.getFullYear().toString().substring(2);
+
+    setInputs((values) => ({ ...values, ["itemCode"]: code }));
   }, []);
 
   return (
