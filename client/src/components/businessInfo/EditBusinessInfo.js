@@ -61,18 +61,13 @@ function EditBusinessInfo() {
     try {
       // get doc id
       const data = await getDocs(basicInfo_CollectionRef);
-      const filteredData = data.docs.map((doc) => ({
+      const basicInfo = data.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
       }));
 
-      const loggedInUser = localStorage.getItem("user");
-      const basicInfo = filteredData.filter(
-        (x) => x.loggedInUser === loggedInUser
-      )[0];
-
       // update business info
-      await updateBusinessInfo(basicInfo.id, inputs);
+      await updateBusinessInfo(basicInfo[0].id, inputs);
 
       navigate("/businessinfo");
     } catch (err) {

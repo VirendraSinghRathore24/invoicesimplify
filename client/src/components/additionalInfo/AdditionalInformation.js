@@ -29,17 +29,12 @@ const AdditionalInformation = () => {
       if (res) {
         setLoading(true);
         const data = await getDocs(basicInfo_CollectionRef);
-        const filteredData = data.docs.map((doc) => ({
+        const basicInfo = data.docs.map((doc) => ({
           ...doc.data(),
           id: doc.id,
         }));
 
-        const loggedInUser = localStorage.getItem("user");
-        const basicInfo = filteredData.filter(
-          (x) => x.loggedInUser === loggedInUser
-        )[0];
-
-        const codeDoc = doc(db, USERS, uid, BASIC_INFO, basicInfo.id);
+        const codeDoc = doc(db, USERS, uid, BASIC_INFO, basicInfo[0].id);
         await updateDoc(codeDoc, {
           additionalInfo: null,
         });

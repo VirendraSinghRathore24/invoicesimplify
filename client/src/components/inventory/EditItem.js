@@ -1,6 +1,6 @@
 import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { db } from "../../config/firebase";
 import { X } from "lucide-react";
 import { toast } from "react-toastify";
@@ -32,6 +32,7 @@ function EditItem({ handleCloseEditModal, setItemAdded, editPost }) {
 
       const isValid = validatePrices(inputs.buyPrice, inputs.sellPrice);
       if (!isValid) {
+        setLoading(false);
         return;
       }
       // update item to db
@@ -56,15 +57,10 @@ function EditItem({ handleCloseEditModal, setItemAdded, editPost }) {
 
   const updateInventoryItems = async () => {
     const data = await getDocs(inventoryInfo_CollectionRef);
-    const filteredData = data.docs.map((doc) => ({
+    const inventoryInfo = data.docs.map((doc) => ({
       ...doc.data(),
       id: doc.id,
-    }));
-
-    const loggedInUser = localStorage.getItem("user");
-    const inventoryInfo = filteredData.filter(
-      (x) => x.loggedInUser === loggedInUser
-    )[0];
+    }))[0];
 
     // update inventory info
 

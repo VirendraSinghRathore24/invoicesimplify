@@ -25,14 +25,10 @@ const MessagePopup = ({
     );
 
     const data = await getDocs(invoiceInfo_CollectionRef2);
-    const filteredData = data.docs.map((doc) => ({
+    const allBrandsInfo = data.docs.map((doc) => ({
       ...doc.data(),
       id: doc.id,
     }));
-    const loggedInUser = localStorage.getItem("user");
-    const allBrandsInfo = filteredData.filter(
-      (x) => x.loggedInUser === loggedInUser
-    );
 
     const invoiceData = allBrandsInfo.filter(
       (x) => x.invoiceInfo.invoiceNumber === parseInt(invoiceNumber)

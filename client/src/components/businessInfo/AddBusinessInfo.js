@@ -13,7 +13,6 @@ import { BASIC_INFO, USERS } from "../Constant";
 function AddBusinessInfo() {
   const navigate = useNavigate();
   const [inputs, setInputs] = useState({});
-  const loggedInUser = localStorage.getItem("user");
   const [saving, setSaving] = useState(false);
   const [avatarURL, setAvatarURL] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
@@ -46,10 +45,9 @@ function AddBusinessInfo() {
       // Add to local storage
       localStorage.setItem("businessInfo", JSON.stringify(inputs));
       await addBusinessData(inputs);
+      setLoading(false);
 
       alert("Business Info Saved Successfully !!!");
-
-      setLoading(false);
     } catch (er) {
       console.log(er);
       setLoading(false);
@@ -60,17 +58,13 @@ function AddBusinessInfo() {
     try {
       // get doc id
       const data = await getDocs(basicInfo_CollectionRef);
-      const filteredData = data.docs.map((doc) => ({
+      const basicInfo = data.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
       }));
 
-      const basicInfo = filteredData.filter(
-        (x) => x.loggedInUser === loggedInUser
-      )[0];
-
       // update business info
-      await updateBusinessInfo(basicInfo.id, inputs);
+      await updateBusinessInfo(basicInfo[0].id, inputs);
       navigate("/businessInfo");
     } catch (err) {
       console.log(err);
@@ -106,14 +100,10 @@ function AddBusinessInfo() {
 
   const getInvoiceInfo = async () => {
     const data = await getDocs(basicInfo_CollectionRef);
-    const filteredData = data.docs.map((doc) => ({
+    const basicInfo = data.docs.map((doc) => ({
       ...doc.data(),
       id: doc.id,
     }));
-
-    const basicInfo = filteredData.filter(
-      (x) => x.loggedInUser === loggedInUser
-    );
 
     if (basicInfo?.length > 0) {
       localStorage.setItem(

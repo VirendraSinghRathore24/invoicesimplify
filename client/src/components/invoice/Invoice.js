@@ -128,14 +128,11 @@ function Invoice() {
       INVENTORY_INFO
     );
     const data = await getDocs(inventoryInfo_CollectionRef);
-    const filteredData = data.docs.map((doc) => ({
+    const inventoryInfo = data.docs.map((doc) => ({
       ...doc.data(),
       id: doc.id,
-    }));
-    const loggedInUser = localStorage.getItem("user");
-    const inventoryInfo = filteredData.filter(
-      (x) => x.loggedInUser === loggedInUser
-    )[0];
+    }))[0];
+
     if (!inventoryInfo) return;
     const existingItems = inventoryInfo.inventory.sort((a, b) =>
       a.itemName.localeCompare(b.itemName)
@@ -187,25 +184,19 @@ function Invoice() {
       linkStr,
     });
 
-    // update dashboard
-    // if it is first time then it will be null
-
     await getInvoiceInfo();
+    await updateInvoiceNumber();
 
     clearLocalStorage();
-    await updateInvoiceNumber();
   };
 
   const getInvoiceInfo = async () => {
     const data = await getDocs(invoiceInfo_CollectionRef);
-    const filteredData = data.docs.map((doc) => ({
+    const invoiceInfo = data.docs.map((doc) => ({
       ...doc.data(),
       id: doc.id,
     }));
 
-    const invoiceInfo = filteredData.filter(
-      (x) => x.loggedInUser === loggedInUser
-    );
     localStorage.setItem("dashboardInfo", JSON.stringify(invoiceInfo));
   };
 
@@ -420,16 +411,10 @@ function Invoice() {
 
   const checkIfInvoiceAlreadyPrintedOnce = async () => {
     const data = await getDocs(invoiceInfo_CollectionRef);
-    const filteredData = data.docs.map((doc) => ({
+    const allBrandsInfo = data.docs.map((doc) => ({
       ...doc.data(),
       id: doc.id,
-    }));
-
-    if (!filteredData) return false;
-
-    const allBrandsInfo = filteredData.filter(
-      (x) => x.loggedInUser === loggedInUser
-    );
+    }))[0];
 
     if (!allBrandsInfo) return false;
 
@@ -446,14 +431,10 @@ function Invoice() {
       INVOICE_INFO
     );
     const data = await getDocs(invoiceInfo_CollectionRef2);
-    const filteredData = data.docs.map((doc) => ({
+    const allBrandsInfo = data.docs.map((doc) => ({
       ...doc.data(),
       id: doc.id,
     }));
-
-    const allBrandsInfo = filteredData.filter(
-      (x) => x.loggedInUser === loggedInUser
-    );
 
     const invoiceData = allBrandsInfo.filter(
       (x) => x.invoiceInfo.invoiceNumber === parseInt(invoiceNumber)

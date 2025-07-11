@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 
-import AddBusinessInfo from "./AddBusinessInfo";
 import { useNavigate } from "react-router-dom";
 import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
 import { db } from "../../config/firebase";
-import Header from "../Header";
 import MobileMenu from "../MobileMenu";
 import Loader from "../Loader";
 import { BASIC_INFO, USERS } from "../Constant";
@@ -31,17 +29,12 @@ const BusinessInfo = () => {
       if (res) {
         setLoading(true);
         const data = await getDocs(basicInfo_CollectionRef);
-        const filteredData = data.docs.map((doc) => ({
+        const basicInfo = data.docs.map((doc) => ({
           ...doc.data(),
           id: doc.id,
         }));
 
-        const loggedInUser = localStorage.getItem("user");
-        const basicInfo = filteredData.filter(
-          (x) => x.loggedInUser === loggedInUser
-        )[0];
-
-        const codeDoc = doc(db, USERS, uid, BASIC_INFO, basicInfo.id);
+        const codeDoc = doc(db, USERS, uid, BASIC_INFO, basicInfo[0].id);
         await updateDoc(codeDoc, {
           businessInfo: null,
         });

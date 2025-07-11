@@ -19,8 +19,6 @@ function ViewInvoice() {
   const location = useLocation();
   const id = location.state.id;
 
-  const uid = localStorage.getItem("uid");
-
   const navigate = useNavigate();
 
   let date = "";

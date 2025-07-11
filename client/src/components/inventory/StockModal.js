@@ -114,7 +114,6 @@ function StockModal({ handleCloseStockModal, setItemAdded, editPost }) {
   const handleChange = (event) => {
     const name = event.target.name;
     const value = event.target.value;
-    setInputs((values) => ({ ...values, [name]: value }));
 
     if (name === "adjustQty") {
       if (stockType === "add") {
@@ -133,6 +132,7 @@ function StockModal({ handleCloseStockModal, setItemAdded, editPost }) {
         setTotalQty(parseInt(editPost.itemQty) - parseInt(value));
       }
     }
+    setInputs((values) => ({ ...values, [name]: value }));
   };
   const handleBack = () => {
     navigate(-1);

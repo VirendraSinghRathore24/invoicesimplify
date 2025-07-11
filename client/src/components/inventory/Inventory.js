@@ -56,15 +56,10 @@ function Inventory() {
 
   const updateInventoryItems = async (item) => {
     const data = await getDocs(inventoryInfo_CollectionRef);
-    const filteredData = data.docs.map((doc) => ({
+    const inventoryInfo = data.docs.map((doc) => ({
       ...doc.data(),
       id: doc.id,
-    }));
-
-    const loggedInUser = localStorage.getItem("user");
-    const inventoryInfo = filteredData.filter(
-      (x) => x.loggedInUser === loggedInUser
-    )[0];
+    }))[0];
 
     // get items list
     const existingItems = inventoryInfo.inventory;
@@ -103,15 +98,10 @@ function Inventory() {
     if (!res) return;
 
     const data = await getDocs(inventoryInfo_CollectionRef);
-    const filteredData = data.docs.map((doc) => ({
+    const inventoryInfo = data.docs.map((doc) => ({
       ...doc.data(),
       id: doc.id,
-    }));
-
-    const loggedInUser = localStorage.getItem("user");
-    const inventoryInfo = filteredData.filter(
-      (x) => x.loggedInUser === loggedInUser
-    )[0];
+    }))[0];
 
     const existingItems = inventoryInfo.inventory;
     const updatedItems = existingItems.filter(
