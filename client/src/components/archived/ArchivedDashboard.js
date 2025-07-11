@@ -10,6 +10,7 @@ import { db } from "../../config/firebase";
 import { useNavigate } from "react-router-dom";
 import Loader from "../Loader";
 import Header from "../Header";
+import { ARCHIVED_INVOICES, USERS } from "../Constant";
 
 const ArchivedDashboard = () => {
   const [data, setData] = useState([]);
@@ -20,6 +21,8 @@ const ArchivedDashboard = () => {
   const [balance, setBalance] = useState(0);
   const [paid, setPaid] = useState(0);
 
+  const uid = localStorage.getItem("uid");
+
   const navigate = useNavigate();
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -29,7 +32,7 @@ const ArchivedDashboard = () => {
     if (window.confirm("Are you sure you want to delete this entry?")) {
       setData(data.filter((item) => item.id !== user.id));
 
-      const invDoc = doc(db, "Archived_Invoices", user.id);
+      const invDoc = doc(db, USERS, uid, ARCHIVED_INVOICES, user.id);
       await deleteDoc(invDoc);
 
       const totalAmount = amount - user?.amountInfo?.amount;

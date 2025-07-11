@@ -3,15 +3,13 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { db } from "../../config/firebase";
 import AddItem from "./AddItem";
-import { Edit, Box } from "lucide-react";
 import EditItem from "./EditItem";
-import Header from "../Header";
 import Loader from "../Loader";
 import StockModal from "./StockModal";
 import MobileMenu from "../MobileMenu";
+import { INVENTORY_INFO, USERS } from "../Constant";
 
 function Inventory() {
-  const location = useLocation();
   const [inputs, setInputs] = useState({});
   const [showList, setShowList] = useState(false);
   const [posts, setPosts] = useState([]);
@@ -21,8 +19,13 @@ function Inventory() {
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const uid = localStorage.getItem("uid");
+
   const navigate = useNavigate();
-  const inventoryInfo_CollectionRef = collection(db, "Inventory_Info");
+  const inventoryInfo_CollectionRef = collection(
+    doc(db, USERS, uid),
+    INVENTORY_INFO
+  );
 
   const [openItem, setOpenItem] = useState(false);
   const handleCloseItem = async () => {
@@ -71,7 +74,7 @@ function Inventory() {
     const inventoryData = [...existingItems, newItem];
 
     // update inventory info
-    const codeDoc = doc(db, "Inventory_Info", inventoryInfo.id);
+    const codeDoc = doc(db, USERS, uid, INVENTORY_INFO, inventoryInfo.id);
     await updateDoc(codeDoc, {
       inventory: inventoryData,
     });
@@ -116,7 +119,7 @@ function Inventory() {
         item.itemName !== post.itemName || item.itemCode !== post.itemCode
     );
 
-    const codeDoc = doc(db, "Inventory_Info", inventoryInfo.id);
+    const codeDoc = doc(db, USERS, uid, INVENTORY_INFO, inventoryInfo.id);
     await updateDoc(codeDoc, {
       inventory: updatedItems,
     });

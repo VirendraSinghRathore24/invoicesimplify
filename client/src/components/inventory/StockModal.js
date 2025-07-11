@@ -5,6 +5,7 @@ import { db } from "../../config/firebase";
 import { X } from "lucide-react";
 import { toast } from "react-toastify";
 import Loader from "../Loader";
+import { INVENTORY_INFO, USERS } from "../Constant";
 
 function StockModal({ handleCloseStockModal, setItemAdded, editPost }) {
   const location = useLocation();
@@ -22,8 +23,13 @@ function StockModal({ handleCloseStockModal, setItemAdded, editPost }) {
   const [newQty, setNewQty] = useState(0);
   const [totalQty, setTotalQty] = useState(0);
 
+  const uid = localStorage.getItem("uid");
+
   const navigate = useNavigate();
-  const inventoryInfo_CollectionRef = collection(db, "Inventory_Info");
+  const inventoryInfo_CollectionRef = collection(
+    doc(db, USERS, uid),
+    INVENTORY_INFO
+  );
 
   const handleSubmit = async (event) => {
     try {
@@ -91,7 +97,7 @@ function StockModal({ handleCloseStockModal, setItemAdded, editPost }) {
 
     localStorage.setItem("inventoryItems", JSON.stringify(updatedItems));
     // Update the inventory in Firestore
-    const codeDoc = doc(db, "Inventory_Info", inventoryInfo.id);
+    const codeDoc = doc(db, USERS, uid, INVENTORY_INFO, inventoryInfo.id);
     await updateDoc(codeDoc, {
       inventory: updatedItems,
     });

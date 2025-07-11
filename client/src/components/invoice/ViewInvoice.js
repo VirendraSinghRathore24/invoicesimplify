@@ -19,6 +19,8 @@ function ViewInvoice() {
   const location = useLocation();
   const id = location.state.id;
 
+  const uid = localStorage.getItem("uid");
+
   const navigate = useNavigate();
 
   let date = "";
@@ -62,8 +64,7 @@ function ViewInvoice() {
     var month = months[today.getMonth()];
     expectedDate = month + " " + today.getDate() + ", " + today.getFullYear();
   }
-  const loggedInUser = localStorage.getItem("user");
-  const invoiceInfo_CollectionRef = collection(db, "Invoice_Info");
+
   const handleDownload = async () => {
     const input = document.getElementById("invoice");
     if (!input) return;

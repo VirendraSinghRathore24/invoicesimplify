@@ -7,10 +7,12 @@ import { db } from "../../config/firebase";
 import Header from "../Header";
 import MobileMenu from "../MobileMenu";
 import Loader from "../Loader";
+import { BASIC_INFO, USERS } from "../Constant";
 
 const BusinessInfo = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const uid = localStorage.getItem("uid");
 
   const navigate = useNavigate();
 
@@ -22,7 +24,7 @@ const BusinessInfo = () => {
       setPosts(null);
     }
   };
-  const basicInfo_CollectionRef = collection(db, "Basic_Info");
+  const basicInfo_CollectionRef = collection(doc(db, USERS, uid), BASIC_INFO);
   const deleteBusinessInfo = async () => {
     try {
       var res = window.confirm("Are you sure to delete Business Info?");
@@ -39,7 +41,7 @@ const BusinessInfo = () => {
           (x) => x.loggedInUser === loggedInUser
         )[0];
 
-        const codeDoc = doc(db, "Basic_Info", basicInfo.id);
+        const codeDoc = doc(db, USERS, uid, BASIC_INFO, basicInfo.id);
         await updateDoc(codeDoc, {
           businessInfo: null,
         });

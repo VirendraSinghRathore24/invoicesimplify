@@ -8,6 +8,7 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import Header from "../Header";
 import Loader from "../Loader";
 import MobileMenu from "../MobileMenu";
+import { BASIC_INFO, USERS } from "../Constant";
 
 function AddBusinessInfo() {
   const navigate = useNavigate();
@@ -18,6 +19,8 @@ function AddBusinessInfo() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const uid = localStorage.getItem("uid");
 
   const handleChange = (event) => {
     const name = event.target.name;
@@ -52,7 +55,7 @@ function AddBusinessInfo() {
       setLoading(false);
     }
   };
-  const basicInfo_CollectionRef = collection(db, "Basic_Info");
+  const basicInfo_CollectionRef = collection(doc(db, USERS, uid), BASIC_INFO);
   const addBusinessData = async (inputs) => {
     try {
       // get doc id
@@ -78,7 +81,7 @@ function AddBusinessInfo() {
   };
   const updateBusinessInfo = async (id, businessInfo) => {
     try {
-      const codeDoc = doc(db, "Basic_Info", id);
+      const codeDoc = doc(db, USERS, uid, BASIC_INFO, id);
 
       // logo upload
       if (selectedFile) {

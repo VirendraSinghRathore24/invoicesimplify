@@ -1,22 +1,23 @@
 import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { db } from "../../config/firebase";
 import { X } from "lucide-react";
 import { toast } from "react-toastify";
-import Header from "../Header";
 import Loader from "../Loader";
+import { INVENTORY_INFO, USERS } from "../Constant";
 
 function AddItem({ handleCloseItem, setItemAdded }) {
-  const location = useLocation();
   const [inputs, setInputs] = useState({});
-  const [showList, setShowList] = useState(false);
-  const [posts, setPosts] = useState([]);
   const [selectedUnit, setSelectedUnit] = useState("pcs");
   const [loading, setLoading] = useState(false);
+  const uid = localStorage.getItem("uid");
 
   const navigate = useNavigate();
-  const inventoryInfo_CollectionRef = collection(db, "Inventory_Info");
+  const inventoryInfo_CollectionRef = collection(
+    doc(db, USERS, uid),
+    INVENTORY_INFO
+  );
 
   const handleSubmit = async (event) => {
     try {
@@ -101,7 +102,7 @@ function AddItem({ handleCloseItem, setItemAdded }) {
     localStorage.setItem("inventoryItems", JSON.stringify(inventoryData));
 
     // update inventory info
-    const codeDoc = doc(db, "Inventory_Info", inventoryInfo.id);
+    const codeDoc = doc(db, USERS, uid, INVENTORY_INFO, inventoryInfo.id);
     await updateDoc(codeDoc, {
       inventory: inventoryData,
     });

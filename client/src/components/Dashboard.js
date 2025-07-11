@@ -1,21 +1,13 @@
-import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  getDocs,
-  query,
-  where,
-} from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { db } from "../config/firebase";
 import { useNavigate } from "react-router-dom";
 import Loader from "./Loader";
-import { BanknoteArrowUp, ArrowUp, FileDigit } from "lucide-react";
-import Header from "./Header";
+import { BanknoteArrowUp, ArrowUp, FileDigit, BanknoteX } from "lucide-react";
 import SettlePopup from "./SettlePopup";
 import MobileMenu from "./MobileMenu";
 import dayjs from "dayjs";
+import { ARCHIVED_INVOICES, INVOICE_INFO, USERS } from "./Constant";
 
 const Dashboard = () => {
   const [data, setData] = useState([]);
@@ -35,6 +27,8 @@ const Dashboard = () => {
   const [endDate, setEndDate] = useState("");
   const [quickOption, setQuickOption] = useState("any");
   const [statusFilter, setStatusFilter] = useState("All");
+
+  const uid = localStorage.getItem("uid");
 
   const navigate = useNavigate();
 
@@ -137,7 +131,7 @@ const Dashboard = () => {
       // archive before deleting
       await archiveInvoice(user);
 
-      const invDoc = doc(db, "Invoice_Info", user.id);
+      const invDoc = doc(db, USERS, uid, INVOICE_INFO, user.id);
       await deleteDoc(invDoc);
 
       const totalAmount = amount - user?.amountInfo?.amount;
@@ -150,7 +144,10 @@ const Dashboard = () => {
   // archive deleted invoice to another collection
   // first get the invoice data and then add it to the archive collection
   const archiveInvoice = async (user) => {
-    const archiveCollectionRef = collection(db, "Archived_Invoices");
+    const archiveCollectionRef = collection(
+      doc(db, USERS, uid),
+      ARCHIVED_INVOICES
+    );
     const archivedInvoice = {
       ...user,
       archivedAt: new Date().toISOString(),
@@ -618,7 +615,10 @@ const Dashboard = () => {
             </div>
 
             <div className={`p-5 rounded-lg shadow bg-yellow-500 text-white`}>
-              <p className="text-md">Outstanding</p>
+              <div className="flex items-center justify-between">
+                <p className="text-md">Outstanding</p>
+                <BanknoteX />
+              </div>
               <h3 className="mt-2 text-2xl font-semibold">{settled}</h3>
             </div>
 

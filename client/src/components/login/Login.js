@@ -1,4 +1,4 @@
-import { collection, getDocs } from "firebase/firestore";
+import { collection, doc, getDocs } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { auth, db, googleProvider } from "../../config/firebase";
 
@@ -11,9 +11,9 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 
-import { getAccountData, getPersonalData } from "../DatabaseHelper";
 import Loader from "../Loader";
 import LoginFooter from "./LoginFooter";
+import { BASIC_INFO, INVENTORY_INFO, INVOICE_INFO, USERS } from "../Constant";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -30,8 +30,8 @@ const Login = () => {
   };
 
   // get all data and add to local storage
-  const getAllData = async (loggedInUser) => {
-    const basicInfo_CollectionRef = collection(db, "Basic_Info");
+  const getAllData = async (loggedInUser, uid) => {
+    const basicInfo_CollectionRef = collection(doc(db, USERS, uid), BASIC_INFO);
     const data = await getDocs(basicInfo_CollectionRef);
     const filteredData = data.docs.map((doc) => ({
       ...doc.data(),
@@ -53,8 +53,11 @@ const Login = () => {
     );
   };
 
-  const getInventoryList = async (loggedInUser) => {
-    const inventoryInfo_CollectionRef = collection(db, "Inventory_Info");
+  const getInventoryList = async (loggedInUser, uid) => {
+    const inventoryInfo_CollectionRef = collection(
+      doc(db, USERS, uid),
+      INVENTORY_INFO
+    );
     const data = await getDocs(inventoryInfo_CollectionRef);
     const filteredData = data.docs.map((doc) => ({
       ...doc.data(),
@@ -84,8 +87,11 @@ const Login = () => {
     localStorage.setItem("subscription", loginInfo.subscription);
   };
 
-  const invoiceInfo_CollectionRef = collection(db, "Invoice_Info");
-  const getInvoiceInfo = async (loggedInUser) => {
+  const getInvoiceInfo = async (loggedInUser, uid) => {
+    const invoiceInfo_CollectionRef = collection(
+      doc(db, USERS, uid),
+      INVOICE_INFO
+    );
     const data = await getDocs(invoiceInfo_CollectionRef);
     const filteredData = data.docs.map((doc) => ({
       ...doc.data(),
@@ -110,7 +116,9 @@ const Login = () => {
 
           const code = auth?.currentUser?.email;
           const userName = auth?.currentUser?.displayName;
+          const uid = auth?.currentUser?.uid;
 
+          localStorage.setItem("uid", auth?.currentUser?.uid);
           localStorage.setItem("auth", "Logged In");
           localStorage.setItem("user", code);
           localStorage.setItem("userName", userName);
@@ -118,12 +126,12 @@ const Login = () => {
           await getBusinessType(code);
 
           // get all data and add to local storage
-          await getAllData(code);
+          await getAllData(code, uid);
 
-          await getInventoryList(code);
+          await getInventoryList(code, uid);
 
           // this is dashboard data
-          await getInvoiceInfo(code);
+          await getInvoiceInfo(code, uid);
 
           const info = localStorage.getItem("businessInfo");
 

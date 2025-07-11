@@ -1,0 +1,8 @@
+export const LOGIN_INFO = "Login_Info";
+export const BASIC_INFO = "Basic_Info";
+export const CONTACT_INFO = "Contact_Info";
+export const INVOICE_INFO = "Invoice_Info";
+export const INVOICE_LINK_INFO = "InvoiceLink_Info";
+export const INVENTORY_INFO = "Inventory_Info";
+export const USERS = "Users";
+export const ARCHIVED_INVOICES = "Archived_Invoices";

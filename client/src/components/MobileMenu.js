@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { Menu, X, CircleCheckBig, ShieldCheck } from "lucide-react"; // optional: or use your own icons
 import { NavLink, useNavigate } from "react-router-dom";
-import { db } from "../config/firebase";
-import Loader from "./Loader";
 
 const MobileMenu = () => {
   const [isOpen, setIsOpen] = useState(false);

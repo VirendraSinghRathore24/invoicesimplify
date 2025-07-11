@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { db } from "../config/firebase";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, doc, getDocs } from "firebase/firestore";
 import Loader from "./Loader";
 import MobileMenu from "./MobileMenu";
 import { useNavigate } from "react-router-dom";
+import { BASIC_INFO, INVENTORY_INFO, INVOICE_INFO, USERS } from "./Constant";
 
 const Refresh = () => {
   const [loading, setLoading] = useState(false);
+  const uid = localStorage.getItem("uid");
   const navigate = useNavigate();
   const handleSync = async () => {
     // get all data from db and reload to local storage
@@ -49,7 +51,7 @@ const Refresh = () => {
     }
   };
 
-  const basicInfo_CollectionRef = collection(db, "Basic_Info");
+  const basicInfo_CollectionRef = collection(doc(db, USERS, uid), BASIC_INFO);
   const getBusinessInfo = async (loggedInUser) => {
     try {
       const data = await getDocs(basicInfo_CollectionRef);
@@ -109,7 +111,10 @@ const Refresh = () => {
 
   const getInventoryItems = async (loggedInUser) => {
     try {
-      const inventoryInfo_CollectionRef = collection(db, "Inventory_Info");
+      const inventoryInfo_CollectionRef = collection(
+        doc(db, USERS, uid),
+        INVENTORY_INFO
+      );
       const data = await getDocs(inventoryInfo_CollectionRef);
       const filteredData = data.docs.map((doc) => ({
         ...doc.data(),
@@ -130,7 +135,10 @@ const Refresh = () => {
     }
   };
 
-  const invoiceInfo_CollectionRef = collection(db, "Invoice_Info");
+  const invoiceInfo_CollectionRef = collection(
+    doc(db, USERS, uid),
+    INVOICE_INFO
+  );
   const getAllInvoices = async (loggedInUser) => {
     const data = await getDocs(invoiceInfo_CollectionRef);
     const filteredData = data.docs.map((doc) => ({

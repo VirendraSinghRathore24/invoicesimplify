@@ -3,6 +3,7 @@ import { X } from "lucide-react";
 import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
 import { db } from "../config/firebase";
 import Loader from "./Loader";
+import { INVOICE_INFO, INVOICE_LINK_INFO, USERS } from "./Constant";
 
 const SettlePopup = ({ handleCloseSettlePopup }) => {
   const [amount, setAmount] = useState(0);
@@ -12,6 +13,8 @@ const SettlePopup = ({ handleCloseSettlePopup }) => {
   const [invoiceNumber, setInvoiceNumber] = useState();
   const [payment, setPayment] = useState();
   const [loading, setLoading] = useState(false);
+
+  const uid = localStorage.getItem("uid");
 
   const handleSettleChange = (e) => {
     const val = e.target.value;
@@ -48,7 +51,7 @@ const SettlePopup = ({ handleCloseSettlePopup }) => {
     const updatedAdvance = parseInt(advance) + parseInt(payment);
     const updatedBalance = parseInt(balance) - parseInt(payment);
 
-    const codeDoc = doc(db, "Invoice_Info", docId);
+    const codeDoc = doc(db, USERS, uid, INVOICE_INFO, docId);
     await updateDoc(codeDoc, {
       "amountInfo.advance": updatedAdvance,
       "taxCalculatedInfo.balance": updatedBalance,
@@ -60,7 +63,10 @@ const SettlePopup = ({ handleCloseSettlePopup }) => {
     await getUpdatedInvoiceInfo();
   };
 
-  const invoiceInfo_CollectionRef = collection(db, "Invoice_Info");
+  const invoiceInfo_CollectionRef = collection(
+    doc(db, USERS, uid),
+    INVOICE_INFO
+  );
   const getUpdatedInvoiceInfo = async () => {
     const data = await getDocs(invoiceInfo_CollectionRef);
     const filteredData = data.docs.map((doc) => ({
@@ -75,7 +81,10 @@ const SettlePopup = ({ handleCloseSettlePopup }) => {
   };
 
   const updateInvoiceLinkInfo = async () => {
-    const invoiceLinkInfo_CollectionRef = collection(db, "Invoice_LinkInfo");
+    const invoiceLinkInfo_CollectionRef = collection(
+      doc(db, USERS, uid),
+      INVOICE_LINK_INFO
+    );
     const data = await getDocs(invoiceLinkInfo_CollectionRef);
     const filteredData = data.docs.map((doc) => ({
       ...doc.data(),
@@ -90,7 +99,7 @@ const SettlePopup = ({ handleCloseSettlePopup }) => {
     const updatedAdvance = parseInt(advance) + parseInt(payment);
     const updatedBalance = parseInt(balance) - parseInt(payment);
 
-    const codeDoc = doc(db, "Invoice_LinkInfo", linkInfo.id);
+    const codeDoc = doc(db, USERS, uid, INVOICE_LINK_INFO, linkInfo.id);
     await updateDoc(codeDoc, {
       "amountInfo.advance": updatedAdvance,
       "taxCalculatedInfo.balance": updatedBalance,

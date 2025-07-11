@@ -21,6 +21,12 @@ import { toast } from "react-toastify";
 import Header from "../Header";
 import MobileMenu from "../MobileMenu";
 import Loader from "../Loader";
+import {
+  INVENTORY_INFO,
+  INVOICE_INFO,
+  INVOICE_LINK_INFO,
+  USERS,
+} from "../Constant";
 
 function Invoice() {
   const [businessInfo, setBusinessInfo] = useState({});
@@ -34,6 +40,8 @@ function Invoice() {
   const [total, setTotal] = useState(0);
   const printRef = useRef(null);
   const pdfExportComponent = React.useRef(null);
+
+  const uid = localStorage.getItem("uid");
 
   const navigate = useNavigate();
   const handleNext = () => {
@@ -87,7 +95,11 @@ function Invoice() {
 
   const [loading, setLoading] = useState(false);
   const loggedInUser = localStorage.getItem("user");
-  const invoiceInfo_CollectionRef = collection(db, "Invoice_Info");
+  const invoiceInfo_CollectionRef = collection(
+    doc(db, USERS, uid),
+    INVOICE_INFO
+  );
+
   const handleDownload = async () => {
     const input = document.getElementById("invoice");
     if (!input) return;
@@ -111,7 +123,10 @@ function Invoice() {
 
   const addInvoiceDataToDB = async (linkStr) => {
     // reduce the quantity of items in inventory
-    const inventoryInfo_CollectionRef = collection(db, "Inventory_Info");
+    const inventoryInfo_CollectionRef = collection(
+      doc(db, USERS, uid),
+      INVENTORY_INFO
+    );
     const data = await getDocs(inventoryInfo_CollectionRef);
     const filteredData = data.docs.map((doc) => ({
       ...doc.data(),
@@ -139,7 +154,7 @@ function Invoice() {
       return item;
     });
     // Update the inventory in Firestore
-    const codeDoc = doc(db, "Inventory_Info", inventoryInfo.id);
+    const codeDoc = doc(db, USERS, uid, INVENTORY_INFO, inventoryInfo.id);
     await updateDoc(codeDoc, {
       inventory: updatedItems,
     });
@@ -158,7 +173,10 @@ function Invoice() {
       linkStr,
     });
 
-    const invoiceInfo_CollectionRef1 = collection(db, "Invoice_LinkInfo");
+    const invoiceInfo_CollectionRef1 = collection(
+      doc(db, USERS, uid),
+      INVOICE_LINK_INFO
+    );
     // for link uses
     await addDoc(invoiceInfo_CollectionRef1, {
       invoiceInfo,
@@ -372,7 +390,7 @@ function Invoice() {
 
     const codeDoc = doc(db, "Login_Info", loginInfo.id);
     await updateDoc(codeDoc, {
-      invoiceNumber: loginInfo.invoiceNumber + 1,
+      invoiceNumber: invoiceInfo?.invoiceNumber + 1,
     });
   };
 
@@ -426,7 +444,10 @@ function Invoice() {
   };
 
   const getLinkStr = async (invoiceNumber) => {
-    const invoiceInfo_CollectionRef2 = collection(db, "Invoice_Info");
+    const invoiceInfo_CollectionRef2 = collection(
+      doc(db, USERS, uid),
+      INVOICE_INFO
+    );
     const data = await getDocs(invoiceInfo_CollectionRef2);
     const filteredData = data.docs.map((doc) => ({
       ...doc.data(),

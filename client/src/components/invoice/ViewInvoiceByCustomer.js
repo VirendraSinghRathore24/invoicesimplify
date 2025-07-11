@@ -1,17 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { FaRegEdit } from "react-icons/fa";
-import { BsWhatsapp } from "react-icons/bs";
-import { Printer } from "lucide-react";
-import { Download } from "lucide-react";
-import { addDoc, collection, getDocs } from "firebase/firestore";
+import { useLocation, useNavigate } from "react-router-dom";
+import { collection, doc, getDocs } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import { useReactToPrint } from "react-to-print";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { toast } from "react-toastify";
-import Header from "../Header";
 import Loader from "../Loader";
+import { INVOICE_LINK_INFO, USERS } from "../Constant";
 
 function ViewInvoiceByCustomer() {
   const [invoiceInfo, setInvoiceInfo] = useState({});
@@ -20,6 +16,7 @@ function ViewInvoiceByCustomer() {
 
   const location = useLocation();
   const linkid = location.pathname.split("/")[2];
+  const uid = localStorage.getItem("uid");
 
   const navigate = useNavigate();
 
@@ -65,7 +62,10 @@ function ViewInvoiceByCustomer() {
     expectedDate = month + " " + today.getDate() + ", " + today.getFullYear();
   }
   const loggedInUser = localStorage.getItem("user");
-  const invoiceInfo_CollectionRef = collection(db, "Invoice_LinkInfo");
+  const invoiceInfo_CollectionRef = collection(
+    doc(db, USERS, uid),
+    INVOICE_LINK_INFO
+  );
   const handleDownload = async () => {
     const input = document.getElementById("invoice");
     if (!input) return;

@@ -4,18 +4,21 @@ import { FaRegEdit } from "react-icons/fa";
 import { BsWhatsapp } from "react-icons/bs";
 import { Printer } from "lucide-react";
 import { Download } from "lucide-react";
-import { addDoc, collection, getDocs } from "firebase/firestore";
+import { addDoc, collection, doc, getDocs } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { toast } from "react-toastify";
 import Header from "../Header";
+import { ARCHIVED_INVOICES, USERS } from "../Constant";
 
 function ArchivedViewInvoice() {
   const [invoiceInfo, setInvoiceInfo] = useState({});
 
   const location = useLocation();
   const id = location.state.id;
+
+  const uid = localStorage.getItem("uid");
 
   const navigate = useNavigate();
 
@@ -61,7 +64,10 @@ function ArchivedViewInvoice() {
     expectedDate = month + " " + today.getDate() + ", " + today.getFullYear();
   }
   const loggedInUser = localStorage.getItem("user");
-  const invoiceInfo_CollectionRef = collection(db, "Archived_Invoices");
+  const invoiceInfo_CollectionRef = collection(
+    doc(db, USERS, uid),
+    ARCHIVED_INVOICES
+  );
   const handleDownload = async () => {
     const input = document.getElementById("invoice");
     if (!input) return;

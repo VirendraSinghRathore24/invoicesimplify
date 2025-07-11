@@ -2,8 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import { X } from "lucide-react";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../../config/firebase";
 import { useNavigate } from "react-router-dom";
 import Loader from "../Loader";
 

@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import Header from "../Header";
 import MobileMenu from "../MobileMenu";
 import Loader from "../Loader";
+import { BASIC_INFO, USERS } from "../Constant";
 
 function EditBusinessInfo() {
   const navigate = useNavigate();
@@ -19,6 +20,7 @@ function EditBusinessInfo() {
   const [infoExists, setInfoExists] = useState(true);
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(false);
+  const uid = localStorage.getItem("uid");
 
   const delay = async (ms) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -54,7 +56,7 @@ function EditBusinessInfo() {
       setLoading(false);
     }
   };
-  const basicInfo_CollectionRef = collection(db, "Basic_Info");
+  const basicInfo_CollectionRef = collection(doc(db, USERS, uid), BASIC_INFO);
   const addBusinessData = async (inputs) => {
     try {
       // get doc id
@@ -80,7 +82,7 @@ function EditBusinessInfo() {
 
   const updateBusinessInfo = async (id, businessInfo) => {
     try {
-      const codeDoc = doc(db, "Basic_Info", id);
+      const codeDoc = doc(db, USERS, uid, BASIC_INFO, id);
       await updateDoc(codeDoc, {
         businessInfo: businessInfo,
       });

@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import Header from "../Header";
 import MobileMenu from "../MobileMenu";
 import Loader from "../Loader";
+import { BASIC_INFO, USERS } from "../Constant";
 
 function AddAddtionalInfo() {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ function AddAddtionalInfo() {
   const location = useLocation();
   const [inputs, setInputs] = useState({});
   const [loading, setLoading] = useState(false);
+  const uid = localStorage.getItem("uid");
 
   const handleSubmit = async (event) => {
     try {
@@ -31,7 +33,10 @@ function AddAddtionalInfo() {
       setLoading(false);
     }
   };
-  const additionalInfo_CollectionRef = collection(db, "Basic_Info");
+  const additionalInfo_CollectionRef = collection(
+    doc(db, USERS, uid),
+    BASIC_INFO
+  );
   const addAdditionalData = async (inputs) => {
     try {
       // get doc id
@@ -55,7 +60,7 @@ function AddAddtionalInfo() {
 
   const updateAdditionalInfo = async (id, additionalInfo) => {
     try {
-      const codeDoc = doc(db, "Basic_Info", id);
+      const codeDoc = doc(db, USERS, uid, BASIC_INFO, id);
       await updateDoc(codeDoc, {
         additionalInfo: additionalInfo,
       });

@@ -11,10 +11,11 @@ import {
   updateProfile,
   sendEmailVerification,
 } from "firebase/auth";
-import { addDoc, collection, getDocs } from "firebase/firestore";
-import AddtionalInfo from "../additionalInfo/EditAddtionalInfo";
+import { addDoc, collection, doc, getDocs } from "firebase/firestore";
+
 import Loader from "../Loader";
 import LoginFooter from "./LoginFooter";
+import { BASIC_INFO, INVENTORY_INFO, LOGIN_INFO, USERS } from "../Constant";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -91,8 +92,9 @@ const Signup = () => {
           const user = userCredential.user;
           const code = auth?.currentUser?.email;
           const userName = auth?.currentUser?.displayName;
+          const uid = auth?.currentUser?.uid;
 
-          initializeDB(code, userName);
+          initializeDB(code, userName, uid);
           updateUserProfile(auth);
 
           // not adding as of now for verification
@@ -104,6 +106,7 @@ const Signup = () => {
           localStorage.setItem("invoiceNumber", 1);
           localStorage.setItem("type", type);
           localStorage.setItem("subscription", "Free");
+          localStorage.setItem("uid", uid);
 
           setLoading(false);
           navigate("/businessinfo");
@@ -128,14 +131,14 @@ const Signup = () => {
   };
 
   const login_CollectionRef = collection(db, "Login_Info");
-  const basicInfo_CollectionRef = collection(db, "Basic_Info");
-  const inventoryInfo_CollectionRef = collection(db, "Inventory_Info");
+
   const signInWithGoogle = async () => {
     try {
       await signInWithPopup(auth, googleProvider);
       setLoading(true);
       const code = auth?.currentUser?.email;
       const userName = auth?.currentUser?.displayName;
+      const uid = auth?.currentUser?.uid;
 
       // 1. check if it is existing user
 
@@ -144,10 +147,10 @@ const Signup = () => {
       if (result === undefined) {
         // 2. it is new user
 
-        await initializeDB(code, userName);
+        await initializeDB(code, userName, uid);
       }
       // check orgCode with DB
-
+      localStorage.setItem("uid", uid);
       localStorage.setItem("auth", "Logged In");
       localStorage.setItem("user", code);
       localStorage.setItem("userName", userName);
@@ -160,7 +163,7 @@ const Signup = () => {
     }
   };
 
-  const initializeDB = async (code, userName) => {
+  const initializeDB = async (code, userName, uid) => {
     const orgCode = Math.random().toString(36).slice(2);
 
     await addDoc(login_CollectionRef, {
@@ -174,6 +177,7 @@ const Signup = () => {
       loginDate: new Date().toISOString().slice(0, 10),
     });
 
+    const basicInfo_CollectionRef = collection(doc(db, USERS, uid), BASIC_INFO);
     // also create db for business, tax and additional info
     await addDoc(basicInfo_CollectionRef, {
       businessInfo: null,
@@ -183,6 +187,10 @@ const Signup = () => {
       loggedInUser: code,
     });
 
+    const inventoryInfo_CollectionRef = collection(
+      doc(db, USERS, uid),
+      INVENTORY_INFO
+    );
     // initialize inventory info
     await addDoc(inventoryInfo_CollectionRef, {
       orgCode: orgCode,
@@ -192,7 +200,7 @@ const Signup = () => {
   };
 
   const getExistingUser = async (loggedInUser) => {
-    const loginCollectionRef = collection(db, "Login_Info");
+    const loginCollectionRef = collection(db, LOGIN_INFO);
 
     const data = await getDocs(loginCollectionRef);
     const filteredData = data.docs.map((doc) => ({

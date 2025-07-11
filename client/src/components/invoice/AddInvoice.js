@@ -1,22 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import Header from "./Header";
-//import { getInvoiceNumber, getUserSettings } from "./DatabaseHelper";
-import { Trash2, X } from "lucide-react";
-import { FaRegEdit } from "react-icons/fa";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { Trash2 } from "lucide-react";
 import InventoryModal from "../inventory/InventoryModal";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, doc, getDocs } from "firebase/firestore";
 import { db } from "../../config/firebase";
-
 import AlertModal from "../confirmModal/AlertModal";
 import MobileMenu from "../MobileMenu";
-//import CurrencyFlag from "react-currency-flags";
-//import "./Sign.css";
-//import { Textarea } from "@headlessui/react";
-
-//import ImageUpload from './ImageUpload';
+import { INVOICE_INFO, LOGIN_INFO, USERS } from "../Constant";
 
 const AddInvoice = () => {
   const [signature, setSignature] = useState(null);
@@ -45,35 +35,9 @@ const AddInvoice = () => {
   const [address1, setAddress1] = useState("");
   const [address2, setAddress2] = useState("");
   const [address3, setAddress3] = useState("");
-  const [phone, setPhone] = useState("");
-  const [savePersonal, setSavePersonal] = useState(true);
 
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
-
-  // account information
-  const [accountName, setAccountName] = useState("");
-  const [accountNumber, setAccountNumber] = useState("");
-  const [bankName, setBankName] = useState("");
-  const [accountType, setAccountType] = useState("");
-  const [branch, setBranch] = useState("");
-  const [upi, setUpi] = useState("");
-  const [ifsc, setIfsc] = useState("");
-  const [pan, setPan] = useState("");
-  const [saveAccount, setSaveAccount] = useState(true);
-
-  // invoice to information
-  const [inv_name, setInv_Name] = useState("");
-  const [inv_email, setInv_Email] = useState("");
-  const [inv_address1, setInv_Address1] = useState("");
-  const [inv_address2, setInv_Address2] = useState("");
-  const [inv_address3, setInv_Address3] = useState("");
-  const [inv_phone, setInv_Phone] = useState("");
-  const [inv_gst, setInv_Gst] = useState("");
-  const [inv_tin, setInv_Tin] = useState("");
-  const [inv_pan, setInv_Pan] = useState("");
-  const [inv_cin, setInv_Cin] = useState("");
-  const [saveInvoiceTo, setSaveInvoiceTo] = useState(true);
 
   const [paymentType, setPaymentType] = useState("fullyPaid");
   const [advanceAmount, setAdvanceAmount] = useState("");
@@ -88,9 +52,9 @@ const AddInvoice = () => {
     new Date().toISOString().slice(0, 10)
   );
   const [expectedDate, setExpectedDate] = useState();
-  const [discount, setDiscount] = useState(0.0);
 
   const [upiEnabled, setUpiEnabled] = useState(true);
+  const uid = localStorage.getItem("uid");
 
   var today = new Date();
   const months = [
@@ -382,7 +346,7 @@ const AddInvoice = () => {
     navigate("/invoice");
   };
 
-  const login_CollectionRef = collection(db, "Login_Info");
+  const login_CollectionRef = collection(db, LOGIN_INFO);
   const getInvoiceNumber = async () => {
     const data = await getDocs(login_CollectionRef);
     const filteredData = data.docs.map((doc) => ({
@@ -393,7 +357,8 @@ const AddInvoice = () => {
     const loggedInUser = localStorage.getItem("user");
     const loginInfo = filteredData.filter((x) => x.code === loggedInUser)[0];
 
-    setInvoiceNumber(loginInfo?.invoiceNumber);
+    const nextInvoiceNumber = parseInt(loginInfo?.invoiceNumber);
+    setInvoiceNumber(nextInvoiceNumber);
   };
 
   const handleResetInvoice = () => {
@@ -420,7 +385,10 @@ const AddInvoice = () => {
   };
 
   const isInvoiceNumberExists = async (invoiceNumber) => {
-    const invoiceInfo_CollectionRef = collection(db, "Invoice_Info");
+    const invoiceInfo_CollectionRef = collection(
+      doc(db, USERS, uid),
+      INVOICE_INFO
+    );
     const data = await getDocs(invoiceInfo_CollectionRef);
     const filteredData = data.docs.map((doc) => ({
       ...doc.data(),

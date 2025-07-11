@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Footer1 from "./Footer1";
 import Header1 from "./Header1";
 import { toast } from "react-toastify";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc } from "firebase/firestore";
 import { db } from "../config/firebase";
 
 const ContactUs = () => {
@@ -25,7 +25,11 @@ const ContactUs = () => {
   };
 
   const addContactUsDataToDB = async () => {
-    const contactInfo_CollectionRef = collection(db, "Contact_Info");
+    const uid = localStorage.getItem("uid");
+    const contactInfo_CollectionRef = collection(
+      doc(db, "Shop", uid),
+      "Contact_Info"
+    );
     await addDoc(contactInfo_CollectionRef, {
       contactData: formData,
       messageDate: new Date().toISOString().slice(0, 10),

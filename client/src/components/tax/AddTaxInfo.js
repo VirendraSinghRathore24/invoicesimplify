@@ -5,11 +5,14 @@ import { toast } from "react-toastify";
 import { db } from "../../config/firebase";
 import MobileMenu from "../MobileMenu";
 import Loader from "../Loader";
+import { BASIC_INFO, USERS } from "../Constant";
 
 function AddTaxInfo() {
   const [inputs, setInputs] = useState({});
   const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState("tax");
+
+  const uid = localStorage.getItem("uid");
 
   const navigate = useNavigate();
 
@@ -29,7 +32,7 @@ function AddTaxInfo() {
       setLoading(false);
     }
   };
-  const basicInfo_CollectionRef = collection(db, "Basic_Info");
+  const basicInfo_CollectionRef = collection(doc(db, USERS, uid), BASIC_INFO);
   const addTaxData = async (inputs) => {
     try {
       // get doc id
@@ -56,7 +59,7 @@ function AddTaxInfo() {
 
   const updateTaxInfo = async (id, taxInfo) => {
     try {
-      const codeDoc = doc(db, "Basic_Info", id);
+      const codeDoc = doc(db, USERS, uid, BASIC_INFO, id);
       await updateDoc(codeDoc, {
         taxInfo: taxInfo,
       });

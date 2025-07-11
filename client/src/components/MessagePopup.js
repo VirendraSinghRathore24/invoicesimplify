@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { X } from "lucide-react";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, doc, getDocs } from "firebase/firestore";
 import { db } from "../config/firebase";
 import Loader from "./Loader";
+import { INVOICE_INFO, USERS } from "./Constant";
 
 const MessagePopup = ({
   handleCloseMessagePopup,
@@ -15,9 +16,14 @@ const MessagePopup = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const [phone, setPhone] = useState(customerPhone);
+  const uid = localStorage.getItem("uid");
 
   const getLinkStr = async () => {
-    const invoiceInfo_CollectionRef2 = collection(db, "Invoice_Info");
+    const invoiceInfo_CollectionRef2 = collection(
+      doc(db, USERS, uid),
+      INVOICE_INFO
+    );
+
     const data = await getDocs(invoiceInfo_CollectionRef2);
     const filteredData = data.docs.map((doc) => ({
       ...doc.data(),
