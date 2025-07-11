@@ -81,10 +81,7 @@ const SettlePopup = ({ handleCloseSettlePopup }) => {
   };
 
   const updateInvoiceLinkInfo = async () => {
-    const invoiceLinkInfo_CollectionRef = collection(
-      doc(db, USERS, uid),
-      INVOICE_LINK_INFO
-    );
+    const invoiceLinkInfo_CollectionRef = collection(db, INVOICE_LINK_INFO);
     const data = await getDocs(invoiceLinkInfo_CollectionRef);
     const filteredData = data.docs.map((doc) => ({
       ...doc.data(),
@@ -99,7 +96,7 @@ const SettlePopup = ({ handleCloseSettlePopup }) => {
     const updatedAdvance = parseInt(advance) + parseInt(payment);
     const updatedBalance = parseInt(balance) - parseInt(payment);
 
-    const codeDoc = doc(db, USERS, uid, INVOICE_LINK_INFO, linkInfo.id);
+    const codeDoc = doc(db, INVOICE_LINK_INFO, linkInfo.id);
     await updateDoc(codeDoc, {
       "amountInfo.advance": updatedAdvance,
       "taxCalculatedInfo.balance": updatedBalance,

@@ -173,10 +173,7 @@ function Invoice() {
       linkStr,
     });
 
-    const invoiceInfo_CollectionRef1 = collection(
-      doc(db, USERS, uid),
-      INVOICE_LINK_INFO
-    );
+    const invoiceInfo_CollectionRef1 = collection(db, INVOICE_LINK_INFO);
     // for link uses
     await addDoc(invoiceInfo_CollectionRef1, {
       invoiceInfo,
