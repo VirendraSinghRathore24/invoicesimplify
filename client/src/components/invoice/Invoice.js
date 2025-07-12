@@ -25,6 +25,7 @@ import {
   INVENTORY_INFO,
   INVOICE_INFO,
   INVOICE_LINK_INFO,
+  LOGIN_INFO,
   USERS,
 } from "../Constant";
 
@@ -100,6 +101,7 @@ function Invoice() {
     INVOICE_INFO
   );
 
+  const loginInfo_Collection = collection(db, LOGIN_INFO);
   const handleDownload = async () => {
     const input = document.getElementById("invoice");
     if (!input) return;
@@ -410,19 +412,22 @@ function Invoice() {
   });
 
   const checkIfInvoiceAlreadyPrintedOnce = async () => {
-    const data = await getDocs(invoiceInfo_CollectionRef);
-    const allBrandsInfo = data.docs.map((doc) => ({
+    const nextInvoiceNumber = await getExistingInvoiceNumber();
+    return nextInvoiceNumber !== invoiceInfo.invoiceNumber;
+  };
+
+  const getExistingInvoiceNumber = async () => {
+    const data = await getDocs(login_CollectionRef);
+    const filteredData = data.docs.map((doc) => ({
       ...doc.data(),
       id: doc.id,
-    }))[0];
+    }));
 
-    if (!allBrandsInfo) return false;
+    const loggedInUser = localStorage.getItem("user");
+    const loginInfo = filteredData.filter((x) => x.code === loggedInUser)[0];
 
-    const invoiceData = allBrandsInfo.filter(
-      (x) => x.invoiceInfo.invoiceNumber === parseInt(invoiceInfo.invoiceNumber)
-    )[0];
-
-    return invoiceData !== undefined;
+    const nextInvoiceNumber = parseInt(loginInfo?.invoiceNumber);
+    return nextInvoiceNumber;
   };
 
   const getLinkStr = async (invoiceNumber) => {
