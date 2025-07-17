@@ -10,16 +10,29 @@ const PDFDocument = require("pdfkit");
 const FormData = require("form-data");
 const ejs = require("ejs");
 const dotenv = require("dotenv");
+const nodemailer = require("nodemailer");
+const cron = require("node-cron");
+const admin = require("firebase-admin");
+const serviceAccount = require("./firebaseServiceAccount.json");
 dotenv.config();
 
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
+
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(cors());
 app.use(express.json());
+
+const dayjs = require("dayjs");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
+
+const db = admin.firestore();
 
 const accountSid = process.env.TWITTER_ACCOUNT_SID; // Use environment variables
 
@@ -60,6 +73,331 @@ app.use(
     credentials: true,
   })
 );
+
+const transporter = nodemailer.createTransport({
+  service: "Godaddy",
+  host: "smtpout.secureserver.net",
+  secure: false,
+  port: 465,
+  auth: {
+    user: "support@invoicesimplify.com",
+    pass: process.env.EMAIL_PASSWORD,
+  },
+});
+
+const tableHeaders = [
+  "Invoice #",
+  "Name",
+  "Phone",
+  "Date",
+  "Amount",
+  "Type",
+  "Link",
+];
+
+const tableDescHeaders = ["Description", "Rate", "Quantity", "Amount"];
+
+const fetchTableRowsFromFirebaseForDaily = async (uid) => {
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
+
+  const yesterdayStr = yesterday.toISOString().split("T")[0];
+
+  const invoicesSnapshot = await db
+    .collection("Users")
+    .doc(uid)
+    .collection("Invoice_Info")
+    .get();
+
+  const filteredDocs = invoicesSnapshot.docs.filter((doc) => {
+    const data = doc.data();
+    const invoiceDate = data?.invoiceInfo?.date; // assuming invoiceInfo.date exists
+    return invoiceDate === yesterdayStr;
+  });
+
+  const result = filteredDocs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+
+  const rows = result.map((d, index) => {
+    return [
+      d.invoiceInfo.invoiceNumber,
+      d.customerInfo.customerName,
+      d.customerInfo.customerPhone,
+      d.invoiceInfo.date,
+      d.amountInfo.amount,
+      d.amountInfo.paymentType,
+      "https://invoicesimplify.com/ci/" + d.linkStr,
+    ];
+  });
+  return rows;
+};
+
+const fetchTableRowsFromFirebaseForDailyDesc = async (uid) => {
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
+
+  const yesterdayStr = yesterday.toISOString().split("T")[0];
+
+  const invoicesSnapshot = await db
+    .collection("Users")
+    .doc(uid)
+    .collection("Invoice_Info")
+    .get();
+
+  const filteredDocs = invoicesSnapshot.docs.filter((doc) => {
+    const data = doc.data();
+    const invoiceDate = data?.invoiceInfo?.date; // assuming invoiceInfo.date exists
+    return invoiceDate === yesterdayStr;
+  });
+
+  const result = filteredDocs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+
+  const rows = result.map((d, index) => {
+    return d.invoiceInfo.rows;
+  });
+  return rows;
+};
+
+const fetchTableRowsFromFirebaseForWeekly = async (uid) => {
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 6);
+
+  const todayStr = today.toISOString().split("T")[0];
+  const yesterdayStr = yesterday.toISOString().split("T")[0];
+
+  const invoicesSnapshot = await db
+    .collection("Users")
+    .doc(uid)
+    .collection("Invoice_Info")
+    .get();
+
+  const filteredDocs = invoicesSnapshot.docs.filter((doc) => {
+    const data = doc.data();
+    const invoiceDate = data?.invoiceInfo?.date; // assuming invoiceInfo.date exists
+    return invoiceDate >= yesterdayStr && invoiceDate <= todayStr;
+  });
+
+  const result = filteredDocs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+
+  const rows = result.map((d, index) => {
+    return [
+      d.invoiceInfo.invoiceNumber,
+      d.customerInfo.customerName,
+      d.customerInfo.customerPhone,
+      d.invoiceInfo.date,
+      d.amountInfo.amount,
+      d.amountInfo.paymentType,
+      "https://invoicesimplify.com/ci/" + d.linkStr,
+    ];
+  });
+  return rows;
+};
+
+const fetchTableRowsFromFirebaseForMonthly = async (uid) => {
+  const today = new Date();
+
+  const lastMonth = new Date(today);
+  lastMonth.setMonth(today.getMonth() - 1);
+  lastMonth.setHours(0, 0, 0, 0);
+
+  const todayStr = today.toISOString().split("T")[0];
+  const lastMonthStr = lastMonth.toISOString().split("T")[0];
+
+  const invoicesSnapshot = await db
+    .collection("Users")
+    .doc(uid)
+    .collection("Invoice_Info")
+    .get();
+
+  const filteredDocs = invoicesSnapshot.docs.filter((doc) => {
+    const data = doc.data();
+    const invoiceDate = data?.invoiceInfo?.date; // assuming invoiceInfo.date exists
+    return invoiceDate >= lastMonthStr && invoiceDate <= todayStr;
+  });
+
+  const result = filteredDocs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+
+  const rows = result.map((d, index) => {
+    return [
+      d.invoiceInfo.invoiceNumber,
+      d.customerInfo.customerName,
+      d.customerInfo.customerPhone,
+      d.invoiceInfo.date,
+      d.amountInfo.amount,
+      d.amountInfo.paymentType,
+      "https://invoicesimplify.com/ci/" + d.linkStr,
+    ];
+  });
+  return rows;
+};
+const generatePdfTable = async (filePath, uid, frequency) => {
+  let tableRows = [];
+  let tableDescRows = [];
+  if (frequency === "daily") {
+    tableRows = await fetchTableRowsFromFirebaseForDaily(uid);
+    tableDescRows = await fetchTableRowsFromFirebaseForDailyDesc(uid);
+  } else if (frequency === "weekly") {
+    tableRows = await fetchTableRowsFromFirebaseForWeekly(uid);
+  } else if (frequency === "monthly") {
+    tableRows = await fetchTableRowsFromFirebaseForMonthly(uid);
+  }
+  return new Promise(async (resolve, reject) => {
+    const doc = new PDFDocument({ margin: 10 });
+    const stream = fs.createWriteStream(filePath);
+    doc.pipe(stream);
+
+    doc.fontSize(16).text("Invoice Report", { align: "center" });
+    doc.moveDown(1);
+
+    doc.fontSize(10);
+    const columnWidths = [50, 100, 70, 70, 90, 80, 120];
+    const columnDescWidths = [50, 100, 90, 90, 70];
+    const tableTop = doc.y;
+
+    // Draw headers
+    const xVal = doc.x;
+    let x = doc.x;
+
+    tableHeaders.forEach((header, i) => {
+      doc.rect(x, tableTop, columnWidths[i], 20).stroke();
+      doc.text(header, x + 5, tableTop + 5, {
+        width: columnWidths[i] - 10,
+        align: "left",
+      });
+      x += columnWidths[i];
+    });
+
+    // Draw rows
+    let y = tableTop + 20;
+    tableRows.forEach((row) => {
+      const heights = row.map((cell, i) => {
+        const textOptions = { width: columnWidths[i] - 10 };
+        return doc.heightOfString(cell, textOptions);
+      });
+      const rowHeight = Math.max(...heights) + 10;
+      x = xVal;
+      row.forEach((cell, i) => {
+        doc.rect(x, y, columnWidths[i], rowHeight).stroke();
+        if (i === 6 && cell.startsWith("https://invoicesimplify.com")) {
+          doc
+            .fillColor("blue")
+            .text(cell, x + 5, y + 5, {
+              width: columnWidths[i] - 10,
+              height: rowHeight - 10,
+              align: "left",
+              link: cell,
+              underline: true,
+            })
+            .fillColor("black");
+        } else {
+          doc.text(cell, x + 5, y + 5, {
+            width: columnWidths[i] - 10,
+            height: rowHeight - 10,
+            align: "left",
+          });
+        }
+        x += columnWidths[i];
+      });
+      y += rowHeight;
+    });
+
+    tableDescHeaders.forEach((header, i) => {
+      doc.rect(x, tableTop, columnDescWidths[i], 20).stroke();
+      doc.text(header, x + 5, tableTop + 5, {
+        width: columnDescWidths[i] - 10,
+        align: "left",
+      });
+      x += columnDescWidths[i];
+    });
+
+    tableDescRows.forEach((row) => {
+      const heights = row.map((cell, i) => {
+        const textOptions = { width: columnDescWidths[i] - 10 };
+        return doc.heightOfString(cell, textOptions);
+      });
+      const rowHeight = Math.max(...heights) + 10;
+      x = xVal;
+      row.forEach((cell, i) => {
+        doc.rect(x, y, columnDescWidths[i], rowHeight).stroke();
+
+        doc.text(cell, x + 5, y + 5, {
+          width: columnDescWidths[i] - 10,
+          height: rowHeight - 10,
+          align: "left",
+        });
+
+        x += columnDescWidths[i];
+      });
+      y += rowHeight;
+    });
+
+    doc.end();
+
+    stream.on("finish", () => resolve());
+    stream.on("error", reject);
+  });
+};
+
+const sendEmail = async (email, frequency, uid) => {
+  const pdfPath = path.join(__dirname, "report.pdf");
+  await generatePdfTable(pdfPath, uid, frequency);
+  const mailOptions = {
+    from: "support@invoicesimplify.com",
+    to: email,
+    subject: `Your ${frequency} report`,
+    text: `Hello, this is your ${frequency} scheduled report.`,
+    attachments: [
+      {
+        filename: "report.pdf",
+        path: pdfPath,
+      },
+    ],
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log(`✅ Email sent to ${email} for ${frequency}`);
+  } catch (err) {
+    console.error(`❌ Error sending to ${email}:`, err);
+  }
+};
+
+const checkAndSendEmails = async (frequency) => {
+  try {
+    const basicInfoRef = db.collection("scheduledEmails");
+    const basicSnapshot = await basicInfoRef.get();
+
+    basicSnapshot.forEach((doc) => {
+      const data = doc.data();
+      if (data.frequencies.includes(frequency)) {
+        sendEmail(data.email, frequency, data.uid);
+      }
+    });
+  } catch (err) {
+    console.error("Error fetching schedule info:", err);
+  }
+};
+
+// TODO - Future work
+// cron.schedule("15 21 * * *", () => checkAndSendEmails("daily")); // 12:10 AM daily night for prev day
+// cron.schedule("00 20 * * 1", () => checkAndSendEmails("weekly")); // 12:20 AM every Monday for prev week
+// cron.schedule("00 30 1 * *", () => checkAndSendEmails("monthly")); // 12:30 AM on the 1st of every month
+
+app.get("/ping", (req, res) => res.send("Server is running"));
 
 app.post("/send-sms", async (req, res) => {
   const { to, message } = req.body;

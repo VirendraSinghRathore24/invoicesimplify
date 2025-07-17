@@ -12,6 +12,7 @@ import {
   ShieldCheck,
   CircleCheckBig,
   RefreshCcw,
+  Mail,
 } from "lucide-react";
 
 const Sidebar = () => {
@@ -126,10 +127,10 @@ const Sidebar = () => {
             active={location.pathname === "/refresh"}
           />
           {/* <SubMenuItem
-            icon={<MdOutlineMessage size={20} />}
-            text="SMS"
-            to="/sms"
-            active={location.pathname === "/sms"}
+            icon={<Mail size={20} />}
+            text="Email Schedule"
+            to="/emailscheduler"
+            active={location.pathname === "/emailscheduler"}
           /> */}
           {/* <SubMenuItem
             icon={<Trash2 size={18} />}
@@ -228,7 +229,7 @@ const SidebarItem = ({
 
 const SubMenuItem = ({ text, to, active, icon, onClick }) => {
   const baseClasses =
-    "flex items-center space-x-3 px-3 py-3 rounded-md transition my-2 text-sm";
+    "flex items-center space-x-3 px-3 py-2 rounded-md transition my-2 text-sm";
   const activeClasses = active
     ? "bg-amber-600 font-semibold"
     : "hover:bg-gray-600";

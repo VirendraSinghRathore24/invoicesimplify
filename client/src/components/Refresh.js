@@ -38,9 +38,7 @@ const Refresh = () => {
         id: doc.id,
       }));
 
-      const loginInfo = filteredData.filter(
-        (x) => x.loggedInUser === loggedInUser
-      )[0];
+      const loginInfo = filteredData.filter((x) => x.code === loggedInUser)[0];
 
       localStorage.setItem("user", loginInfo.code);
       localStorage.setItem("userName", loginInfo.userName);

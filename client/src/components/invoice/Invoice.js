@@ -342,7 +342,7 @@ function Invoice() {
   const clearLocalStorage = () => {
     localStorage.removeItem("custname");
     localStorage.removeItem("custphone");
-    localStorage.removeItem("expectedDate");
+    localStorage.removeItem("expecteddate");
     localStorage.removeItem("advance");
     localStorage.removeItem("rows");
     localStorage.removeItem("paymentType");

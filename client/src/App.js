@@ -38,6 +38,7 @@ import SMS from "./components/SMS";
 import TaxSelector from "./components/TaxSelector";
 import AllUsers from "./components/admin/AllUsers";
 import Refresh from "./components/Refresh";
+import EmailScheduler from "./components/EmailScheduler";
 
 function App() {
   const location = useLocation();
@@ -109,6 +110,8 @@ function App() {
           <Route path="/refresh" element={<Refresh />} />
 
           <Route path="/admin/allusers" element={<AllUsers />} />
+
+          <Route path="/emailscheduler" element={<EmailScheduler />} />
         </Routes>
 
         <ToastContainer />

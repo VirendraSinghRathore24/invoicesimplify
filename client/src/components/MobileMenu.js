@@ -26,6 +26,7 @@ const MobileMenu = () => {
     "Tax Info",
     "Additional Info",
     "Refresh",
+    "Email Scheduler",
   ];
 
   return (
