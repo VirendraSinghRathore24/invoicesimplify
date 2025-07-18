@@ -263,11 +263,6 @@ const AddInvoice = () => {
       return;
     }
 
-    // verify invoice number
-    if (await isInvoiceNumberExists(invoiceNumber)) {
-      alert("Invoice number is already exists, Please change it !!!");
-      return;
-    }
     const customerInfo = {
       customerName: customerName,
       customerPhone: customerPhone,
@@ -346,18 +341,27 @@ const AddInvoice = () => {
     navigate("/invoice");
   };
 
-  const login_CollectionRef = collection(db, LOGIN_INFO);
+  //const login_CollectionRef = collection(db, LOGIN_INFO);
   const getInvoiceNumber = async () => {
-    const data = await getDocs(login_CollectionRef);
-    const filteredData = data.docs.map((doc) => ({
-      ...doc.data(),
-      id: doc.id,
-    }));
+    // const data = await getDocs(login_CollectionRef);
+    // const filteredData = data.docs.map((doc) => ({
+    //   ...doc.data(),
+    //   id: doc.id,
+    // }));
 
-    const loggedInUser = localStorage.getItem("user");
-    const loginInfo = filteredData.filter((x) => x.code === loggedInUser)[0];
+    // const loggedInUser = localStorage.getItem("user");
+    // const loginInfo = filteredData.filter((x) => x.code === loggedInUser)[0];
 
-    const nextInvoiceNumber = parseInt(loginInfo?.invoiceNumber);
+    const invNumber = localStorage.getItem("invoiceNumber");
+    const nextInvoiceNumber = parseInt(invNumber);
+
+    const usedInvoiceNumbers = localStorage.getItem("usedInvoiceNumbers");
+    const userdNumbers = usedInvoiceNumbers.split(",");
+    while (userdNumbers.some((num) => num === nextInvoiceNumber)) {
+      // If the invoice number already exists in usedInvoiceNumbers, increment it
+      nextInvoiceNumber++;
+    }
+    localStorage.setItem("invoiceNumber", nextInvoiceNumber);
     setInvoiceNumber(nextInvoiceNumber);
   };
 

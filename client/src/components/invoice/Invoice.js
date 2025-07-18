@@ -172,6 +172,8 @@ function Invoice() {
       linkStr,
     });
 
+    localStorage.setItem("printedInvoiceNumber", invoiceInfo?.invoiceNumber);
+
     const invoiceInfo_CollectionRef1 = collection(db, INVOICE_LINK_INFO);
     // for link uses
     await addDoc(invoiceInfo_CollectionRef1, {
@@ -273,7 +275,7 @@ function Invoice() {
       // alert("PDF uploaded! URL:\n" + response.data.secure_url);
       setLoading(true);
 
-      const alreadyPrintedOnce = await checkIfInvoiceAlreadyPrintedOnce();
+      const alreadyPrintedOnce = await checkIfInvoiceAlreadyPrintedOnce1();
       // if (alreadyPrintedOnce) {
       //   toast("Invoice sent successfully!", {
       //     position: "top-center",
@@ -379,8 +381,21 @@ function Invoice() {
     const loginInfo = filteredData.filter((x) => x.code === loggedInUser)[0];
 
     const codeDoc = doc(db, "Login_Info", loginInfo.id);
+    const usedInvoiceNumbers = [
+      ...loginInfo.usedInvoiceNumbers,
+      parseInt(invoiceInfo?.invoiceNumber),
+    ];
+    localStorage.setItem(
+      "usedInvoiceNumbers",
+      JSON.stringify(usedInvoiceNumbers)
+    );
+    localStorage.setItem(
+      "invoiceNumber",
+      parseInt(invoiceInfo?.invoiceNumber) + 1
+    );
     await updateDoc(codeDoc, {
-      invoiceNumber: invoiceInfo?.invoiceNumber + 1,
+      invoiceNumber: parseInt(invoiceInfo?.invoiceNumber + 1),
+      usedInvoiceNumbers: usedInvoiceNumbers,
     });
   };
 
@@ -389,7 +404,7 @@ function Invoice() {
     contentRef: printRef,
     onAfterPrint: async () => {
       try {
-        const alreadyPrintedOnce = await checkIfInvoiceAlreadyPrintedOnce();
+        const alreadyPrintedOnce = await checkIfInvoiceAlreadyPrintedOnce1();
         if (alreadyPrintedOnce) {
           toast("Invoice printed successfully!", {
             position: "top-center",
@@ -411,6 +426,16 @@ function Invoice() {
     },
   });
 
+  const checkIfInvoiceAlreadyPrintedOnce1 = async () => {
+    const printedInvoiceNumber = localStorage.getItem("printedInvoiceNumber");
+    if (
+      printedInvoiceNumber &&
+      parseInt(printedInvoiceNumber) === invoiceInfo.invoiceNumber
+    ) {
+      return true;
+    }
+    return false;
+  };
   const checkIfInvoiceAlreadyPrintedOnce = async () => {
     const nextInvoiceNumber = await getExistingInvoiceNumber();
     return nextInvoiceNumber !== invoiceInfo.invoiceNumber;

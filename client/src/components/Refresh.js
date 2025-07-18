@@ -44,6 +44,13 @@ const Refresh = () => {
       localStorage.setItem("userName", loginInfo.userName);
       localStorage.setItem("name1", loginInfo.name);
       localStorage.setItem("type", loginInfo.type);
+      localStorage.setItem("subscription", loginInfo.subscription);
+      localStorage.setItem("invoiceNumber", loginInfo.invoiceNumber);
+      localStorage.setItem(
+        "usedInvoiceNumbers",
+        loginInfo.usedInvoiceNumbers ? loginInfo.usedInvoiceNumbers : []
+      );
+      localStorage.setItem("uid", uid);
     } catch (err) {
       console.log(err);
     }

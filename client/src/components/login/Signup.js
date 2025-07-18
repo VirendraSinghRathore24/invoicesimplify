@@ -104,6 +104,7 @@ const Signup = () => {
           localStorage.setItem("userName", userName);
           localStorage.setItem("name1", name);
           localStorage.setItem("invoiceNumber", 1);
+          localStorage.setItem("usedInvoiceNumbers", []);
           localStorage.setItem("type", type);
           localStorage.setItem("subscription", "Free");
           localStorage.setItem("uid", uid);
@@ -172,6 +173,7 @@ const Signup = () => {
       userName: userName,
       name: name,
       invoiceNumber: 1,
+      usedInvoiceNumbers: [],
       type: type,
       subscription: "Free",
       loginDate: new Date().toISOString().slice(0, 10),

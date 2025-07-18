@@ -85,6 +85,8 @@ const Login = () => {
     localStorage.setItem("type", loginInfo.type);
     localStorage.setItem("name1", loginInfo.name);
     localStorage.setItem("subscription", loginInfo.subscription);
+    localStorage.setItem("invoiceNumber", loginInfo.invoiceNumber);
+    localStorage.setItem("usedInvoiceNumbers", loginInfo.usedInvoiceNumbers);
   };
 
   const getInvoiceInfo = async (loggedInUser, uid) => {
