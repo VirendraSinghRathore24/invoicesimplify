@@ -132,6 +132,7 @@ const fetchTableRowsFromFirebaseForDaily = async (uid) => {
       "https://invoicesimplify.com/ci/" + d.linkStr,
     ];
   });
+
   return rows;
 };
 
@@ -246,11 +247,23 @@ const generatePdfTable = async (filePath, uid, frequency) => {
   let tableDescRows = [];
   if (frequency === "daily") {
     tableRows = await fetchTableRowsFromFirebaseForDaily(uid);
-    tableDescRows = await fetchTableRowsFromFirebaseForDailyDesc(uid);
+    if (tableRows.length === 0) {
+      console.log("No invoices found for yesterday.");
+      return;
+    }
+    //tableDescRows = await fetchTableRowsFromFirebaseForDailyDesc(uid);
   } else if (frequency === "weekly") {
     tableRows = await fetchTableRowsFromFirebaseForWeekly(uid);
+    if (tableRows.length === 0) {
+      console.log("No invoices found for the last week.");
+      return;
+    }
   } else if (frequency === "monthly") {
     tableRows = await fetchTableRowsFromFirebaseForMonthly(uid);
+    if (tableRows.length === 0) {
+      console.log("No invoices found for the last month.");
+      return;
+    }
   }
   return new Promise(async (resolve, reject) => {
     const doc = new PDFDocument({ margin: 10 });
@@ -312,18 +325,18 @@ const generatePdfTable = async (filePath, uid, frequency) => {
       y += rowHeight;
     });
 
-    doc.fontSize(16).text("Customer Profiles", { align: "center" });
-    doc.moveDown();
+    // doc.fontSize(16).text("Customer Invoices", { align: "center" });
+    // doc.moveDown();
 
-    // Loop through JSON data
-    tableDescRows.forEach((entry, index) => {
-      doc.fontSize(12).text(`Customer #${index + 1}`);
-      doc.text(`Name: ${entry.id}`);
-      doc.text(`Age: ${entry.invoiceInfo.date}`);
-      doc.text(`Gender: ${entry.customerInfo.customerName}`);
-      doc.text(`Occupation: ${entry.customerInfo.customerPhone}`);
-      doc.moveDown();
-    });
+    // // Loop through JSON data
+    // tableDescRows.forEach((entry, index) => {
+    //   doc.fontSize(12).text(`Customer #${index + 1}`);
+    //   doc.text(`Name: ${entry.id}`);
+    //   doc.text(`Age: ${entry.invoiceInfo.date}`);
+    //   doc.text(`Gender: ${entry.customerInfo.customerName}`);
+    //   doc.text(`Occupation: ${entry.customerInfo.customerPhone}`);
+    //   doc.moveDown();
+    // });
 
     // tableDescHeaders.forEach((header, i) => {
     //   doc.rect(x, tableTop, columnDescWidths[i], 20).stroke();
@@ -531,12 +544,19 @@ const generatePdfTable1 = async (filePath) => {
 };
 const sendEmail = async (email, frequency, uid) => {
   const pdfPath = path.join(__dirname, "report.pdf");
-  await generatePdfTable1(pdfPath);
-  //await generatePdfTable(pdfPath, uid, frequency);
+  //await generatePdfTable1(pdfPath);
+
+  await generatePdfTable(pdfPath, uid, frequency);
   const mailOptions = {
     from: "support@invoicesimplify.com",
     to: email,
-    subject: `Your ${frequency} report`,
+    subject: `Your ${frequency} report - ${
+      frequency === "daily"
+        ? getYestderdayDate()
+        : frequency === "weekly"
+        ? getLastWeekDate()
+        : getLastMonthDate()
+    }`,
     text: `Hello, this is your ${frequency} scheduled report.`,
     attachments: [
       {
@@ -552,6 +572,26 @@ const sendEmail = async (email, frequency, uid) => {
   } catch (err) {
     console.error(`❌ Error sending to ${email}:`, err);
   }
+};
+
+const getYestderdayDate = () => {
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
+  return yesterday.toISOString().split("T")[0];
+};
+
+const getLastWeekDate = () => {
+  const today = new Date();
+  const lastWeek = new Date(today);
+  lastWeek.setDate(today.getDate() - 7);
+  return lastWeek.toISOString().split("T")[0];
+};
+const getLastMonthDate = () => {
+  const today = new Date();
+  const lastMonth = new Date(today);
+  lastMonth.setMonth(today.getMonth() - 1);
+  return lastMonth.toISOString().split("T")[0];
 };
 
 const checkAndSendEmails = async (frequency) => {
@@ -571,9 +611,9 @@ const checkAndSendEmails = async (frequency) => {
 };
 
 // TODO - Future work
-cron.schedule("29 21 * * *", () => checkAndSendEmails("daily")); // 12:10 AM daily night for prev day
-//cron.schedule("00 20 * * 1", () => checkAndSendEmails("weekly")); // 12:20 AM every Monday for prev week
-//cron.schedule("00 30 1 * *", () => checkAndSendEmails("monthly")); // 12:30 AM on the 1st of every month
+cron.schedule("10 00 * * *", () => checkAndSendEmails("daily")); // 12:10 AM daily night for prev day
+cron.schedule("20 00 * * 1", () => checkAndSendEmails("weekly")); // 12:20 AM every Monday for prev week
+cron.schedule("30 00 1 * *", () => checkAndSendEmails("monthly")); // 12:30 AM on the 1st of every month
 
 app.get("/ping", (req, res) => res.send("Server is running"));
 
