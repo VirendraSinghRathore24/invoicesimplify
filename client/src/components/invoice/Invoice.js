@@ -310,19 +310,17 @@ function Invoice() {
             businessname: businessInfo.name,
             amount: amountInfo?.amount,
             message:
-              "Dear " + customerInfo.customerName + ",\n\n" + type ===
-              SERVICE_CENTER
-                ? "Thank you for servicing your vehicle with us!"
-                : "Thank you for your purchase!" +
-                  "Your invoice is ready.\n\n" +
-                  "You can view your invoice using the link below:\n\n" +
-                  "https://invoicesimplify.com/ci/" +
-                  linkStr +
-                  "\n\nIf you have any questions, feel free to contact us.\n\n" +
-                  "Best regards,\n" +
-                  businessInfo.name +
-                  "\n" +
-                  businessInfo.phonePrimary,
+              "Dear " +
+              customerInfo.customerName +
+              ",\n\nThank you for your purchase! Your invoice is ready.\n\n" +
+              "You can view your invoice using the link below:\n\n" +
+              "https://invoicesimplify.com/ci/" +
+              linkStr +
+              "\n\nIf you have any questions, feel free to contact us.\n\n" +
+              "Best regards,\n" +
+              businessInfo.name +
+              "\n" +
+              businessInfo.phonePrimary,
             urllink: "https://invoicesimplify.com/ci/" + linkStr,
             date: getCurrentDate(),
           }),
