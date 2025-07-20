@@ -159,10 +159,7 @@ const fetchTableRowsFromFirebaseForDailyDesc = async (uid) => {
     ...doc.data(),
   }));
 
-  const rows = result.map((d, index) => {
-    return d.invoiceInfo.rows;
-  });
-  return rows;
+  return result;
 };
 
 const fetchTableRowsFromFirebaseForWeekly = async (uid) => {
@@ -315,35 +312,52 @@ const generatePdfTable = async (filePath, uid, frequency) => {
       y += rowHeight;
     });
 
-    tableDescHeaders.forEach((header, i) => {
-      doc.rect(x, tableTop, columnDescWidths[i], 20).stroke();
-      doc.text(header, x + 5, tableTop + 5, {
-        width: columnDescWidths[i] - 10,
-        align: "left",
-      });
-      x += columnDescWidths[i];
+    doc.fontSize(16).text("Customer Profiles", { align: "center" });
+    doc.moveDown();
+
+    // Loop through JSON data
+    tableDescRows.forEach((entry, index) => {
+      doc.fontSize(12).text(`Customer #${index + 1}`);
+      doc.text(`Name: ${entry.id}`);
+      doc.text(`Age: ${entry.invoiceInfo.date}`);
+      doc.text(`Gender: ${entry.customerInfo.customerName}`);
+      doc.text(`Occupation: ${entry.customerInfo.customerPhone}`);
+      doc.moveDown();
     });
 
-    tableDescRows.forEach((row) => {
-      const heights = row.map((cell, i) => {
-        const textOptions = { width: columnDescWidths[i] - 10 };
-        return doc.heightOfString(cell, textOptions);
-      });
-      const rowHeight = Math.max(...heights) + 10;
-      x = xVal;
-      row.forEach((cell, i) => {
-        doc.rect(x, y, columnDescWidths[i], rowHeight).stroke();
+    // tableDescHeaders.forEach((header, i) => {
+    //   doc.rect(x, tableTop, columnDescWidths[i], 20).stroke();
+    //   doc.text(header, x + 5, tableTop + 5, {
+    //     width: columnDescWidths[i] - 10,
+    //     align: "left",
+    //   });
+    //   x += columnDescWidths[i];
+    // });
 
-        doc.text(cell, x + 5, y + 5, {
-          width: columnDescWidths[i] - 10,
-          height: rowHeight - 10,
-          align: "left",
-        });
+    // console.log("basu bhuvaji");
+    // console.log(tableDescRows[0]);
 
-        x += columnDescWidths[i];
-      });
-      y += rowHeight;
-    });
+    // tableDescRows.forEach((row) => {
+    //   const heights = 100;
+    //   //  row.map((cell, i) => {
+    //   //   const textOptions = { width: columnDescWidths[i] - 10 };
+    //   //   return doc.heightOfString(cell, textOptions);
+    //   // });
+    //   const rowHeight = Math.max(...heights) + 10;
+    //   x = xVal;
+    //   row.forEach((cell, i) => {
+    //     doc.rect(x, y, columnDescWidths[i], rowHeight).stroke();
+
+    //     doc.text(cell, x + 5, y + 5, {
+    //       width: columnDescWidths[i] - 10,
+    //       height: rowHeight - 10,
+    //       align: "left",
+    //     });
+
+    //     x += columnDescWidths[i];
+    //   });
+    //   y += rowHeight;
+    // });
 
     doc.end();
 
@@ -352,9 +366,173 @@ const generatePdfTable = async (filePath, uid, frequency) => {
   });
 };
 
+const generatePdfTable1 = async (filePath) => {
+  const doc = new PDFDocument({ margin: 30 });
+  doc.pipe(fs.createWriteStream(filePath));
+
+  // Sample summary data
+  const invoices = [
+    {
+      invoiceNo: "INV-1001",
+      name: "John Doe",
+      phone: "9876543210",
+      date: "2025-07-18",
+      amount: 1200,
+      type: "Online",
+      link: "https://example.com/invoice/INV-1001",
+      status: "Paid",
+      details: [
+        { desc: "Product A", price: 200, qty: 2 },
+        { desc: "Service B", price: 400, qty: 2 },
+      ],
+    },
+    {
+      invoiceNo: "INV-1002",
+      name: "Jane Smith",
+      phone: "9123456780",
+      date: "2025-07-17",
+      amount: 600,
+      type: "Offline",
+      link: "https://example.com/invoice/INV-1002",
+      status: "Unpaid",
+      details: [
+        { desc: "Item X", price: 150, qty: 2 },
+        { desc: "Item Y", price: 100, qty: 3 },
+      ],
+    },
+  ];
+
+  // Helper function to draw summary table
+  function drawSummaryTable(data) {
+    const headers = [
+      "Invoice #",
+      "Name",
+      "Phone",
+      "Date",
+      "Amount",
+      "Type",
+      "Link",
+    ];
+    const columnWidths = [30, 80, 60, 50, 40, 40, 100];
+    let y = doc.y;
+    let x = doc.x;
+    let x1 = doc.x;
+    let y1 = doc.y;
+    doc.font("Helvetica-Bold").fontSize(10);
+    headers.forEach((header, i) => {
+      doc.text(
+        header,
+        x + columnWidths.slice(0, i).reduce((a, b) => a + b, 0),
+        y,
+        {
+          width: columnWidths[i],
+          align: "left",
+        }
+      );
+    });
+    doc.moveDown(1);
+
+    x = x1;
+    y = doc.x;
+    doc.font("Helvetica").fontSize(10);
+    data.forEach((row) => {
+      y = y + 15; // Move down for each row
+      const values = [
+        row.invoiceNo,
+        row.name,
+        row.phone,
+        row.date,
+        row.amount,
+        row.type,
+        row.link,
+      ];
+      values.forEach((value, i) => {
+        doc.text(
+          String(value),
+          x + columnWidths.slice(0, i).reduce((a, b) => a + b, 0),
+          y,
+          {
+            width: columnWidths[i],
+            align: "left",
+          }
+        );
+      });
+      doc.moveDown(0.8);
+    });
+  }
+
+  // Helper function to draw detailed invoice
+  function drawInvoiceDetail(invoice) {
+    doc.addPage(); // New page for each invoice
+    doc
+      .fontSize(14)
+      .text(`Invoice Detail: ${invoice.invoiceNo}`, { underline: true });
+    doc.moveDown(0.5);
+    doc.fontSize(11).text(`Name: ${invoice.name}`);
+    doc.text(`Phone: ${invoice.phone}`);
+    doc.text(`Date: ${invoice.date}`);
+    doc.text(`Status: ${invoice.status}`);
+    doc.moveDown(1);
+
+    // Invoice item table
+    const itemHeaders = ["Description", "Price", "Qty", "Total"];
+    const colWidths = [200, 80, 60, 80];
+    let y = doc.y;
+
+    doc.font("Helvetica-Bold");
+    itemHeaders.forEach((header, i) => {
+      doc.text(
+        header,
+        doc.x + colWidths.slice(0, i).reduce((a, b) => a + b, 0),
+        y,
+        {
+          width: colWidths[i],
+          align: "left",
+        }
+      );
+    });
+    doc.moveDown(0.5);
+
+    doc.font("Helvetica");
+    let grandTotal = 0;
+    invoice.details.forEach((item) => {
+      const total = item.price * item.qty;
+      grandTotal += total;
+      const values = [item.desc, item.price, item.qty, total];
+      y = doc.y;
+      values.forEach((val, i) => {
+        doc.text(
+          String(val),
+          doc.x + colWidths.slice(0, i).reduce((a, b) => a + b, 0),
+          y,
+          {
+            width: colWidths[i],
+            align: "left",
+          }
+        );
+      });
+      doc.moveDown(0.5);
+    });
+
+    // Grand Total
+    doc.moveDown(0.5);
+    doc
+      .font("Helvetica-Bold")
+      .text(`Total: ₹${grandTotal}`, { align: "right" });
+  }
+
+  // Build PDF
+  doc.fontSize(16).text("Invoice Summary Report", { align: "center" });
+  doc.moveDown(1);
+  drawSummaryTable(invoices);
+  invoices.forEach(drawInvoiceDetail);
+
+  doc.end();
+};
 const sendEmail = async (email, frequency, uid) => {
   const pdfPath = path.join(__dirname, "report.pdf");
-  await generatePdfTable(pdfPath, uid, frequency);
+  await generatePdfTable1(pdfPath);
+  //await generatePdfTable(pdfPath, uid, frequency);
   const mailOptions = {
     from: "support@invoicesimplify.com",
     to: email,
@@ -393,9 +571,9 @@ const checkAndSendEmails = async (frequency) => {
 };
 
 // TODO - Future work
-// cron.schedule("15 21 * * *", () => checkAndSendEmails("daily")); // 12:10 AM daily night for prev day
-// cron.schedule("00 20 * * 1", () => checkAndSendEmails("weekly")); // 12:20 AM every Monday for prev week
-// cron.schedule("00 30 1 * *", () => checkAndSendEmails("monthly")); // 12:30 AM on the 1st of every month
+cron.schedule("29 21 * * *", () => checkAndSendEmails("daily")); // 12:10 AM daily night for prev day
+//cron.schedule("00 20 * * 1", () => checkAndSendEmails("weekly")); // 12:20 AM every Monday for prev week
+//cron.schedule("00 30 1 * *", () => checkAndSendEmails("monthly")); // 12:30 AM on the 1st of every month
 
 app.get("/ping", (req, res) => res.send("Server is running"));
 

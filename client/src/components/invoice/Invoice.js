@@ -26,6 +26,7 @@ import {
   INVOICE_INFO,
   INVOICE_LINK_INFO,
   LOGIN_INFO,
+  SERVICE_CENTER,
   USERS,
 } from "../Constant";
 
@@ -34,6 +35,7 @@ function Invoice() {
   const [taxInfo, setTaxInfo] = useState({});
   const [additionalInfo, setAdditionalInfo] = useState({});
   const [customerInfo, setCustomerInfo] = useState({});
+  const [vehicleInfo, setVehicleInfo] = useState({});
   const [invoiceInfo, setInvoiceInfo] = useState({});
   const [amountInfo, setAmountInfo] = useState({});
   const [taxCalculatedInfo, setTaxCalculatedInfo] = useState({});
@@ -43,6 +45,7 @@ function Invoice() {
   const pdfExportComponent = React.useRef(null);
 
   const uid = localStorage.getItem("uid");
+  const type = localStorage.getItem("type");
 
   const navigate = useNavigate();
   const handleNext = () => {
@@ -163,6 +166,7 @@ function Invoice() {
       invoiceInfo,
       amountInfo,
       customerInfo,
+      vehicleInfo,
       rows,
       businessInfo,
       taxInfo,
@@ -180,6 +184,7 @@ function Invoice() {
       invoiceInfo,
       amountInfo,
       customerInfo,
+      vehicleInfo,
       rows,
       businessInfo,
       taxInfo,
@@ -305,17 +310,19 @@ function Invoice() {
             businessname: businessInfo.name,
             amount: amountInfo?.amount,
             message:
-              "Dear " +
-              customerInfo.customerName +
-              ",\n\nThank you for your purchase! Your invoice is ready.\n\n" +
-              "You can view your invoice using the link below:\n\n" +
-              "https://invoicesimplify.com/ci/" +
-              linkStr +
-              "\n\nIf you have any questions, feel free to contact us.\n\n" +
-              "Best regards,\n" +
-              businessInfo.name +
-              "\n" +
-              businessInfo.phonePrimary,
+              "Dear " + customerInfo.customerName + ",\n\n" + type ===
+              SERVICE_CENTER
+                ? "Thank you for servicing your vehicle with us!"
+                : "Thank you for your purchase!" +
+                  "Your invoice is ready.\n\n" +
+                  "You can view your invoice using the link below:\n\n" +
+                  "https://invoicesimplify.com/ci/" +
+                  linkStr +
+                  "\n\nIf you have any questions, feel free to contact us.\n\n" +
+                  "Best regards,\n" +
+                  businessInfo.name +
+                  "\n" +
+                  businessInfo.phonePrimary,
             urllink: "https://invoicesimplify.com/ci/" + linkStr,
             date: getCurrentDate(),
           }),
@@ -347,6 +354,7 @@ function Invoice() {
     localStorage.removeItem("expecteddate");
     localStorage.removeItem("advance");
     localStorage.removeItem("rows");
+    localStorage.removeItem("date");
     localStorage.removeItem("paymentType");
     localStorage.removeItem("advanceAmount");
     localStorage.removeItem("selectedItem");
@@ -489,6 +497,9 @@ function Invoice() {
 
     let info4 = localStorage.getItem("customerInfo");
     setCustomerInfo(JSON.parse(info4));
+
+    let vInfo = localStorage.getItem("vehicleInfo");
+    setVehicleInfo(JSON.parse(vInfo));
 
     let info5 = localStorage.getItem("invoiceInfo");
     setInvoiceInfo(JSON.parse(info5));
@@ -678,6 +689,20 @@ function Invoice() {
                 </div>
               </div>
             </div>
+            {type === SERVICE_CENTER && (
+              <div>
+                <div className="border-b-2 border-dashed py-1"></div>
+                <div className="w-full mx-auto text-left font-semibold py-2">
+                  <div className="text-sm">Vehicle Details</div>
+                  <div className="text-xs lg:text-sm uppercase">
+                    {vehicleInfo?.vehicleNumber} - ( {vehicleInfo?.vehicleKM} KM
+                    ) - {vehicleInfo?.vehicleType}
+                  </div>
+                </div>
+                <div className="border-b-2 border-dashed py-1"></div>
+              </div>
+            )}
+
             <div className="flex justify-between border-b-[1.2px] border-black mt-6"></div>
             <div className="overflow-hidden">
               <div className="overflow-hidden mt-2 hidden lg:block">

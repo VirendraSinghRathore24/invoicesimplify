@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import MobileMenu from "../MobileMenu";
 import Loader from "../Loader";
 import MessagePopup from "../MessagePopup";
+import { SERVICE_CENTER } from "../Constant";
 
 function ViewInvoice() {
   const [invoiceInfo, setInvoiceInfo] = useState({});
@@ -18,6 +19,8 @@ function ViewInvoice() {
 
   const location = useLocation();
   const id = location.state.id;
+
+  const type = localStorage.getItem("type");
 
   const navigate = useNavigate();
 
@@ -280,6 +283,21 @@ function ViewInvoice() {
                 </div>
               </div>
             </div>
+            {type === SERVICE_CENTER &&
+              invoiceInfo?.vehicleInfo?.vehicleNumber && (
+                <div>
+                  <div className="border-b-2 border-dashed py-1"></div>
+                  <div className="w-full mx-auto text-left font-semibold py-2">
+                    <div className="text-sm">Vehicle Details</div>
+                    <div className="text-xs lg:text-sm uppercase">
+                      {invoiceInfo?.vehicleInfo?.vehicleNumber} - ({" "}
+                      {invoiceInfo?.vehicleInfo?.vehicleKM} KM ) -{" "}
+                      {invoiceInfo?.vehicleInfo?.vehicleType}
+                    </div>
+                  </div>
+                  <div className="border-b-2 border-dashed py-1"></div>
+                </div>
+              )}
             <div className="flex justify-between border-b-[1.2px] border-black mt-6"></div>
             <div className="overflow-hidden">
               <div className="overflow-hidden mt-2 hidden lg:block">

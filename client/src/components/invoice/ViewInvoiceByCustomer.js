@@ -222,6 +222,21 @@ function ViewInvoiceByCustomer() {
                 </div>
               </div>
             </div>
+            {invoiceInfo?.vehicleInfo?.vehicleNumber && (
+              <div>
+                <div className="border-b-2 border-dashed py-1"></div>
+                <div className="w-full mx-auto text-left font-semibold py-2">
+                  <div className="text-sm">Vehicle Details</div>
+                  <div className="text-xs lg:text-sm uppercase">
+                    {invoiceInfo?.vehicleInfo?.vehicleNumber} - ({" "}
+                    {invoiceInfo?.vehicleInfo?.vehicleKM} KM ) -{" "}
+                    {invoiceInfo?.vehicleInfo?.vehicleType}
+                  </div>
+                </div>
+                <div className="border-b-2 border-dashed py-1"></div>
+              </div>
+            )}
+
             <div className="flex justify-between border-b-[1.2px] border-black mt-2 lg:mt-6"></div>
             <div className="overflow-hidden mt-2">
               <div className="overflow-hidden mt-2 hidden max-lg:block">

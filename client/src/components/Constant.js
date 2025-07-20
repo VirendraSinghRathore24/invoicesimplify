@@ -7,3 +7,4 @@ export const INVENTORY_INFO = "Inventory_Info";
 export const USERS = "Users";
 export const ARCHIVED_INVOICES = "Archived_Invoices";
 export const SCHEDULED_EMAILS = "scheduledEmails";
+export const SERVICE_CENTER = "Service Center";

@@ -126,12 +126,12 @@ const Sidebar = () => {
             to="/refresh"
             active={location.pathname === "/refresh"}
           />
-          {/* <SubMenuItem
+          <SubMenuItem
             icon={<Mail size={20} />}
             text="Email Schedule"
             to="/emailscheduler"
             active={location.pathname === "/emailscheduler"}
-          /> */}
+          />
           {/* <SubMenuItem
             icon={<Trash2 size={18} />}
             text="Archived Invoices"

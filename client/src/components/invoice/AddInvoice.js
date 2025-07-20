@@ -6,7 +6,7 @@ import { collection, doc, getDocs } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import AlertModal from "../confirmModal/AlertModal";
 import MobileMenu from "../MobileMenu";
-import { INVOICE_INFO, LOGIN_INFO, USERS } from "../Constant";
+import { INVOICE_INFO, LOGIN_INFO, SERVICE_CENTER, USERS } from "../Constant";
 
 const AddInvoice = () => {
   const [signature, setSignature] = useState(null);
@@ -46,6 +46,9 @@ const AddInvoice = () => {
 
   // invoice details
   const [invoiceNumber, setInvoiceNumber] = useState("");
+  const [vehicleNumber, setVehicleNumber] = useState("");
+  const [vehicleKM, setVehicleKM] = useState("");
+  const [vehicleType, setVehicleType] = useState("");
 
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
   const [settledDate, setSettledDate] = useState(
@@ -55,6 +58,8 @@ const AddInvoice = () => {
 
   const [upiEnabled, setUpiEnabled] = useState(true);
   const uid = localStorage.getItem("uid");
+
+  const type = localStorage.getItem("type");
 
   var today = new Date();
   const months = [
@@ -269,6 +274,14 @@ const AddInvoice = () => {
     };
 
     localStorage.setItem("customerInfo", JSON.stringify(customerInfo));
+
+    const vehicleInfo = {
+      vehicleNumber: vehicleNumber,
+      vehicleKM: vehicleKM,
+      vehicleType: vehicleType,
+    };
+
+    localStorage.setItem("vehicleInfo", JSON.stringify(vehicleInfo));
 
     const invoiceInfo = {
       invoiceNumber: invoiceNumber,
@@ -816,6 +829,83 @@ const AddInvoice = () => {
                   </div>
                 }
               </div>
+              {type === SERVICE_CENTER && (
+                <div className="w-full lg:w-6/12 mx-auto flex flex-col mt-4  border-[1.2px] p-2 lg:p-4 bg-white gap-y-2 lg:gap-y-4 rounded-md">
+                  <div className="flex hidden lg:block">
+                    <div className="text-xl text-gray-600 font-medium">
+                      Vehicle
+                    </div>
+                  </div>
+                  <div className="flex justify-between w-full mx-auto">
+                    <div className="flex flex-col">
+                      <div className="text-xs font-medium leading-5 mt-2">
+                        Vehicle #
+                      </div>
+                      <div>
+                        <input
+                          className="w-9/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5 uppercase"
+                          required
+                          name="vehicleNumber"
+                          placeholder="RJ14KA1234"
+                          value={vehicleNumber}
+                          onChange={(e) => {
+                            setVehicleNumber(e.target.value);
+                            localStorage.setItem(
+                              "vehicleNumber",
+                              e.target.value
+                            );
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="text-xs font-medium leading-5 mt-2">
+                        K.M.
+                      </div>
+                      <div>
+                        <input
+                          className="w-10/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5 "
+                          required
+                          name="number"
+                          placeholder="kilometer"
+                          type="number"
+                          value={vehicleKM}
+                          onChange={(e) => {
+                            setVehicleKM(e.target.value);
+                            localStorage.setItem("vehicleKM", e.target.value);
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  {
+                    <div className="flex flex-col">
+                      <div className="flex flex-col">
+                        <div className="text-xs font-medium leading-5 mt-2">
+                          Vehicle Type
+                        </div>
+                        <div>
+                          <input
+                            className="w-12/12 lg:w-3/12 block uppercase text-xs rounded border border-gray-400 py-2 px-4 leading-5 "
+                            required
+                            name="vehicleType"
+                            placeholder="Alto"
+                            type="text"
+                            value={vehicleType}
+                            onChange={(e) => {
+                              setVehicleType(e.target.value);
+                              localStorage.setItem(
+                                "vehicleType",
+                                e.target.value
+                              );
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  }
+                </div>
+              )}
             </div>
 
             <div className="w-full mx-auto  border-[1.2px] p-2 lg:p-4 bg-white gap-y-4 rounded-md">
