@@ -362,6 +362,9 @@ function Invoice() {
     localStorage.removeItem("selectedItemPrice");
     localStorage.removeItem("selectedItemBuyPrice");
     localStorage.removeItem("selectedItemQty");
+    localStorage.removeItem("vehicleNumber");
+    localStorage.removeItem("vehicleKM");
+    localStorage.removeItem("vehicleType");
   };
 
   const sendToWhatsapp = async () => {

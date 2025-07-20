@@ -387,6 +387,10 @@ const AddInvoice = () => {
     setExpectedDate("");
     setAdvance(0);
 
+    setVehicleNumber("");
+    setVehicleKM("");
+    setVehicleType("");
+
     setDate(new Date().toISOString().slice(0, 10));
     setAmount(0);
     setSignature(null);
@@ -466,6 +470,9 @@ const AddInvoice = () => {
     setAddress3(localStorage.getItem("address3"));
     setCustomerPhone(localStorage.getItem("custphone"));
     setAdvance(localStorage.getItem("advance"));
+    setVehicleNumber(localStorage.getItem("vehicleNumber"));
+    setVehicleKM(localStorage.getItem("vehicleKM"));
+    setVehicleType(localStorage.getItem("vehicleType"));
   };
 
   const getLocalStorageInvoiceInfo = async () => {
@@ -515,6 +522,9 @@ const AddInvoice = () => {
     localStorage.removeItem("address2");
     localStorage.removeItem("address3");
     localStorage.removeItem("custphone");
+    localStorage.removeItem("vehicleNumber");
+    localStorage.removeItem("vehicleKM");
+    localStorage.removeItem("vehicleType");
   };
 
   const deleteLocalStorageInvoiceInfo = () => {
