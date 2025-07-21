@@ -155,7 +155,7 @@ function ViewInvoiceByCustomer() {
         >
           <div ref={printRef} className="p-1 lg:p-4">
             <div className="flex justify-between">
-              <div>
+              <div className="-ml-4">
                 <img
                   src="../images/logo14.webp"
                   className="h-10 lg:h-20 w-16 lg:w-[155px]"
@@ -166,13 +166,13 @@ function ViewInvoiceByCustomer() {
                   {invoiceInfo?.businessInfo?.name}
                 </div>
                 {/* <div className='text-3xl font-bold'>बाईसाराज पौशाक पैलेस</div> */}
-                <div className="text-sm lg:text-lg font-medium">
+                <div className="text-xs lg:text-lg font-medium">
                   {invoiceInfo?.businessInfo?.subTitle1}
                 </div>
-                <div className="text-sm lg:text-lg font-medium">
+                <div className="text-xs lg:text-lg font-medium">
                   {invoiceInfo?.businessInfo?.subTitle2}
                 </div>
-                <div className="text-sm lg:text-md font-normal mt-1">
+                <div className="text-xs lg:text-md font-normal mt-1">
                   {invoiceInfo?.businessInfo?.email}
                 </div>
               </div>
@@ -261,11 +261,13 @@ function ViewInvoiceByCustomer() {
                               {row?.desc}
                             </td>
                             <td className="w-[20%] text-xs">{row?.rate}</td>
-                            <td className="w-[15%] text-xs">
+                            <td className="w-[15%] text-xs ">
                               {row?.qty}{" "}
-                              <span className="ml-1 uppercase text-xs">
-                                {row?.selectedUnit}
-                              </span>
+                              {row.selectedUnit !== "none" && (
+                                <span className="ml-1 uppercase">
+                                  {row?.selectedUnit}
+                                </span>
+                              )}
                             </td>
                             <td className="w-[25%] text-xs"> {row?.amount}</td>
                           </tr>
@@ -301,11 +303,13 @@ function ViewInvoiceByCustomer() {
                             <td className="w-[10%]">{index + 1}.</td>
                             <td className="w-[40%] text-left ">{row?.desc}</td>
                             <td className="w-[10%] ">{row?.rate}</td>
-                            <td className="w-[15%] ">
+                            <td className="w-[10%] ">
                               {row?.qty}{" "}
-                              <span className="ml-1 uppercase ">
-                                {row?.selectedUnit}
-                              </span>
+                              {row.selectedUnit !== "none" && (
+                                <span className="ml-1 uppercase">
+                                  {row?.selectedUnit}
+                                </span>
+                              )}
                             </td>
                             <td className="w-[20%] "> {row?.amount}</td>
                           </tr>
