@@ -77,8 +77,8 @@ app.use(
 const transporter = nodemailer.createTransport({
   //service: "SendGrid",
   host: "smtpout.secureserver.net",
-  secure: true,
-  port: 465,
+  //secure: true,
+  port: 587,
   auth: {
     user: "support@invoicesimplify.com",
     pass: process.env.EMAIL_PASSWORD,
