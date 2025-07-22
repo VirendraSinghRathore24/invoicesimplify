@@ -611,7 +611,7 @@ const checkAndSendEmails = async (frequency) => {
 };
 
 // TODO - Future work
-cron.schedule("10 00 * * *", () => checkAndSendEmails("daily")); // 12:10 AM daily night for prev day
+cron.schedule("15 10 * * *", () => checkAndSendEmails("daily")); // 12:10 AM daily night for prev day
 cron.schedule("20 00 * * 1", () => checkAndSendEmails("weekly")); // 12:20 AM every Monday for prev week
 cron.schedule("30 00 1 * *", () => checkAndSendEmails("monthly")); // 12:30 AM on the 1st of every month
 

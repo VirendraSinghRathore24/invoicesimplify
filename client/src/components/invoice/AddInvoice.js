@@ -820,7 +820,7 @@ const AddInvoice = () => {
                       </div>
                       <div>
                         <input
-                          className="w-12/12 lg:w-3/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5 "
+                          className="w-12/12 lg:w-5/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5 "
                           required
                           name="expecteddate"
                           placeholder="Date"
