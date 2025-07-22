@@ -75,9 +75,9 @@ app.use(
 );
 
 const transporter = nodemailer.createTransport({
-  service: "SendGrid",
+  //service: "SendGrid",
   host: "smtpout.secureserver.net",
-  secure: false,
+  secure: true,
   port: 465,
   auth: {
     user: "support@invoicesimplify.com",
@@ -707,7 +707,7 @@ const checkAndSendEmails = async (frequency) => {
   }
 };
 
-cron.schedule("38 11 * * *", () => {
+cron.schedule("59 15 * * *", () => {
   checkAndSendEmails("daily");
   // const html = generateHtmlTable();
   // sendEmail(html);
