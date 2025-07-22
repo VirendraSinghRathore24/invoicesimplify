@@ -707,7 +707,7 @@ const checkAndSendEmails = async (frequency) => {
   }
 };
 
-cron.schedule("26 22 * * *", () => {
+cron.schedule("30 22 * * *", () => {
   checkAndSendEmails("daily");
   // const html = generateHtmlTable();
   // sendEmail(html);
