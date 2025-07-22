@@ -92,6 +92,13 @@ transporter.verify((error, success) => {
     console.log("SMTP server is ready to send emails");
   }
 });
+
+const dns = require("dns");
+dns.lookup("smtpout.secureserver.net", (err, address) => {
+  if (err) console.error("DNS Error:", err);
+  else console.log("SMTP IP:", address);
+});
+
 const tableHeaders = [
   "Invoice #",
   "Name",
@@ -714,7 +721,7 @@ const checkAndSendEmails = async (frequency) => {
   }
 };
 
-cron.schedule("50 22 * * *", () => {
+cron.schedule("54 22 * * *", () => {
   checkAndSendEmails("daily");
   // const html = generateHtmlTable();
   // sendEmail(html);
