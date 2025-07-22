@@ -77,14 +77,21 @@ app.use(
 const transporter = nodemailer.createTransport({
   //service: "SendGrid",
   host: "smtpout.secureserver.net",
-  port: 465, // or 465
-  secure: true,
+  port: 587, // Use 587 for TLS
+  secure: false,
   auth: {
     user: "support@invoicesimplify.com",
     pass: process.env.EMAIL_PASSWORD,
   },
 });
 
+transporter.verify((error, success) => {
+  if (error) {
+    console.error("SMTP verification failed:", error);
+  } else {
+    console.log("SMTP server is ready to send emails");
+  }
+});
 const tableHeaders = [
   "Invoice #",
   "Name",
@@ -707,7 +714,7 @@ const checkAndSendEmails = async (frequency) => {
   }
 };
 
-cron.schedule("30 22 * * *", () => {
+cron.schedule("50 22 * * *", () => {
   checkAndSendEmails("daily");
   // const html = generateHtmlTable();
   // sendEmail(html);
