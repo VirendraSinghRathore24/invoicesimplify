@@ -75,7 +75,7 @@ app.use(
 );
 
 const transporter = nodemailer.createTransport({
-  service: "Godaddy",
+  service: "SendGrid",
   host: "smtpout.secureserver.net",
   secure: false,
   port: 465,
@@ -707,7 +707,7 @@ const checkAndSendEmails = async (frequency) => {
   }
 };
 
-cron.schedule("29 11 * * *", () => {
+cron.schedule("38 11 * * *", () => {
   checkAndSendEmails("daily");
   // const html = generateHtmlTable();
   // sendEmail(html);
