@@ -120,20 +120,20 @@ const fetchTableRowsFromFirebaseForDaily = async (uid) => {
     id: doc.id,
     ...doc.data(),
   }));
+  return result;
+  // const rows = result.map((d, index) => {
+  //   return [
+  //     d.invoiceInfo.invoiceNumber,
+  //     d.customerInfo.customerName,
+  //     d.customerInfo.customerPhone,
+  //     d.invoiceInfo.date,
+  //     d.amountInfo.amount,
+  //     d.amountInfo.paymentType,
+  //     "https://invoicesimplify.com/ci/" + d.linkStr,
+  //   ];
+  // });
 
-  const rows = result.map((d, index) => {
-    return [
-      d.invoiceInfo.invoiceNumber,
-      d.customerInfo.customerName,
-      d.customerInfo.customerPhone,
-      d.invoiceInfo.date,
-      d.amountInfo.amount,
-      d.amountInfo.paymentType,
-      "https://invoicesimplify.com/ci/" + d.linkStr,
-    ];
-  });
-
-  return rows;
+  // return rows;
 };
 
 const fetchTableRowsFromFirebaseForDailyDesc = async (uid) => {
@@ -542,8 +542,105 @@ const generatePdfTable1 = async (filePath) => {
 
   doc.end();
 };
+const generateHtmlTable = async () => {
+  let data = await fetchTableRowsFromFirebaseForDaily(uid);
+  let html = `
+    <h3>Daily Invoice Summary</h3>
+    <table border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse; width: 100%;">
+      <thead style="background-color: #f2f2f2;">
+        <tr>
+          <th>Invoice</th>
+          <th>Name</th>
+          <th>Amount</th>
+          <th>Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+
+  data.forEach((row) => {
+    html += `
+      <tr>
+        <td>${row.invoice}</td>
+        <td>${row.name}</td>
+        <td>₹${row.amount}</td>
+        <td>${row.date}</td>
+        <td>${row.status}</td>
+      </tr>
+    `;
+  });
+
+  html += `
+      </tbody>
+    </table>
+  `;
+
+  return html;
+};
+
+const generateHtmlTableHtml = async (uid) => {
+  let data = await fetchTableRowsFromFirebaseForDaily(uid);
+  let html = `
+    <h3>Daily Invoice Summary</h3>
+    <table border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse; width: 100%;">
+      <thead style="background-color: #f2f2f2;">
+        <tr>
+          <th>Invoice#</th>
+          <th>Name</th>
+          <th>Phone</th>
+          <th>Date</th>
+          <th>Amount</th>
+          <th>Type</th>
+          <th>Link</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+
+  console.log("Data fetched for HTML table:", data);
+
+  data.forEach((row) => {
+    html += `
+      <tr>
+       <td>${row.invoiceInfo.invoiceNumber}</td>
+        <td>${row.customerInfo.customerName}</td>
+         <td>${row.customerInfo.customerPhone}</td>
+          <td>${row.invoiceInfo.date}</td>
+           <td>${row.amountInfo.amount}</td>
+            <td>${row.amountInfo.paymentType}</td>
+             <td>${row.linkStr}</td>
+      </tr>
+    `;
+  });
+
+  html += `
+      </tbody>
+    </table>
+  `;
+
+  return html;
+};
+
+const sendEmailHtml = async (email, frequency, uid) => {
+  const htmlBody = await generateHtmlTableHtml(uid);
+  const mailOptions = {
+    from: "support@invoicesimplify.com",
+    to: email,
+    subject: "Daily Invoice Report",
+    html: htmlBody,
+  };
+
+  console.log("Sending email to:", email);
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) return console.error("Error:", error);
+    console.log("Email sent:", info.response);
+  });
+};
+
 const sendEmail = async (email, frequency, uid) => {
   const pdfPath = path.join(__dirname, "report.pdf");
+
   //await generatePdfTable1(pdfPath);
 
   await generatePdfTable(pdfPath, uid, frequency);
@@ -602,7 +699,7 @@ const checkAndSendEmails = async (frequency) => {
     basicSnapshot.forEach((doc) => {
       const data = doc.data();
       if (data.frequencies.includes(frequency)) {
-        sendEmail(data.email, frequency, data.uid);
+        sendEmailHtml(data.email, frequency, data.uid);
       }
     });
   } catch (err) {
@@ -610,10 +707,15 @@ const checkAndSendEmails = async (frequency) => {
   }
 };
 
+cron.schedule("20 11 * * *", () => {
+  checkAndSendEmails("daily");
+  // const html = generateHtmlTable();
+  // sendEmail(html);
+});
 // TODO - Future work
-cron.schedule("15 10 * * *", () => checkAndSendEmails("daily")); // 12:10 AM daily night for prev day
-cron.schedule("20 00 * * 1", () => checkAndSendEmails("weekly")); // 12:20 AM every Monday for prev week
-cron.schedule("30 00 1 * *", () => checkAndSendEmails("monthly")); // 12:30 AM on the 1st of every month
+//cron.schedule("15 10 * * *", () => checkAndSendEmails("daily")); // 12:10 AM daily night for prev day
+//cron.schedule("20 00 * * 1", () => checkAndSendEmails("weekly")); // 12:20 AM every Monday for prev week
+//cron.schedule("30 00 1 * *", () => checkAndSendEmails("monthly")); // 12:30 AM on the 1st of every month
 
 app.get("/ping", (req, res) => res.send("Server is running"));
 
