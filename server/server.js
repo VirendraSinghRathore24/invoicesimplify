@@ -19,6 +19,8 @@ dotenv.config();
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
 
+const pdf = require("html-pdf");
+
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
@@ -593,11 +595,22 @@ const generateHtmlTable = async () => {
   return html;
 };
 
-const generateHtmlTableHtml = async (uid) => {
+const generateHtmlTableHtml1 = async (pdfPath, uid, yesterday) => {
+  const html = await generateHtmlTableHtml(uid, yesterday);
+
+  const options = { format: "A4" };
+
+  pdf.create(html, options).toFile(pdfPath, (err, res) => {
+    if (err) return console.error(err);
+    console.log("PDF created:", res.filename);
+  });
+};
+
+const generateHtmlTableHtml = async (uid, yesterday) => {
   let data = await fetchTableRowsFromFirebaseForDaily(uid);
   let html = `
-    <h3>Daily Invoice Summary</h3>
-    <table border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse; width: 100%;">
+    <h3 style="font-size: 12px;">Daily Invoice Summary - ${yesterday}</h3>
+    <table border="1" cellpadding="4" cellspacing="0" style="border-collapse: collapse; width: 100%; font-size: 10px;">
       <thead style="background-color: #f2f2f2;">
         <tr>
           <th>Invoice#</th>
@@ -612,18 +625,16 @@ const generateHtmlTableHtml = async (uid) => {
       <tbody>
   `;
 
-  console.log("Data fetched for HTML table:", data);
-
   data.forEach((row) => {
     html += `
       <tr>
-       <td>${row.invoiceInfo.invoiceNumber}</td>
+        <td>${row.invoiceInfo.invoiceNumber}</td>
         <td>${row.customerInfo.customerName}</td>
-         <td>${row.customerInfo.customerPhone}</td>
-          <td>${row.invoiceInfo.date}</td>
-           <td>${row.amountInfo.amount}</td>
-            <td>${row.amountInfo.paymentType}</td>
-             <td>${row.linkStr}</td>
+        <td>${row.customerInfo.customerPhone}</td>
+        <td>${row.invoiceInfo.date}</td>
+        <td>${row.amountInfo.amount}</td>
+        <td>${row.amountInfo.paymentType}</td>
+        <td>${row.linkStr}</td>
       </tr>
     `;
   });
@@ -632,7 +643,96 @@ const generateHtmlTableHtml = async (uid) => {
       </tbody>
     </table>
   `;
+  html += `
+    <hr style="border: 1px solid #ccc; margin: 20px 0;">
+    `;
+  data.forEach((row) => {
+    html += `
+    <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 10px;">
+      <div>
+        <p><strong>Customer Name:</strong> ${
+          row?.customerInfo?.customerName || "N/A"
+        }</p>
+        <p><strong>Customer Phone:</strong> ${
+          row?.customerInfo?.customerPhone || "N/A"
+        }</p>
+      </div>
+      <div style="text-align: right;">
+        <p><strong>Invoice #:</strong> ${
+          row?.invoiceInfo?.invoiceNumber || "N/A"
+        }</p>
+        <p><strong>Date:</strong> ${row?.invoiceInfo?.date || "N/A"}</p>
+      </div>
+    </div>
+  `;
 
+    html += `
+    <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 10px;">
+      <div>
+        <p><strong>Vehicle Number:</strong> ${
+          row?.vehicleInfo?.vehicleNumber.toUpperCase() || "N/A"
+        }</p>
+        <p><strong>Kilometer:</strong> ${
+          row?.vehicleInfo?.vehicleKM || "N/A"
+        }</p>
+        <p><strong>Type:</strong> ${
+          row?.vehicleInfo?.vehicleType.toUpperCase() || "N/A"
+        }</p>
+      </div>
+    </div>
+  `;
+
+    // Add headers for the new table
+    html += `
+    <h3 style="font-size: 12px;">Item Details</h3>
+    <table border="1" cellpadding="4" cellspacing="0" style="border-collapse: collapse; width: 100%; font-size: 10px;">
+      <thead style="background-color: #f2f2f2;">
+        <tr>
+          <th>SN</th>
+          <th>Description</th>
+          <th>Rate</th>
+          <th>Quantity</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+
+    let totalAmount = 0;
+
+    row?.rows?.forEach((row1, index) => {
+      const rowAmount = row1.rate * row1.qty;
+      totalAmount += rowAmount;
+
+      html += `
+      <tr>
+        <td>${index + 1}.</td>
+        <td>${row1.desc}</td>
+        <td>₹${row1.rate}</td>
+        <td>${row1.qty}</td>
+        <td>₹${rowAmount}</td>
+      </tr>
+    `;
+    });
+
+    html += `
+      </tbody>
+    </table>
+    <h4 style="text-align: right; font-size: 12px;">Total Amount: ₹${totalAmount}</h4>
+   
+      <h4 style="text-align: right; font-size: 12px;">
+        ${
+          row?.amountInfo?.paymentType === "fullyPaid"
+            ? "Fully Paid"
+            : `Balance: ₹${totalAmount - row?.amountInfo?.advance}`
+        }
+      </h4>
+      
+  `;
+    html += `
+    <hr style="border: 1px solid #ccc; margin: 20px 0;">
+    `;
+  });
   return html;
 };
 
@@ -646,18 +746,19 @@ const sendEmailHtml = async (email, frequency, uid) => {
   };
 
   console.log("Sending email to:", email);
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) return console.error("Error:", error);
-    console.log("Email sent:", info.response);
-  });
+  // transporter.sendMail(mailOptions, (error, info) => {
+  //   if (error) return console.error("Error:", error);
+  //   console.log("Email sent:", info.response);
+  // });
 };
 
 const sendEmail = async (email, frequency, uid) => {
   const pdfPath = path.join(__dirname, "report.pdf");
 
   //await generatePdfTable1(pdfPath);
+  await generateHtmlTableHtml1(pdfPath, uid, getYestderdayDate());
 
-  await generatePdfTable(pdfPath, uid, frequency);
+  //await generatePdfTable(pdfPath, uid, frequency);
   const mailOptions = {
     from: "support@invoicesimplify.com",
     to: email,
@@ -678,7 +779,7 @@ const sendEmail = async (email, frequency, uid) => {
   };
 
   try {
-    await transporter.sendMail(mailOptions);
+    //await transporter.sendMail(mailOptions);
     console.log(`✅ Email sent to ${email} for ${frequency}`);
   } catch (err) {
     console.error(`❌ Error sending to ${email}:`, err);
@@ -713,7 +814,7 @@ const checkAndSendEmails = async (frequency) => {
     basicSnapshot.forEach((doc) => {
       const data = doc.data();
       if (data.frequencies.includes(frequency)) {
-        sendEmailHtml(data.email, frequency, data.uid);
+        sendEmail(data.email, frequency, data.uid);
       }
     });
   } catch (err) {
@@ -722,12 +823,10 @@ const checkAndSendEmails = async (frequency) => {
 };
 
 cron.schedule(
-  "05 11 * * *",
+  "40 18 * * *",
   () => {
     checkAndSendEmails("daily");
     console.log("✅ Daily email check completed at 10:57 AM");
-    // const html = generateHtmlTable();
-    // sendEmail(html);
   },
   {
     timezone: "Asia/Kolkata",
