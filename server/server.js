@@ -722,7 +722,7 @@ const checkAndSendEmails = async (frequency) => {
 };
 
 cron.schedule(
-  "57 10 * * *",
+  "05 11 * * *",
   () => {
     checkAndSendEmails("daily");
     console.log("✅ Daily email check completed at 10:57 AM");
