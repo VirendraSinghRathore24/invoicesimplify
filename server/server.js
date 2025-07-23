@@ -395,206 +395,6 @@ const generatePdfTable = async (filePath, uid, frequency) => {
   });
 };
 
-const generatePdfTable1 = async (filePath) => {
-  const doc = new PDFDocument({ margin: 30 });
-  doc.pipe(fs.createWriteStream(filePath));
-
-  // Sample summary data
-  const invoices = [
-    {
-      invoiceNo: "INV-1001",
-      name: "John Doe",
-      phone: "9876543210",
-      date: "2025-07-18",
-      amount: 1200,
-      type: "Online",
-      link: "https://example.com/invoice/INV-1001",
-      status: "Paid",
-      details: [
-        { desc: "Product A", price: 200, qty: 2 },
-        { desc: "Service B", price: 400, qty: 2 },
-      ],
-    },
-    {
-      invoiceNo: "INV-1002",
-      name: "Jane Smith",
-      phone: "9123456780",
-      date: "2025-07-17",
-      amount: 600,
-      type: "Offline",
-      link: "https://example.com/invoice/INV-1002",
-      status: "Unpaid",
-      details: [
-        { desc: "Item X", price: 150, qty: 2 },
-        { desc: "Item Y", price: 100, qty: 3 },
-      ],
-    },
-  ];
-
-  // Helper function to draw summary table
-  function drawSummaryTable(data) {
-    const headers = [
-      "Invoice #",
-      "Name",
-      "Phone",
-      "Date",
-      "Amount",
-      "Type",
-      "Link",
-    ];
-    const columnWidths = [30, 80, 60, 50, 40, 40, 100];
-    let y = doc.y;
-    let x = doc.x;
-    let x1 = doc.x;
-    let y1 = doc.y;
-    doc.font("Helvetica-Bold").fontSize(10);
-    headers.forEach((header, i) => {
-      doc.text(
-        header,
-        x + columnWidths.slice(0, i).reduce((a, b) => a + b, 0),
-        y,
-        {
-          width: columnWidths[i],
-          align: "left",
-        }
-      );
-    });
-    doc.moveDown(1);
-
-    x = x1;
-    y = doc.x;
-    doc.font("Helvetica").fontSize(10);
-    data.forEach((row) => {
-      y = y + 15; // Move down for each row
-      const values = [
-        row.invoiceNo,
-        row.name,
-        row.phone,
-        row.date,
-        row.amount,
-        row.type,
-        row.link,
-      ];
-      values.forEach((value, i) => {
-        doc.text(
-          String(value),
-          x + columnWidths.slice(0, i).reduce((a, b) => a + b, 0),
-          y,
-          {
-            width: columnWidths[i],
-            align: "left",
-          }
-        );
-      });
-      doc.moveDown(0.8);
-    });
-  }
-
-  // Helper function to draw detailed invoice
-  function drawInvoiceDetail(invoice) {
-    doc.addPage(); // New page for each invoice
-    doc
-      .fontSize(14)
-      .text(`Invoice Detail: ${invoice.invoiceNo}`, { underline: true });
-    doc.moveDown(0.5);
-    doc.fontSize(11).text(`Name: ${invoice.name}`);
-    doc.text(`Phone: ${invoice.phone}`);
-    doc.text(`Date: ${invoice.date}`);
-    doc.text(`Status: ${invoice.status}`);
-    doc.moveDown(1);
-
-    // Invoice item table
-    const itemHeaders = ["Description", "Price", "Qty", "Total"];
-    const colWidths = [200, 80, 60, 80];
-    let y = doc.y;
-
-    doc.font("Helvetica-Bold");
-    itemHeaders.forEach((header, i) => {
-      doc.text(
-        header,
-        doc.x + colWidths.slice(0, i).reduce((a, b) => a + b, 0),
-        y,
-        {
-          width: colWidths[i],
-          align: "left",
-        }
-      );
-    });
-    doc.moveDown(0.5);
-
-    doc.font("Helvetica");
-    let grandTotal = 0;
-    invoice.details.forEach((item) => {
-      const total = item.price * item.qty;
-      grandTotal += total;
-      const values = [item.desc, item.price, item.qty, total];
-      y = doc.y;
-      values.forEach((val, i) => {
-        doc.text(
-          String(val),
-          doc.x + colWidths.slice(0, i).reduce((a, b) => a + b, 0),
-          y,
-          {
-            width: colWidths[i],
-            align: "left",
-          }
-        );
-      });
-      doc.moveDown(0.5);
-    });
-
-    // Grand Total
-    doc.moveDown(0.5);
-    doc
-      .font("Helvetica-Bold")
-      .text(`Total: ₹${grandTotal}`, { align: "right" });
-  }
-
-  // Build PDF
-  doc.fontSize(16).text("Invoice Summary Report", { align: "center" });
-  doc.moveDown(1);
-  drawSummaryTable(invoices);
-  invoices.forEach(drawInvoiceDetail);
-
-  doc.end();
-};
-const generateHtmlTable = async () => {
-  let data = await fetchTableRowsFromFirebaseForDaily(uid);
-  let html = `
-    <h3>Daily Invoice Summary</h3>
-    <table border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse; width: 100%;">
-      <thead style="background-color: #f2f2f2;">
-        <tr>
-          <th>Invoice</th>
-          <th>Name</th>
-          <th>Amount</th>
-          <th>Date</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-  `;
-
-  data.forEach((row) => {
-    html += `
-      <tr>
-        <td>${row.invoice}</td>
-        <td>${row.name}</td>
-        <td>₹${row.amount}</td>
-        <td>${row.date}</td>
-        <td>${row.status}</td>
-      </tr>
-    `;
-  });
-
-  html += `
-      </tbody>
-    </table>
-  `;
-
-  return html;
-};
-
 const generateHtmlTableHtml1 = async (pdfPath, uid, yesterday) => {
   const html = await generateHtmlTableHtml(uid, yesterday);
 
@@ -666,21 +466,21 @@ const generateHtmlTableHtml = async (uid, yesterday) => {
     </div>
   `;
 
-    html += `
-    <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 10px;">
+    if (row?.vehicleInfo) {
+      html += `
+      <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 10px;">
       <div>
         <p><strong>Vehicle Number:</strong> ${
-          row?.vehicleInfo?.vehicleNumber.toUpperCase() || "N/A"
+          row.vehicleInfo.vehicleNumber.toUpperCase() || "N/A"
         }</p>
-        <p><strong>Kilometer:</strong> ${
-          row?.vehicleInfo?.vehicleKM || "N/A"
-        }</p>
+        <p><strong>Kilometer:</strong> ${row.vehicleInfo.vehicleKM || "N/A"}</p>
         <p><strong>Type:</strong> ${
-          row?.vehicleInfo?.vehicleType.toUpperCase() || "N/A"
+          row.vehicleInfo.vehicleType.toUpperCase() || "N/A"
         }</p>
       </div>
-    </div>
-  `;
+      </div>
+      `;
+    }
 
     // Add headers for the new table
     html += `
@@ -719,16 +519,18 @@ const generateHtmlTableHtml = async (uid, yesterday) => {
       </tbody>
     </table>
     <h4 style="text-align: right; font-size: 12px;">Total Amount: ₹${totalAmount}</h4>
-   
+     
       <h4 style="text-align: right; font-size: 12px;">
-        ${
-          row?.amountInfo?.paymentType === "fullyPaid"
-            ? "Fully Paid"
-            : `Balance: ₹${totalAmount - row?.amountInfo?.advance}`
-        }
+      ${
+        row?.amountInfo?.paymentType === "fullyPaid"
+          ? "Fully Paid"
+          : `Advance: ₹${row?.amountInfo?.advance || 0} <br> Balance: ₹${
+              totalAmount - (row?.amountInfo?.advance || 0)
+            }`
+      }
       </h4>
       
-  `;
+    `;
     html += `
     <hr style="border: 1px solid #ccc; margin: 20px 0;">
     `;
@@ -736,29 +538,11 @@ const generateHtmlTableHtml = async (uid, yesterday) => {
   return html;
 };
 
-const sendEmailHtml = async (email, frequency, uid) => {
-  const htmlBody = await generateHtmlTableHtml(uid);
-  const mailOptions = {
-    from: "support@invoicesimplify.com",
-    to: email,
-    subject: "Daily Invoice Report",
-    html: htmlBody,
-  };
-
-  console.log("Sending email to:", email);
-  // transporter.sendMail(mailOptions, (error, info) => {
-  //   if (error) return console.error("Error:", error);
-  //   console.log("Email sent:", info.response);
-  // });
-};
-
 const sendEmail = async (email, frequency, uid) => {
   const pdfPath = path.join(__dirname, "report.pdf");
 
-  //await generatePdfTable1(pdfPath);
   await generateHtmlTableHtml1(pdfPath, uid, getYestderdayDate());
 
-  //await generatePdfTable(pdfPath, uid, frequency);
   const mailOptions = {
     from: "support@invoicesimplify.com",
     to: email,
@@ -822,8 +606,9 @@ const checkAndSendEmails = async (frequency) => {
   }
 };
 
+// 12:10 AM daily night for prev day
 cron.schedule(
-  "40 18 * * *",
+  "10 0 * * *",
   () => {
     checkAndSendEmails("daily");
     console.log("✅ Daily email check completed at 10:57 AM");
@@ -833,9 +618,9 @@ cron.schedule(
   }
 );
 // TODO - Future work
-//cron.schedule("15 10 * * *", () => checkAndSendEmails("daily")); // 12:10 AM daily night for prev day
-//cron.schedule("20 00 * * 1", () => checkAndSendEmails("weekly")); // 12:20 AM every Monday for prev week
-//cron.schedule("30 00 1 * *", () => checkAndSendEmails("monthly")); // 12:30 AM on the 1st of every month
+
+//cron.schedule("20 0 * * 1", () => checkAndSendEmails("weekly")); // 12:20 AM every Monday for prev week
+//cron.schedule("30 0 1 * *", () => checkAndSendEmails("monthly")); // 12:30 AM on the 1st of every month
 
 app.get("/ping", (req, res) => res.send("Server is running"));
 
