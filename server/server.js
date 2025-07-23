@@ -779,7 +779,7 @@ const sendEmail = async (email, frequency, uid) => {
   };
 
   try {
-    //await transporter.sendMail(mailOptions);
+    await transporter.sendMail(mailOptions);
     console.log(`✅ Email sent to ${email} for ${frequency}`);
   } catch (err) {
     console.error(`❌ Error sending to ${email}:`, err);
