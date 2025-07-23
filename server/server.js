@@ -721,11 +721,17 @@ const checkAndSendEmails = async (frequency) => {
   }
 };
 
-cron.schedule("54 22 * * *", () => {
-  checkAndSendEmails("daily");
-  // const html = generateHtmlTable();
-  // sendEmail(html);
-});
+cron.schedule(
+  "57 10 * * *",
+  () => {
+    checkAndSendEmails("daily");
+    // const html = generateHtmlTable();
+    // sendEmail(html);
+  },
+  {
+    timezone: "Asia/Kolkata",
+  }
+);
 // TODO - Future work
 //cron.schedule("15 10 * * *", () => checkAndSendEmails("daily")); // 12:10 AM daily night for prev day
 //cron.schedule("20 00 * * 1", () => checkAndSendEmails("weekly")); // 12:20 AM every Monday for prev week
