@@ -725,6 +725,7 @@ cron.schedule(
   "57 10 * * *",
   () => {
     checkAndSendEmails("daily");
+    console.log("✅ Daily email check completed at 10:57 AM");
     // const html = generateHtmlTable();
     // sendEmail(html);
   },
