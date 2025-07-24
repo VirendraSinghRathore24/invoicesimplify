@@ -1,14 +1,26 @@
 // EmailScheduler.jsx
-import React, { useState } from "react";
-import { db } from "../config/firebase";
-import { addDoc, collection, doc } from "firebase/firestore";
-import { SCHEDULED_EMAILS, USERS } from "./Constant";
-import MobileMenu from "./MobileMenu";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDocs,
+  updateDoc,
+} from "firebase/firestore";
+import React, { useEffect, useState } from "react";
+import { db } from "../../config/firebase";
+import { SCHEDULED_EMAILS } from "../Constant";
+import MobileMenu from "../MobileMenu";
+import { useLocation, useNavigate } from "react-router-dom";
 
-const EmailScheduler = () => {
+const EditEmailScheduler = () => {
   const [email, setEmail] = useState("");
   const [frequencies, setFrequencies] = useState([]);
   const [message, setMessage] = useState("");
+
+  const navigate = useNavigate();
+
+  const location = useLocation();
+  const id = location.state?.id || null;
 
   const handleFrequencyChange = (e) => {
     const { value, checked } = e.target;
@@ -26,22 +38,41 @@ const EmailScheduler = () => {
     }
 
     try {
-      const uid = localStorage.getItem("uid");
-      const scheduledEmails_CollectionRef = collection(db, SCHEDULED_EMAILS);
-      await addDoc(scheduledEmails_CollectionRef, {
-        uid,
+      const codeDoc = doc(db, SCHEDULED_EMAILS, id);
+      await updateDoc(codeDoc, {
         email,
         frequencies,
         createdAt: new Date().toISOString(),
       });
       setMessage("✅ Email schedule saved successfully !!!");
-      setEmail("");
-      setFrequencies([]);
+      navigate("/emailscheduler"); // Redirect to the email scheduler page
     } catch (error) {
       console.error("Firebase error:", error);
       setMessage("❌ Failed to save schedule.");
     }
   };
+
+  useEffect(() => {
+    // get email info from db
+    const fetchEmailInfo = async () => {
+      try {
+        const uid = localStorage.getItem("uid");
+        const scheduledEmails_CollectionRef = collection(db, SCHEDULED_EMAILS);
+        const querySnapshot = await getDocs(scheduledEmails_CollectionRef);
+        const emailData = querySnapshot.docs
+          .map((doc) => ({ ...doc.data(), id: doc.id }))
+          .find((data) => data.uid === uid);
+
+        if (emailData) {
+          setEmail(emailData.email);
+          setFrequencies(emailData.frequencies || []);
+        }
+      } catch (error) {
+        console.error("Error fetching email info:", error);
+      }
+    };
+    fetchEmailInfo();
+  }, []);
 
   return (
     <div>
@@ -86,12 +117,25 @@ const EmailScheduler = () => {
               </label>
             ))}
           </div>
-
+          <div className="flex flex-col gap-y-1">
+            <div className="text-xs text-gray-500 text-left">
+              Daily - Report will be shared to email at every day in the night
+              12:10 AM
+            </div>
+            <div className="text-xs text-gray-500 text-left">
+              Weekly - Report will be shared to email at Monday in the night
+              12:20 AM
+            </div>
+            <div className="text-xs text-gray-500 text-left">
+              Monthly - Report will be shared to email at 1st of every month in
+              the night 12:30 AM
+            </div>
+          </div>
           <button
             type="submit"
             className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition duration-150"
           >
-            Schedule
+            Update Schedule
           </button>
         </form>
         {message && (
@@ -102,4 +146,4 @@ const EmailScheduler = () => {
   );
 };
 
-export default EmailScheduler;
+export default EditEmailScheduler;
