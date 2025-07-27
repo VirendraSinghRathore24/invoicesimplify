@@ -7,10 +7,12 @@ import { db } from "../../config/firebase";
 import AlertModal from "../confirmModal/AlertModal";
 import MobileMenu from "../MobileMenu";
 import { INVOICE_INFO, LOGIN_INFO, SERVICE_CENTER, USERS } from "../Constant";
+import Loader from "../Loader";
 
 const AddInvoice = () => {
   const [signature, setSignature] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [loading1, setLoading1] = useState(false);
 
   const [isAccountInfo, setIsAccountInfo] = useState(false);
   const [isBusinessInfo, setIsBusinessInfo] = useState(false);
@@ -287,6 +289,9 @@ const AddInvoice = () => {
 
     localStorage.setItem("vehicleInfo", JSON.stringify(vehicleInfo));
 
+    // verify unique invoice number
+    const invoiceExists = await checkInvoiceNumberExists(invoiceNumber);
+
     const invoiceInfo = {
       invoiceNumber: invoiceNumber,
       date: date,
@@ -358,7 +363,33 @@ const AddInvoice = () => {
     navigate("/invoice");
   };
 
-  //const login_CollectionRef = collection(db, LOGIN_INFO);
+  const login_CollectionRef = collection(db, LOGIN_INFO);
+  const checkInvoiceNumberExists = async (invoiceNumber) => {
+    try {
+      setLoading1(true);
+      const data = await getDocs(login_CollectionRef);
+      const filteredData = data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+
+      const loggedInUser = localStorage.getItem("user");
+      const loginInfo = filteredData.filter((x) => x.code === loggedInUser)[0];
+
+      const userdNumbers = loginInfo.usedInvoiceNumbers;
+
+      while (userdNumbers.some((num) => num === invoiceNumber)) {
+        // If the invoice number already exists in usedInvoiceNumbers, increment it
+        invoiceNumber++;
+      }
+      setInvoiceNumber(invoiceNumber);
+    } catch (error) {
+      console.error("Error checking invoice number:", error);
+    } finally {
+      setLoading1(false);
+    }
+  };
+
   const getInvoiceNumber = async () => {
     // const data = await getDocs(login_CollectionRef);
     // const filteredData = data.docs.map((doc) => ({
@@ -1376,6 +1407,7 @@ const AddInvoice = () => {
               </div> */}
             </div>
           </div>
+          {loading1 && <Loader />}
         </div>
         {openItem && (
           <InventoryModal
