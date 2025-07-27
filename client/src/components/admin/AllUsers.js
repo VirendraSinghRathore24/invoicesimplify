@@ -27,6 +27,17 @@ const AllUsers = () => {
     }
   };
 
+  const calculateRemainingDays = (loginDate) => {
+    const today = new Date();
+    const future = new Date(loginDate); // replace with login date
+    future.setMonth(future.getMonth() + 2);
+
+    const diff = future - today;
+    const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+
+    return days;
+  };
+
   useEffect(() => {
     const user = localStorage.getItem("user");
 
@@ -63,7 +74,7 @@ const AllUsers = () => {
         </div>
         <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4 shadow-lg border-2 bg-white gap-y-4 rounded-md">
           <table className="min-w-full text-xs text-left text-gray-700 ">
-            <thead className="bg-gray-100 text-xs text-gray-600 border-b">
+            <thead className="bg-gray-100 text-xs text-gray-600 border-b text-center">
               <tr>
                 {[
                   "S.No.",
@@ -72,6 +83,7 @@ const AllUsers = () => {
                   "Subscription",
                   "Org Code",
                   "Login Date",
+                  "Days Left",
                   "Type",
                   "Invoices Count",
                 ].map((header) => (
@@ -113,7 +125,7 @@ const AllUsers = () => {
                   return (
                     <tr
                       key={user.id}
-                      className={`border-t ${
+                      className={`border-t text-center ${
                         index % 2 === 0 ? "bg-white" : "bg-gray-50"
                       } hover:bg-gray-200`}
                     >
@@ -134,6 +146,9 @@ const AllUsers = () => {
                       </td>
                       <td className="px-4 py-3 border-r w-[10%]">
                         {user.loginDate}
+                      </td>
+                      <td className="px-4 py-3 border-r w-[10%]">
+                        {calculateRemainingDays(user.loginDate)}
                       </td>
                       <td className="px-4 py-3 border-r w-[10%]">
                         {user.type}
