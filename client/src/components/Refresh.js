@@ -51,6 +51,7 @@ const Refresh = () => {
         loginInfo.usedInvoiceNumbers ? loginInfo.usedInvoiceNumbers : []
       );
       localStorage.setItem("uid", uid);
+      localStorage.setItem("loginDate", loginInfo.loginDate);
     } catch (err) {
       console.log(err);
     }
