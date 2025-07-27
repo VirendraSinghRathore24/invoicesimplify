@@ -308,12 +308,12 @@ const generateHtmlTableHtml = async (uid, frequency, yesterday) => {
       <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 10px;">
       <div>
         <p><strong>Vehicle Number:</strong> ${
-          row.vehicleInfo.vehicleNumber.toUpperCase() || "N/A"
+          row?.vehicleInfo?.vehicleNumber || "N/A"
         }</p>
-        <p><strong>Kilometer:</strong> ${row.vehicleInfo.vehicleKM || "N/A"}</p>
-        <p><strong>Type:</strong> ${
-          row.vehicleInfo.vehicleType.toUpperCase() || "N/A"
+        <p><strong>Kilometer:</strong> ${
+          row?.vehicleInfo?.vehicleKM || "N/A"
         }</p>
+        <p><strong>Type:</strong> ${row?.vehicleInfo?.vehicleType || "N/A"}</p>
       </div>
       </div>
       `;
@@ -395,7 +395,7 @@ const sendEmail = async (email, frequency, uid) => {
 
   let dateRange = "";
   if (frequency === "daily") {
-    dateRange = yesterday;
+    dateRange = getYestderdayDate();
   } else if (frequency === "weekly") {
     const today = new Date();
     const lastWeek = new Date(today);
@@ -471,7 +471,7 @@ const checkAndSendEmails = async (frequency) => {
 
 // 12:10 AM daily night for prev day
 cron.schedule(
-  "10 0 * * *",
+  "03 15 * * *",
   () => {
     checkAndSendEmails("daily");
     console.log("✅ Daily email check completed at 12:10 AM in the night");
