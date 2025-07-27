@@ -394,10 +394,7 @@ function Invoice() {
       ...loginInfo.usedInvoiceNumbers,
       parseInt(invoiceInfo?.invoiceNumber),
     ];
-    localStorage.setItem(
-      "usedInvoiceNumbers",
-      JSON.stringify(usedInvoiceNumbers)
-    );
+    localStorage.setItem("usedInvoiceNumbers", usedInvoiceNumbers);
     localStorage.setItem(
       "invoiceNumber",
       parseInt(invoiceInfo?.invoiceNumber) + 1

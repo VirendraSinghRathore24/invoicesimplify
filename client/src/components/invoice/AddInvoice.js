@@ -105,7 +105,8 @@ const AddInvoice = () => {
       const isExceeded = isQuantityExceeded(
         value,
         values[index].totalQty,
-        values[index].desc
+        values[index].desc,
+        values[index].code
       );
       if (!isExceeded) return;
 
@@ -184,7 +185,10 @@ const AddInvoice = () => {
     return parseInt(modifiedSellValue) < parseInt(buyPrice);
   };
 
-  const isQuantityExceeded = (qty, itemQty, itemName) => {
+  const isQuantityExceeded = (qty, itemQty, itemName, code) => {
+    if (code === "emptyrow") {
+      return true; // Allow empty row to be added
+    }
     if (itemQty < parseInt(qty)) {
       alert(`Quantity of ${itemName} is not sufficient in stock !!!`);
       return false;
@@ -370,7 +374,7 @@ const AddInvoice = () => {
 
     const usedInvoiceNumbers = localStorage.getItem("usedInvoiceNumbers");
     const userdNumbers = usedInvoiceNumbers.split(",");
-    while (userdNumbers.some((num) => num === nextInvoiceNumber)) {
+    while (userdNumbers.some((num) => num === invNumber)) {
       // If the invoice number already exists in usedInvoiceNumbers, increment it
       nextInvoiceNumber++;
     }
@@ -562,7 +566,34 @@ const AddInvoice = () => {
     setOpenItem(true);
   };
 
+  const handleCloseItemForEmptyRow = () => {
+    const item = {
+      desc: localStorage.getItem("selectedItem"),
+      code: localStorage.getItem("selectedItemCode"),
+      buyPrice: localStorage.getItem("selectedItemBuyPrice"),
+      totalQty: localStorage.getItem("selectedItemQty"),
+      selectedUnit: localStorage.getItem("selectedItemUnit"),
+      rate: "",
+      qty: 1,
+      amount: "",
+    };
+
+    setRows((prevRows) => {
+      const updatedRows = [...prevRows, item];
+      localStorage.setItem("rows", JSON.stringify(updatedRows));
+      setAmount((prevAmount) => prevAmount + item.amount);
+      return updatedRows;
+    });
+
+    setOpenItem(false);
+  };
+
   const handleCloseItem = () => {
+    const itemCode = localStorage.getItem("selectedItemCode");
+    if (itemCode === "emptyrow") {
+      handleCloseItemForEmptyRow();
+      return;
+    }
     const selectedItem = localStorage.getItem("selectedItem");
     if (
       !selectedItem ||
@@ -998,7 +1029,7 @@ const AddInvoice = () => {
                                   className="w-full text-right pr-14 block text-xs rounded border border-gray-400 py-2 px-4 leading-5"
                                   required
                                   name="quantity"
-                                  placeholder="Quantity"
+                                  placeholder="Qty"
                                   value={row.qty}
                                   onChange={(e) =>
                                     handleInputChange(
@@ -1008,11 +1039,12 @@ const AddInvoice = () => {
                                     )
                                   }
                                 />
-                                {row.selectedUnit !== "none" && (
-                                  <div className="absolute right-0 top-1/2 transform -translate-y-1/2 text-white p-2 rounded-r bg-gray-600 uppercase">
-                                    {row.selectedUnit}
-                                  </div>
-                                )}
+                                {row.selectedUnit !== "none" &&
+                                  row.code !== "emptyrow" && (
+                                    <div className="absolute right-0 top-1/2 transform -translate-y-1/2 text-white p-2 rounded-r bg-gray-600 uppercase">
+                                      {row.selectedUnit}
+                                    </div>
+                                  )}
                               </div>
                             </td>
                             <td className="w-[20%] text-center">

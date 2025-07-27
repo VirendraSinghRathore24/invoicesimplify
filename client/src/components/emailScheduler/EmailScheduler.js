@@ -50,6 +50,7 @@ const EmailScheduler = () => {
     // get email info from d)
     const fetchEmailInfo = async () => {
       try {
+        setLoading(true);
         const uid = localStorage.getItem("uid");
         const scheduledEmails_CollectionRef = collection(db, SCHEDULED_EMAILS);
         const querySnapshot = await getDocs(scheduledEmails_CollectionRef);
@@ -59,10 +60,11 @@ const EmailScheduler = () => {
 
         if (emailData) {
           setEmailInfo([emailData]);
-          console.log("Email Info:", emailData);
         }
       } catch (error) {
         console.error("Error fetching email info:", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchEmailInfo();

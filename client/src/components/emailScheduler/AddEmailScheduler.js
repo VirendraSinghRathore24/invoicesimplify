@@ -63,6 +63,7 @@ const AddEmailScheduler = () => {
             </label>
             <input
               type="email"
+              required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
@@ -92,16 +93,16 @@ const AddEmailScheduler = () => {
           </div>
           <div className="flex flex-col gap-y-1">
             <div className="text-xs text-gray-500 text-left">
-              Daily - Report will be shared to email at every day in the night
-              12:10 AM
+              Daily - The report will be automatically sent via email every
+              night at 12:10 AM.
             </div>
             <div className="text-xs text-gray-500 text-left">
-              Weekly - Report will be shared to email at Monday in the night
-              12:20 AM
+              Weekly – The report will be automatically sent via email at 12:20
+              AM every Monday night.
             </div>
             <div className="text-xs text-gray-500 text-left">
-              Monthly - Report will be shared to email at 1st of every month in
-              the night 12:30 AM
+              Monthly – The report will be automatically sent via email at 12:30
+              AM on the 1st night of every month.
             </div>
           </div>
           <button
