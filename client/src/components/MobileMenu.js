@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Menu, X, CircleCheckBig, ShieldCheck } from "lucide-react"; // optional: or use your own icons
 import { NavLink, useNavigate } from "react-router-dom";
 
@@ -28,6 +28,26 @@ const MobileMenu = () => {
     "Refresh",
     "Email Scheduler",
   ];
+
+  const [remainingDays, setRemainingDays] = useState(null);
+  const loginDate = localStorage.getItem("loginDate");
+  useEffect(() => {
+    const calculateRemainingDays = () => {
+      const today = new Date();
+      const future = new Date(loginDate); // replace with login date
+      future.setMonth(future.getMonth() + 2);
+
+      const diff = future - today;
+      const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+
+      setRemainingDays(days);
+    };
+
+    calculateRemainingDays();
+
+    const interval = setInterval(calculateRemainingDays, 24 * 60 * 60 * 1000); // Update daily
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="fixed top-0 left-0 w-full z-50">
@@ -90,7 +110,12 @@ const MobileMenu = () => {
               {subscription}
             </span>
           </h3>
-
+          <div className="text-sm">
+            Expires in :{" "}
+            <span className="inline-block bg-yellow-100 text-green-700 text-xs font-semibold px-1 py-1 rounded-full">
+              {remainingDays} days{" "}
+            </span>
+          </div>
           <button className="mt-4 w-full bg-indigo-600 hover:bg-indigo-700 text-white text-xs py-2 rounded-lg transition-all duration-200 font-semibold">
             Upgrade Plan
           </button>

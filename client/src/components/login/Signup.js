@@ -108,6 +108,10 @@ const Signup = () => {
           localStorage.setItem("type", type);
           localStorage.setItem("subscription", "Free");
           localStorage.setItem("uid", uid);
+          localStorage.setItem(
+            "loginDate",
+            new Date().toISOString().slice(0, 10)
+          );
 
           setLoading(false);
           navigate("/businessinfo");

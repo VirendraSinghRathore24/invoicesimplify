@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaChevronDown, FaChevronRight, FaCog } from "react-icons/fa";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { TbReceiptTax } from "react-icons/tb";
@@ -36,7 +36,25 @@ const Sidebar = () => {
       navigate("/login");
     }
   };
+  const [remainingDays, setRemainingDays] = useState(null);
+  const loginDate = localStorage.getItem("loginDate");
+  useEffect(() => {
+    const calculateRemainingDays = () => {
+      const today = new Date();
+      const future = new Date(loginDate); // replace with login date
+      future.setMonth(future.getMonth() + 2);
 
+      const diff = future - today;
+      const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+
+      setRemainingDays(days);
+    };
+
+    calculateRemainingDays();
+
+    const interval = setInterval(calculateRemainingDays, 24 * 60 * 60 * 1000); // Update daily
+    return () => clearInterval(interval);
+  }, []);
   return (
     <div className="w-60 h-screen bg-[#014459] text-white flex flex-col shadow-lg">
       <NavLink className="text-xl font-bold p-5 border-b border-white" to={"/"}>
@@ -159,7 +177,12 @@ const Sidebar = () => {
             {subscription}
           </span>
         </h3>
-
+        <div className="text-sm">
+          Expires in :{" "}
+          <span className="inline-block bg-yellow-100 text-green-700 text-xs font-semibold px-1 py-1 rounded-full">
+            {remainingDays} days{" "}
+          </span>
+        </div>
         <button className="mt-4 w-full bg-indigo-600 hover:bg-indigo-700 text-white text-sm py-2 rounded-lg transition-all duration-200 font-semibold">
           Upgrade Plan
         </button>
