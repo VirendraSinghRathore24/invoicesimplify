@@ -906,13 +906,13 @@ app.post("/order/validate", async (req, res) => {
 });
 
 const razorpay = new Razorpay({
-  key_id: "rzp_test_kkMM3XGefJOEFm",
-  key_secret: "tJ1scFo8Dh6UJQff0otXd3fz",
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: RAZORPAY_KEY_SECRET,
 });
 
 app.post("/create-order", async (req, res) => {
   const { amount, currency = "INR" } = req.body;
-
+  console.log(razorpay.key_id);
   const options = {
     amount: amount * 100, // in paise
     currency,

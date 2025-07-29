@@ -16,6 +16,8 @@ const Success = () => {
       particleCount: 500,
       spread: 75,
     });
+
+    window.scrollTo(0, 0);
   }, []);
   return (
     <div>
