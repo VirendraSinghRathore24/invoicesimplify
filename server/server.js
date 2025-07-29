@@ -906,8 +906,8 @@ app.post("/order/validate", async (req, res) => {
 });
 
 const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID,
-  key_secret: RAZORPAY_KEY_SECRET,
+  key_id: "rzp_test_kkMM3XGefJOEFm",
+  key_secret: "tJ1scFo8Dh6UJQff0otXd3fz",
 });
 
 app.post("/create-order", async (req, res) => {
