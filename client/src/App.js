@@ -102,7 +102,7 @@ function App() {
             path="/archivedviewinvoice"
             element={<ArchivedViewInvoice />}
           />
-          <Route path="/upgrade" element={<Upgrade />} />
+
           <Route path="/success" element={<Success />} />
           <Route path="/paymenthistory" element={<PaymentHistory />} />
           <Route path="/ci/:id" element={<ViewInvoiceByCustomer />} />
