@@ -912,7 +912,7 @@ const razorpay = new Razorpay({
 
 app.post("/create-order", async (req, res) => {
   const { amount, currency = "INR" } = req.body;
-  console.log(razorpay.key_id);
+
   const options = {
     amount: amount * 100, // in paise
     currency,
