@@ -9,7 +9,7 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
-    "axios": "^1.9.0",
+    "axios": "^1.11.0",
     "canvas-confetti": "^1.9.3",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",

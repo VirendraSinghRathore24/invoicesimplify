@@ -870,7 +870,9 @@ app.post("/order", async (req, res) => {
     });
 
     const options = req.body;
+    console.log("Options:", options);
     const order = await razorpay.orders.create(options);
+    console.log(order);
 
     if (!order) {
       return res.status(500).send("Error");
@@ -879,6 +881,7 @@ app.post("/order", async (req, res) => {
     res.json(order);
   } catch (er) {
     res.status(500).send(er);
+    console.log(er);
   }
 });
 
@@ -900,6 +903,30 @@ app.post("/order/validate", async (req, res) => {
     orderId: razorpay_order_id,
     paymentId: razorpay_payment_id,
   });
+});
+
+const razorpay = new Razorpay({
+  key_id: "rzp_test_kkMM3XGefJOEFm",
+  key_secret: "tJ1scFo8Dh6UJQff0otXd3fz",
+});
+
+app.post("/create-order", async (req, res) => {
+  const { amount, currency = "INR" } = req.body;
+
+  const options = {
+    amount: amount * 100, // in paise
+    currency,
+    receipt: `receipt_order_${Date.now()}`,
+  };
+
+  try {
+    const order = await razorpay.orders.create(options);
+    console.log("Order created1:", order);
+    res.json(order);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+    console.error("Error creating order1:", err);
+  }
 });
 
 app.listen(5001, () => console.log("Server running on port 5001"));

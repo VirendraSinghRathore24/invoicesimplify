@@ -41,6 +41,7 @@ import Refresh from "./components/Refresh";
 import EmailScheduler from "./components/emailScheduler/EmailScheduler";
 import EditEmailScheduler from "./components/emailScheduler/EditEmailScheduler";
 import AddEmailScheduler from "./components/emailScheduler/AddEmailScheduler";
+import PricingPlans from "./components/PricingPlans";
 
 function App() {
   const location = useLocation();
@@ -53,6 +54,8 @@ function App() {
     "/contactus",
     "/privacypolicy",
     "/termsofuse",
+    "/plans",
+    "/success",
   ].includes(location.pathname);
 
   const showSidebar1 = !location.pathname.includes("/ci");
@@ -116,6 +119,8 @@ function App() {
           <Route path="/emailscheduler" element={<EmailScheduler />} />
           <Route path="/addemailscheduler" element={<AddEmailScheduler />} />
           <Route path="/editemailscheduler" element={<EditEmailScheduler />} />
+
+          <Route path="/plans" element={<PricingPlans />} />
         </Routes>
 
         <ToastContainer />

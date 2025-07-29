@@ -110,13 +110,16 @@ const MobileMenu = () => {
               {subscription}
             </span>
           </h3>
-          <div className="text-sm">
+          <div className="text-sm font-medium text-gray-600">
             Expires in :{" "}
             <span className="inline-block bg-yellow-100 text-green-700 text-xs font-semibold px-1 py-1 rounded-full">
               {remainingDays} days{" "}
             </span>
           </div>
-          <button className="mt-4 w-full bg-indigo-600 hover:bg-indigo-700 text-white text-xs py-2 rounded-lg transition-all duration-200 font-semibold">
+          <button
+            onClick={() => navigate("/plans")}
+            className="mt-4 w-full bg-indigo-600 hover:bg-indigo-700 text-white text-xs py-2 rounded-lg transition-all duration-200 font-semibold"
+          >
             Upgrade Plan
           </button>
         </div>
