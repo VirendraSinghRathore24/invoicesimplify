@@ -68,196 +68,198 @@ const AdditionalInformation = () => {
   }, []);
 
   return (
-    <div>
-      <div className="hidden lg:block mb-12">
-        <div className="top-0 mx-auto w-full h-[68px] text-white fixed bg-white shadow-lg">
-          <div className="flex justify-between mx-auto font-bold text-md  py-4 px-2 rounded-md fixed w-[81.5%]">
-            <div className="text-xl text-black">Additional Information</div>
+    <div className="flex justify-evenly w-full h-full">
+      <div className="w-full lg:w-[82%] ml-0 lg:ml-[17%] border-2 my-3 rounded-lg border-gray-300 bg-white shadow-lg top-0 fixed h-[96.7%]">
+        <div className="hidden lg:block">
+          <div className="top-0 mx-auto w-full h-[68px] text-white border-b-2">
+            <div className="flex justify-between font-bold text-md py-4 px-2 rounded-md w-full">
+              <div className="text-xl text-black">Additional Information</div>
+              {posts && (
+                <div className="font-bold text-lg lg:text-2xl rounded-md">
+                  <div>
+                    <button
+                      onClick={() => handleDelete()}
+                      className="text-white bg-gray-800 font-semibold text-sm border-2 border-black p-2 rounded-md"
+                    >
+                      Delete All
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="hidden max-lg:block mb-16">
-        <MobileMenu />
-      </div>
+        <div className="hidden max-lg:block mb-16">
+          <MobileMenu />
+        </div>
 
-      <div className="p-2 lg:p-6">
-        {posts && (
-          <div className="flex justify-between w-full mx-auto font-bold text-lg lg:text-2xl bg-gray-200 py-2 lg:py-4 px-2 rounded-md">
-            <div>
-              <button
-                onClick={() => handleDelete()}
-                className="text-white bg-gray-800 font-semibold text-sm border-2 border-black p-2 rounded-md"
-              >
-                Delete All
-              </button>
-            </div>
-          </div>
-        )}
-        <div className="text-sm">
-          {posts && <div className="mt-4">Left Bottom Text</div>}
-          {posts && (
-            <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4">
-              <table className="min-w-full text-sm text-left text-gray-700">
-                <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
-                  <tr>
-                    <th className="px-4 py-3 border-r">Note1</th>
-                    <th className="px-4 py-3 border-r">Note2</th>
-                    <th className="px-4 py-3 border-r">Note3</th>
-                    <th className="px-4 py-3 border-r">Note4</th>
-                    <th className="px-4 py-3 border-r">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="border-t bg-white">
-                    <td className="px-4 py-3 border-r w-[24%]">
-                      {posts[0]?.note1}
-                    </td>
-                    <td className="px-4 py-3 border-r w-[24%]">
-                      {posts[0]?.note2}
-                    </td>
-                    <td className="px-4 py-3 border-r w-[24%]">
-                      {posts[0]?.note3}
-                    </td>
-                    <td className="px-4 py-3 border-r w-[24%]">
-                      {posts[0]?.note4}
-                    </td>
-                    <td className="px-4 py-3">
-                      <button
-                        onClick={() => navigate("/editadditionalinfo")}
-                        className="text-blue-600 hover:text-red-800 font-semibold text-sm"
-                      >
-                        Edit
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          )}
-          {posts && <div className="mt-6">Middle Bottom Text</div>}
-          {posts && (
-            <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4">
-              <table className="min-w-full text-sm text-left text-gray-700">
-                <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
-                  <tr>
-                    <th className="px-4 py-3 border-r">Note1</th>
-                    <th className="px-4 py-3 border-r">Note2</th>
-                    <th className="px-4 py-3 border-r">Note3</th>
-                    <th className="px-4 py-3 border-r">Note4</th>
-                    <th className="px-4 py-3 border-r">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="border-t bg-white">
-                    <td className="px-4 py-3 border-r w-[24%]">
-                      {posts[0]?.middlenote1}
-                    </td>
-                    <td className="px-4 py-3 border-r w-[24%]">
-                      {posts[0]?.middlenote2}
-                    </td>
-                    <td className="px-4 py-3 border-r w-[24%]">
-                      {posts[0]?.middlenote3}
-                    </td>
-                    <td className="px-4 py-3 border-r w-[24%]">
-                      {posts[0]?.middlenote4}
-                    </td>
-                    <td className="px-4 py-3">
-                      <button
-                        onClick={() => navigate("/editadditionalinfo")}
-                        className="text-blue-600 hover:text-red-800 font-semibold text-sm"
-                      >
-                        Edit
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          )}
-          {posts && <div className="mt-6">Right Bottom Text</div>}
-          {posts && (
-            <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4">
-              <table className="min-w-full text-sm text-left text-gray-700">
-                <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
-                  <tr>
-                    <th className="px-4 py-3 border-r">Note1</th>
-                    <th className="px-4 py-3 border-r">Note2</th>
-                    <th className="px-4 py-3 border-r">Note3</th>
-                    <th className="px-4 py-3 border-r">Note4</th>
-                    <th className="px-4 py-3 border-r">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="border-t bg-white">
-                    <td className="px-4 py-3 border-r w-[24%]">
-                      {posts[0]?.rnote1}
-                    </td>
-                    <td className="px-4 py-3 border-r w-[24%]">
-                      {posts[0]?.rnote2}
-                    </td>
-                    <td className="px-4 py-3 border-r w-[24%]">
-                      {posts[0]?.rnote3}
-                    </td>
-                    <td className="px-4 py-3 border-r w-[24%]">
-                      {posts[0]?.rnote4}
-                    </td>
-                    <td className="px-4 py-3">
-                      <button
-                        onClick={() => navigate("/editadditionalinfo")}
-                        className="text-blue-600 hover:text-red-800 font-semibold text-sm"
-                      >
-                        Edit
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          )}
-          {posts && <div className="mt-6">Additional Description</div>}
-          {posts && (
-            <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4">
-              <table className="min-w-full text-sm text-left text-gray-700">
-                <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
-                  <tr>
-                    <th className="px-4 py-3 border-r">
-                      Additional Description
-                    </th>
-                    <th className="px-4 py-3 border-r">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="border-t bg-white">
-                    <td className="px-4 py-3 border-r w-[96%]">
-                      {posts[0]?.additionaldesc}
-                    </td>
-                    <td className="px-4 py-3">
-                      <button
-                        onClick={() => navigate("/editadditionalinfo")}
-                        className="text-blue-600 hover:text-red-800 font-semibold text-sm"
-                      >
-                        Edit
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          )}
-          {!posts && (
-            <div className="flex h-screen items-center justify-center ">
-              <div onClick={() => navigate("/addadditionalinfo")}>
-                <button className="border-2 bg-[#444] text-white fond-bold text-md py-4 px-8 rounded-md cursor-pointer">
-                  {" "}
-                  + Add Additional Info
-                </button>
+        <div className="p-2">
+          <div className="text-sm">
+            {posts && <div className="mt-4">Left Bottom Text</div>}
+            {posts && (
+              <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4">
+                <table className="min-w-full text-sm text-left text-gray-700">
+                  <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
+                    <tr>
+                      <th className="px-4 py-3 border-r">Note1</th>
+                      <th className="px-4 py-3 border-r">Note2</th>
+                      <th className="px-4 py-3 border-r">Note3</th>
+                      <th className="px-4 py-3 border-r">Note4</th>
+                      <th className="px-4 py-3 border-r">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-t bg-white">
+                      <td className="px-4 py-3 border-r w-[24%]">
+                        {posts[0]?.note1}
+                      </td>
+                      <td className="px-4 py-3 border-r w-[24%]">
+                        {posts[0]?.note2}
+                      </td>
+                      <td className="px-4 py-3 border-r w-[24%]">
+                        {posts[0]?.note3}
+                      </td>
+                      <td className="px-4 py-3 border-r w-[24%]">
+                        {posts[0]?.note4}
+                      </td>
+                      <td className="px-4 py-3">
+                        <button
+                          onClick={() => navigate("/editadditionalinfo")}
+                          className="text-blue-600 hover:text-red-800 font-semibold text-sm"
+                        >
+                          Edit
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
-            </div>
-          )}
+            )}
+            {posts && <div className="mt-6">Middle Bottom Text</div>}
+            {posts && (
+              <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4">
+                <table className="min-w-full text-sm text-left text-gray-700">
+                  <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
+                    <tr>
+                      <th className="px-4 py-3 border-r">Note1</th>
+                      <th className="px-4 py-3 border-r">Note2</th>
+                      <th className="px-4 py-3 border-r">Note3</th>
+                      <th className="px-4 py-3 border-r">Note4</th>
+                      <th className="px-4 py-3 border-r">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-t bg-white">
+                      <td className="px-4 py-3 border-r w-[24%]">
+                        {posts[0]?.middlenote1}
+                      </td>
+                      <td className="px-4 py-3 border-r w-[24%]">
+                        {posts[0]?.middlenote2}
+                      </td>
+                      <td className="px-4 py-3 border-r w-[24%]">
+                        {posts[0]?.middlenote3}
+                      </td>
+                      <td className="px-4 py-3 border-r w-[24%]">
+                        {posts[0]?.middlenote4}
+                      </td>
+                      <td className="px-4 py-3">
+                        <button
+                          onClick={() => navigate("/editadditionalinfo")}
+                          className="text-blue-600 hover:text-red-800 font-semibold text-sm"
+                        >
+                          Edit
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            )}
+            {posts && <div className="mt-6">Right Bottom Text</div>}
+            {posts && (
+              <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4">
+                <table className="min-w-full text-sm text-left text-gray-700">
+                  <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
+                    <tr>
+                      <th className="px-4 py-3 border-r">Note1</th>
+                      <th className="px-4 py-3 border-r">Note2</th>
+                      <th className="px-4 py-3 border-r">Note3</th>
+                      <th className="px-4 py-3 border-r">Note4</th>
+                      <th className="px-4 py-3 border-r">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-t bg-white">
+                      <td className="px-4 py-3 border-r w-[24%]">
+                        {posts[0]?.rnote1}
+                      </td>
+                      <td className="px-4 py-3 border-r w-[24%]">
+                        {posts[0]?.rnote2}
+                      </td>
+                      <td className="px-4 py-3 border-r w-[24%]">
+                        {posts[0]?.rnote3}
+                      </td>
+                      <td className="px-4 py-3 border-r w-[24%]">
+                        {posts[0]?.rnote4}
+                      </td>
+                      <td className="px-4 py-3">
+                        <button
+                          onClick={() => navigate("/editadditionalinfo")}
+                          className="text-blue-600 hover:text-red-800 font-semibold text-sm"
+                        >
+                          Edit
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            )}
+            {posts && <div className="mt-6">Additional Description</div>}
+            {posts && (
+              <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4">
+                <table className="min-w-full text-sm text-left text-gray-700">
+                  <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
+                    <tr>
+                      <th className="px-4 py-3 border-r">
+                        Additional Description
+                      </th>
+                      <th className="px-4 py-3 border-r">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-t bg-white">
+                      <td className="px-4 py-3 border-r w-[96%]">
+                        {posts[0]?.additionaldesc}
+                      </td>
+                      <td className="px-4 py-3">
+                        <button
+                          onClick={() => navigate("/editadditionalinfo")}
+                          className="text-blue-600 hover:text-red-800 font-semibold text-sm"
+                        >
+                          Edit
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            )}
+            {!posts && (
+              <div className="flex h-screen items-center justify-center ">
+                <div onClick={() => navigate("/addadditionalinfo")}>
+                  <button className="border-2 bg-[#444] text-white fond-bold text-md py-4 px-8 rounded-md cursor-pointer">
+                    {" "}
+                    + Add Additional Info
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
+        {loading && <Loader />}
       </div>
-      {loading && <Loader />}
     </div>
   );
 };

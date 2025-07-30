@@ -85,209 +85,211 @@ function AddTaxInfo() {
   }, []);
 
   return (
-    <div>
-      <div className="hidden lg:block mb-12">
-        <div className="top-0 mx-auto w-full h-[68px] text-white fixed bg-white shadow-lg">
-          <div className="flex justify-between mx-auto font-bold text-md  py-4 px-2 rounded-md fixed w-[81.5%]">
-            <div className="text-xl text-black">Tax Information</div>
+    <div className="flex justify-evenly w-full h-full">
+      <div className="w-[82%] ml-[17%] border-2 my-3 rounded-lg border-gray-300 bg-white shadow-lg top-0 fixed h-[96.7%]">
+        <div className="hidden lg:block">
+          <div className="top-0 mx-auto w-full h-[68px] text-white border-b-2">
+            <div className="font-bold text-md py-4 px-2 rounded-md w-[82%]">
+              <div className="text-xl text-black">Tax Information</div>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="hidden max-lg:block mb-16">
-        <MobileMenu />
-      </div>
+        <div className="hidden max-lg:block mb-16">
+          <MobileMenu />
+        </div>
 
-      <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
-        <main className="flex-grow container mx-auto px-2 py-10">
-          <div className="max-w-xl mx-auto bg-white dark:bg-gray-800 shadow-lg rounded-xl p-8">
-            <h2 className="text-lg lg:text-2xl font-semibold mb-6 text-center">
-              Add Tax Information
-            </h2>
+        <div className="flex flex-col text-gray-800 dark:text-gray-200">
+          <main className="flex-grow container mx-auto px-2 py-10">
+            <div className="max-w-xl mx-auto bg-white dark:bg-gray-800 border-2 rounded-xl p-8">
+              <h2 className="text-lg lg:text-2xl font-semibold mb-6 text-center">
+                Add Tax Information
+              </h2>
 
-            <form onSubmit={handleSubmit} className="space-y-6 text-sm">
-              {/* GST */}
-              <div>
-                <label htmlFor="gstNumber" className="block font-medium mb-1">
-                  GST Number
-                </label>
-                <input
-                  type="text"
-                  id="gstNumber"
-                  name="gstNumber"
-                  required
-                  placeholder="Enter your GST number"
-                  value={inputs?.gstNumber || ""}
-                  onChange={(e) => {
-                    localStorage.setItem("gstNumber", e.target.value);
-                    handleChange(e);
-                  }}
-                  className="w-full lg:w-6/12 border border-gray-300 dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-
-              <h3 className="text-lg font-semibold mb-4 text-blue-700">
-                Select Tax Option
-              </h3>
-
-              <div className="flex flex-wrap gap-6 mb-6">
-                <label className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    value="tax"
-                    checked={selected === "tax"}
-                    onChange={() => setSelected("tax")}
-                    className="form-radio text-blue-600"
-                  />
-                  Tax
-                </label>
-                <label className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    value="alltax"
-                    checked={selected === "alltax"}
-                    onChange={() => setSelected("alltax")}
-                    className="form-radio text-blue-600"
-                  />
-                  All Tax
-                </label>
-              </div>
-              {selected === "tax" && (
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Tax %
+              <form onSubmit={handleSubmit} className="space-y-6 text-sm">
+                {/* GST */}
+                <div>
+                  <label htmlFor="gstNumber" className="block font-medium mb-1">
+                    GST Number
                   </label>
                   <input
-                    type="number"
-                    id="taxAmount"
-                    name="taxAmount"
-                    min={0}
-                    max={100}
-                    value={inputs?.taxAmount || ""}
+                    type="text"
+                    id="gstNumber"
+                    name="gstNumber"
+                    required
+                    placeholder="Enter your GST number"
+                    value={inputs?.gstNumber || ""}
                     onChange={(e) => {
-                      localStorage.setItem("taxAmount", e.target.value);
+                      localStorage.setItem("gstNumber", e.target.value);
                       handleChange(e);
                     }}
-                    className="w-4/12 lg:w-2/12 px-4 py-2 border rounded-md shadow-sm focus:ring focus:ring-blue-300"
+                    className="w-full lg:w-6/12 border border-gray-300 dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
-              )}
 
-              {/* CGST */}
-              {selected === "alltax" && (
-                <div className="flex flex-wrap gap-y-4 gap-x-4 justify-between text-sm">
-                  <div>
-                    <label
-                      htmlFor="cgstAmount"
-                      className="block font-medium mb-1"
-                    >
-                      CGST%
-                    </label>
-                    <input
-                      type="number"
-                      min={0}
-                      max={100}
-                      id="cgstAmount"
-                      name="cgstAmount"
-                      value={inputs?.cgstAmount || ""}
-                      onChange={(e) => {
-                        localStorage.setItem("cgstAmount", e.target.value);
-                        handleChange(e);
-                      }}
-                      className="w-full border border-gray-300 dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    />
-                  </div>
-                  {/* SGST */}
-                  <div>
-                    <label
-                      htmlFor="sgstAmount"
-                      className="block font-medium mb-1"
-                    >
-                      SGST%
-                    </label>
-                    <input
-                      type="number"
-                      id="sgstAmount"
-                      min={0}
-                      max={100}
-                      name="sgstAmount"
-                      value={inputs?.sgstAmount || ""}
-                      onChange={(e) => {
-                        localStorage.setItem("sgstAmount", e.target.value);
-                        handleChange(e);
-                      }}
-                      className="w-full border border-gray-300 dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    />
-                  </div>
+                <h3 className="text-lg font-semibold mb-4 text-blue-700">
+                  Select Tax Option
+                </h3>
 
-                  {/* IGST */}
-
-                  <div>
-                    <label
-                      htmlFor="igstAmount"
-                      className="block font-medium mb-1"
-                    >
-                      IGST%
-                    </label>
+                <div className="flex flex-wrap gap-6 mb-6">
+                  <label className="flex items-center gap-2">
                     <input
-                      type="number"
-                      id="igstAmount"
-                      min={0}
-                      max={100}
-                      name="igstAmount"
-                      value={inputs?.igstAmount || ""}
-                      onChange={(e) => {
-                        localStorage.setItem("igstAmount", e.target.value);
-                        handleChange(e);
-                      }}
-                      className="w-full border border-gray-300 dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      type="radio"
+                      value="tax"
+                      checked={selected === "tax"}
+                      onChange={() => setSelected("tax")}
+                      className="form-radio text-blue-600"
                     />
-                  </div>
-                  {/* UGST */}
-                  <div>
-                    <label
-                      htmlFor="ugstAmount"
-                      className="block font-medium mb-1"
-                    >
-                      UGST%
-                    </label>
+                    Tax
+                  </label>
+                  <label className="flex items-center gap-2">
                     <input
-                      type="number"
-                      id="ugstAmount"
-                      min={0}
-                      max={100}
-                      name="ugstAmount"
-                      value={inputs?.ugstAmount || ""}
-                      onChange={(e) => {
-                        localStorage.setItem("ugstAmount", e.target.value);
-                        handleChange(e);
-                      }}
-                      className="w-full border border-gray-300 dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      type="radio"
+                      value="alltax"
+                      checked={selected === "alltax"}
+                      onChange={() => setSelected("alltax")}
+                      className="form-radio text-blue-600"
                     />
-                  </div>
+                    All Tax
+                  </label>
                 </div>
-              )}
-              {/* Buttons */}
-              <div className="flex justify-end gap-4 pt-4">
-                <button
-                  onClick={() => navigate("/taxinfo")}
-                  type="button"
-                  className="px-5 py-2 border border-gray-400 text-gray-700 dark:text-white rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 transition"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-5 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition"
-                >
-                  Save
-                </button>
-              </div>
-            </form>
-          </div>
-        </main>
+                {selected === "tax" && (
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Tax %
+                    </label>
+                    <input
+                      type="number"
+                      id="taxAmount"
+                      name="taxAmount"
+                      min={0}
+                      max={100}
+                      value={inputs?.taxAmount || ""}
+                      onChange={(e) => {
+                        localStorage.setItem("taxAmount", e.target.value);
+                        handleChange(e);
+                      }}
+                      className="w-4/12 lg:w-2/12 px-4 py-2 border rounded-md shadow-sm focus:ring focus:ring-blue-300"
+                    />
+                  </div>
+                )}
+
+                {/* CGST */}
+                {selected === "alltax" && (
+                  <div className="flex flex-wrap gap-y-4 gap-x-4 justify-between text-sm">
+                    <div>
+                      <label
+                        htmlFor="cgstAmount"
+                        className="block font-medium mb-1"
+                      >
+                        CGST%
+                      </label>
+                      <input
+                        type="number"
+                        min={0}
+                        max={100}
+                        id="cgstAmount"
+                        name="cgstAmount"
+                        value={inputs?.cgstAmount || ""}
+                        onChange={(e) => {
+                          localStorage.setItem("cgstAmount", e.target.value);
+                          handleChange(e);
+                        }}
+                        className="w-full border border-gray-300 dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      />
+                    </div>
+                    {/* SGST */}
+                    <div>
+                      <label
+                        htmlFor="sgstAmount"
+                        className="block font-medium mb-1"
+                      >
+                        SGST%
+                      </label>
+                      <input
+                        type="number"
+                        id="sgstAmount"
+                        min={0}
+                        max={100}
+                        name="sgstAmount"
+                        value={inputs?.sgstAmount || ""}
+                        onChange={(e) => {
+                          localStorage.setItem("sgstAmount", e.target.value);
+                          handleChange(e);
+                        }}
+                        className="w-full border border-gray-300 dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      />
+                    </div>
+
+                    {/* IGST */}
+
+                    <div>
+                      <label
+                        htmlFor="igstAmount"
+                        className="block font-medium mb-1"
+                      >
+                        IGST%
+                      </label>
+                      <input
+                        type="number"
+                        id="igstAmount"
+                        min={0}
+                        max={100}
+                        name="igstAmount"
+                        value={inputs?.igstAmount || ""}
+                        onChange={(e) => {
+                          localStorage.setItem("igstAmount", e.target.value);
+                          handleChange(e);
+                        }}
+                        className="w-full border border-gray-300 dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      />
+                    </div>
+                    {/* UGST */}
+                    <div>
+                      <label
+                        htmlFor="ugstAmount"
+                        className="block font-medium mb-1"
+                      >
+                        UGST%
+                      </label>
+                      <input
+                        type="number"
+                        id="ugstAmount"
+                        min={0}
+                        max={100}
+                        name="ugstAmount"
+                        value={inputs?.ugstAmount || ""}
+                        onChange={(e) => {
+                          localStorage.setItem("ugstAmount", e.target.value);
+                          handleChange(e);
+                        }}
+                        className="w-full border border-gray-300 dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      />
+                    </div>
+                  </div>
+                )}
+                {/* Buttons */}
+                <div className="flex justify-end gap-4 pt-4">
+                  <button
+                    onClick={() => navigate("/taxinfo")}
+                    type="button"
+                    className="px-5 py-2 border border-gray-400 text-gray-700 dark:text-white rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-5 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition"
+                  >
+                    Save
+                  </button>
+                </div>
+              </form>
+            </div>
+          </main>
+        </div>
+        {loading && <Loader />}
       </div>
-      {loading && <Loader />}
     </div>
   );
 }

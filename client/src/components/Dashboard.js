@@ -8,6 +8,7 @@ import SettlePopup from "./SettlePopup";
 import MobileMenu from "./MobileMenu";
 import dayjs from "dayjs";
 import { ARCHIVED_INVOICES, INVOICE_INFO, USERS } from "./Constant";
+import Sidebar from "./Sidebar";
 
 const Dashboard = () => {
   const [data, setData] = useState([]);
@@ -582,209 +583,200 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div>
-      <div className="hidden lg:block top-0 mx-auto w-full h-[68px] text-white sticky bg-white shadow-lg">
-        <div className="flex justify-between mx-auto font-bold text-md  py-4 px-2 rounded-md fixed w-[81.5%]">
-          <div className="text-xl text-black">Dashboard</div>
-        </div>
-      </div>
-
-      <div className="hidden max-lg:block mb-16">
-        <MobileMenu />
-      </div>
-
-      <div className="p-2 lg:p-6">
-        <div className="hidden lg:block">
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-8  p-3 rounded-md">
-            <div className={`p-5 rounded-lg shadow bg-indigo-500 text-white`}>
-              <div className="flex items-center justify-between">
-                <p className="text-md">Total Invoices</p>
-                <FileDigit />
-              </div>
-              <h3 className="mt-2 text-2xl font-semibold">
-                {filteredData ? filteredData.length : 0}
-              </h3>
-            </div>
-
-            <div className={`p-5 rounded-lg shadow bg-purple-500 text-white`}>
-              <div className="flex items-center justify-between">
-                <p className="text-md">Paid</p>
-                <BanknoteArrowUp />
-              </div>
-              <h3 className="mt-2 text-2xl font-semibold"> {paidInvoices}</h3>
-            </div>
-
-            <div className={`p-5 rounded-lg shadow bg-yellow-500 text-white`}>
-              <div className="flex items-center justify-between">
-                <p className="text-md">Outstanding</p>
-                <BanknoteX />
-              </div>
-              <h3 className="mt-2 text-2xl font-semibold">{settled}</h3>
-            </div>
-
-            <div className={`p-5 rounded-lg shadow bg-emerald-500 text-white`}>
-              <div className="flex items-center justify-between">
-                <p className="text-md">Profit</p>
-                <ArrowUp />
-              </div>
-              <h3 className="mt-2 text-2xl font-semibold">₹ {totalProfit}</h3>
-            </div>
+    <div className="flex justify-evenly w-full h-full">
+      <div className="w-full lg:w-[82%] ml-0 lg:ml-[17%] border-2 my-3 rounded-lg border-gray-300 bg-white shadow-lg top-0 fixed">
+        <div className="hidden lg:block top-0 mx-auto w-[82%] h-[68px] text-white fixed border-b-2 my-3">
+          <div className="flex justify-between mx-auto font-bold text-md py-4 px-2 rounded-lg ">
+            <div className="text-xl text-black">Dashboard</div>
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 text-xs">
-          <input
-            type="text"
-            placeholder="Search..."
-            value={searchTerm}
-            onChange={handleSearch}
-            className="px-4 py-2 border rounded-lg w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
 
-          <select
-            className="px-4 py-2 border rounded-lg text-xs w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-            value={quickOption}
-            onChange={(e) => handleQuickFilterChange(e.target.value)}
-          >
-            <option value="any">Any Date</option>
-            <option value="today">Today</option>
-            <option value="month">This Month</option>
-            <option value="sixmonths">Last 6 Months</option>
-            <option value="range">Custom Range</option>
-          </select>
-
-          {/* Show range inputs only if 'range' is selected */}
-          {quickOption === "range" && (
-            <>
-              <input
-                type="date"
-                name="startdate"
-                className="border px-3 py-1 rounded w-full"
-                value={startDate}
-                onChange={(e) => handleCustomRangeFilter(e)}
-              />
-
-              <input
-                type="date"
-                name="enddate"
-                className="border px-3 py-1 rounded w-full"
-                value={endDate}
-                onChange={(e) => handleCustomRangeFilter(e)}
-              />
-            </>
-          )}
+        <div className="hidden max-lg:block mb-16">
+          <MobileMenu />
         </div>
-        <div className="flex gap-2">
-          {["All", "Paid", "Unpaid"].map((status) => (
-            <button
-              key={status}
-              onClick={() => handleStatusFilter(status)}
-              className={`px-4 py-2 rounded-md text-xs font-medium ${
-                statusFilter === status
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-200 text-gray-700"
-              }`}
+
+        <div className="p-2 lg:py-6 mt-10 ">
+          <div className="hidden lg:block">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-2 py-3 rounded-md">
+              <div className={`p-5 rounded-lg shadow bg-indigo-500 text-white`}>
+                <div className="flex items-center justify-between">
+                  <p className="text-md">Total Invoices</p>
+                  <FileDigit />
+                </div>
+                <h3 className="mt-2 text-2xl font-semibold">
+                  {filteredData ? filteredData.length : 0}
+                </h3>
+              </div>
+
+              <div className={`p-5 rounded-lg shadow bg-purple-500 text-white`}>
+                <div className="flex items-center justify-between">
+                  <p className="text-md">Paid</p>
+                  <BanknoteArrowUp />
+                </div>
+                <h3 className="mt-2 text-2xl font-semibold"> {paidInvoices}</h3>
+              </div>
+
+              <div className={`p-5 rounded-lg shadow bg-yellow-500 text-white`}>
+                <div className="flex items-center justify-between">
+                  <p className="text-md">Outstanding</p>
+                  <BanknoteX />
+                </div>
+                <h3 className="mt-2 text-2xl font-semibold">{settled}</h3>
+              </div>
+
+              <div
+                className={`p-5 rounded-lg shadow bg-emerald-500 text-white`}
+              >
+                <div className="flex items-center justify-between">
+                  <p className="text-md">Profit</p>
+                  <ArrowUp />
+                </div>
+                <h3 className="mt-2 text-2xl font-semibold">₹ {totalProfit}</h3>
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 text-xs">
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchTerm}
+              onChange={handleSearch}
+              className="px-4 py-2 border rounded-lg w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+
+            <select
+              className="px-4 py-2 border rounded-lg text-xs w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+              value={quickOption}
+              onChange={(e) => handleQuickFilterChange(e.target.value)}
             >
-              {status}
-            </button>
-          ))}
-        </div>
-        <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4 shadow-lg border-2 bg-white gap-y-4 rounded-md">
-          <table className="min-w-full text-xs text-left text-gray-700 ">
-            <thead className="bg-gray-100 text-xs text-gray-600 border-b">
-              <tr>
-                {[
-                  "S.No.",
-                  "Invoice",
-                  "Name",
-                  "Phone",
-                  "Date",
-                  "Delivery",
-                  "Amount",
-                  "Paid",
-                  "Balance",
-                  "Settle",
-                  "View",
-                  "Delete",
-                ].map((header) => (
-                  <th
-                    key={header}
-                    className="px-4 py-3 border-r cursor-pointer"
-                    onClick={() =>
-                      !["S.No.", "View", "Delete"].includes(header) &&
-                      handleSort(header)
-                    }
-                  >
-                    {header}
-                    {!["S.No.", "View", "Delete"].includes(header) && (
-                      <span>
-                        {sortConfig.key === header.toLowerCase()
-                          ? sortConfig.direction === "asc"
-                            ? " 🔼"
-                            : " 🔽"
-                          : " ⬍"}
-                      </span>
-                    )}
-                  </th>
-                ))}
-              </tr>
-            </thead>
+              <option value="any">Any Date</option>
+              <option value="today">Today</option>
+              <option value="month">This Month</option>
+              <option value="sixmonths">Last 6 Months</option>
+              <option value="range">Custom Range</option>
+            </select>
 
-            <tbody>
-              {filteredData &&
-                filteredData?.map((user, index) => {
-                  const formatDate = (dateString) => {
-                    const date = new Date(dateString);
-                    const day = String(date.getDate()).padStart(2, "0");
-                    const month = String(date.getMonth() + 1).padStart(2, "0");
-                    const year = date.getFullYear();
-                    return `${day}-${month}-${year}`;
-                  };
+            {/* Show range inputs only if 'range' is selected */}
+            {quickOption === "range" && (
+              <>
+                <input
+                  type="date"
+                  name="startdate"
+                  className="border px-3 py-1 rounded w-full"
+                  value={startDate}
+                  onChange={(e) => handleCustomRangeFilter(e)}
+                />
 
-                  return (
-                    <tr
-                      key={user.id}
-                      className={`border-t ${
-                        index % 2 === 0 ? "bg-white" : "bg-gray-50"
-                      } hover:bg-gray-200 cursor-pointer`}
+                <input
+                  type="date"
+                  name="enddate"
+                  className="border px-3 py-1 rounded w-full"
+                  value={endDate}
+                  onChange={(e) => handleCustomRangeFilter(e)}
+                />
+              </>
+            )}
+          </div>
+          <div className="flex gap-2">
+            {["All", "Paid", "Unpaid"].map((status) => (
+              <button
+                key={status}
+                onClick={() => handleStatusFilter(status)}
+                className={`px-4 py-2 rounded-md text-xs font-medium ${
+                  statusFilter === status
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-200 text-gray-700"
+                }`}
+              >
+                {status}
+              </button>
+            ))}
+          </div>
+          <div className="overflow-x-auto h-screen lg:h-[373px] overflow-y-auto rounded-lg border border-gray-300 shadow-md mt-4 shadow-lg border-2 bg-white gap-y-4 rounded-md">
+            <table className="min-w-full text-xs text-left text-gray-700 ">
+              <thead className="bg-gray-100 text-xs text-gray-600 border-b">
+                <tr>
+                  {[
+                    "S.No.",
+                    "Invoice",
+                    "Name",
+                    "Phone",
+                    "Date",
+                    "Delivery",
+                    "Amount",
+                    "Paid",
+                    "Balance",
+                    "Settle",
+                    "View",
+                    "Delete",
+                  ].map((header) => (
+                    <th
+                      key={header}
+                      className="px-4 py-3 border-r cursor-pointer"
+                      onClick={() =>
+                        !["S.No.", "View", "Delete"].includes(header) &&
+                        handleSort(header)
+                      }
                     >
-                      <td className="px-4 py-3 border-r w-[4%]">
-                        {index + 1}.
-                      </td>
-                      <td className="px-4 py-3 border-r w-[10%]">
-                        {user.invoiceInfo.invoiceNumber}
-                      </td>
-                      <td className="px-4 py-3 border-r w-[18%]">
-                        {user.customerInfo.customerName}
-                      </td>
-                      <td className="px-4 py-3 border-r w-[10%]">
-                        {user.customerInfo.customerPhone}
-                      </td>
-                      <td className="px-1 lg:px-4 py-3 border-r w-[10%]">
-                        {formatDate(user.invoiceInfo.date)}
-                      </td>
+                      {header}
+                      {!["S.No.", "View", "Delete"].includes(header) && (
+                        <span>
+                          {sortConfig.key === header.toLowerCase()
+                            ? sortConfig.direction === "asc"
+                              ? " 🔼"
+                              : " 🔽"
+                            : " ⬍"}
+                        </span>
+                      )}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
 
-                      <td className="px-1 lg:px-4 py-3 border-r w-[10%]">
-                        {user.invoiceInfo.expectedDate
-                          ? formatDate(user.invoiceInfo.expectedDate)
-                          : ""}
-                      </td>
+              <tbody>
+                {filteredData &&
+                  filteredData?.map((user, index) => {
+                    const formatDate = (dateString) => {
+                      const date = new Date(dateString);
+                      const day = String(date.getDate()).padStart(2, "0");
+                      const month = String(date.getMonth() + 1).padStart(
+                        2,
+                        "0"
+                      );
+                      const year = date.getFullYear();
+                      return `${day}-${month}-${year}`;
+                    };
 
-                      <td className="px-4 py-3 border-r text-right w-[10%]">
-                        {user.taxCalculatedInfo.taxType === "alltax"
-                          ? Math.round(
-                              user.amountInfo.amount +
-                                user.taxCalculatedInfo.cgst +
-                                user.taxCalculatedInfo.sgst +
-                                user.taxCalculatedInfo.igst +
-                                user.taxCalculatedInfo.ugst
-                            )
-                          : Math.round(
-                              user.amountInfo.amount +
-                                user.taxCalculatedInfo.tax
-                            )}
-                      </td>
-                      {user.amountInfo.paymentType === "fullyPaid" ? (
-                        <td className="px-4 py-3 border-r text-right w-[8%]">
+                    return (
+                      <tr
+                        key={user.id}
+                        className={`border-t ${
+                          index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                        } hover:bg-gray-200 cursor-pointer`}
+                      >
+                        <td className="px-4 py-3 border-r w-[4%]">
+                          {index + 1}.
+                        </td>
+                        <td className="px-4 py-3 border-r w-[10%]">
+                          {user.invoiceInfo.invoiceNumber}
+                        </td>
+                        <td className="px-4 py-3 border-r w-[18%]">
+                          {user.customerInfo.customerName}
+                        </td>
+                        <td className="px-4 py-3 border-r w-[10%]">
+                          {user.customerInfo.customerPhone}
+                        </td>
+                        <td className="px-1 lg:px-4 py-3 border-r w-[10%]">
+                          {formatDate(user.invoiceInfo.date)}
+                        </td>
+
+                        <td className="px-1 lg:px-4 py-3 border-r w-[10%]">
+                          {user.invoiceInfo.expectedDate
+                            ? formatDate(user.invoiceInfo.expectedDate)
+                            : ""}
+                        </td>
+
+                        <td className="px-4 py-3 border-r text-right w-[10%]">
                           {user.taxCalculatedInfo.taxType === "alltax"
                             ? Math.round(
                                 user.amountInfo.amount +
@@ -798,75 +790,91 @@ const Dashboard = () => {
                                   user.taxCalculatedInfo.tax
                               )}
                         </td>
-                      ) : (
-                        <td className="px-4 py-3 border-r text-right w-[8%]">
-                          {user.amountInfo.advance}
-                        </td>
-                      )}
-                      {user.amountInfo.paymentType === "fullyPaid" ||
-                      user.taxCalculatedInfo.balance === 0 ? (
-                        <td className="px-4 py-3 text-green-600 border-r text-right w-[10%]">
-                          Fully Paid
-                        </td>
-                      ) : (
-                        <td className="px-4 py-3 border-r text-right w-[10%]">
-                          {user.taxCalculatedInfo.balance}
-                        </td>
-                      )}
-                      {user.taxCalculatedInfo.balance > 0 ? (
-                        <td className="px-4 py-3 border-r w-[10%] text-center">
+                        {user.amountInfo.paymentType === "fullyPaid" ? (
+                          <td className="px-4 py-3 border-r text-right w-[8%]">
+                            {user.taxCalculatedInfo.taxType === "alltax"
+                              ? Math.round(
+                                  user.amountInfo.amount +
+                                    user.taxCalculatedInfo.cgst +
+                                    user.taxCalculatedInfo.sgst +
+                                    user.taxCalculatedInfo.igst +
+                                    user.taxCalculatedInfo.ugst
+                                )
+                              : Math.round(
+                                  user.amountInfo.amount +
+                                    user.taxCalculatedInfo.tax
+                                )}
+                          </td>
+                        ) : (
+                          <td className="px-4 py-3 border-r text-right w-[8%]">
+                            {user.amountInfo.advance}
+                          </td>
+                        )}
+                        {user.amountInfo.paymentType === "fullyPaid" ||
+                        user.taxCalculatedInfo.balance === 0 ? (
+                          <td className="px-4 py-3 text-green-600 border-r text-right w-[10%]">
+                            Fully Paid
+                          </td>
+                        ) : (
+                          <td className="px-4 py-3 border-r text-right w-[10%]">
+                            {user.taxCalculatedInfo.balance}
+                          </td>
+                        )}
+                        {user.taxCalculatedInfo.balance > 0 ? (
+                          <td className="px-4 py-3 border-r w-[10%] text-center">
+                            <button
+                              onClick={() => handleSettle(user)}
+                              className="text-blue-600 hover:text-blue-800 font-semibold text-xs"
+                            >
+                              Settle
+                            </button>
+                          </td>
+                        ) : (
+                          <td className="px-1 lg:px-4 py-3 border-r w-[10%] text-center">
+                            {user.invoiceInfo.settledDate
+                              ? formatDate(user.invoiceInfo.settledDate)
+                              : ""}
+                          </td>
+                        )}
+                        <td className="px-4 py-3 border-r w-[8%]">
                           <button
-                            onClick={() => handleSettle(user)}
+                            onClick={() => handleView(user.id)}
                             className="text-blue-600 hover:text-blue-800 font-semibold text-xs"
                           >
-                            Settle
+                            View
                           </button>
                         </td>
-                      ) : (
-                        <td className="px-1 lg:px-4 py-3 border-r w-[10%] text-center">
-                          {user.invoiceInfo.settledDate
-                            ? formatDate(user.invoiceInfo.settledDate)
-                            : ""}
+                        <td className="px-4 py-3 w-[8%]">
+                          <button
+                            onClick={() => handleDelete(user)}
+                            className="text-red-600 hover:text-red-800 font-semibold text-xs"
+                          >
+                            Delete
+                          </button>
                         </td>
-                      )}
-                      <td className="px-4 py-3 border-r w-[8%]">
-                        <button
-                          onClick={() => handleView(user.id)}
-                          className="text-blue-600 hover:text-blue-800 font-semibold text-xs"
-                        >
-                          View
-                        </button>
-                      </td>
-                      <td className="px-4 py-3 w-[8%]">
-                        <button
-                          onClick={() => handleDelete(user)}
-                          className="text-red-600 hover:text-red-800 font-semibold text-xs"
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              {filteredData?.length === 0 && (
-                <tr>
-                  <td
-                    colSpan="12"
-                    className="text-center px-4 py-6 text-gray-500"
-                  >
-                    No data available.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                      </tr>
+                    );
+                  })}
+                {filteredData?.length === 0 && (
+                  <tr>
+                    <td
+                      colSpan="12"
+                      className="text-center px-4 py-6 text-gray-500"
+                    >
+                      No data available.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+          {openSettlePopup && (
+            <SettlePopup
+              handleCloseSettlePopup={handleCloseSettlePopup}
+            ></SettlePopup>
+          )}
+          {loading && <Loader />}
         </div>
-        {openSettlePopup && (
-          <SettlePopup
-            handleCloseSettlePopup={handleCloseSettlePopup}
-          ></SettlePopup>
-        )}
-        {loading && <Loader />}
       </div>
     </div>
   );

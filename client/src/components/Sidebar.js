@@ -56,7 +56,7 @@ const Sidebar = () => {
     return () => clearInterval(interval);
   }, []);
   return (
-    <div className="w-60 h-screen bg-[#014459] text-white flex flex-col shadow-lg">
+    <div className="w-60 h-[96.7%] bg-[#014459] text-white flex flex-col shadow-lg fixed top-0 left-0 rounded-lg m-3">
       <NavLink className="text-xl font-bold p-5 border-b border-white" to={"/"}>
         Invoice Simplify
       </NavLink>

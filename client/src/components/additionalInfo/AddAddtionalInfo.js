@@ -96,239 +96,245 @@ function AddAddtionalInfo() {
     setInputs(JSON.parse(info1));
   }, []);
   return (
-    <div>
-      <div className="hidden lg:block">
-        <Header />
-      </div>
-      <div className="hidden max-lg:block mb-16">
-        <MobileMenu />
-      </div>
-
-      <div className="p-2 lg:p-6">
-        <div className="flex flex-col w-full mx-auto font-bold text-lg lg:text-2xl bg-gray-200 py-4 px-2 rounded-md">
-          Add Additional Information
-        </div>
-
-        <div className="flex flex-col w-full my-auto px-4 shadow-lg border-2 p-5 bg-white gap-y-4 rounded-md mt-4 text-sm">
-          <form
-            onSubmit={handleSubmit}
-            className="w-full mx-auto flex flex-col md:flex-row justify-between "
-          >
-            <div className="flex flex-col w-full mx-auto gap-y-6">
-              <div className="flex flex-col lg:flex-row gap-y-4 justify-between w-full mx-auto gap-x-8">
-                <div className="flex flex-col gap-y-4 w-full mx-auto">
-                  <div>Left Bottom Text</div>
-                  <div>
-                    <div>
-                      <input
-                        className="form-input w-full block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
-                        name="note1"
-                        placeholder="Enter Notes"
-                        value={inputs?.note1 || ""}
-                        onChange={(e) => {
-                          localStorage.setItem("note1", e.target.value);
-                          handleChange(e);
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <div>
-                      <input
-                        className="form-input w-full block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
-                        name="note2"
-                        placeholder="Enter Notes"
-                        value={inputs?.note2 || ""}
-                        onChange={(e) => {
-                          localStorage.setItem("note2", e.target.value);
-                          handleChange(e);
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <div>
-                      <input
-                        className="form-input w-full block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
-                        name="note3"
-                        placeholder="Enter Notes"
-                        value={inputs?.note3 || ""}
-                        onChange={(e) => {
-                          localStorage.setItem("note3", e.target.value);
-                          handleChange(e);
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <div>
-                      <input
-                        className="form-input w-full block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
-                        name="note4"
-                        placeholder="Enter Notes"
-                        value={inputs?.note4 || ""}
-                        onChange={(e) => {
-                          localStorage.setItem("note4", e.target.value);
-                          handleChange(e);
-                        }}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="flex flex-col gap-y-4 w-full  mx-auto">
-                  <div>Middle Bottom Text</div>
-                  <div>
-                    <div>
-                      <input
-                        className="form-input w-full block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
-                        name="middlenote1"
-                        placeholder="Enter Notes"
-                        value={inputs?.middlenote1 || ""}
-                        onChange={(e) => {
-                          localStorage.setItem("middlenote1", e.target.value);
-                          handleChange(e);
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <div>
-                      <input
-                        className="form-input w-full block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
-                        name="middlenote2"
-                        placeholder="Enter Notes"
-                        value={inputs?.middlenote2 || ""}
-                        onChange={(e) => {
-                          localStorage.setItem("middlenote2", e.target.value);
-                          handleChange(e);
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <div>
-                      <input
-                        className="form-input w-full block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
-                        name="middlenote3"
-                        placeholder="Enter Notes"
-                        value={inputs?.middlenote3 || ""}
-                        onChange={(e) => {
-                          localStorage.setItem("middlenote3", e.target.value);
-                          handleChange(e);
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <div>
-                      <input
-                        className="form-input w-full block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
-                        name="middlenote4"
-                        placeholder="Enter Notes"
-                        value={inputs?.middlenote4 || ""}
-                        onChange={(e) => {
-                          localStorage.setItem("middlenote4", e.target.value);
-                          handleChange(e);
-                        }}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="flex flex-col gap-y-4 w-full mx-auto">
-                  <div>Right Bottom Text</div>
-                  <div>
-                    <div>
-                      <input
-                        className="form-input w-full block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
-                        name="rnote1"
-                        placeholder="Enter Notes"
-                        value={inputs?.rnote1 || ""}
-                        onChange={(e) => {
-                          localStorage.setItem("rnote1", e.target.value);
-                          handleChange(e);
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <div>
-                      <input
-                        className="form-input w-full block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
-                        name="rnote2"
-                        placeholder="Enter Notes"
-                        value={inputs?.rnote2 || ""}
-                        onChange={(e) => {
-                          localStorage.setItem("rnote2", e.target.value);
-                          handleChange(e);
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <div>
-                      <input
-                        className="form-input w-full block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
-                        name="rnote3"
-                        placeholder="Enter Notes"
-                        value={inputs?.rnote3 || ""}
-                        onChange={(e) => {
-                          localStorage.setItem("rnote3", e.target.value);
-                          handleChange(e);
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <div>
-                      <input
-                        className="form-input w-full block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
-                        name="rnote4"
-                        placeholder="Enter Notes"
-                        value={inputs?.rnote4 || ""}
-                        onChange={(e) => {
-                          localStorage.setItem("rnote4", e.target.value);
-                          handleChange(e);
-                        }}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <textarea
-                  className="form-input w-full block text-xs text-start rounded border border-gray-400 py-2 px-4 leading-5 h-24 focus:text-gray-600"
-                  name="additionaldesc"
-                  type="text"
-                  placeholder="Enter additional information"
-                  value={inputs?.additionaldesc || ""}
-                  onChange={(e) => {
-                    localStorage.setItem("additionaldesc", e.target.value);
-                    handleChange(e);
-                  }}
-                />
-              </div>
-              <div className="flex justify-evenly">
-                <div className="rounded-md flex justify-between w-full mx-auto">
-                  <button
-                    type="button"
-                    onClick={() => navigate("/additionalinfo")}
-                    className="px-5 py-2 rounded-md border border-gray-500 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="px-5 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 transition"
-                  >
-                    Save Changes
-                  </button>
-                </div>
-              </div>
+    <div className="flex justify-evenly w-full h-full">
+      <div className="w-full lg:w-[82%] ml-0 lg:ml-[17%] border-2 my-3 rounded-lg border-gray-300 bg-white shadow-lg top-0 fixed h-[96.7%]">
+        <div className="hidden lg:block">
+          <div className="top-0 mx-auto w-full h-[68px] text-white border-b-2">
+            <div className="font-bold text-md py-4 px-2 rounded-md w-[82%]">
+              <div className="text-xl text-black">Additional Information</div>
             </div>
-          </form>
+          </div>
         </div>
+        <div className="hidden max-lg:block mb-16">
+          <MobileMenu />
+        </div>
+
+        <div className="p-2">
+          <div className="flex flex-col w-full mx-auto font-bold text-lg lg:text-2xl bg-gray-200 py-4 px-2 rounded-md">
+            Add Additional Information
+          </div>
+
+          <div className="flex flex-col w-full my-auto px-4 shadow-lg border-2 p-5 bg-white gap-y-4 rounded-md mt-4 text-sm">
+            <form
+              onSubmit={handleSubmit}
+              className="w-full mx-auto flex flex-col md:flex-row justify-between "
+            >
+              <div className="flex flex-col w-full mx-auto gap-y-6">
+                <div className="flex flex-col lg:flex-row gap-y-4 justify-between w-full mx-auto gap-x-8">
+                  <div className="flex flex-col gap-y-4 w-full mx-auto">
+                    <div>Left Bottom Text</div>
+                    <div>
+                      <div>
+                        <input
+                          className="form-input w-full block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
+                          name="note1"
+                          placeholder="Enter Notes"
+                          value={inputs?.note1 || ""}
+                          onChange={(e) => {
+                            localStorage.setItem("note1", e.target.value);
+                            handleChange(e);
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <div>
+                        <input
+                          className="form-input w-full block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
+                          name="note2"
+                          placeholder="Enter Notes"
+                          value={inputs?.note2 || ""}
+                          onChange={(e) => {
+                            localStorage.setItem("note2", e.target.value);
+                            handleChange(e);
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <div>
+                        <input
+                          className="form-input w-full block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
+                          name="note3"
+                          placeholder="Enter Notes"
+                          value={inputs?.note3 || ""}
+                          onChange={(e) => {
+                            localStorage.setItem("note3", e.target.value);
+                            handleChange(e);
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <div>
+                        <input
+                          className="form-input w-full block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
+                          name="note4"
+                          placeholder="Enter Notes"
+                          value={inputs?.note4 || ""}
+                          onChange={(e) => {
+                            localStorage.setItem("note4", e.target.value);
+                            handleChange(e);
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-y-4 w-full  mx-auto">
+                    <div>Middle Bottom Text</div>
+                    <div>
+                      <div>
+                        <input
+                          className="form-input w-full block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
+                          name="middlenote1"
+                          placeholder="Enter Notes"
+                          value={inputs?.middlenote1 || ""}
+                          onChange={(e) => {
+                            localStorage.setItem("middlenote1", e.target.value);
+                            handleChange(e);
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <div>
+                        <input
+                          className="form-input w-full block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
+                          name="middlenote2"
+                          placeholder="Enter Notes"
+                          value={inputs?.middlenote2 || ""}
+                          onChange={(e) => {
+                            localStorage.setItem("middlenote2", e.target.value);
+                            handleChange(e);
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <div>
+                        <input
+                          className="form-input w-full block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
+                          name="middlenote3"
+                          placeholder="Enter Notes"
+                          value={inputs?.middlenote3 || ""}
+                          onChange={(e) => {
+                            localStorage.setItem("middlenote3", e.target.value);
+                            handleChange(e);
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <div>
+                        <input
+                          className="form-input w-full block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
+                          name="middlenote4"
+                          placeholder="Enter Notes"
+                          value={inputs?.middlenote4 || ""}
+                          onChange={(e) => {
+                            localStorage.setItem("middlenote4", e.target.value);
+                            handleChange(e);
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-y-4 w-full mx-auto">
+                    <div>Right Bottom Text</div>
+                    <div>
+                      <div>
+                        <input
+                          className="form-input w-full block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
+                          name="rnote1"
+                          placeholder="Enter Notes"
+                          value={inputs?.rnote1 || ""}
+                          onChange={(e) => {
+                            localStorage.setItem("rnote1", e.target.value);
+                            handleChange(e);
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <div>
+                        <input
+                          className="form-input w-full block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
+                          name="rnote2"
+                          placeholder="Enter Notes"
+                          value={inputs?.rnote2 || ""}
+                          onChange={(e) => {
+                            localStorage.setItem("rnote2", e.target.value);
+                            handleChange(e);
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <div>
+                        <input
+                          className="form-input w-full block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
+                          name="rnote3"
+                          placeholder="Enter Notes"
+                          value={inputs?.rnote3 || ""}
+                          onChange={(e) => {
+                            localStorage.setItem("rnote3", e.target.value);
+                            handleChange(e);
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <div>
+                        <input
+                          className="form-input w-full block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
+                          name="rnote4"
+                          placeholder="Enter Notes"
+                          value={inputs?.rnote4 || ""}
+                          onChange={(e) => {
+                            localStorage.setItem("rnote4", e.target.value);
+                            handleChange(e);
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <textarea
+                    className="form-input w-full block text-xs text-start rounded border border-gray-400 py-2 px-4 leading-5 h-24 focus:text-gray-600"
+                    name="additionaldesc"
+                    type="text"
+                    placeholder="Enter additional information"
+                    value={inputs?.additionaldesc || ""}
+                    onChange={(e) => {
+                      localStorage.setItem("additionaldesc", e.target.value);
+                      handleChange(e);
+                    }}
+                  />
+                </div>
+                <div className="flex justify-evenly">
+                  <div className="rounded-md flex justify-between w-full mx-auto">
+                    <button
+                      type="button"
+                      onClick={() => navigate("/additionalinfo")}
+                      className="px-5 py-2 rounded-md border border-gray-500 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-5 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 transition"
+                    >
+                      Save Changes
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        {loading && <Loader />}
       </div>
-      {loading && <Loader />}
     </div>
   );
 }
