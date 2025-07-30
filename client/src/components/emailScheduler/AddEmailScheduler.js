@@ -60,7 +60,7 @@ const AddEmailScheduler = () => {
         <div className="hidden max-lg:block mb-16">
           <MobileMenu />
         </div>
-        <div className="max-w-md mx-auto mt-10 p-6 bg-gradient-to-r from-blue-100 to-blue-50 shadow-lg rounded-xl">
+        <div className="max-w-md mx-auto mt-10 p-3 bg-gradient-to-r from-blue-100 to-blue-50 shadow-lg rounded-xl">
           <h2 className="text-2xl font-semibold text-blue-800 mb-4 text-center">
             📧 Email Scheduler
           </h2>

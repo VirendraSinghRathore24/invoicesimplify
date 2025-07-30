@@ -743,7 +743,7 @@ const AddInvoice = () => {
 
   return (
     <div className="flex justify-evenly w-full h-full  ">
-      <div className="w-full lg:w-[82%] ml-0 lg:ml-[17%] border-2 my-3 rounded-lg border-gray-300 bg-white shadow-lg top-0 fixed">
+      <div className="w-full lg:w-[82%] ml-0 lg:ml-[17%] lg:border-2 my-3 rounded-lg lg:border-gray-300 lg:bg-white lg:shadow-lg top-0 lg:fixed">
         <div className="hidden max-lg:block mb-16">
           <MobileMenu />
         </div>
@@ -779,7 +779,7 @@ const AddInvoice = () => {
               </>
             )}
             <div>
-              <div className="flex flex-col w-full gap-y-3 mx-auto h-screen overflow-y-auto h-[calc(100vh-68px)] lg:h-[calc(100vh-100px)]">
+              <div className="flex flex-col w-full gap-y-3 mx-auto lg:h-screen lg:overflow-y-auto  lg:h-[calc(100vh-100px)]">
                 <div className="flex flex-col lg:flex-row justify-between gap-x-2 w-full mx-auto">
                   <div className="flex flex-col w-full lg:w-6/12 mx-auto justify-start items-left mt-16 lg:mt-4  border-[1.2px] p-2 lg:p-5 bg-white gap-y-2 lg:gap-y-4 rounded-md">
                     <div className="flex flex-col justify-start items-left gap-y-0 lg:gap-y-4 ">

@@ -583,7 +583,7 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className="flex justify-evenly w-full h-full">
+    <div className="flex justify-evenly w-full h-full ">
       <div className="w-full lg:w-[82%] ml-0 lg:ml-[17%] border-2 my-3 rounded-lg border-gray-300 bg-white shadow-lg top-0 fixed">
         <div className="hidden lg:block top-0 mx-auto w-[82%] h-[68px] text-white fixed border-b-2 my-3">
           <div className="flex justify-between mx-auto font-bold text-md py-4 px-2 rounded-lg ">
@@ -692,7 +692,7 @@ const Dashboard = () => {
               </button>
             ))}
           </div>
-          <div className="overflow-x-auto h-screen lg:h-[373px] overflow-y-auto rounded-lg border border-gray-300 shadow-md mt-4 shadow-lg border-2 bg-white gap-y-4 rounded-md">
+          <div className="overflow-auto h-[65vh] lg:h-[51vh] rounded-lg border border-gray-300 shadow-md mt-4 shadow-lg border-2 bg-white gap-y-4 rounded-md">
             <table className="min-w-full text-xs text-left text-gray-700 ">
               <thead className="bg-gray-100 text-xs text-gray-600 border-b">
                 <tr>

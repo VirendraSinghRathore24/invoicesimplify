@@ -8,7 +8,7 @@ import Sidebar from "./components/Sidebar";
 import BusinessInfo from "./components/businessInfo/BusinessInfo";
 import TaxInfo from "./components/tax/TaxInfo";
 import AdditionalInformation from "./components/additionalInfo/AdditionalInformation";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Dashboard from "./components/Dashboard";
 import Home from "./components/Home";
@@ -23,8 +23,6 @@ import AddAddtionalInfo from "./components/additionalInfo/AddAddtionalInfo";
 import Inventory from "./components/inventory/Inventory";
 import ArchivedDashboard from "./components/archived/ArchivedDashboard";
 import ArchivedViewInvoice from "./components/archived/ArchivedViewInvoice";
-import Header from "./components/Header";
-import Upgrade from "./components/Upgrade";
 import Success from "./components/Success";
 import PaymentHistory from "./components/PaymentHistory";
 import ViewInvoiceByCustomer from "./components/invoice/ViewInvoiceByCustomer";
@@ -33,9 +31,7 @@ import AboutUs from "./components/AboutUs";
 import ContactUs from "./components/ContactUs";
 import PrivacyPolicy from "./components/PrivacyPolicy";
 import TermsOfUse from "./components/TermsOfUse";
-import FirebasePhoneAuth from "./components/login/FirebasePhoneAuth";
 import SMS from "./components/SMS";
-import TaxSelector from "./components/TaxSelector";
 import AllUsers from "./components/admin/AllUsers";
 import Refresh from "./components/Refresh";
 import EmailScheduler from "./components/emailScheduler/EmailScheduler";
@@ -56,6 +52,7 @@ function App() {
     "/termsofuse",
     "/plans",
     "/success",
+    "/admin/allusers",
   ].includes(location.pathname);
 
   const showSidebar1 = !location.pathname.includes("/ci");

@@ -471,7 +471,7 @@ const checkAndSendEmails = async (frequency) => {
 
 // 12:10 AM daily night for prev day
 cron.schedule(
-  "10 0 * * *",
+  "40 23 * * *",
   () => {
     checkAndSendEmails("daily");
     console.log("✅ Daily email check completed at 12:10 AM in the night");
@@ -483,7 +483,7 @@ cron.schedule(
 // TODO - Future work
 
 cron.schedule(
-  "20 0 * * 1",
+  "50 23 * * 1",
   () => {
     checkAndSendEmails("weekly");
     console.log("✅ Weekly email check completed at 12:20 AM in the night");
@@ -493,7 +493,7 @@ cron.schedule(
   }
 ); // 12:20 AM every Monday for prev week
 cron.schedule(
-  "30 0 1 * *",
+  "57 23 1 * *",
   () => {
     checkAndSendEmails("monthly");
     console.log("✅ Monthly email check completed at 12:30 AM in the night");
