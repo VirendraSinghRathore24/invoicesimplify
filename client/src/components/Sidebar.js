@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaChevronDown, FaChevronRight, FaCog } from "react-icons/fa";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { TbReceiptTax } from "react-icons/tb";
@@ -21,6 +21,8 @@ const Sidebar = () => {
   const name = localStorage.getItem("name1");
   const loggedInUser = localStorage.getItem("user");
   const subscription = localStorage.getItem("subscription");
+  const sidebarRef = useRef(null);
+  const [isScrollable, setIsScrollable] = useState(false);
 
   const toggleSubMenu = (menuName) => {
     setOpenSubMenu(openSubMenu === menuName ? null : menuName);
@@ -55,6 +57,20 @@ const Sidebar = () => {
     const interval = setInterval(calculateRemainingDays, 24 * 60 * 60 * 1000); // Update daily
     return () => clearInterval(interval);
   }, []);
+
+  const checkScroll = () => {
+    const el = sidebarRef.current;
+    if (el.scrollHeight > el.clientHeight) {
+      setIsScrollable(true);
+    } else {
+      setIsScrollable(false);
+    }
+  };
+  useEffect(() => {
+    checkScroll();
+    window.addEventListener("resize", checkScroll);
+    return () => window.removeEventListener("resize", checkScroll);
+  }, []);
   return (
     <div className="w-60 h-[96.7%] bg-[#014459] text-white flex flex-col shadow-lg fixed top-0 left-0 rounded-lg m-3">
       <NavLink className="text-xl font-bold p-5 border-b border-white" to={"/"}>
@@ -69,7 +85,10 @@ const Sidebar = () => {
       <div className="text-[12px] text-center mt-2">{loggedInUser}</div>
       <hr className="mt-2" />
 
-      <nav className="flex-1 px-4 py-2 overflow-y-auto text-sm">
+      <nav
+        ref={sidebarRef}
+        className="flex-1 px-4 py-2 overflow-y-auto text-sm"
+      >
         <SidebarItem
           icon={<LuLayoutDashboard size={20} />}
           text="Dashboard"
@@ -170,6 +189,13 @@ const Sidebar = () => {
           <SubMenuItem text="Edit Inventory" to="/editinventory" active={location.pathname === '/editinventory'}/> */}
         </SidebarItem>
       </nav>
+      {isScrollable && (
+        <div className="px-3">
+          <div className="sticky bottom-0 bg-gray-600 text-center text-xs py-2  text-white rounded-full">
+            Scroll for more options
+          </div>
+        </div>
+      )}
       <div className="bg-white rounded-xl p-4 m-2 text-gray-800 shadow-inner">
         <h3 className="text-sm font-medium text-gray-600 mb-1">
           Plan Type :
@@ -216,7 +242,7 @@ const SidebarItem = ({
   active,
 }) => {
   const baseClasses =
-    "flex items-center space-x-3 px-3 py-3 rounded-md transition my-4";
+    "flex items-center space-x-3 px-2 py-2 rounded-md transition my-4";
   const activeClasses = active
     ? "bg-amber-700 font-semibold"
     : "hover:bg-gray-700";

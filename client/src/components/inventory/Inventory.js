@@ -196,24 +196,41 @@ function Inventory() {
                       className="p-2 border border-gray-300 rounded-md w-full"
                     />
                   </div>
-                  <div className="overflow-auto h-[60vh] lg:h-[66.5vh]">
+                  <div className="max-h-[490px] overflow-y-auto">
                     <table className="min-w-full text-sm text-left text-gray-700">
-                      <thead className="bg-gray-100 text-xs  text-gray-600 border-b">
+                      <thead className="bg-gray-100 text-xs text-gray-600 border-b sticky top-0 z-10">
                         <tr>
-                          <th className="px-4 py-3 border-r">S.No.</th>
-                          <th className="px-4 py-3 border-r">Item Name</th>
-                          <th className="px-4 py-3 border-r">Item Code</th>
-                          <th className="px-4 py-3 border-r">Quantity</th>
-                          <th className="px-4 py-3 border-r">Buy Price</th>
-                          <th className="px-4 py-3 border-r">Sell Price</th>
-                          <th className="px-4 py-3 border-r">Stock</th>
-                          <th className="px-4 py-3 border-r">Edit</th>
-                          <th className="px-4 py-3 max-lg:hidden">Delete</th>
+                          <th className="px-4 py-3 border-r bg-gray-100">
+                            S.No.
+                          </th>
+                          <th className="px-4 py-3 border-r bg-gray-100">
+                            Item Name
+                          </th>
+                          <th className="px-4 py-3 border-r bg-gray-100">
+                            Item Code
+                          </th>
+                          <th className="px-4 py-3 border-r bg-gray-100">
+                            Quantity
+                          </th>
+                          <th className="px-4 py-3 border-r bg-gray-100">
+                            Buy Price
+                          </th>
+                          <th className="px-4 py-3 border-r bg-gray-100">
+                            Sell Price
+                          </th>
+                          <th className="px-4 py-3 border-r bg-gray-100">
+                            Stock
+                          </th>
+                          <th className="px-4 py-3 border-r bg-gray-100">
+                            Edit
+                          </th>
+                          <th className="px-4 py-3 bg-gray-100 max-lg:hidden">
+                            Delete
+                          </th>
                         </tr>
                       </thead>
                       <tbody>
-                        {filteredData &&
-                          filteredData?.length > 0 &&
+                        {filteredData?.length > 0 ? (
                           filteredData.map((post, index) => (
                             <tr
                               key={index}
@@ -231,7 +248,7 @@ function Inventory() {
                                 {post?.itemCode}
                               </td>
                               <td className="px-4 py-3 border-r border-b">
-                                {post?.itemQty}{" "}
+                                {post?.itemQty}
                                 {post?.selectedUnit !== "none" && (
                                   <span className="ml-1 uppercase">
                                     {post.selectedUnit}
@@ -250,10 +267,6 @@ function Inventory() {
                                   className="text-blue-600 hover:text-red-800 font-semibold text-xs"
                                 >
                                   Update
-                                  {/* Tooltip */}
-                                  {/* <div className="absolute bottom-full mb-2 font-bold text-sm left-1/2 -translate-x-1/2 bg-black text-white rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition whitespace-nowrap z-10">
-                                  Add or reduce your stock for this item
-                                </div> */}
                                 </button>
                               </td>
                               <td className="px-4 py-3 cursor-pointer border-r border-b">
@@ -273,12 +286,12 @@ function Inventory() {
                                 </button>
                               </td>
                             </tr>
-                          ))}
-                        {filteredData?.length === 0 && (
+                          ))
+                        ) : (
                           <tr>
                             <td
                               colSpan="9"
-                              className="text-center px-4 py-6 text-gray-500"
+                              className="text-center px-4 py-6 text-gray-500 bg-white"
                             >
                               No data available.
                             </td>

@@ -692,106 +692,89 @@ const Dashboard = () => {
               </button>
             ))}
           </div>
-          <div className="overflow-auto h-[65vh] lg:h-[51vh] rounded-lg border border-gray-300 shadow-md mt-4 shadow-lg border-2 bg-white gap-y-4 rounded-md">
-            <table className="min-w-full text-xs text-left text-gray-700 ">
-              <thead className="bg-gray-100 text-xs text-gray-600 border-b">
-                <tr>
-                  {[
-                    "S.No.",
-                    "Invoice",
-                    "Name",
-                    "Phone",
-                    "Date",
-                    "Delivery",
-                    "Amount",
-                    "Paid",
-                    "Balance",
-                    "Settle",
-                    "View",
-                    "Delete",
-                  ].map((header) => (
-                    <th
-                      key={header}
-                      className="px-4 py-3 border-r cursor-pointer"
-                      onClick={() =>
-                        !["S.No.", "View", "Delete"].includes(header) &&
-                        handleSort(header)
-                      }
-                    >
-                      {header}
-                      {!["S.No.", "View", "Delete"].includes(header) && (
-                        <span>
-                          {sortConfig.key === header.toLowerCase()
-                            ? sortConfig.direction === "asc"
-                              ? " 🔼"
-                              : " 🔽"
-                            : " ⬍"}
-                        </span>
-                      )}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-
-              <tbody>
-                {filteredData &&
-                  filteredData?.map((user, index) => {
-                    const formatDate = (dateString) => {
-                      const date = new Date(dateString);
-                      const day = String(date.getDate()).padStart(2, "0");
-                      const month = String(date.getMonth() + 1).padStart(
-                        2,
-                        "0"
-                      );
-                      const year = date.getFullYear();
-                      return `${day}-${month}-${year}`;
-                    };
-
-                    return (
-                      <tr
-                        key={user.id}
-                        className={`border-t ${
-                          index % 2 === 0 ? "bg-white" : "bg-gray-50"
-                        } hover:bg-gray-200 cursor-pointer`}
+          <div className="overflow-hidden border border-gray-300 shadow-md mt-4 rounded-md">
+            <div className="max-h-[65vh] lg:max-h-[51vh] overflow-y-auto overflow-x-auto">
+              <table className="min-w-full text-xs text-left text-gray-700">
+                <thead className="bg-gray-100 text-gray-600 border-b sticky top-0 z-10">
+                  <tr>
+                    {[
+                      "Invoice",
+                      "Name",
+                      "Phone",
+                      "Date",
+                      "Delivery",
+                      "Amount",
+                      "Paid",
+                      "Balance",
+                      "Settle",
+                      "View",
+                      "Delete",
+                    ].map((header, i) => (
+                      <th
+                        key={i}
+                        className="px-4 py-3 border-r bg-gray-100 min-w-[100px] whitespace-nowrap"
+                        onClick={() =>
+                          !["S.No.", "View", "Delete"].includes(header) &&
+                          handleSort(header)
+                        }
                       >
-                        <td className="px-4 py-3 border-r w-[4%]">
-                          {index + 1}.
-                        </td>
-                        <td className="px-4 py-3 border-r w-[10%]">
-                          {user.invoiceInfo.invoiceNumber}
-                        </td>
-                        <td className="px-4 py-3 border-r w-[18%]">
-                          {user.customerInfo.customerName}
-                        </td>
-                        <td className="px-4 py-3 border-r w-[10%]">
-                          {user.customerInfo.customerPhone}
-                        </td>
-                        <td className="px-1 lg:px-4 py-3 border-r w-[10%]">
-                          {formatDate(user.invoiceInfo.date)}
-                        </td>
+                        {header}
+                        {!["S.No.", "View", "Delete"].includes(header) && (
+                          <span>
+                            {sortConfig.key === header.toLowerCase()
+                              ? sortConfig.direction === "asc"
+                                ? " 🔼"
+                                : " 🔽"
+                              : " ⬍"}
+                          </span>
+                        )}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
 
-                        <td className="px-1 lg:px-4 py-3 border-r w-[10%]">
-                          {user.invoiceInfo.expectedDate
-                            ? formatDate(user.invoiceInfo.expectedDate)
-                            : ""}
-                        </td>
+                <tbody>
+                  {filteredData?.length > 0 ? (
+                    filteredData.map((user, index) => {
+                      const formatDate = (dateString) => {
+                        const date = new Date(dateString);
+                        return `${String(date.getDate()).padStart(
+                          2,
+                          "0"
+                        )}-${String(date.getMonth() + 1).padStart(
+                          2,
+                          "0"
+                        )}-${date.getFullYear()}`;
+                      };
 
-                        <td className="px-4 py-3 border-r text-right w-[10%]">
-                          {user.taxCalculatedInfo.taxType === "alltax"
-                            ? Math.round(
-                                user.amountInfo.amount +
-                                  user.taxCalculatedInfo.cgst +
-                                  user.taxCalculatedInfo.sgst +
-                                  user.taxCalculatedInfo.igst +
-                                  user.taxCalculatedInfo.ugst
-                              )
-                            : Math.round(
-                                user.amountInfo.amount +
-                                  user.taxCalculatedInfo.tax
-                              )}
-                        </td>
-                        {user.amountInfo.paymentType === "fullyPaid" ? (
-                          <td className="px-4 py-3 border-r text-right w-[8%]">
+                      return (
+                        <tr
+                          key={user.id}
+                          className={`border-t ${
+                            index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                          } hover:bg-gray-200`}
+                        >
+                          {/* <td className="px-4 py-3 border-r w-[10%]">
+                            {index + 1}.
+                          </td> */}
+                          <td className="px-4 py-3 border-r whitespace-nowrap">
+                            {user.invoiceInfo.invoiceNumber}
+                          </td>
+                          <td className="px-4 py-3 border-r whitespace-nowrap">
+                            {user.customerInfo.customerName}
+                          </td>
+                          <td className="px-4 py-3 border-r whitespace-nowrap">
+                            {user.customerInfo.customerPhone}
+                          </td>
+                          <td className="px-4 py-3 border-r whitespace-nowrap">
+                            {formatDate(user.invoiceInfo.date)}
+                          </td>
+                          <td className="px-4 py-3 border-r whitespace-nowrap">
+                            {user.invoiceInfo.expectedDate
+                              ? formatDate(user.invoiceInfo.expectedDate)
+                              : ""}
+                          </td>
+                          <td className="px-4 py-3 border-r text-right whitespace-nowrap">
                             {user.taxCalculatedInfo.taxType === "alltax"
                               ? Math.round(
                                   user.amountInfo.amount +
@@ -805,69 +788,76 @@ const Dashboard = () => {
                                     user.taxCalculatedInfo.tax
                                 )}
                           </td>
-                        ) : (
-                          <td className="px-4 py-3 border-r text-right w-[8%]">
-                            {user.amountInfo.advance}
+                          <td className="px-4 py-3 border-r text-right whitespace-nowrap">
+                            {user.amountInfo.paymentType === "fullyPaid"
+                              ? Math.round(
+                                  user.taxCalculatedInfo.taxType === "alltax"
+                                    ? user.amountInfo.amount +
+                                        user.taxCalculatedInfo.cgst +
+                                        user.taxCalculatedInfo.sgst +
+                                        user.taxCalculatedInfo.igst +
+                                        user.taxCalculatedInfo.ugst
+                                    : user.amountInfo.amount +
+                                        user.taxCalculatedInfo.tax
+                                )
+                              : user.amountInfo.advance}
                           </td>
-                        )}
-                        {user.amountInfo.paymentType === "fullyPaid" ||
-                        user.taxCalculatedInfo.balance === 0 ? (
-                          <td className="px-4 py-3 text-green-600 border-r text-right w-[10%]">
-                            Fully Paid
+                          <td className="px-4 py-3 border-r text-right whitespace-nowrap">
+                            {user.amountInfo.paymentType === "fullyPaid" ||
+                            user.taxCalculatedInfo.balance === 0 ? (
+                              <span className="text-green-600">Fully Paid</span>
+                            ) : (
+                              user.taxCalculatedInfo.balance
+                            )}
                           </td>
-                        ) : (
-                          <td className="px-4 py-3 border-r text-right w-[10%]">
-                            {user.taxCalculatedInfo.balance}
+                          <td className="px-4 py-3 border-r text-center whitespace-nowrap">
+                            {user.taxCalculatedInfo.balance > 0 ? (
+                              <button
+                                onClick={() => handleSettle(user)}
+                                className="text-blue-600 hover:text-blue-800 font-semibold text-xs"
+                              >
+                                Settle
+                              </button>
+                            ) : user.invoiceInfo.settledDate ? (
+                              formatDate(user.invoiceInfo.settledDate)
+                            ) : (
+                              ""
+                            )}
                           </td>
-                        )}
-                        {user.taxCalculatedInfo.balance > 0 ? (
-                          <td className="px-4 py-3 border-r w-[10%] text-center">
+                          <td className="px-4 py-3 border-r whitespace-nowrap">
                             <button
-                              onClick={() => handleSettle(user)}
+                              onClick={() => handleView(user.id)}
                               className="text-blue-600 hover:text-blue-800 font-semibold text-xs"
                             >
-                              Settle
+                              View
                             </button>
                           </td>
-                        ) : (
-                          <td className="px-1 lg:px-4 py-3 border-r w-[10%] text-center">
-                            {user.invoiceInfo.settledDate
-                              ? formatDate(user.invoiceInfo.settledDate)
-                              : ""}
+                          <td className="px-4 py-3 whitespace-nowrap">
+                            <button
+                              onClick={() => handleDelete(user)}
+                              className="text-red-600 hover:text-red-800 font-semibold text-xs"
+                            >
+                              Delete
+                            </button>
                           </td>
-                        )}
-                        <td className="px-4 py-3 border-r w-[8%]">
-                          <button
-                            onClick={() => handleView(user.id)}
-                            className="text-blue-600 hover:text-blue-800 font-semibold text-xs"
-                          >
-                            View
-                          </button>
-                        </td>
-                        <td className="px-4 py-3 w-[8%]">
-                          <button
-                            onClick={() => handleDelete(user)}
-                            className="text-red-600 hover:text-red-800 font-semibold text-xs"
-                          >
-                            Delete
-                          </button>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                {filteredData?.length === 0 && (
-                  <tr>
-                    <td
-                      colSpan="12"
-                      className="text-center px-4 py-6 text-gray-500"
-                    >
-                      No data available.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+                        </tr>
+                      );
+                    })
+                  ) : (
+                    <tr>
+                      <td
+                        colSpan="12"
+                        className="text-center px-4 py-6 text-gray-500"
+                      >
+                        No data available.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
+
           {openSettlePopup && (
             <SettlePopup
               handleCloseSettlePopup={handleCloseSettlePopup}
