@@ -116,19 +116,20 @@ const InventoryModal = ({ handleCloseItem, setItem }) => {
         </div>
 
         <hr />
-        <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md">
+        <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-2">
           <div className="p-4">
             <input
               type="text"
               placeholder="Search..."
               value={searchTerm}
               onChange={(e) => handleSearch(e)}
-              className="p-2 border border-gray-300 rounded-md mb-4 w-full"
+              className="p-2 border border-gray-300 rounded-md w-full text-sm"
             />
           </div>
-          <div className="overflow-auto h-[400px] hidden lg:block">
-            <table className="min-w-full text-sm text-left text-gray-700 ">
-              <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
+          {/* Desktop view with sticky header */}
+          <div className="h-[400px] overflow-auto hidden lg:block border border-gray-300 rounded-md">
+            <table className="min-w-full text-sm text-left text-gray-700">
+              <thead className="sticky top-0 z-10 bg-gray-100 text-xs uppercase text-gray-600 border-b">
                 <tr>
                   {[
                     "S.No.",
@@ -139,13 +140,9 @@ const InventoryModal = ({ handleCloseItem, setItem }) => {
                   ].map((header) => (
                     <th
                       key={header}
-                      className="px-4 py-3 border-r cursor-pointer"
-                      //onClick={() => handleSort(header.toLowerCase())}
+                      className="px-4 py-3 border-r min-w-[120px] bg-gray-100"
                     >
                       {header}
-                      {/* {sortConfig.key === header.toLowerCase() && (
-                  <span>{sortConfig.direction === "asc" ? " 🔼" : " 🔽"}</span>
-                )} */}
                     </th>
                   ))}
                 </tr>
@@ -162,14 +159,14 @@ const InventoryModal = ({ handleCloseItem, setItem }) => {
                         post.itemQty === 0
                           ? "bg-red-500 text-black cursor-not-allowed"
                           : "hover:bg-amber-300 cursor-pointer"
-                      } `}
+                      }`}
                     >
                       <td className="px-4 py-3 border-r">{index + 1}.</td>
                       <td className="px-4 py-3 border-r">{post.itemName}</td>
                       <td className="px-4 py-3 border-r">{post.itemCode}</td>
                       <td className="px-4 py-3 border-r">{post.sellPrice}</td>
                       <td className="px-4 py-3 border-r">
-                        {post.itemQty}{" "}
+                        {post.itemQty}
                         {post?.selectedUnit !== "none" && (
                           <span className="ml-1 uppercase">
                             {post.selectedUnit}
@@ -181,7 +178,7 @@ const InventoryModal = ({ handleCloseItem, setItem }) => {
                 {filteredData && filteredData.length === 0 && (
                   <tr>
                     <td
-                      colSpan="9"
+                      colSpan="5"
                       className="text-center px-4 py-6 text-gray-500"
                     >
                       No data available.
@@ -191,20 +188,18 @@ const InventoryModal = ({ handleCloseItem, setItem }) => {
               </tbody>
             </table>
           </div>
-          <div className="overflow-auto h-[400px] hidden max-lg:block">
-            <table className="min-w-full text-xs text-left text-gray-700 ">
-              <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
+
+          {/* Mobile view with sticky header */}
+          <div className="h-[400px] overflow-auto lg:hidden border border-gray-300 rounded-md mt-4">
+            <table className="min-w-full text-xs text-left text-gray-700">
+              <thead className="sticky top-0 z-10 bg-gray-100 text-xs uppercase text-gray-600 border-b">
                 <tr>
                   {["Name", "Code", "Price", "Stock"].map((header) => (
                     <th
                       key={header}
-                      className="px-4 py-3 border-r cursor-pointer"
-                      //onClick={() => handleSort(header.toLowerCase())}
+                      className="px-4 py-3 border-r min-w-[120px] bg-gray-100"
                     >
                       {header}
-                      {/* {sortConfig.key === header.toLowerCase() && (
-                  <span>{sortConfig.direction === "asc" ? " 🔼" : " 🔽"}</span>
-                )} */}
                     </th>
                   ))}
                 </tr>
@@ -221,19 +216,13 @@ const InventoryModal = ({ handleCloseItem, setItem }) => {
                         post.itemQty === 0
                           ? "bg-red-500 text-black cursor-not-allowed"
                           : "hover:bg-amber-300 cursor-pointer"
-                      } `}
+                      }`}
                     >
-                      <td className="px-4 py-3 border-r w-[50%]">
-                        {post.itemName}
-                      </td>
-                      <td className="px-4 py-3 border-r w-[20%]">
-                        {post.itemCode}
-                      </td>
-                      <td className="px-4 py-3 border-r w-[10%]">
-                        {post.sellPrice}
-                      </td>
-                      <td className="px-4 py-3 border-r w-[20%]">
-                        {post.itemQty}{" "}
+                      <td className="px-4 py-3 border-r">{post.itemName}</td>
+                      <td className="px-4 py-3 border-r">{post.itemCode}</td>
+                      <td className="px-4 py-3 border-r">{post.sellPrice}</td>
+                      <td className="px-4 py-3 border-r">
+                        {post.itemQty}
                         {post?.selectedUnit !== "none" && (
                           <span className="ml-1 uppercase">
                             {post.selectedUnit}
@@ -245,7 +234,7 @@ const InventoryModal = ({ handleCloseItem, setItem }) => {
                 {filteredData && filteredData.length === 0 && (
                   <tr>
                     <td
-                      colSpan="9"
+                      colSpan="4"
                       className="text-center px-4 py-6 text-gray-500"
                     >
                       No data available.
