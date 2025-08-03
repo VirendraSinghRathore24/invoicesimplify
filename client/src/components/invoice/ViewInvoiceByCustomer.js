@@ -398,7 +398,16 @@ function ViewInvoiceByCustomer() {
                 {invoiceInfo?.taxInfo?.taxAmount && (
                   <div className="border-b-2 border-dashed py-1"></div>
                 )}
-
+                {invoiceInfo?.amountInfo?.discount && (
+                  <div className="w-full flex justify-end gap-x-10 mt-2 text-green-700">
+                    <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs  font-semibold rounded-md uppercase">
+                      Discount
+                    </div>
+                    <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-xs  font-semibold rounded-md">
+                      ₹ {invoiceInfo?.amountInfo?.discount}
+                    </div>
+                  </div>
+                )}
                 <div className="w-full flex justify-end gap-x-12">
                   <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs lg:text-sm font-bold rounded-md uppercase text-center">
                     Total{" "}
