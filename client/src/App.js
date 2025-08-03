@@ -38,6 +38,7 @@ import EmailScheduler from "./components/emailScheduler/EmailScheduler";
 import EditEmailScheduler from "./components/emailScheduler/EditEmailScheduler";
 import AddEmailScheduler from "./components/emailScheduler/AddEmailScheduler";
 import PricingPlans from "./components/PricingPlans";
+import EditInvoice from "./components/invoice/EditInvoice";
 
 function App() {
   const location = useLocation();
@@ -90,6 +91,7 @@ function App() {
           <Route path="/additionalinfo" element={<AdditionalInformation />} />
           {/* Invoice */}
           <Route path="/createinvoice" element={<AddInvoice />} />
+          <Route path="/editinvoice" element={<EditInvoice />} />
           <Route path="/viewinvoice" element={<ViewInvoice />} />
           <Route path="/invoice" element={<Invoice />} />
           <Route path="/dashboard" element={<Dashboard />} />

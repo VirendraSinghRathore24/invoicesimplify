@@ -193,6 +193,14 @@ const Dashboard = () => {
     });
   };
 
+  const handleEdit = (id) => {
+    navigate("/editinvoice", {
+      state: {
+        id: id,
+      },
+    });
+  };
+
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
 
@@ -708,6 +716,7 @@ const Dashboard = () => {
                       "Balance",
                       "Settle",
                       "View",
+                      "Edit",
                       "Delete",
                     ].map((header, i) => (
                       <th
@@ -775,31 +784,11 @@ const Dashboard = () => {
                               : ""}
                           </td>
                           <td className="px-4 py-3 border-r text-right whitespace-nowrap">
-                            {user.taxCalculatedInfo.taxType === "alltax"
-                              ? Math.round(
-                                  user.amountInfo.amount +
-                                    user.taxCalculatedInfo.cgst +
-                                    user.taxCalculatedInfo.sgst +
-                                    user.taxCalculatedInfo.igst +
-                                    user.taxCalculatedInfo.ugst
-                                )
-                              : Math.round(
-                                  user.amountInfo.amount +
-                                    user.taxCalculatedInfo.tax
-                                )}
+                            {user.taxCalculatedInfo.total}
                           </td>
                           <td className="px-4 py-3 border-r text-right whitespace-nowrap">
                             {user.amountInfo.paymentType === "fullyPaid"
-                              ? Math.round(
-                                  user.taxCalculatedInfo.taxType === "alltax"
-                                    ? user.amountInfo.amount +
-                                        user.taxCalculatedInfo.cgst +
-                                        user.taxCalculatedInfo.sgst +
-                                        user.taxCalculatedInfo.igst +
-                                        user.taxCalculatedInfo.ugst
-                                    : user.amountInfo.amount +
-                                        user.taxCalculatedInfo.tax
-                                )
+                              ? Math.round(user.taxCalculatedInfo.total)
                               : user.amountInfo.advance}
                           </td>
                           <td className="px-4 py-3 border-r text-right whitespace-nowrap">
@@ -830,6 +819,14 @@ const Dashboard = () => {
                               className="text-blue-600 hover:text-blue-800 font-semibold text-xs"
                             >
                               View
+                            </button>
+                          </td>
+                          <td className="px-4 py-3 border-r whitespace-nowrap">
+                            <button
+                              onClick={() => handleEdit(user.id)}
+                              className="text-blue-600 hover:text-blue-800 font-semibold text-xs"
+                            >
+                              Edit
                             </button>
                           </td>
                           <td className="px-4 py-3 whitespace-nowrap">

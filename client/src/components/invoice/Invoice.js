@@ -411,6 +411,7 @@ function Invoice() {
     contentRef: printRef,
     onAfterPrint: async () => {
       try {
+        setLoading(true);
         const alreadyPrintedOnce = await checkIfInvoiceAlreadyPrintedOnce1();
         if (alreadyPrintedOnce) {
           toast("Invoice printed successfully!", {
@@ -429,6 +430,8 @@ function Invoice() {
         toast("Failed to add invoice data to the database.", {
           position: "top-center",
         });
+      } finally {
+        setLoading(false);
       }
     },
   });
