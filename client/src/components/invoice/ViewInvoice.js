@@ -473,24 +473,22 @@ function ViewInvoice() {
                     invoiceInfo?.taxInfo?.taxAmount && (
                       <div className="border-b-2 border-dashed py-1"></div>
                     )}
+                  {invoiceInfo?.amountInfo?.discount && (
+                    <div className="w-full flex justify-end gap-x-10 mt-2 text-green-700">
+                      <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs  font-semibold rounded-md uppercase">
+                        Discount
+                      </div>
+                      <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-xs  font-semibold rounded-md">
+                        ₹ {invoiceInfo?.amountInfo?.discount}
+                      </div>
+                    </div>
+                  )}
                   <div className="w-full flex justify-end gap-x-12">
                     <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs lg:text-sm font-bold rounded-md uppercase text-center">
                       Total{" "}
                     </div>
                     <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-xs lg:text-sm font-bold rounded-md ">
-                      ₹{" "}
-                      {invoiceInfo?.taxCalculatedInfo?.taxType === "alltax"
-                        ? Math.round(
-                            invoiceInfo?.amountInfo?.amount +
-                              invoiceInfo?.taxCalculatedInfo?.sgst +
-                              invoiceInfo?.taxCalculatedInfo?.cgst +
-                              invoiceInfo?.taxCalculatedInfo?.igst +
-                              invoiceInfo?.taxCalculatedInfo?.ugst
-                          )
-                        : Math.round(
-                            invoiceInfo?.amountInfo?.amount +
-                              invoiceInfo?.taxCalculatedInfo?.tax
-                          )}
+                      ₹ {invoiceInfo?.taxCalculatedInfo?.total}
                     </div>
                   </div>
                   <div className="border-b-2 border-dashed py-1"></div>
@@ -505,31 +503,16 @@ function ViewInvoice() {
                     </div>
                   )}
                   <div className="border-b-2 border-dashed py-1"></div>
+
                   {invoiceInfo?.amountInfo?.paymentType === "advance" &&
                   invoiceInfo?.taxCalculatedInfo.balance > 0 ? (
                     <div className="w-full flex justify-end gap-x-10 mt-2 text-red-700">
                       <div className="w-11/12 flex justify-end mx-auto mt-1 px-2 text-xs lg:text-sm font-bold rounded-md uppercase">
                         Balance
                       </div>
+
                       <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-xs lg:text-sm font-bold rounded-md">
-                        ₹{" "}
-                        {Math.round(invoiceInfo?.taxCalculatedInfo.balance) ??
-                        invoiceInfo?.taxCalculatedInfo?.taxType === "alltax"
-                          ? Math.round(
-                              parseInt(
-                                invoiceInfo?.amountInfo.amount +
-                                  invoiceInfo?.taxCalculatedInfo?.cgst +
-                                  invoiceInfo?.taxCalculatedInfo?.sgst +
-                                  invoiceInfo?.taxCalculatedInfo?.igst +
-                                  invoiceInfo?.taxCalculatedInfo?.ugst
-                              ) - parseInt(invoiceInfo?.amountInfo?.advance)
-                            )
-                          : Math.round(
-                              parseInt(
-                                invoiceInfo?.amountInfo.amount +
-                                  invoiceInfo?.taxCalculatedInfo?.tax
-                              ) - parseInt(invoiceInfo?.amountInfo?.advance)
-                            )}
+                        ₹ {Math.round(invoiceInfo?.taxCalculatedInfo.balance)}
                       </div>
                     </div>
                   ) : (

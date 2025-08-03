@@ -43,6 +43,7 @@ const AddInvoice = () => {
 
   const [paymentType, setPaymentType] = useState("fullyPaid");
   const [advanceAmount, setAdvanceAmount] = useState("");
+  const [discountAmount, setDiscountAmount] = useState("");
 
   const [businessType, setBusinessType] = useState("Rajputi Poshak");
 
@@ -307,6 +308,7 @@ const AddInvoice = () => {
       amount: amount,
       paymentType: paymentType,
       advance: parseInt(advanceAmount),
+      discount: discountAmount,
     };
 
     if (paymentType === "fullyPaid") {
@@ -315,6 +317,7 @@ const AddInvoice = () => {
       invoiceInfo.settledDate = "";
     }
     localStorage.setItem("advanceAmount", advanceAmount);
+    localStorage.setItem("discountAmount", discountAmount);
     localStorage.setItem("paymentType", paymentType);
 
     localStorage.setItem("amountInfo", JSON.stringify(amountInfo));
@@ -330,9 +333,29 @@ const AddInvoice = () => {
     const balance =
       taxData?.taxType === "alltax"
         ? Math.round(
-            amount + cgst + sgst + igst + ugst - parseInt(advanceAmount)
+            amount +
+              cgst +
+              sgst +
+              igst +
+              ugst -
+              parseInt(advanceAmount) -
+              parseInt(discountAmount ?? 0)
           )
-        : Math.round(amount + tax - parseInt(advanceAmount));
+        : Math.round(
+            amount +
+              tax -
+              parseInt(advanceAmount) -
+              parseInt(discountAmount ?? 0)
+          );
+
+    const discountAmt = parseInt(discountAmount ?? 0);
+    const total =
+      (taxData?.taxType === "alltax"
+        ? Math.round(amount + cgst + sgst + igst + ugst)
+        : Math.round(amount + tax)) - discountAmt;
+
+    localStorage.setItem("total", total);
+
     const taxCalculatedInfo = {
       cgst: cgst,
       sgst: sgst,
@@ -340,15 +363,13 @@ const AddInvoice = () => {
       ugst: ugst,
       tax: tax,
       balance: balance,
+      total: total,
     };
 
-    const total =
-      taxData?.taxType === "alltax"
-        ? Math.round(amount + cgst + sgst + igst + ugst)
-        : Math.round(amount + tax);
-    localStorage.setItem("total", total);
-
-    if (paymentType === "advance" && parseInt(advanceAmount) > total) {
+    if (
+      paymentType === "advance" &&
+      parseInt(advanceAmount) > total - discountAmt
+    ) {
       alert("Advance amount can not be greater than total amount");
       document.querySelector('input[name="advanceAmount"]').focus();
       return;
@@ -568,6 +589,7 @@ const AddInvoice = () => {
     localStorage.removeItem("expecteddate");
     localStorage.removeItem("advance");
     localStorage.removeItem("paymentType");
+    localStorage.removeItem("discountAmount");
   };
 
   const getUserSettingsData = async (loggedInUser) => {
@@ -702,6 +724,10 @@ const AddInvoice = () => {
     const amt = advAmount === null ? "" : advAmount;
     setAdvanceAmount(amt);
 
+    const discAmount = localStorage.getItem("discountAmount");
+    const da = discAmount === null ? "" : discAmount;
+    setDiscountAmount(da);
+
     window.scroll(0, 0);
     setTimeout(function () {
       //your code to be executed after 1 second
@@ -779,7 +805,7 @@ const AddInvoice = () => {
               </>
             )}
             <div>
-              <div className="flex flex-col w-full gap-y-3 mx-auto lg:h-screen lg:overflow-y-auto  lg:h-[calc(100vh-100px)]">
+              <div className="flex flex-col w-full gap-y-3 mx-auto  lg:overflow-y-auto  lg:h-[calc(100vh-100px)]">
                 <div className="flex flex-col lg:flex-row justify-between gap-x-2 w-full mx-auto">
                   <div className="flex flex-col w-full lg:w-6/12 mx-auto justify-start items-left mt-16 lg:mt-4  border-[1.2px] p-2 lg:p-5 bg-white gap-y-2 lg:gap-y-4 rounded-md">
                     <div className="flex flex-col justify-start items-left gap-y-0 lg:gap-y-4 ">
@@ -1221,7 +1247,7 @@ const AddInvoice = () => {
                   </div>
                   <hr className="w-full mt-2"></hr>
 
-                  <div className="flex flex-col lg:flex-row justify-between w-full mx-auto">
+                  <div className="flex flex-col lg:flex-row justify-between w-full mx-auto gap-x-3">
                     <div className="w-full lg:w-3/12 mt-2">
                       <div className="w-full mx-auto p-2 lg:p-6 bg-white border-[1.4px] rounded-md">
                         <h2 className="text-lg font-semibold mb-4">
@@ -1278,6 +1304,29 @@ const AddInvoice = () => {
                             />
                           </div>
                         )}
+                      </div>
+                    </div>
+                    <div className="w-full lg:w-3/12 mt-2">
+                      <div className="w-full mx-auto p-2 lg:p-6 bg-white border-[1.4px] rounded-md">
+                        <h2 className="text-lg font-semibold mb-4">Discount</h2>
+
+                        <div className="mt-2 text-sm">
+                          <label className="block mb-1 font-medium">
+                            Amount (₹)
+                          </label>
+                          <input
+                            name="discountAmount"
+                            type="text"
+                            pattern="[0-9]*"
+                            value={discountAmount}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              if (/^\d*$/.test(val)) setDiscountAmount(val);
+                            }}
+                            className="w-8/12 border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            //placeholder="e.g. 500"
+                          />
+                        </div>
                       </div>
                     </div>
                     <div className="w-full lg:w-8/12 text-sm">
@@ -1406,6 +1455,7 @@ const AddInvoice = () => {
                       </div>
                     </div>
                   </div>
+
                   {/* <hr className="w-full my-4"></hr> */}
 
                   {/* <div className="w-full flex justify-end gap-x-10 mt-2">

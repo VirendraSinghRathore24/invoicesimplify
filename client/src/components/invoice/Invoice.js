@@ -355,6 +355,7 @@ function Invoice() {
     localStorage.removeItem("date");
     localStorage.removeItem("paymentType");
     localStorage.removeItem("advanceAmount");
+    localStorage.removeItem("discountAmount");
     localStorage.removeItem("selectedItem");
     localStorage.removeItem("selectedItemCode");
     localStorage.removeItem("selectedItemPrice");
@@ -866,6 +867,17 @@ function Invoice() {
                   {taxInfo?.taxType === "tax" && taxInfo?.taxAmount && (
                     <div className="border-b-2 border-dashed py-1"></div>
                   )}
+
+                  {amountInfo?.discount && (
+                    <div className="w-full flex justify-end gap-x-10 mt-2 text-green-700">
+                      <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs  font-semibold rounded-md uppercase">
+                        Discount
+                      </div>
+                      <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-xs  font-semibold rounded-md">
+                        ₹ {amountInfo?.discount}
+                      </div>
+                    </div>
+                  )}
                   <div className="w-full flex justify-end gap-x-10 mt-2">
                     <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs lg:text-sm font-bold rounded-md uppercase">
                       Total
@@ -892,15 +904,7 @@ function Invoice() {
                         Balance
                       </div>
                       <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-xs lg:text-sm  font-bold rounded-md">
-                        ₹{" "}
-                        {Math.round(taxCalculatedInfo.balance) ??
-                        taxCalculatedInfo?.taxType === "alltax"
-                          ? Math.round(
-                              parseInt(total) - parseInt(amountInfo?.advance)
-                            )
-                          : Math.round(
-                              parseInt(total) - parseInt(amountInfo?.advance)
-                            )}
+                        ₹ {taxCalculatedInfo.balance}
                       </div>
                     </div>
                   ) : (

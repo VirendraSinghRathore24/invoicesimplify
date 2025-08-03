@@ -404,12 +404,7 @@ function ViewInvoiceByCustomer() {
                     Total{" "}
                   </div>
                   <div className="w-3/12 flex justify-end mx-auto mt-1 px-2 text-xs lg:text-sm font-bold rounded-md ">
-                    ₹{" "}
-                    {Math.round(
-                      invoiceInfo?.amountInfo?.amount +
-                        invoiceInfo?.taxCalculatedInfo?.sgst +
-                        invoiceInfo?.taxCalculatedInfo?.cgst
-                    )}
+                    ₹ {invoiceInfo?.taxCalculatedInfo?.total}
                   </div>
                 </div>
                 <div className="border-b-2 border-dashed py-1"></div>
