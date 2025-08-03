@@ -375,6 +375,12 @@ const AddInvoice = () => {
       return;
     }
 
+    if (parseInt(discountAmount) > total + parseInt(discountAmount)) {
+      alert("Discount amount can not be greater than total amount");
+      document.querySelector('input[name="discountAmount"]').focus();
+      return;
+    }
+
     localStorage.setItem(
       "taxCalculatedInfo",
       JSON.stringify(taxCalculatedInfo)
