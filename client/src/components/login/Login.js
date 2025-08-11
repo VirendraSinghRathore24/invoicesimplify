@@ -169,7 +169,7 @@ const Login = () => {
             if (info === "undefined") {
               navigate("/creator/personalinfo");
             } else {
-              navigate("/creator/invoice");
+              navigate("/creator/createinvoice");
             }
             return;
           }
