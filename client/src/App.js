@@ -39,8 +39,25 @@ import EditEmailScheduler from "./components/emailScheduler/EditEmailScheduler";
 import AddEmailScheduler from "./components/emailScheduler/AddEmailScheduler";
 import PricingPlans from "./components/PricingPlans";
 import EditInvoice from "./components/invoice/EditInvoice";
+import AccountInfo from "./components/creator/AccountInfo";
+import CreatorAddInvoice from "./components/creator/CreatorAddInvoice";
+import CreatorInvoice from "./components/creator/CreatorInvoice";
+import { CONTENT_CREATOR } from "./components/Constant";
+import CreatorSidebar from "./components/creator/CreatorSidebar";
+import CreatorDashboard from "./components/creator/CreatorDashboard";
+import CreatorViewInvoice from "./components/creator/CreatorViewInvoice";
+import Brands from "./components/creator/Brands";
+import AddPersonalInfo from "./components/creator/AddPersonalInfo";
+import PersonalInfo from "./components/creator/PersonalInfo";
+import EditPersonalInfo from "./components/creator/EditPersonalInfo";
+import AddAccountInfo from "./components/creator/AddAccountInfo";
+import EditAccountInfo from "./components/creator/EditAccountInfo";
+import AddCreatorAddtionalInfo from "./components/creator/AddCreatorAddtionalInfo";
+import CreatorAdditionalInformation from "./components/creator/CreatorAdditionalInformation";
+import EditCreatorAddtionalInfo from "./components/creator/EditCreatorAddtionalInfo";
 
 function App() {
+  const type = localStorage.getItem("type");
   const location = useLocation();
   const showSidebar = ![
     "/",
@@ -63,7 +80,7 @@ function App() {
       {showSidebar && showSidebar1 && (
         <div>
           <div className="hidden lg:block">
-            <Sidebar />
+            {type === CONTENT_CREATOR ? <CreatorSidebar /> : <Sidebar />}
           </div>
         </div>
       )}
@@ -120,6 +137,43 @@ function App() {
           <Route path="/editemailscheduler" element={<EditEmailScheduler />} />
 
           <Route path="/plans" element={<PricingPlans />} />
+
+          {/* Creator Routes */}
+          <Route path="/creator/personalinfo" element={<PersonalInfo />} />
+          <Route
+            path="/creator/addpersonalinfo"
+            element={<AddPersonalInfo />}
+          />
+          <Route
+            path="/creator/editpersonalinfo"
+            element={<EditPersonalInfo />}
+          />
+          <Route path="/creator/accountinfo" element={<AccountInfo />} />
+          <Route path="/creator/addaccountinfo" element={<AddAccountInfo />} />
+          <Route
+            path="/creator/editaccountinfo"
+            element={<EditAccountInfo />}
+          />
+          <Route
+            path="/creator/creatoradditionalinfo"
+            element={<CreatorAdditionalInformation />}
+          />
+          <Route
+            path="/creator/addcreatoradditionalinfo"
+            element={<AddCreatorAddtionalInfo />}
+          />
+          <Route
+            path="/creator/editcreatoradditionalinfo"
+            element={<EditCreatorAddtionalInfo />}
+          />
+          <Route
+            path="/creator/createinvoice"
+            element={<CreatorAddInvoice />}
+          />
+          <Route path="/creator/invoice" element={<CreatorInvoice />} />
+          <Route path="/creator/viewinvoice" element={<CreatorViewInvoice />} />
+          <Route path="/creator/dashboard" element={<CreatorDashboard />} />
+          <Route path="/creator/brands" element={<Brands />} />
         </Routes>
 
         <ToastContainer />

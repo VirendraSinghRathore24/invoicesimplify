@@ -70,8 +70,8 @@ app.use(express.json());
 
 app.use(
   cors({
-    //origin: "http://localhost:3000",
-    origin: "https://invoicesimplify.com",
+    origin: "http://localhost:3000",
+    //origin: "https://invoicesimplify.com",
     credentials: true,
   })
 );
@@ -604,28 +604,51 @@ app.get("/download-pdf", async (req, res) => {
 
 const CLOUDINARY_PDF_URL =
   "https://res.cloudinary.com/dixqxdivr/image/upload/v1695621741/jalmahal3_sd6for.jpg";
-app.get("/generate-pdf", async (req, res) => {
+app.post("/generate-pdf", async (req, res) => {
+  const { html } = req.body;
+
+  if (!html) return res.status(400).send("No HTML content provided.");
+
   try {
-    // Upload media to WhatsApp
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: ["--no-sandbox"],
+    });
 
-    const response = await axios.post(
-      `https://graph.facebook.com/v19.0/${PHONE_NUMBER_ID}/media`,
-      {
-        messaging_product: "whatsapp",
-        type: "image", // use 'image', 'video', etc. if needed
-        url: CLOUDINARY_PDF_URL,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${WHATSAPP_TOKEN}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const page = await browser.newPage();
 
-    console.log("✅ Uploaded:", response.data);
-  } catch (error) {
-    console.error("❌ Upload error:", error.response?.data || error.message);
+    const fontLink = `<link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">`;
+    const html1 = `
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset="UTF-8" />
+      <title>Invoice</title>
+      ${fontLink}
+      <style>
+        body {
+          font-family: 'Inter', sans-serif;
+        }
+      </style>
+    </head>
+    <body>
+      ${html}
+    </body>
+  </html>
+`;
+
+    await page.setContent(html1, { waitUntil: "networkidle0" });
+
+    const pdfBuffer = await page.pdf({ format: "A4", printBackground: true });
+
+    await browser.close();
+
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", "attachment; filename=invoice.pdf");
+    res.send(pdfBuffer);
+  } catch (err) {
+    console.error("Error generating PDF:", err);
+    res.status(500).send("Failed to generate PDF");
   }
 });
 

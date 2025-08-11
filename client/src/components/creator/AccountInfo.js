@@ -5,9 +5,10 @@ import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import MobileMenu from "../MobileMenu";
 import Loader from "../Loader";
-import { BASIC_INFO, USERS } from "../Constant";
+import { BASIC_INFO, CREATORS } from "../Constant";
+import CreatorMobileMenu from "./CreatorMobileMenu";
 
-const BusinessInfo = () => {
+const AccountInfo = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const uid = localStorage.getItem("uid");
@@ -17,14 +18,17 @@ const BusinessInfo = () => {
   const handleDelete = async () => {
     const isDeleted = await deleteBusinessInfo();
     if (isDeleted) {
-      localStorage.removeItem("businessInfo");
+      localStorage.removeItem("creator_accountInfo");
       setPosts(null);
     }
   };
-  const basicInfo_CollectionRef = collection(doc(db, USERS, uid), BASIC_INFO);
+  const basicInfo_CollectionRef = collection(
+    doc(db, CREATORS, uid),
+    BASIC_INFO
+  );
   const deleteBusinessInfo = async () => {
     try {
-      var res = window.confirm("Are you sure to delete Business Info?");
+      var res = window.confirm("Are you sure to delete Account Info?");
       if (res) {
         setLoading(true);
         const data = await getDocs(basicInfo_CollectionRef);
@@ -33,9 +37,9 @@ const BusinessInfo = () => {
           id: doc.id,
         }));
 
-        const codeDoc = doc(db, USERS, uid, BASIC_INFO, basicInfo[0].id);
+        const codeDoc = doc(db, CREATORS, uid, BASIC_INFO, basicInfo[0].id);
         await updateDoc(codeDoc, {
-          businessInfo: null,
+          accountInfo: null,
         });
         setLoading(false);
         return true;
@@ -57,7 +61,7 @@ const BusinessInfo = () => {
 
   useEffect(() => {
     handleLogin();
-    const info = localStorage.getItem("businessInfo");
+    const info = localStorage.getItem("creator_accountInfo");
 
     if (info === "undefined" || info === "null") {
       setPosts(null);
@@ -74,13 +78,13 @@ const BusinessInfo = () => {
         <div className="hidden lg:block">
           <div className="top-0 mx-auto w-full h-[68px] text-white border-b-2">
             <div className="font-bold text-md py-4 px-2 rounded-md w-[82%]">
-              <div className="text-xl text-black">Business Information</div>
+              <div className="text-xl text-black">Account Information</div>
             </div>
           </div>
         </div>
 
         <div className="hidden max-lg:block mb-16">
-          <MobileMenu />
+          <CreatorMobileMenu />
         </div>
         <div className="p-2">
           <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4 hidden lg:block">
@@ -88,13 +92,13 @@ const BusinessInfo = () => {
               <table className="min-w-full text-sm text-left text-gray-700">
                 <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
                   <tr>
-                    <th className="px-4 py-3 border-r">Title</th>
-                    <th className="px-4 py-3 border-r">SubTitle1</th>
-                    <th className="px-4 py-3 border-r">SubTitle2</th>
-                    <th className="px-4 py-3 border-r">Address</th>
-                    <th className="px-4 py-3 border-r">Phone1</th>
-                    <th className="px-4 py-3 border-r">Phone2</th>
-                    <th className="px-4 py-3 border-r">Email</th>
+                    <th className="px-4 py-3 border-r">Name</th>
+                    <th className="px-4 py-3 border-r">Account #</th>
+                    <th className="px-4 py-3 border-r">Account Type</th>
+                    <th className="px-4 py-3 border-r">Bank</th>
+                    <th className="px-4 py-3 border-r">IFSC Code</th>
+                    <th className="px-4 py-3 border-r">Branch</th>
+                    <th className="px-4 py-3 border-r">PAN #</th>
                     <th className="px-4 py-3 border-r">Edit</th>
                     <th className="px-4 py-3">Delete</th>
                   </tr>
@@ -102,19 +106,17 @@ const BusinessInfo = () => {
                 <tbody>
                   <tr className="border-t bg-white">
                     <td className="px-4 py-3 border-r">{posts?.name}</td>
-                    <td className="px-4 py-3 border-r">{posts?.subTitle1}</td>
-                    <td className="px-4 py-3 border-r">{posts?.subTitle2}</td>
-                    <td className="px-4 py-3 border-r">{posts?.address}</td>
                     <td className="px-4 py-3 border-r">
-                      {posts?.phonePrimary}
+                      {posts?.accountNumber}
                     </td>
-                    <td className="px-4 py-3 border-r">
-                      {posts?.phoneSecondary}
-                    </td>
-                    <td className="px-4 py-3 border-r">{posts?.email}</td>
+                    <td className="px-4 py-3 border-r">{posts?.accountType}</td>
+                    <td className="px-4 py-3 border-r">{posts?.bankName}</td>
+                    <td className="px-4 py-3 border-r">{posts?.ifscCode}</td>
+                    <td className="px-4 py-3 border-r">{posts?.branch}</td>
+                    <td className="px-4 py-3 border-r">{posts?.pan}</td>
                     <td className="px-4 py-3 border-r">
                       <button
-                        onClick={() => navigate("/editbusinessinfo")}
+                        onClick={() => navigate("/creator/editaccountinfo")}
                         className="text-blue-600 hover:text-red-800 font-semibold text-sm"
                       >
                         Edit
@@ -135,10 +137,10 @@ const BusinessInfo = () => {
 
             {!posts && (
               <div className=" flex items-center justify-center  ">
-                <div onClick={() => navigate("/addbusinessinfo")}>
+                <div onClick={() => navigate("/creator/addaccountinfo")}>
                   <button className="border-2 bg-[#444] text-white fond-bold text-md py-4 px-8 rounded-md cursor-pointer">
                     {" "}
-                    + Add Business Info
+                    + Add Account Info
                   </button>
                 </div>
               </div>
@@ -149,22 +151,24 @@ const BusinessInfo = () => {
               <table className="min-w-full text-sm text-left text-gray-700">
                 <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
                   <tr>
-                    <th className="px-4 py-3 border-r">Title</th>
-                    <th className="px-4 py-3 border-r">Address</th>
-                    <th className="px-4 py-3 border-r">Phone1</th>
+                    <th className="px-4 py-3 border-r">Name</th>
+                    <th className="px-4 py-3 border-r">Account #</th>
+                    <th className="px-4 py-3 border-r">IFSC Code</th>
+                    <th className="px-4 py-3 border-r">PAN #</th>
                     <th className="px-4 py-3 border-r">Edit</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr className="border-t bg-white">
                     <td className="px-4 py-3 border-r">{posts?.name}</td>
-                    <td className="px-4 py-3 border-r">{posts?.address}</td>
                     <td className="px-4 py-3 border-r">
-                      {posts?.phonePrimary}
+                      {posts?.accountNumber}
                     </td>
+                    <td className="px-4 py-3 border-r">{posts?.ifscCode}</td>
+                    <td className="px-4 py-3 border-r">{posts?.pan}</td>
                     <td className="px-4 py-3 border-r">
                       <button
-                        onClick={() => navigate("/editbusinessinfo")}
+                        onClick={() => navigate("/creator/editaccountinfo")}
                         className="text-blue-600 hover:text-red-800 font-semibold text-sm"
                       >
                         Edit
@@ -193,4 +197,4 @@ const BusinessInfo = () => {
   );
 };
 
-export default BusinessInfo;
+export default AccountInfo;

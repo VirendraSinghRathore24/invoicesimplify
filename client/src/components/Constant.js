@@ -11,3 +11,7 @@ export const SERVICE_CENTER = "Service Center";
 export const FREE = "Free";
 export const STANDARD = "Standard";
 export const PRO = "Pro";
+
+export const CONTENT_CREATOR = "Content Creator";
+export const CREATORS = "Creators";
+export const PERSONAL_INFO = "Personal_Info";

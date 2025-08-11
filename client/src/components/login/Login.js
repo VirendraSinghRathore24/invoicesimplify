@@ -13,7 +13,15 @@ import {
 
 import Loader from "../Loader";
 import LoginFooter from "./LoginFooter";
-import { BASIC_INFO, INVENTORY_INFO, INVOICE_INFO, USERS } from "../Constant";
+import {
+  BASIC_INFO,
+  CONTENT_CREATOR,
+  CREATORS,
+  INVENTORY_INFO,
+  INVOICE_INFO,
+  PERSONAL_INFO,
+  USERS,
+} from "../Constant";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -107,6 +115,29 @@ const Login = () => {
     localStorage.setItem("dashboardInfo", JSON.stringify(invoiceInfo));
   };
 
+  const getPersonalInfo = async (loggedInUser, uid) => {
+    const personalInfo_CollectionRef = collection(
+      doc(db, CREATORS, uid),
+      BASIC_INFO
+    );
+    const data = await getDocs(personalInfo_CollectionRef);
+    const filteredData = data.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+    const pInfo = filteredData.filter(
+      (x) => x.loggedInUser === loggedInUser
+    )[0];
+    localStorage.setItem(
+      "creator_personalInfo",
+      JSON.stringify(pInfo.personalInfo)
+    );
+    localStorage.setItem(
+      "creator_accountInfo",
+      JSON.stringify(pInfo.accountInfo)
+    );
+  };
+
   const signInWithUsernameAndPassword = async (e) => {
     try {
       e.preventDefault();
@@ -127,6 +158,21 @@ const Login = () => {
           localStorage.setItem("userName", userName);
 
           await getBusinessType(code);
+
+          const type = localStorage.getItem("type");
+          if (type === CONTENT_CREATOR) {
+            // for content cretor
+            await getPersonalInfo(code, uid);
+
+            const info = localStorage.getItem("creator_personalInfo");
+
+            if (info === "undefined") {
+              navigate("/creator/personalinfo");
+            } else {
+              navigate("/creator/invoice");
+            }
+            return;
+          }
 
           // get all data and add to local storage
           await getAllData(code, uid);

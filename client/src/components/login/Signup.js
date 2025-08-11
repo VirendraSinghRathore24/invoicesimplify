@@ -15,7 +15,14 @@ import { addDoc, collection, doc, getDocs } from "firebase/firestore";
 
 import Loader from "../Loader";
 import LoginFooter from "./LoginFooter";
-import { BASIC_INFO, INVENTORY_INFO, LOGIN_INFO, USERS } from "../Constant";
+import {
+  BASIC_INFO,
+  CONTENT_CREATOR,
+  CREATORS,
+  INVENTORY_INFO,
+  LOGIN_INFO,
+  USERS,
+} from "../Constant";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -114,7 +121,12 @@ const Signup = () => {
           );
 
           setLoading(false);
-          navigate("/businessinfo");
+
+          if (type === CONTENT_CREATOR) {
+            navigate("/creator/personalinfo");
+          } else {
+            navigate("/businessinfo");
+          }
 
           // ...
         })
@@ -182,6 +194,20 @@ const Signup = () => {
       subscription: "Free",
       loginDate: new Date().toISOString().slice(0, 10),
     });
+
+    if (type === CONTENT_CREATOR) {
+      const basicInfo_CollectionRef = collection(
+        doc(db, CREATORS, uid),
+        BASIC_INFO
+      );
+      await addDoc(basicInfo_CollectionRef, {
+        personalInfo: null,
+        accountInfo: null,
+        additionalInfo: null,
+        loggedInUser: code,
+      });
+      return;
+    }
 
     const basicInfo_CollectionRef = collection(doc(db, USERS, uid), BASIC_INFO);
     // also create db for business, tax and additional info
@@ -311,6 +337,7 @@ const Signup = () => {
                   className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
                   <option value="notselected">Select your business type</option>
+                  <option value="Content Creator">Content Creator</option>
                   <option value="Rajputi Poshak">Rajputi Poshak</option>
                   <option value="Service Center">Service Center</option>
                   {/* <option value="digitalstudio">Digital Studio</option> */}

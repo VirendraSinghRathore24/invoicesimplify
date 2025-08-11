@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Menu, X, CircleCheckBig, ShieldCheck } from "lucide-react"; // optional: or use your own icons
 import { NavLink, useNavigate } from "react-router-dom";
 
-const MobileMenu = () => {
+const CreatorMobileMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
   const loggedInUser = localStorage.getItem("user");
   const subscription = localStorage.getItem("subscription");
@@ -21,13 +21,33 @@ const MobileMenu = () => {
   const menuItems = [
     "Create Invoice",
     "Dashboard",
-    "Inventory",
-    "Business Info",
-    "Tax Info",
+    "Brands",
+    "Personal Info",
+    "Account Info",
     "Additional Info",
     "Refresh",
-    "Email Scheduler",
   ];
+
+  const getPath = (input) => {
+    if (input === "Create Invoice") {
+      return "creator/createinvoice";
+    }
+    if (input === "Dashboard") {
+      return "creator/dashboard";
+    }
+    if (input === "Brands") {
+      return "creator/brands";
+    }
+    if (input === "Personal Info") {
+      return "creator/personalinfo";
+    }
+    if (input === "Account Info") {
+      return "creator/accountinfo";
+    }
+    if (input === "Additional Info") {
+      return "creator/addtionalinfo";
+    }
+  };
 
   const [remainingDays, setRemainingDays] = useState(null);
   const loginDate = localStorage.getItem("loginDate");
@@ -95,7 +115,7 @@ const MobileMenu = () => {
         <nav className="p-4 space-y-4">
           {menuItems.map((item, index) => (
             <NavLink
-              to={`/${item.toLowerCase().replace(/\s+/g, "")}`}
+              to={`/${getPath(item)}`}
               key={index}
               className="block text-gray-800 hover:text-blue-600 transition"
             >
@@ -142,4 +162,4 @@ const MobileMenu = () => {
   );
 };
 
-export default MobileMenu;
+export default CreatorMobileMenu;

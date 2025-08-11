@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Sidebar, Trash2 } from "lucide-react";
+import { Sidebar, Trash2, X, Search } from "lucide-react";
 import InventoryModal from "../inventory/InventoryModal";
 import { collection, doc, getDocs } from "firebase/firestore";
 import { db } from "../../config/firebase";
@@ -8,8 +8,11 @@ import AlertModal from "../confirmModal/AlertModal";
 import MobileMenu from "../MobileMenu";
 import { INVOICE_INFO, LOGIN_INFO, SERVICE_CENTER, USERS } from "../Constant";
 import Loader from "../Loader";
+import SignModal from "./SignModal";
+import BrandModal from "./BrandModal";
+import CreatorMobileMenu from "./CreatorMobileMenu";
 
-const AddInvoice = () => {
+const CreatorAddInvoice = () => {
   const [signature, setSignature] = useState(null);
   const [loading, setLoading] = useState(false);
   const [loading1, setLoading1] = useState(false);
@@ -37,6 +40,8 @@ const AddInvoice = () => {
   const [address1, setAddress1] = useState("");
   const [address2, setAddress2] = useState("");
   const [address3, setAddress3] = useState("");
+
+  const [inputs, setInputs] = useState({});
 
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
@@ -87,6 +92,11 @@ const AddInvoice = () => {
 
   const [loss, setLoss] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
+  const [openSign, setOpenSign] = useState(false);
+  const handleCloseSign = () => {
+    setOpenSign(false);
+  };
 
   // item details
   const [rows, setRows] = useState([]);
@@ -205,90 +215,51 @@ const AddInvoice = () => {
   const [taxInfo, setTaxInfo] = useState([]);
 
   const [showConfirm, setShowConfirm] = useState(false);
-  const [showConfirm1, setShowConfirm1] = useState(false);
-  const [showConfirm2, setShowConfirm2] = useState(false);
-  const [showConfirm3, setShowConfirm3] = useState(false);
 
   const handleCreateInvoice = async () => {
-    if (!customerName?.trim()) {
-      setShowConfirm(true);
-      return;
-    }
+    // if (!inputs?.customerName?.trim()) {
+    //   setShowConfirm(true);
+    //   return;
+    // }
 
-    if (!customerPhone?.trim()) {
-      setShowConfirm1(true);
-      return;
-    }
+    // if (!invoiceNumber) {
+    //   alert("Please add invoice number !!!");
+    //   return;
+    // }
 
-    if (customerPhone?.trim().length !== 10) {
-      setShowConfirm2(true);
-      return;
-    }
+    // if (!date) {
+    //   alert("Please add invoice date !!!");
+    //   return;
+    // }
 
-    if (!invoiceNumber) {
-      alert("Please add invoice number !!!");
-      return;
-    }
+    // let info1 = localStorage.getItem("creater_personalInfo");
+    // if (!info1 || info1 === null || info1 === undefined || info1 === "null") {
+    //   alert("Please add business name to create invoice !!!");
+    //   return;
+    // }
 
-    if (!date) {
-      alert("Please add invoice date !!!");
-      return;
-    }
+    // if (rows.length === 0) {
+    //   alert("Atleast one item should be added !!!");
+    //   return;
+    // }
+    // // validate each row before creating invoice
+    // for (let i = 0; i < rows.length; i++) {
+    //   const row = rows[i];
+    //   if (!row.desc.trim()) {
+    //     alert("Item description can not be empty !!!");
+    //     return;
+    //   }
+    //   if (!row.rate) {
+    //     alert("Price (Rate) can not be empty !!!");
+    //     return;
+    //   }
+    //   if (!row.qty) {
+    //     alert("Quantity can not be empty !!!");
+    //     return;
+    //   }
+    // }
 
-    let info1 = localStorage.getItem("businessInfo");
-    if (!info1 || info1 === null || info1 === undefined || info1 === "null") {
-      alert("Please add business name to create invoice !!!");
-      return;
-    }
-
-    if (
-      (paymentType === "advance" && advanceAmount === "") ||
-      parseInt(advanceAmount) < 0
-    ) {
-      alert("Please enter valid advance amount");
-      document.querySelector('input[name="advanceAmount"]').focus();
-      return;
-    }
-    if (rows.length === 0) {
-      alert("Atleast one item should be added !!!");
-      return;
-    }
-    // validate each row before creating invoice
-    for (let i = 0; i < rows.length; i++) {
-      const row = rows[i];
-      if (!row.desc.trim()) {
-        alert("Item description can not be empty !!!");
-        return;
-      }
-      if (!row.rate) {
-        alert("Price (Rate) can not be empty !!!");
-        return;
-      }
-      if (!row.qty) {
-        alert("Quantity can not be empty !!!");
-        return;
-      }
-    }
-
-    if (expectedDate && new Date(expectedDate) < new Date(date)) {
-      setShowConfirm3(true);
-      return;
-    }
-
-    const customerInfo = {
-      customerName: customerName,
-      customerPhone: customerPhone,
-    };
-
-    localStorage.setItem("customerInfo", JSON.stringify(customerInfo));
-
-    const vehicleInfo = {
-      vehicleNumber: vehicleNumber,
-      vehicleKM: vehicleKM,
-      vehicleType: vehicleType,
-    };
-
-    localStorage.setItem("vehicleInfo", JSON.stringify(vehicleInfo));
+    localStorage.setItem("creator_customerInfo", JSON.stringify(inputs));
 
     // verify unique invoice number
     const invoiceExists = await checkInvoiceNumberExists(invoiceNumber);
@@ -296,98 +267,21 @@ const AddInvoice = () => {
     const invoiceInfo = {
       invoiceNumber: invoiceNumber,
       date: date,
-      expectedDate: expectedDate,
-      settledDate: settledDate,
-    };
-    localStorage.setItem("invoiceInfo", JSON.stringify(invoiceInfo));
-    // const imageRef = ref(storage, `images/signature/${showTime}-${selectedFile.name}`);
-    // await uploadBytes(imageRef, selectedFile);
-
-    // const imageUrl1 = await getDownloadURL(imageRef);
-    const amountInfo = {
-      amount: amount,
-      paymentType: paymentType,
-      advance: parseInt(advanceAmount),
-      discount: discountAmount,
     };
 
-    if (paymentType === "fullyPaid") {
-      invoiceInfo.settledDate = settledDate;
-    } else {
-      invoiceInfo.settledDate = "";
-    }
-    localStorage.setItem("advanceAmount", advanceAmount);
-    localStorage.setItem("discountAmount", discountAmount);
-    localStorage.setItem("paymentType", paymentType);
-
-    localStorage.setItem("amountInfo", JSON.stringify(amountInfo));
-
-    let info2 = localStorage.getItem("taxInfo");
-    let taxData = JSON.parse(info2);
-
-    const cgst = Math.round((taxData?.cgstAmount ?? 0) * amount) / 100;
-    const sgst = Math.round((taxData?.sgstAmount ?? 0) * amount) / 100;
-    const igst = Math.round((taxData?.igstAmount ?? 0) * amount) / 100;
-    const ugst = Math.round((taxData?.ugstAmount ?? 0) * amount) / 100;
-    const tax = Math.round((taxData?.taxAmount ?? 0) * amount) / 100;
-    const balance =
-      taxData?.taxType === "alltax"
-        ? Math.round(
-            amount +
-              cgst +
-              sgst +
-              igst +
-              ugst -
-              parseInt(advanceAmount) -
-              parseInt(discountAmount ?? 0)
-          )
-        : Math.round(
-            amount +
-              tax -
-              parseInt(advanceAmount) -
-              parseInt(discountAmount ?? 0)
-          );
-
-    const discountAmt = parseInt(discountAmount ?? 0);
-    const total =
-      (taxData?.taxType === "alltax"
-        ? Math.round(amount + cgst + sgst + igst + ugst)
-        : Math.round(amount + tax)) - discountAmt;
-
-    localStorage.setItem("total", total);
-
-    const taxCalculatedInfo = {
-      cgst: cgst,
-      sgst: sgst,
-      igst: igst,
-      ugst: ugst,
-      tax: tax,
-      balance: balance,
-      total: total,
+    const signedInfo = {
+      signature: signature,
+      signedDate: signedDate,
     };
 
-    if (
-      paymentType === "advance" &&
-      parseInt(advanceAmount) > total - discountAmt
-    ) {
-      alert("Advance amount can not be greater than total amount");
-      document.querySelector('input[name="advanceAmount"]').focus();
-      return;
-    }
+    localStorage.setItem("creator_signedInfo", JSON.stringify(signedInfo));
+    localStorage.setItem("creator_invoiceInfo", JSON.stringify(invoiceInfo));
 
-    if (parseInt(discountAmount) > total + parseInt(discountAmount)) {
-      alert("Discount amount can not be greater than total amount");
-      document.querySelector('input[name="discountAmount"]').focus();
-      return;
-    }
+    localStorage.setItem("creator_amountInfo", amount);
 
-    localStorage.setItem(
-      "taxCalculatedInfo",
-      JSON.stringify(taxCalculatedInfo)
-    );
-    localStorage.setItem("rows", JSON.stringify(rows));
+    localStorage.setItem("customer_rows", JSON.stringify(rows));
 
-    navigate("/invoice");
+    navigate("/creator/invoice");
   };
 
   const login_CollectionRef = collection(db, LOGIN_INFO);
@@ -418,16 +312,17 @@ const AddInvoice = () => {
   };
 
   const getInvoiceNumber = async () => {
-    // const data = await getDocs(login_CollectionRef);
-    // const filteredData = data.docs.map((doc) => ({
-    //   ...doc.data(),
-    //   id: doc.id,
-    // }));
+    const data = await getDocs(login_CollectionRef);
+    const filteredData = data.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
 
-    // const loggedInUser = localStorage.getItem("user");
-    // const loginInfo = filteredData.filter((x) => x.code === loggedInUser)[0];
+    const loggedInUser = localStorage.getItem("user");
+    const loginInfo = filteredData.filter((x) => x.code === loggedInUser)[0];
 
-    const invNumber = localStorage.getItem("invoiceNumber");
+    // const invNumber = localStorage.getItem("invoiceNumber");
+    const invNumber = loginInfo.invoiceNumber;
     const nextInvoiceNumber = parseInt(invNumber);
 
     const usedInvoiceNumbers = localStorage.getItem("usedInvoiceNumbers");
@@ -524,17 +419,38 @@ const AddInvoice = () => {
 
   const [showModal, setShowModal] = React.useState(false);
 
+  const UpdateValues = (key, value) => {
+    if (value === undefined || value === null || value === "undefined") return;
+    setInputs((values) => ({
+      ...values,
+      [key]: value ?? "",
+    }));
+  };
+
   const getLocalStoragePersonalInfo = () => {
-    setCustomerName(localStorage.getItem("custname"));
-    setEmail(localStorage.getItem("email"));
-    setAddress1(localStorage.getItem("address1"));
-    setAddress2(localStorage.getItem("address2"));
-    setAddress3(localStorage.getItem("address3"));
-    setCustomerPhone(localStorage.getItem("custphone"));
-    setAdvance(localStorage.getItem("advance"));
-    setVehicleNumber(localStorage.getItem("vehicleNumber"));
-    setVehicleKM(localStorage.getItem("vehicleKM"));
-    setVehicleType(localStorage.getItem("vehicleType"));
+    const customerName = localStorage.getItem("creator_customername");
+    const customerEmail = localStorage.getItem("creator_customeremail");
+    const address = localStorage.getItem("customer_address");
+    const address1 = localStorage.getItem("customer_address1");
+    const address2 = localStorage.getItem("customer_address2");
+    const address3 = localStorage.getItem("customer_address3");
+    const phone = localStorage.getItem("customer_customerphone");
+    const gst = localStorage.getItem("customer_gst");
+    const pan = localStorage.getItem("customer_pan");
+    const tin = localStorage.getItem("customer_tin");
+    const cin = localStorage.getItem("customer_cin");
+
+    UpdateValues("customerName", customerName);
+    UpdateValues("customerEmail", customerEmail);
+    UpdateValues("address", address);
+    UpdateValues("address1", address1);
+    UpdateValues("address2", address2);
+    UpdateValues("address3", address3);
+    UpdateValues("customerPhone", phone);
+    UpdateValues("gst", gst);
+    UpdateValues("pan", pan);
+    UpdateValues("tin", tin);
+    UpdateValues("cin", cin);
   };
 
   const getLocalStorageInvoiceInfo = async () => {
@@ -549,11 +465,6 @@ const AddInvoice = () => {
     const dat = localStorage.getItem("date");
     if (dat) {
       setDate(localStorage.getItem("date"));
-    }
-
-    const expecteddat = localStorage.getItem("expecteddate");
-    if (expecteddat) {
-      setExpectedDate(localStorage.getItem("expecteddate"));
     }
   };
 
@@ -609,6 +520,11 @@ const AddInvoice = () => {
     }
   };
 
+  const [openBrandModal, setOpenBrandModal] = useState(false);
+  const handleCloseBrandModal = async () => {
+    setOpenBrandModal(false);
+  };
+
   useEffect(() => {
     getLocalStoragePersonalInfo();
     getLocalStorageInvoiceInfo();
@@ -616,22 +532,17 @@ const AddInvoice = () => {
 
     getLocalStorageSignInfo();
     getLocalStorageUpiInfo();
-  }, [name]);
+  }, []);
 
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [openItem, setOpenItem] = useState(false);
-  const handleSearch = (index) => {
-    setSelectedIndex(index);
-    setOpenItem(true);
+  const handleSearch = () => {
+    handleCloseItemForEmptyRow();
   };
 
   const handleCloseItemForEmptyRow = () => {
     const item = {
-      desc: localStorage.getItem("selectedItem"),
-      code: localStorage.getItem("selectedItemCode"),
-      buyPrice: localStorage.getItem("selectedItemBuyPrice"),
-      totalQty: localStorage.getItem("selectedItemQty"),
-      selectedUnit: localStorage.getItem("selectedItemUnit"),
+      desc: "",
       rate: "",
       qty: 1,
       amount: "",
@@ -639,64 +550,16 @@ const AddInvoice = () => {
 
     setRows((prevRows) => {
       const updatedRows = [...prevRows, item];
-      localStorage.setItem("rows", JSON.stringify(updatedRows));
+      localStorage.setItem("customer_rows", JSON.stringify(updatedRows));
       setAmount((prevAmount) => prevAmount + item.amount);
       return updatedRows;
     });
-
-    setOpenItem(false);
   };
 
-  const handleCloseItem = () => {
-    const itemCode = localStorage.getItem("selectedItemCode");
-    if (itemCode === "emptyrow") {
-      handleCloseItemForEmptyRow();
-      return;
-    }
-    const selectedItem = localStorage.getItem("selectedItem");
-    if (
-      !selectedItem ||
-      selectedItem === "undefined" ||
-      selectedItem === "null"
-    ) {
-      setOpenItem(false);
-      return;
-    }
-
-    const price = parseFloat(localStorage.getItem("selectedItemPrice"));
-    const item = {
-      desc: localStorage.getItem("selectedItem"),
-      code: localStorage.getItem("selectedItemCode"),
-      buyPrice: localStorage.getItem("selectedItemBuyPrice"),
-      totalQty: localStorage.getItem("selectedItemQty"),
-      selectedUnit: localStorage.getItem("selectedItemUnit"),
-      rate: price,
-      qty: 1,
-      amount: 1 * price,
-    };
-
-    if (parseInt(item.totalQty) === 0) {
-      alert("Item is out of stock. Please check the inventory.");
-      return;
-    }
-
-    setRows((prevRows) => {
-      if (
-        prevRows.some((row) => row.code === item.code && row.desc === item.desc)
-      ) {
-        alert(
-          "Item already exists in the invoice. Please edit the existing item."
-        );
-        return prevRows;
-      }
-
-      const updatedRows = [...prevRows, item];
-      localStorage.setItem("rows", JSON.stringify(updatedRows));
-      setAmount((prevAmount) => prevAmount + item.amount);
-      return updatedRows;
-    });
-
-    setOpenItem(false);
+  const handleChange = (event) => {
+    const name = event.target.name;
+    const value = event.target.value;
+    setInputs((values) => ({ ...values, [name]: value }));
   };
 
   useEffect(() => {
@@ -768,25 +631,16 @@ const AddInvoice = () => {
       navigate("/login");
     }
   };
-  const submitBtnRef = useRef(null);
   useEffect(() => {
     handleLogin();
     window.scroll(0, 0);
-    const handleKeyDown = (e) => {
-      if (e.key === "F9") {
-        submitBtnRef.current?.click(); // Simulate button click
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   return (
-    <div className="flex justify-evenly w-full h-full  ">
+    <div className="flex justify-evenly w-full h-full">
       <div className="w-full lg:w-[82%] ml-0 lg:ml-[17%] lg:border-2 my-3 rounded-lg lg:border-gray-300 lg:bg-white lg:shadow-lg top-0 lg:fixed">
         <div className="hidden max-lg:block mb-16">
-          <MobileMenu />
+          <CreatorMobileMenu />
         </div>
         <div>
           <div className="top-14 lg:top-0 mx-auto w-full h-[56px] lg:h-[68px] text-white fixed lg:sticky border-b-2">
@@ -802,7 +656,6 @@ const AddInvoice = () => {
                   Reset
                 </button>
                 <button
-                  ref={submitBtnRef}
                   onClick={handleCreateInvoice}
                   className="bg-amber-600 top-14 border-[1.4px] border-gray-400 text-white py-2 px-6 font-semibold rounded-md text-richblack-700 hover:scale-110 transition duration-300 ease-in cursor-pointer "
                 >
@@ -813,21 +666,21 @@ const AddInvoice = () => {
           </div>
 
           <div className="px-3">
-            {loading && (
-              <>
-                <div className="h-2 w-2 bg-[#d6f539] rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-                <div className="h-2 w-2 bg-[#d6f539] rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-                <div className="h-2 w-2 bg-[#d6f539] rounded-full animate-bounce"></div>
-              </>
-            )}
             <div>
               <div className="flex flex-col w-full gap-y-3 mx-auto  lg:overflow-y-auto  lg:h-[calc(100vh-100px)]">
                 <div className="flex flex-col lg:flex-row justify-between gap-x-2 w-full mx-auto">
                   <div className="flex flex-col w-full lg:w-6/12 mx-auto justify-start items-left mt-16 lg:mt-4  border-[1.2px] p-2 lg:p-5 bg-white gap-y-2 lg:gap-y-4 rounded-md">
                     <div className="flex flex-col justify-start items-left gap-y-0 lg:gap-y-4 ">
-                      <div className="flex ">
+                      <div className="flex justify-between">
                         <div className="text-md lg:text-lg text-gray-600 font-medium">
-                          Customer
+                          Brand Information
+                        </div>
+                        <div
+                          onClick={() => setOpenBrandModal(true)}
+                          className="border-[1.4px] border-black rounded-md px-4 py-1 bg-[#146eb4] text-white flex gap-x-2"
+                        >
+                          <Search size={21} className="mt-1" />
+                          <button>Brands</button>
                         </div>
                       </div>
 
@@ -839,18 +692,103 @@ const AddInvoice = () => {
                           <input
                             className="form-input w-full lg:w-8/12 block font-semibold text-[13px] rounded border border-gray-400 p-2 leading-5 "
                             required
-                            name="custname"
-                            placeholder="Enter Customer Name"
-                            value={customerName}
+                            name="customerName"
+                            placeholder="Enter Brand/Agency Name"
+                            value={inputs?.customerName}
                             onChange={(e) => {
-                              localStorage.setItem("custname", e.target.value);
-                              setCustomerName(e.target.value);
+                              localStorage.setItem(
+                                "creator_customername",
+                                e.target.value
+                              );
+                              handleChange(e);
                             }}
                           />
                         </div>
                       </div>
                     </div>
-
+                    <div className="flex flex-col justify-start items-left">
+                      <div className="text-[13px] font-bold leading-5 mt-2">
+                        Email
+                      </div>
+                      <div>
+                        <input
+                          className="form-input w-full lg:w-8/12 block font-semibold text-[13px] rounded border border-gray-400 p-2 leading-5 "
+                          required
+                          name="customerEmail"
+                          placeholder="Enter Brand Email"
+                          value={inputs?.customerEmail}
+                          onChange={(e) => {
+                            localStorage.setItem(
+                              "creator_customeremail",
+                              e.target.value
+                            );
+                            handleChange(e);
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <div className="flex flex-col text-sm">
+                      <div className="font-medium leading-5 text-gray-700 mb-1">
+                        Address
+                      </div>
+                      <div className="flex flex-col gap-y-3">
+                        <input
+                          className="w-full dark:bg-gray-700 border border-gray-400 border-[1.4px] dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                          name="address"
+                          placeholder="Enter Brand address"
+                          value={inputs?.address || ""}
+                          onChange={(e) => {
+                            localStorage.setItem(
+                              "customer_address",
+                              e.target.value
+                            );
+                            handleChange(e);
+                          }}
+                        />
+                        <input
+                          className="w-full dark:bg-gray-700 border border-gray-400 border-[1.4px] dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                          name="address1"
+                          placeholder="Enter address"
+                          value={inputs?.address1 || ""}
+                          onChange={(e) => {
+                            localStorage.setItem(
+                              "customer_address1",
+                              e.target.value
+                            );
+                            handleChange(e);
+                          }}
+                        />
+                        <div className="flex gap-x-3 justify-between">
+                          <input
+                            className="w-8/12 dark:bg-gray-700 border border-gray-400 border-[1.4px] dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            name="address2"
+                            placeholder="City, State"
+                            value={inputs?.address2 || ""}
+                            onChange={(e) => {
+                              localStorage.setItem(
+                                "customer_address2",
+                                e.target.value
+                              );
+                              handleChange(e);
+                            }}
+                          />
+                          <input
+                            className="w-3/12 dark:bg-gray-700 border border-gray-400 border-[1.4px] dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            name="address3"
+                            placeholder="Zip Code"
+                            maxLength={6}
+                            value={inputs?.address3 || ""}
+                            onChange={(e) => {
+                              localStorage.setItem(
+                                "customer_address3",
+                                e.target.value
+                              );
+                              handleChange(e);
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </div>
                     <div className="flex flex-col ">
                       <div className="text-[13px] font-bold leading-5 mt-2">
                         Mobile
@@ -862,9 +800,15 @@ const AddInvoice = () => {
                         <input
                           className="p-[5px] pl-[10px] border border-[#ccc] rounded-r w-[120px] text-[13px] text-left"
                           type="text"
-                          name="custphone"
-                          value={customerPhone}
-                          onChange={handleCustomerPhoneChange}
+                          name="customerPhone"
+                          value={inputs?.customerPhone}
+                          onChange={(e) => {
+                            localStorage.setItem(
+                              "customer_customerphone",
+                              e.target.value
+                            );
+                            handleChange(e);
+                          }}
                           minLength={10}
                           maxLength={10}
                           placeholder="Mobile number..."
@@ -873,104 +817,113 @@ const AddInvoice = () => {
                     </div>
                   </div>
 
-                  <div className="w-full lg:w-6/12 mx-auto flex flex-col mt-4  border-[1.2px] p-2 lg:p-4 bg-white gap-y-2 lg:gap-y-4 rounded-md">
-                    <div className="flex hidden lg:block">
-                      <div className="text-xl text-gray-600 font-medium">
-                        Invoice
-                      </div>
-                    </div>
-                    <div className="flex justify-between w-full mx-auto">
-                      <div className="flex flex-col">
-                        <div className="text-xs font-medium leading-5 mt-2">
-                          Invoice #
+                  <div className="flex flex-col w-full lg:w-6/12 mx-auto justify-start items-left mt-16 lg:mt-4  border-[1.2px] p-2 lg:p-5 bg-white gap-y-2 lg:gap-y-4 rounded-md">
+                    <div className="flex flex-col justify-start items-left gap-y-0 lg:gap-y-4 ">
+                      <div className="flex flex-col justify-start items-left">
+                        <div className="text-[13px] font-bold leading-5 mt-2">
+                          GST #
                         </div>
                         <div>
                           <input
-                            className="w-6/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5"
+                            className="form-input w-full lg:w-6/12 block font-semibold text-[13px] rounded border border-gray-400 p-2 leading-5 "
                             required
-                            name="invoiceNumber"
-                            placeholder="10"
-                            value={invoiceNumber}
+                            name="gst"
+                            placeholder="Enter GST Number"
+                            value={inputs?.gst}
                             onChange={(e) => {
-                              setInvoiceNumber(e.target.value);
                               localStorage.setItem(
-                                "invoiceNumber",
+                                "customer_gst",
                                 e.target.value
                               );
-                            }}
-                          />
-                        </div>
-                      </div>
-                      <div className="flex flex-col">
-                        <div className="text-xs font-medium leading-5 mt-2">
-                          Date
-                        </div>
-                        <div>
-                          <input
-                            className="w-12/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5 "
-                            required
-                            name="date"
-                            placeholder="Date"
-                            type="date"
-                            value={date}
-                            onChange={(e) => {
-                              setDate(e.target.value);
-                              localStorage.setItem("date", e.target.value);
+                              handleChange(e);
                             }}
                           />
                         </div>
                       </div>
                     </div>
-                    {
-                      <div className="flex flex-col">
-                        <div className="flex flex-col">
-                          <div className="text-xs font-medium leading-5 mt-2">
-                            Expected Delivery
-                          </div>
-                          <div>
-                            <input
-                              className="w-12/12 lg:w-5/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5 "
-                              required
-                              name="expecteddate"
-                              placeholder="Date"
-                              type="date"
-                              value={expectedDate}
-                              onChange={(e) => {
-                                setExpectedDate(e.target.value);
-                                localStorage.setItem(
-                                  "expecteddate",
-                                  e.target.value
-                                );
-                              }}
-                            />
-                          </div>
-                        </div>
+                    <div className="flex flex-col justify-start items-left">
+                      <div className="text-[13px] font-bold leading-5 mt-2">
+                        PAN #
                       </div>
-                    }
-                  </div>
-                  {type === SERVICE_CENTER && (
-                    <div className="w-full lg:w-6/12 mx-auto flex flex-col mt-4  border-[1.2px] p-2 lg:p-4 bg-white gap-y-2 lg:gap-y-4 rounded-md">
+                      <div>
+                        <input
+                          className="form-input w-full lg:w-6/12 block font-semibold text-[13px] rounded border border-gray-400 p-2 leading-5 "
+                          required
+                          name="pan"
+                          placeholder="Enter PAN Number"
+                          value={inputs?.pan}
+                          onChange={(e) => {
+                            localStorage.setItem(
+                              "customer_pan",
+                              e.target.value
+                            );
+                            handleChange(e);
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <div className="flex flex-col text-sm">
+                      <div className="font-medium leading-5 text-gray-700 mb-1">
+                        TIN #
+                      </div>
+                      <div className="flex flex-col gap-y-3">
+                        <input
+                          className="w-full lg:w-6/12 dark:bg-gray-700 border border-gray-400 border-[1.4px] dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                          name="tin"
+                          placeholder="Enter TIN Number"
+                          value={inputs?.tin || ""}
+                          onChange={(e) => {
+                            localStorage.setItem(
+                              "customer_tin",
+                              e.target.value
+                            );
+                            handleChange(e);
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <div className="flex flex-col text-sm">
+                      <div className="font-medium leading-5 text-gray-700 mb-1">
+                        CIN #
+                      </div>
+                      <div className="flex flex-col gap-y-3">
+                        <input
+                          className="w-full lg:w-6/12 dark:bg-gray-700 border border-gray-400 border-[1.4px] dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                          name="cin"
+                          placeholder="Enter CIN Number"
+                          value={inputs?.cin || ""}
+                          onChange={(e) => {
+                            localStorage.setItem(
+                              "customer_cin",
+                              e.target.value
+                            );
+                            handleChange(e);
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <div className="w-full mx-auto flex flex-col mt-4  border-[1.2px] p-2 lg:p-4 bg-white gap-y-2 lg:gap-y-4 rounded-md">
                       <div className="flex hidden lg:block">
                         <div className="text-xl text-gray-600 font-medium">
-                          Vehicle
+                          Invoice
                         </div>
                       </div>
                       <div className="flex justify-between w-full mx-auto">
                         <div className="flex flex-col">
                           <div className="text-xs font-medium leading-5 mt-2">
-                            Vehicle #
+                            Invoice #
                           </div>
                           <div>
                             <input
-                              className="w-9/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5 uppercase"
+                              className="w-6/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5"
                               required
-                              name="vehicleNumber"
-                              placeholder="RJ14KA1234"
-                              value={vehicleNumber}
+                              name="invoiceNumber"
+                              placeholder="10"
+                              value={invoiceNumber}
                               onChange={(e) => {
-                                setVehicleNumber(e.target.value);
+                                setInvoiceNumber(e.target.value);
                                 localStorage.setItem(
-                                  "vehicleNumber",
+                                  "customer_invoiceNumber",
                                   e.target.value
                                 );
                               }}
@@ -979,20 +932,20 @@ const AddInvoice = () => {
                         </div>
                         <div className="flex flex-col">
                           <div className="text-xs font-medium leading-5 mt-2">
-                            K.M.
+                            Date
                           </div>
                           <div>
                             <input
-                              className="w-10/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5 "
+                              className="w-12/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5 "
                               required
-                              name="number"
-                              placeholder="kilometer"
-                              type="number"
-                              value={vehicleKM}
+                              name="date"
+                              placeholder="Date"
+                              type="date"
+                              value={date}
                               onChange={(e) => {
-                                setVehicleKM(e.target.value);
+                                setDate(e.target.value);
                                 localStorage.setItem(
-                                  "vehicleKM",
+                                  "customer_date",
                                   e.target.value
                                 );
                               }}
@@ -1000,34 +953,8 @@ const AddInvoice = () => {
                           </div>
                         </div>
                       </div>
-                      {
-                        <div className="flex flex-col">
-                          <div className="flex flex-col">
-                            <div className="text-xs font-medium leading-5 mt-2">
-                              Vehicle Type
-                            </div>
-                            <div>
-                              <input
-                                className="w-12/12 lg:w-3/12 block uppercase text-xs rounded border border-gray-400 py-2 px-4 leading-5 "
-                                required
-                                name="vehicleType"
-                                placeholder="Alto"
-                                type="text"
-                                value={vehicleType}
-                                onChange={(e) => {
-                                  setVehicleType(e.target.value);
-                                  localStorage.setItem(
-                                    "vehicleType",
-                                    e.target.value
-                                  );
-                                }}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      }
                     </div>
-                  )}
+                  </div>
                 </div>
 
                 <div className="w-full mx-auto  border-[1.2px] p-2 lg:p-4 bg-white gap-y-4 rounded-md">
@@ -1058,7 +985,7 @@ const AddInvoice = () => {
                                   <div className="relative w-full max-w-md">
                                     <input
                                       type="text"
-                                      placeholder="Item Description"
+                                      placeholder="Description"
                                       className="w-full py-2 pr-10 pl-4 border border-gray-300 rounded-md "
                                       name="desc"
                                       required
@@ -1120,12 +1047,6 @@ const AddInvoice = () => {
                                         )
                                       }
                                     />
-                                    {row.selectedUnit !== "none" &&
-                                      row.code !== "emptyrow" && (
-                                        <div className="absolute right-0 top-1/2 transform -translate-y-1/2 text-white p-2 rounded-r bg-gray-600 uppercase">
-                                          {row.selectedUnit}
-                                        </div>
-                                      )}
                                   </div>
                                 </td>
                                 <td className="w-[20%] text-center">
@@ -1263,215 +1184,47 @@ const AddInvoice = () => {
                   </div>
                   <hr className="w-full mt-2"></hr>
 
-                  <div className="flex flex-col lg:flex-row justify-between w-full mx-auto gap-x-3">
-                    <div className="w-full lg:w-3/12 mt-2">
-                      <div className="w-full mx-auto p-2 lg:p-6 bg-white border-[1.4px] rounded-md">
-                        <h2 className="text-lg font-semibold mb-4">
-                          Payment Type
-                        </h2>
-
-                        {/* Radio Options */}
-                        <div className="flex flex-col gap-6 mb-4 text-sm">
-                          <label className="flex items-center gap-2">
-                            <input
-                              type="radio"
-                              name="payment"
-                              value="fullyPaid"
-                              checked={paymentType === "fullyPaid"}
-                              onChange={() => {
-                                setPaymentType("fullyPaid");
-                                setAdvanceAmount("");
-                              }}
-                              className="accent-indigo-600"
-                            />
-                            Fully Paid
-                          </label>
-
-                          <label className="flex items-center gap-2">
-                            <input
-                              type="radio"
-                              name="payment"
-                              value="advance"
-                              checked={paymentType === "advance"}
-                              onChange={() => setPaymentType("advance")}
-                              className="accent-indigo-600"
-                            />
-                            Advance
-                          </label>
-                        </div>
-
-                        {/* Input field for Advance */}
-                        {paymentType === "advance" && (
-                          <div className="mt-2 text-sm">
-                            <label className="block mb-1 font-medium">
-                              Enter Advance Amount (₹)
-                            </label>
-                            <input
-                              name="advanceAmount"
-                              type="text"
-                              pattern="[0-9]*"
-                              value={advanceAmount}
-                              onChange={(e) => {
-                                const val = e.target.value;
-                                if (/^\d*$/.test(val)) setAdvanceAmount(val);
-                              }}
-                              className="w-8/12 border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 "
-                              //placeholder="e.g. 500"
-                            />
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                    <div className="w-full lg:w-3/12 mt-2">
-                      <div className="w-full mx-auto p-2 lg:p-6 bg-white border-[1.4px] rounded-md">
-                        <h2 className="text-lg font-semibold mb-4">Discount</h2>
-
-                        <div className="mt-2 text-sm">
-                          <label className="block mb-1 font-medium">
-                            Amount (₹)
-                          </label>
-                          <input
-                            name="discountAmount"
-                            type="text"
-                            pattern="[0-9]*"
-                            value={discountAmount}
-                            onChange={(e) => {
-                              const val = e.target.value;
-                              if (/^\d*$/.test(val)) setDiscountAmount(val);
-                            }}
-                            className="w-8/12 border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                            //placeholder="e.g. 500"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="w-full lg:w-8/12 text-sm">
-                      <div className="w-full flex justify-end gap-x-10 mt-2">
-                        <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs lg:text-sm font-bold rounded-md uppercase">
-                          SubTotal
-                        </div>
-                        <div
-                          className="w-3/12 mx-auto flex justify-end mt-1 px-2 text-xs lg:text-sm font-bold rounded-md"
-                          name="amount"
-                        >
-                          ₹ {amount}
-                        </div>
-                      </div>
-
-                      {taxInfo?.taxType === "alltax" && taxInfo?.cgstAmount && (
-                        <div className="w-full flex justify-end gap-x-10 mt-2">
-                          <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs lg:text-sm font-bold rounded-md uppercase">
-                            CGST ({taxInfo?.cgstAmount}%)
-                          </div>
-                          <div
-                            className="w-3/12 mx-auto flex justify-end mt-1 px-2 text-xs lg:text-sm font-bold rounded-md"
-                            name="cgst"
-                          >
-                            ₹{" "}
-                            {Math.round((taxInfo?.cgstAmount ?? 0) * amount) /
-                              100}
-                          </div>
-                        </div>
-                      )}
-
-                      {taxInfo?.taxType === "alltax" && taxInfo?.sgstAmount && (
-                        <div className="w-full flex justify-end gap-x-10 mt-2">
-                          <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs lg:text-sm font-bold rounded-md uppercase">
-                            SGST ({taxInfo?.sgstAmount}%)
-                          </div>
-                          <div
-                            className="w-3/12 mx-auto flex justify-end mt-1 px-2 text-xs lg:text-sm font-bold rounded-md"
-                            name="sgst"
-                          >
-                            ₹{" "}
-                            {Math.round((taxInfo?.sgstAmount ?? 0) * amount) /
-                              100}
-                          </div>
-                        </div>
-                      )}
-
-                      {taxInfo?.taxType === "alltax" && taxInfo?.igstAmount && (
-                        <div className="w-full flex justify-end gap-x-10 mt-2">
-                          <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs lg:text-sm font-bold rounded-md uppercase">
-                            IGST ({taxInfo?.igstAmount}%)
-                          </div>
-                          <div
-                            className="w-3/12 mx-auto flex justify-end mt-1 px-2 text-xs lg:text-sm font-bold rounded-md"
-                            name="igst"
-                          >
-                            ₹{" "}
-                            {Math.round((taxInfo?.igstAmount ?? 0) * amount) /
-                              100}
-                          </div>
-                        </div>
-                      )}
-
-                      {taxInfo?.taxType === "alltax" && taxInfo?.ugstAmount && (
-                        <div className="w-full flex justify-end gap-x-10 mt-2">
-                          <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs lg:text-sm font-bold rounded-md uppercase">
-                            UGST ({taxInfo?.ugstAmount}%)
-                          </div>
-                          <div
-                            className="w-3/12 mx-auto flex justify-end mt-1 px-2 text-xs lg:text-sm font-bold rounded-md"
-                            name="ugst"
-                          >
-                            ₹{" "}
-                            {Math.round((taxInfo?.ugstAmount ?? 0) * amount) /
-                              100}
-                          </div>
-                        </div>
-                      )}
-
-                      {taxInfo?.taxType === "tax" && taxInfo?.taxAmount && (
-                        <div className="w-full flex justify-end gap-x-10 mt-2">
-                          <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-xs lg:text-sm font-bold rounded-md uppercase">
-                            Tax ({taxInfo?.taxAmount}%)
-                          </div>
-                          <div
-                            className="w-3/12 mx-auto flex justify-end mt-1 px-2 text-xs lg:text-sm font-bold rounded-md"
-                            name="tax"
-                          >
-                            ₹{" "}
-                            {Math.round((taxInfo?.taxAmount ?? 0) * amount) /
-                              100}
-                          </div>
-                        </div>
-                      )}
-
+                  <div className="flex flex-col justify-between w-full mx-auto gap-x-3">
+                    <div className="w-full text-sm">
                       <div className="w-full flex justify-end gap-x-10 mt-2">
                         <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-md font-bold rounded-md uppercase">
                           Total
                         </div>
-                        {taxInfo?.taxType === "alltax" ? (
-                          <div
-                            className="w-3/12 mx-auto flex justify-end mt-1 px-2  text-sm font-bold rounded-md"
-                            name="total"
-                          >
-                            ₹{" "}
-                            {Math.round(
-                              amount +
-                                ((taxInfo?.cgstAmount ?? 0) * amount) / 100 +
-                                ((taxInfo?.sgstAmount ?? 0) * amount) / 100 +
-                                ((taxInfo?.igstAmount ?? 0) * amount) / 100 +
-                                ((taxInfo?.ugstAmount ?? 0) * amount) / 100
-                            )}
-                          </div>
-                        ) : (
-                          <div
-                            className="w-3/12 mx-auto flex justify-end mt-1 px-2  text-sm font-bold rounded-md"
-                            name="total"
-                          >
-                            ₹{" "}
-                            {Math.round(
-                              amount +
-                                ((taxInfo?.taxAmount ?? 0) * amount) / 100
-                            )}
-                          </div>
-                        )}
+                        <div
+                          className="w-3/12 mx-auto flex justify-end mt-1 px-2  text-sm font-bold rounded-md"
+                          name="total"
+                        >
+                          ₹ {Math.round(amount)}
+                        </div>
                       </div>
                     </div>
                   </div>
 
+                  <div
+                    onClick={() => setOpenSign(true)}
+                    className="bg-[#146eb4] text-center w-4/12 lg:w-2/12 border-[1.4px] border-gray-400 text-white py-2 font-semibold rounded-md text-richblack-700 mb-2 cursor-pointer "
+                  >
+                    {" "}
+                    <button>+ Add Signature</button>
+                  </div>
+
+                  {sign && (
+                    <div className="w-[35%] md:w-[20%] border-2">
+                      <img src={signature} alt="sign" />
+                      <div className="flex justify-between">
+                        <div className="px-2 text-xs">
+                          {" "}
+                          Signed on: {signedDate}
+                        </div>
+                        <div>
+                          {" "}
+                          <button onClick={handleCloseSign1}>
+                            <X />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                   {/* <hr className="w-full my-4"></hr> */}
 
                   {/* <div className="w-full flex justify-end gap-x-10 mt-2">
@@ -1494,47 +1247,26 @@ const AddInvoice = () => {
               </div>
               {loading1 && <Loader />}
             </div>
-            {openItem && (
-              <InventoryModal
-                handleCloseItem={handleCloseItem}
-                setItem={setItem}
-              ></InventoryModal>
+            {openSign && (
+              <SignModal
+                setSignature={setSignature}
+                handleSignOpen={handleSignOpen}
+                handleCloseSign={handleCloseSign}
+              ></SignModal>
+            )}
+            {openBrandModal && (
+              <BrandModal
+                handleCloseBrandModal={handleCloseBrandModal}
+              ></BrandModal>
             )}
             <AlertModal
               isOpen={showConfirm}
               onClose={() => {
                 setShowConfirm(false);
-                document.querySelector('input[name="custname"]').focus();
+                document.querySelector('input[name="customerName"]').focus();
               }}
               title="Required"
               message="Customer Name is required."
-            />
-            <AlertModal
-              isOpen={showConfirm1}
-              onClose={() => {
-                setShowConfirm1(false);
-                document.querySelector('input[name="custphone"]').focus();
-              }}
-              title="Required"
-              message="Customer Phone number is required."
-            />
-            <AlertModal
-              isOpen={showConfirm2}
-              onClose={() => {
-                setShowConfirm2(false);
-                document.querySelector('input[name="custphone"]').focus();
-              }}
-              title="Not Valid"
-              message="Customer phone number is not valid."
-            />
-            <AlertModal
-              isOpen={showConfirm3}
-              onClose={() => {
-                setShowConfirm3(false);
-                document.querySelector('input[name="expecteddate"]').focus();
-              }}
-              title="Not Allowed"
-              message="Expected delivery date cannot be before the invoice date."
             />
           </div>
         </div>
@@ -1543,4 +1275,4 @@ const AddInvoice = () => {
   );
 };
 
-export default AddInvoice;
+export default CreatorAddInvoice;

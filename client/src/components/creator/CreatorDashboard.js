@@ -1,16 +1,25 @@
-import { addDoc, collection, deleteDoc, doc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  updateDoc,
+} from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { db } from "../config/firebase";
-import { useNavigate } from "react-router-dom";
-import Loader from "./Loader";
-import { BanknoteArrowUp, ArrowUp, FileDigit, BanknoteX } from "lucide-react";
-import SettlePopup from "./SettlePopup";
-import MobileMenu from "./MobileMenu";
-import dayjs from "dayjs";
-import { ARCHIVED_INVOICES, INVOICE_INFO, USERS } from "./Constant";
-import Sidebar from "./Sidebar";
 
-const Dashboard = () => {
+import { useNavigate } from "react-router-dom";
+
+import { BanknoteArrowUp, ArrowUp, FileDigit, BanknoteX } from "lucide-react";
+
+// import MobileMenu from "./MobileMenu";
+import dayjs from "dayjs";
+import { ARCHIVED_INVOICES, CREATORS, INVOICE_INFO, USERS } from "../Constant";
+import { db } from "../../config/firebase";
+import Loader from "../Loader";
+import CreatorMobileMenu from "./CreatorMobileMenu";
+
+const CreatorDashboard = () => {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -42,13 +51,17 @@ const Dashboard = () => {
     getInvoiceInfo();
   };
 
-  const origionalData = JSON.parse(localStorage.getItem("dashboardInfo"));
+  const origionalData = JSON.parse(
+    localStorage.getItem("creator_dashboardInfo")
+  );
 
   const fetchData = async (from, to) => {
     try {
       setLoading(true);
 
-      const invoiceInfo = JSON.parse(localStorage.getItem("dashboardInfo"));
+      const invoiceInfo = JSON.parse(
+        localStorage.getItem("creator_dashboardInfo")
+      );
       const result = invoiceInfo.filter(
         (item) =>
           new Date(item.invoiceInfo.date) >= from &&
@@ -111,7 +124,6 @@ const Dashboard = () => {
     updateAmountAfterSearch(result);
     updateBalanceAfterSearch(result);
     updatePaidAfterSearch(result);
-    updateTotalProfitAfterSearch(result);
 
     const totalPaidInvoices = result.filter(
       (item) =>
@@ -186,11 +198,22 @@ const Dashboard = () => {
   };
 
   const handleView = (id) => {
-    navigate("/viewinvoice", {
+    navigate("/creator/viewinvoice", {
       state: {
         id: id,
       },
     });
+  };
+
+  const handleUpdateStatus = async (id, status) => {
+    if (window.confirm("Are you sure you want to update the payment status?")) {
+      const codeDoc = doc(db, CREATORS, uid, INVOICE_INFO, id);
+      await updateDoc(codeDoc, {
+        paymentStatus: status === "Received" ? "Pending" : "Received",
+      });
+
+      await getInvoiceInfo();
+    }
   };
 
   const handleEdit = (id) => {
@@ -209,9 +232,10 @@ const Dashboard = () => {
         item.customerInfo.customerName
           .toLowerCase()
           .includes(e.target.value.toLowerCase()) ||
-        item.customerInfo.customerPhone
-          .toLowerCase()
-          .includes(e.target.value.toLowerCase()) ||
+        (item.customerInfo.customerPhone &&
+          item.customerInfo.customerPhone
+            .toLowerCase()
+            .includes(e.target.value.toLowerCase())) ||
         item.invoiceInfo.invoiceNumber
           .toString()
           .toLowerCase()
@@ -222,33 +246,11 @@ const Dashboard = () => {
     updateAmountAfterSearch(result);
     updateBalanceAfterSearch(result);
     updatePaidAfterSearch(result);
-    updateTotalProfitAfterSearch(result);
-
-    const totalPaidInvoices = result?.filter(
-      (item) =>
-        item.amountInfo.paymentType === "fullyPaid" ||
-        item.taxCalculatedInfo.balance === 0
-    ).length;
-    setPaidInvoices(result ? totalPaidInvoices : 0);
-
-    // const totalSettled = result.filter(
-    //   (item) => item.taxCalculatedInfo.balance === 0
-    // ).length;
-    setSettled(result ? result.length - totalPaidInvoices : 0);
   };
 
   const updateAmountAfterSearch = (result) => {
     const totalAmount = result?.reduce((acc, item) => {
-      const amount =
-        item.taxCalculatedInfo.taxType === "alltax"
-          ? Math.round(
-              item.amountInfo.amount +
-                item.taxCalculatedInfo.cgst +
-                item.taxCalculatedInfo.sgst +
-                item.taxCalculatedInfo.igst +
-                item.taxCalculatedInfo.ugst
-            )
-          : Math.round(item.amountInfo.amount + item.taxCalculatedInfo.tax);
+      const amount = Math.round(parseInt(item.amount));
       return acc + amount;
     }, 0);
 
@@ -257,7 +259,8 @@ const Dashboard = () => {
 
   const updateBalanceAfterSearch = (result) => {
     const totalBalance = result?.reduce((acc, item) => {
-      const balance = Math.round(item.taxCalculatedInfo.balance);
+      const balance =
+        item.paymentStatus === "Pending" ? parseInt(item.amount) : 0;
       return acc + balance;
     }, 0);
 
@@ -265,17 +268,13 @@ const Dashboard = () => {
   };
 
   const updatePaidAfterSearch = (result) => {
-    const totalPaid = result?.reduce((acc, item) => {
-      const paid = Math.round(item.amountInfo.advance);
+    const totalPaid = result.reduce((acc, item) => {
+      const paid =
+        item.paymentStatus === "Received" ? parseInt(item.amount) : 0;
       return acc + paid;
     }, 0);
 
-    setPaid(result ? totalPaid : 0);
-  };
-
-  const updateTotalProfitAfterSearch = (result) => {
-    const totalProfit = calculateProfit(result);
-    setTotalProft(totalProfit);
+    setPaid(totalPaid);
   };
 
   const handleSort = (key) => {
@@ -331,13 +330,9 @@ const Dashboard = () => {
     return 0;
   };
 
-  const sortDelivery = (a, b) => {
-    const dateA = a.invoiceInfo.expectedDate
-      ? new Date(a.invoiceInfo.expectedDate)
-      : 0;
-    const dateB = b.invoiceInfo.expectedDate
-      ? new Date(b.invoiceInfo.expectedDate)
-      : 0;
+  const sortStatus = (a, b) => {
+    const dateA = a.paymentStatus;
+    const dateB = b.paymentStatus;
 
     if (dateA < dateB) {
       return sortConfig.direction === "asc" ? -1 : 1;
@@ -349,26 +344,8 @@ const Dashboard = () => {
   };
 
   const sortAmount = (a, b) => {
-    const amountA =
-      a.taxCalculatedInfo.taxType === "alltax"
-        ? Math.round(
-            a.amountInfo.amount +
-              a.taxCalculatedInfo.cgst +
-              a.taxCalculatedInfo.sgst +
-              a.taxCalculatedInfo.igst +
-              a.taxCalculatedInfo.ugst
-          )
-        : Math.round(a.amountInfo.amount + a.taxCalculatedInfo.tax);
-    const amountB =
-      b.taxCalculatedInfo.taxType === "alltax"
-        ? Math.round(
-            b.amountInfo.amount +
-              b.taxCalculatedInfo.cgst +
-              b.taxCalculatedInfo.sgst +
-              b.taxCalculatedInfo.igst +
-              b.taxCalculatedInfo.ugst
-          )
-        : Math.round(b.amountInfo.amount + b.taxCalculatedInfo.tax);
+    const amountA = parseInt(a.amount);
+    const amountB = parseInt(b.amount);
     if (amountA < amountB) {
       return sortConfig.direction === "asc" ? -1 : 1;
     }
@@ -423,17 +400,17 @@ const Dashboard = () => {
     if (sortConfig.key === "invoice") {
       sortableData?.sort(sortInvoiceNumber);
       setFilteredData(sortableData);
-    } else if (sortConfig.key === "name") {
+    } else if (sortConfig.key === "brand name") {
       sortableData?.sort(sortCustomerName);
       setFilteredData(sortableData);
-    } else if (sortConfig.key === "phone") {
+    } else if (sortConfig.key === "address") {
       sortableData?.sort(sortCustomerPhone);
       setFilteredData(sortableData);
     } else if (sortConfig.key === "date") {
       sortableData?.sort(sortDate);
       setFilteredData(sortableData);
-    } else if (sortConfig.key === "delivery") {
-      sortableData?.sort(sortDelivery);
+    } else if (sortConfig.key === "status") {
+      sortableData?.sort(sortStatus);
       setFilteredData(sortableData);
     } else if (sortConfig.key === "amount") {
       sortableData?.sort(sortAmount);
@@ -463,57 +440,54 @@ const Dashboard = () => {
     return totalProfit;
   };
 
+  const invoiceInfo_CollectionRef = collection(
+    doc(db, CREATORS, uid),
+    INVOICE_INFO
+  );
+
+  const getAllInvoiceInfo = async () => {
+    const data = await getDocs(invoiceInfo_CollectionRef);
+    const invoiceInfo = data.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+
+    localStorage.setItem("creator_dashboardInfo", JSON.stringify(invoiceInfo));
+    return invoiceInfo;
+  };
   //const invoiceInfo_CollectionRef = collection(db, "Invoice_Info");
   const getInvoiceInfo = async () => {
     setLoading(true);
+    const invoiceInfo = await getAllInvoiceInfo();
 
-    const invoiceInfo = JSON.parse(localStorage.getItem("dashboardInfo"));
-    const totalAmount = invoiceInfo?.reduce((acc, item) => {
-      const amount =
-        item.taxCalculatedInfo.taxType === "alltax"
-          ? Math.round(
-              item.amountInfo.amount +
-                item.taxCalculatedInfo.cgst +
-                item.taxCalculatedInfo.sgst +
-                item.taxCalculatedInfo.igst +
-                item.taxCalculatedInfo.ugst
-            )
-          : Math.round(item.amountInfo.amount + item.taxCalculatedInfo.tax);
+    setFilteredData(invoiceInfo);
+    setData(invoiceInfo);
+
+    console.log(invoiceInfo);
+
+    const totalAmount = invoiceInfo.reduce((acc, item) => {
+      const amount = Math.round(parseInt(item.amount));
       return acc + amount;
     }, 0);
 
     setAmount(totalAmount);
 
-    const totalBalance = invoiceInfo?.reduce((acc, item) => {
-      const balance = Math.round(item.taxCalculatedInfo.balance);
+    const totalOutstanding = invoiceInfo.reduce((acc, item) => {
+      const balance =
+        item.paymentStatus === "Pending" ? parseInt(item.amount) : 0;
       return acc + balance;
     }, 0);
 
-    setBalance(totalBalance);
+    setBalance(totalOutstanding);
 
-    const totalPaid = invoiceInfo?.reduce((acc, item) => {
-      const paid = Math.round(item.amountInfo.advance);
+    const totalPaid = invoiceInfo.reduce((acc, item) => {
+      const paid =
+        item.paymentStatus === "Received" ? parseInt(item.amount) : 0;
       return acc + paid;
     }, 0);
 
-    setPaid(invoiceInfo === null ? 0 : totalPaid);
+    setPaid(totalPaid);
 
-    setTotalProft(calculateProfit(invoiceInfo));
-
-    const paidInvoices = invoiceInfo?.filter(
-      (item) =>
-        item.amountInfo.paymentType === "fullyPaid" ||
-        item.taxCalculatedInfo.balance === 0
-    ).length;
-    setPaidInvoices(invoiceInfo === null ? 0 : paidInvoices);
-
-    setSettled(invoiceInfo === null ? 0 : invoiceInfo?.length - paidInvoices);
-
-    const invoiceInfo1 = invoiceInfo?.sort(
-      (a, b) => b.invoiceInfo.invoiceNumber - a.invoiceInfo.invoiceNumber
-    );
-    setData(invoiceInfo1 ?? []);
-    setFilteredData(invoiceInfo1 ?? []);
     setLoading(false);
   };
 
@@ -545,14 +519,9 @@ const Dashboard = () => {
 
     let result = origionalData;
     if (status === "Paid") {
-      result = origionalData?.filter(
-        (x) =>
-          x.amountInfo.paymentType === "fullyPaid" ||
-          x.taxCalculatedInfo.balance === 0 ||
-          x.taxCalculatedInfo.balance === null
-      );
+      result = origionalData?.filter((x) => x.paymentStatus === "Received");
     } else if (status === "Unpaid") {
-      result = origionalData?.filter((x) => x.taxCalculatedInfo.balance > 0);
+      result = origionalData?.filter((x) => x.paymentStatus === "Pending");
     }
 
     const invoiceInfo1 = result?.sort(
@@ -562,19 +531,6 @@ const Dashboard = () => {
     updateAmountAfterSearch(result);
     updateBalanceAfterSearch(result);
     updatePaidAfterSearch(result);
-    updateTotalProfitAfterSearch(result);
-
-    const totalPaidInvoices = result?.filter(
-      (item) =>
-        item.amountInfo.paymentType === "fullyPaid" ||
-        item.taxCalculatedInfo.balance === 0
-    ).length;
-    setPaidInvoices(result ? totalPaidInvoices : 0);
-
-    // const totalSettled = result.filter(
-    //   (item) => item.taxCalculatedInfo.balance === 0
-    // ).length;
-    setSettled(result ? result.length - totalPaidInvoices : 0);
   };
   const handleLogin = () => {
     const user = localStorage.getItem("user");
@@ -600,7 +556,7 @@ const Dashboard = () => {
         </div>
 
         <div className="hidden max-lg:block mb-16">
-          <MobileMenu />
+          <CreatorMobileMenu />
         </div>
 
         <div className="p-2 lg:py-6 mt-10 ">
@@ -621,25 +577,25 @@ const Dashboard = () => {
                   <p className="text-md">Paid</p>
                   <BanknoteArrowUp />
                 </div>
-                <h3 className="mt-2 text-2xl font-semibold"> {paidInvoices}</h3>
+                <h3 className="mt-2 text-2xl font-semibold">₹ {paid}</h3>
               </div>
 
-              <div className={`p-5 rounded-lg shadow bg-yellow-500 text-white`}>
+              <div className={`p-5 rounded-lg shadow bg-red-400 text-white`}>
                 <div className="flex items-center justify-between">
-                  <p className="text-md">Outstanding</p>
+                  <p className="text-md">Due Amount</p>
                   <BanknoteX />
                 </div>
-                <h3 className="mt-2 text-2xl font-semibold">{settled}</h3>
+                <h3 className="mt-2 text-2xl font-semibold">₹ {balance}</h3>
               </div>
 
               <div
                 className={`p-5 rounded-lg shadow bg-emerald-500 text-white`}
               >
                 <div className="flex items-center justify-between">
-                  <p className="text-md">Profit</p>
+                  <p className="text-md">Total Earnings</p>
                   <ArrowUp />
                 </div>
-                <h3 className="mt-2 text-2xl font-semibold">₹ {totalProfit}</h3>
+                <h3 className="mt-2 text-2xl font-semibold">₹ {amount}</h3>
               </div>
             </div>
           </div>
@@ -706,22 +662,19 @@ const Dashboard = () => {
                 <thead className="bg-gray-100 text-gray-600 border-b sticky top-0 z-10">
                   <tr>
                     {[
+                      "S.No.",
                       "Invoice",
-                      "Name",
-                      "Phone",
+                      "Brand Name",
                       "Date",
-                      "Delivery",
                       "Amount",
-                      "Paid",
-                      "Balance",
-                      "Settle",
+                      "Status",
+                      "Update",
                       "View",
-                      "Edit",
                       "Delete",
                     ].map((header, i) => (
                       <th
                         key={i}
-                        className="px-4 py-3 border-r bg-gray-100 min-w-[100px] whitespace-nowrap"
+                        className="px-4 py-3 border-r bg-gray-100 whitespace-nowrap"
                         onClick={() =>
                           !["S.No.", "View", "Delete"].includes(header) &&
                           handleSort(header)
@@ -763,9 +716,9 @@ const Dashboard = () => {
                             index % 2 === 0 ? "bg-white" : "bg-gray-50"
                           } hover:bg-gray-200`}
                         >
-                          {/* <td className="px-4 py-3 border-r w-[10%]">
+                          <td className="px-4 py-3 border-r w-[10%]">
                             {index + 1}.
-                          </td> */}
+                          </td>
 
                           <td className="px-4 py-3 border-r whitespace-nowrap">
                             {user.invoiceInfo.invoiceNumber}
@@ -773,49 +726,43 @@ const Dashboard = () => {
                           <td className="px-4 py-3 border-r whitespace-nowrap">
                             {user.customerInfo.customerName}
                           </td>
-                          <td className="px-4 py-3 border-r whitespace-nowrap">
-                            {user.customerInfo.customerPhone}
-                          </td>
+                          {/* {user.customerInfo.address ? (
+                            <td className="px-4 py-3 border-r whitespace-nowrap text-wrap">
+                              {user.customerInfo.address},{" "}
+                              {user.customerInfo.address1},{" "}
+                              {user.customerInfo.address2} -{" "}
+                              {user.customerInfo.address3}
+                            </td>
+                          ) : (
+                            <td className="px-4 py-3 border-r whitespace-nowrap"></td>
+                          )} */}
+
                           <td className="px-4 py-3 border-r whitespace-nowrap">
                             {formatDate(user.invoiceInfo.date)}
                           </td>
-                          <td className="px-4 py-3 border-r whitespace-nowrap">
-                            {user.invoiceInfo.expectedDate
-                              ? formatDate(user.invoiceInfo.expectedDate)
-                              : ""}
-                          </td>
-                          <td className="px-4 py-3 border-r text-right whitespace-nowrap">
-                            {user.taxCalculatedInfo.total}
-                          </td>
 
                           <td className="px-4 py-3 border-r text-right whitespace-nowrap">
-                            {user.amountInfo.paymentType === "fullyPaid"
-                              ? Math.round(user.taxCalculatedInfo.total)
-                              : user.amountInfo?.advance !== null
-                              ? parseInt(user.amountInfo.advance)
-                              : ""}
+                            {user.amount}
                           </td>
-                          <td className="px-4 py-3 border-r text-right whitespace-nowrap">
-                            {user.amountInfo.paymentType === "fullyPaid" ||
-                            user.taxCalculatedInfo.balance === 0 ? (
-                              <span className="text-green-600">Fully Paid</span>
-                            ) : (
-                              user.taxCalculatedInfo.balance
-                            )}
-                          </td>
-                          <td className="px-4 py-3 border-r text-center whitespace-nowrap">
-                            {user.taxCalculatedInfo.balance > 0 ? (
-                              <button
-                                onClick={() => handleSettle(user)}
-                                className="text-blue-600 hover:text-blue-800 font-semibold text-xs"
-                              >
-                                Settle
-                              </button>
-                            ) : user.invoiceInfo.settledDate ? (
-                              formatDate(user.invoiceInfo.settledDate)
-                            ) : (
-                              ""
-                            )}
+                          {user.paymentStatus === "Pending" ? (
+                            <td className="px-4 py-3 border-r text-right whitespace-nowrap text-red-700 font-bold">
+                              {user.paymentStatus}
+                            </td>
+                          ) : (
+                            <td className="px-4 py-3 border-r text-right whitespace-nowrap text-green-700 font-bold">
+                              {user.paymentStatus}
+                            </td>
+                          )}
+
+                          <td className="px-4 py-3 border-r whitespace-nowrap">
+                            <button
+                              onClick={() =>
+                                handleUpdateStatus(user.id, user.paymentStatus)
+                              }
+                              className="text-white border-2 rounded-md px-2 py-1 bg-blue-600 font-semibold text-xs"
+                            >
+                              Update Status
+                            </button>
                           </td>
                           <td className="px-4 py-3 border-r whitespace-nowrap">
                             <button
@@ -825,14 +772,14 @@ const Dashboard = () => {
                               View
                             </button>
                           </td>
-                          <td className="px-4 py-3 border-r whitespace-nowrap">
+                          {/* <td className="px-4 py-3 border-r whitespace-nowrap">
                             <button
                               onClick={() => handleEdit(user.id)}
                               className="text-blue-600 hover:text-blue-800 font-semibold text-xs"
                             >
                               Edit
                             </button>
-                          </td>
+                          </td> */}
                           <td className="px-4 py-3 whitespace-nowrap">
                             <button
                               onClick={() => handleDelete(user)}
@@ -859,11 +806,6 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {openSettlePopup && (
-            <SettlePopup
-              handleCloseSettlePopup={handleCloseSettlePopup}
-            ></SettlePopup>
-          )}
           {loading && <Loader />}
         </div>
       </div>
@@ -871,4 +813,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default CreatorDashboard;
