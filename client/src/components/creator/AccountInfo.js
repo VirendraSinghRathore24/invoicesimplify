@@ -181,10 +181,10 @@ const AccountInfo = () => {
 
             {!posts && (
               <div className="flex h-screen items-center justify-center ">
-                <div onClick={() => navigate("/addbusinessinfo")}>
+                <div onClick={() => navigate("/creator/addaccountinfo")}>
                   <button className="border-2 bg-[#444] text-white fond-bold text-lg py-4 px-8 rounded-md cursor-pointer">
                     {" "}
-                    + Add Business Info
+                    + Add Account Info
                   </button>
                 </div>
               </div>
