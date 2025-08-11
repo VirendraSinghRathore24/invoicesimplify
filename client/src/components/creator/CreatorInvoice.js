@@ -59,11 +59,12 @@ function CreatorInvoice() {
 
   const handleDownloadPdf = async (e) => {
     e.preventDefault();
-
+    const url = "https://invoicesimplify.onrender.com";
+    //const url = "http://localhost:5001";
     try {
       setLoading(true);
       const html = printRef.current.innerHTML;
-      const response = await fetch("http://localhost:5001/generate-pdf", {
+      const response = await fetch(url + "/generate-pdf", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
