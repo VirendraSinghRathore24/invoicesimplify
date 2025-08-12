@@ -160,6 +160,7 @@ const Login = () => {
           await getBusinessType(code);
 
           const type = localStorage.getItem("type");
+
           if (type === CONTENT_CREATOR) {
             // for content cretor
             await getPersonalInfo(code, uid);

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { CheckCircle, Star, Moon, Sun } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import Footer1 from "./Footer1";
+import { CONTENT_CREATOR } from "./Constant";
 const features = [
   "Create invoices in seconds",
   "Print or message with one click",
@@ -38,9 +39,13 @@ const Home = () => {
 
   const handleCreateInvoice = () => {
     const user = localStorage.getItem("user");
+    const type = localStorage.getItem("type");
 
     if (user && user !== "undefined" && user !== "null") {
-      const newWindow = window.open("/createinvoice", "_blank");
+      const newWindow =
+        type === CONTENT_CREATOR
+          ? window.open("/creator/createinvoice", "_blank")
+          : window.open("/createinvoice", "_blank");
       if (newWindow) newWindow.opener = null;
     } else {
       const newWindow = window.open("/login", "_blank");
