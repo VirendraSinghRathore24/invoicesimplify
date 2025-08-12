@@ -14,7 +14,11 @@ const nodemailer = require("nodemailer");
 const cron = require("node-cron");
 const admin = require("firebase-admin");
 const serviceAccount = require("./firebaseServiceAccount.json");
+const bodyParser = require("body-parser");
+const pdf1 = require("html-pdf-node");
 dotenv.config();
+
+app.use(bodyParser.json({ limit: "10mb" }));
 
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
@@ -600,6 +604,49 @@ app.get("/download-pdf", async (req, res) => {
     "Content-Disposition": "attachment; filename=invoice.pdf",
   });
   res.send(pdfBuffer);
+});
+
+app.post("/generate-pdf1", async (req, res) => {
+  try {
+    const { html } = req.body;
+
+    if (!html) {
+      return res.status(400).json({ error: "HTML content is required" });
+    }
+    const fontLink = `<link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">`;
+    const html1 = `
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset="UTF-8" />
+      <title>Invoice</title>
+      ${fontLink}
+      <style>
+        body {
+          font-family: 'Inter', sans-serif;
+        }
+      </style>
+    </head>
+    <body>
+      ${html}
+    </body>
+  </html>
+`;
+
+    // Convert HTML to PDF
+    const file = { content: html1 };
+    const options = { format: "A4", printBackground: true };
+
+    const pdfBuffer = await pdf1.generatePdf(file, options);
+
+    // Send as downloadable PDF
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", "attachment; filename=invoice.pdf");
+    res.send(pdfBuffer);
+  } catch (err) {
+    console.error("PDF generation error:", err);
+    res.status(500).json({ error: "Failed to generate PDF" });
+  }
 });
 
 const CLOUDINARY_PDF_URL =

@@ -64,7 +64,7 @@ function CreatorInvoice() {
     try {
       setLoading(true);
       const html = printRef.current.innerHTML;
-      const response = await fetch(url + "/generate-pdf", {
+      const response = await fetch(url + "/generate-pdf1", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
