@@ -29,7 +29,9 @@ const ReminderModal = ({ handleCloseReminderModal }) => {
       posts.customerInfo.productName,
     ];
 
-    const res = await fetch("http://localhost:5001/send-reminderemail", {
+    const url = "https://invoicesimplify.onrender.com";
+    //const url = "http://localhost:5001";
+    const res = await fetch(url + "/send-reminderemail", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ brandEmail, ccEmail, subject, textData }),
