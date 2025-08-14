@@ -74,8 +74,8 @@ app.use(express.json());
 
 app.use(
   cors({
-    //origin: "http://localhost:3000",
-    origin: "https://invoicesimplify.com",
+    origin: "http://localhost:3000",
+    //origin: "https://invoicesimplify.com",
     credentials: true,
   })
 );
@@ -103,6 +103,60 @@ const dns = require("dns");
 dns.lookup("smtpout.secureserver.net", (err, address) => {
   if (err) console.error("DNS Error:", err);
   else console.log("SMTP IP:", address);
+});
+
+// API Endpoint to send email
+app.post("/send-reminderemail", async (req, res) => {
+  const { brandEmail, ccEmail, subject, textData } = req.body;
+
+  const customerName = textData[0];
+  const invoiceNumber = textData[1];
+  const amount = textData[2];
+  const yourName = textData[3];
+  const date = textData[4];
+  const phoneNumber = textData[5];
+  const email = textData[6];
+  const product = textData[7];
+
+  try {
+    await transporter.sendMail({
+      from: "support@invoicesimplify.com",
+      to: brandEmail,
+      cc: ccEmail || undefined, // only add CC if provided
+      subject: subject,
+      text:
+        "Hi " +
+        customerName +
+        "," +
+        "\n\n" +
+        "I hope you’re doing well." +
+        "\n" +
+        "This is a friendly reminder that " +
+        product +
+        " Collab for ₹" +
+        amount +
+        " is due on " +
+        date +
+        "." +
+        "\n\n" +
+        "If you’ve already made the payment, please disregard this message." +
+        "\n\n" +
+        "Thank you for your prompt attention!" +
+        "\n\n" +
+        "Best regards," +
+        "\n" +
+        yourName +
+        "\n" +
+        phoneNumber +
+        "\n" +
+        email,
+    });
+
+    res.status(200).send({ success: true, message: "Email sent successfully" });
+  } catch (error) {
+    console.error("Email send error:", error);
+    res.status(500).send({ success: false, message: "Failed to send email" });
+  }
 });
 
 const tableHeaders = [

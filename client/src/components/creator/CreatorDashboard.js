@@ -18,6 +18,7 @@ import { ARCHIVED_INVOICES, CREATORS, INVOICE_INFO, USERS } from "../Constant";
 import { db } from "../../config/firebase";
 import Loader from "../Loader";
 import CreatorMobileMenu from "./CreatorMobileMenu";
+import ReminderModal from "./ReminderModal";
 
 const CreatorDashboard = () => {
   const [data, setData] = useState([]);
@@ -45,10 +46,9 @@ const CreatorDashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
 
-  const [openSettlePopup, setOpenSettlePopup] = useState(false);
-  const handleCloseSettlePopup = () => {
-    setOpenSettlePopup(false);
-    getInvoiceInfo();
+  const [openReminderModal, setOpenReminderModal] = useState(false);
+  const handleCloseReminderModal = () => {
+    setOpenReminderModal(false);
   };
 
   const origionalData = JSON.parse(
@@ -154,6 +154,23 @@ const CreatorDashboard = () => {
     }
   };
 
+  function daysFromToday(dateString) {
+    const givenDate = new Date(dateString); // e.g., "2025-08-01"
+    const today = new Date();
+
+    // Remove time part for accurate day count
+    givenDate.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+
+    // Difference in milliseconds
+    const diffInMs = today - givenDate;
+
+    // Convert milliseconds to days
+    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+
+    return diffInDays;
+  }
+
   // archive deleted invoice to another collection
   // first get the invoice data and then add it to the archive collection
   const archiveInvoice = async (user) => {
@@ -194,7 +211,7 @@ const CreatorDashboard = () => {
     }
 
     localStorage.setItem("settleInfo", JSON.stringify(settleInfo));
-    setOpenSettlePopup(true);
+    //setOpenSettlePopup(true);
   };
 
   const handleView = (id) => {
@@ -239,7 +256,11 @@ const CreatorDashboard = () => {
         item.invoiceInfo.invoiceNumber
           .toString()
           .toLowerCase()
-          .includes(e.target.value.toLowerCase())
+          .includes(e.target.value.toLowerCase()) ||
+        (item.customerInfo.productName &&
+          item.customerInfo.productName
+            .toLowerCase()
+            .includes(e.target.value.toLowerCase()))
     );
     setFilteredData(result);
 
@@ -303,6 +324,16 @@ const CreatorDashboard = () => {
       return sortConfig.direction === "asc" ? -1 : 1;
     }
     if (a.customerInfo.customerName > b.customerInfo.customerName) {
+      return sortConfig.direction === "asc" ? 1 : -1;
+    }
+    return 0;
+  };
+
+  const sortProductName = (a, b) => {
+    if (a.customerInfo.productName < b.customerInfo.productName) {
+      return sortConfig.direction === "asc" ? -1 : 1;
+    }
+    if (a.customerInfo.productName > b.customerInfo.productName) {
       return sortConfig.direction === "asc" ? 1 : -1;
     }
     return 0;
@@ -402,6 +433,9 @@ const CreatorDashboard = () => {
       setFilteredData(sortableData);
     } else if (sortConfig.key === "brand name") {
       sortableData?.sort(sortCustomerName);
+      setFilteredData(sortableData);
+    } else if (sortConfig.key === "product") {
+      sortableData?.sort(sortProductName);
       setFilteredData(sortableData);
     } else if (sortConfig.key === "address") {
       sortableData?.sort(sortCustomerPhone);
@@ -665,10 +699,12 @@ const CreatorDashboard = () => {
                       "S.No.",
                       "Invoice",
                       "Brand Name",
+                      "Product",
                       "Date",
                       "Amount",
                       "Status",
                       "Update",
+                      "Payment Reminder",
                       "View",
                       "Delete",
                     ].map((header, i) => (
@@ -676,12 +712,23 @@ const CreatorDashboard = () => {
                         key={i}
                         className="px-4 py-3 border-r bg-gray-100 whitespace-nowrap"
                         onClick={() =>
-                          !["S.No.", "View", "Delete"].includes(header) &&
-                          handleSort(header)
+                          ![
+                            "S.No.",
+                            "View",
+                            "Delete",
+                            "Update",
+                            "Payment Reminder",
+                          ].includes(header) && handleSort(header)
                         }
                       >
                         {header}
-                        {!["S.No.", "View", "Delete"].includes(header) && (
+                        {![
+                          "S.No.",
+                          "View",
+                          "Delete",
+                          "Update",
+                          "Payment Reminder",
+                        ].includes(header) && (
                           <span>
                             {sortConfig.key === header.toLowerCase()
                               ? sortConfig.direction === "asc"
@@ -713,7 +760,16 @@ const CreatorDashboard = () => {
                         <tr
                           key={user.id}
                           className={`border-t ${
-                            index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                            index % 2 === 0 &&
+                            !(
+                              daysFromToday(user.invoiceInfo.date) > 14 &&
+                              user.paymentStatus === "Pending"
+                            )
+                              ? "bg-white"
+                              : daysFromToday(user.invoiceInfo.date) > 14 &&
+                                user.paymentStatus === "Pending"
+                              ? "bg-orange-100"
+                              : "bg-gray-50"
                           } hover:bg-gray-200`}
                         >
                           <td className="px-4 py-3 border-r w-[10%]">
@@ -725,6 +781,9 @@ const CreatorDashboard = () => {
                           </td>
                           <td className="px-4 py-3 border-r whitespace-nowrap">
                             {user.customerInfo.customerName}
+                          </td>
+                          <td className="px-4 py-3 border-r whitespace-nowrap">
+                            {user.customerInfo.productName}
                           </td>
                           {/* {user.customerInfo.address ? (
                             <td className="px-4 py-3 border-r whitespace-nowrap text-wrap">
@@ -746,7 +805,8 @@ const CreatorDashboard = () => {
                           </td>
                           {user.paymentStatus === "Pending" ? (
                             <td className="px-4 py-3 border-r text-right whitespace-nowrap text-red-700 font-bold">
-                              {user.paymentStatus}
+                              {user.paymentStatus} - (
+                              {daysFromToday(user.invoiceInfo.date)} days)
                             </td>
                           ) : (
                             <td className="px-4 py-3 border-r text-right whitespace-nowrap text-green-700 font-bold">
@@ -764,6 +824,28 @@ const CreatorDashboard = () => {
                               Update Status
                             </button>
                           </td>
+                          {user.paymentStatus === "Pending" ? (
+                            <td className="px-4 py-3 border-r whitespace-nowrap">
+                              <button
+                                onClick={() => {
+                                  localStorage.setItem(
+                                    "reminder_data",
+                                    JSON.stringify(user)
+                                  );
+                                  setOpenReminderModal(true);
+                                }}
+                                className="text-white border-2 rounded-md px-2 py-1 bg-orange-600 font-semibold text-xs"
+                              >
+                                Send Reminder
+                              </button>
+                            </td>
+                          ) : (
+                            <td className="px-4 py-3 border-r whitespace-nowrap">
+                              <div className="px-2 py-1 text-green-600 font-semibold text-xs">
+                                Completed
+                              </div>
+                            </td>
+                          )}
                           <td className="px-4 py-3 border-r whitespace-nowrap">
                             <button
                               onClick={() => handleView(user.id)}
@@ -809,6 +891,9 @@ const CreatorDashboard = () => {
           {loading && <Loader />}
         </div>
       </div>
+      {openReminderModal && (
+        <ReminderModal handleCloseReminderModal={handleCloseReminderModal} />
+      )}
     </div>
   );
 };

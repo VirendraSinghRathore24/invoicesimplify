@@ -429,6 +429,7 @@ const CreatorAddInvoice = () => {
 
   const getLocalStoragePersonalInfo = () => {
     const customerName = localStorage.getItem("creator_customername");
+    const productName = localStorage.getItem("creator_productName");
     const customerEmail = localStorage.getItem("creator_customeremail");
     const address = localStorage.getItem("customer_address");
     const address1 = localStorage.getItem("customer_address1");
@@ -441,6 +442,7 @@ const CreatorAddInvoice = () => {
     const cin = localStorage.getItem("customer_cin");
 
     UpdateValues("customerName", customerName);
+    UpdateValues("productName", productName);
     UpdateValues("customerEmail", customerEmail);
     UpdateValues("address", address);
     UpdateValues("address1", address1);
@@ -705,28 +707,29 @@ const CreatorAddInvoice = () => {
                           />
                         </div>
                       </div>
-                    </div>
-                    <div className="flex flex-col justify-start items-left">
-                      <div className="text-[13px] font-bold leading-5 mt-2">
-                        Email
+                      <div className="flex flex-col w-full">
+                        <div className="text-[13px] font-bold leading-5 mt-2">
+                          Product Name
+                        </div>
+                        <div>
+                          <input
+                            className="form-input w-full lg:w-8/12 block font-semibold text-[13px] rounded border border-gray-400 p-2 leading-5 "
+                            required
+                            name="productName"
+                            placeholder="Enter Product Name"
+                            value={inputs?.productName}
+                            onChange={(e) => {
+                              localStorage.setItem(
+                                "creator_productName",
+                                e.target.value
+                              );
+                              handleChange(e);
+                            }}
+                          />
+                        </div>
                       </div>
-                      <div>
-                        <input
-                          className="form-input w-full lg:w-8/12 block font-semibold text-[13px] rounded border border-gray-400 p-2 leading-5 "
-                          required
-                          name="customerEmail"
-                          placeholder="Enter Brand Email"
-                          value={inputs?.customerEmail}
-                          onChange={(e) => {
-                            localStorage.setItem(
-                              "creator_customeremail",
-                              e.target.value
-                            );
-                            handleChange(e);
-                          }}
-                        />
-                      </div>
                     </div>
+
                     <div className="flex flex-col text-sm">
                       <div className="font-medium leading-5 text-gray-700 mb-1">
                         Address
@@ -789,30 +792,53 @@ const CreatorAddInvoice = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="flex flex-col ">
-                      <div className="text-[13px] font-bold leading-5 mt-2">
-                        Mobile
+                    <div className="flex justify-between gap-x-4">
+                      <div className="flex flex-col justify-start items-left w-full">
+                        <div className="text-[13px] font-bold leading-5 mt-2">
+                          Email
+                        </div>
+                        <div>
+                          <input
+                            className="form-input w-full block font-semibold text-[13px] rounded border border-gray-400 p-2 leading-5 "
+                            required
+                            name="customerEmail"
+                            placeholder="Enter Brand Email"
+                            value={inputs?.customerEmail}
+                            onChange={(e) => {
+                              localStorage.setItem(
+                                "creator_customeremail",
+                                e.target.value
+                              );
+                              handleChange(e);
+                            }}
+                          />
+                        </div>
                       </div>
-                      <div className="flex justify-start items-left -ml-4">
-                        <span className="p-[7px] bg-[#eee] border border-[#ccc] border-r-0 rounded-l font-medium text-[13px]">
-                          +91
-                        </span>
-                        <input
-                          className="p-[5px] pl-[10px] border border-[#ccc] rounded-r w-[120px] text-[13px] text-left"
-                          type="text"
-                          name="customerPhone"
-                          value={inputs?.customerPhone}
-                          onChange={(e) => {
-                            localStorage.setItem(
-                              "customer_customerphone",
-                              e.target.value
-                            );
-                            handleChange(e);
-                          }}
-                          minLength={10}
-                          maxLength={10}
-                          placeholder="Mobile number..."
-                        />
+                      <div className="flex flex-col ">
+                        <div className="text-[13px] font-bold leading-5 mt-2">
+                          Mobile
+                        </div>
+                        <div className="flex justify-start items-left -ml-4">
+                          <span className="p-[8px] bg-[#eee] border border-[#ccc] border-r-0 rounded-l font-medium text-[13px]">
+                            +91
+                          </span>
+                          <input
+                            className="p-[5px] pl-[10px] border border-[#ccc] rounded-r text-[13px] text-left"
+                            type="text"
+                            name="customerPhone"
+                            value={inputs?.customerPhone}
+                            onChange={(e) => {
+                              localStorage.setItem(
+                                "customer_customerphone",
+                                e.target.value
+                              );
+                              handleChange(e);
+                            }}
+                            minLength={10}
+                            maxLength={10}
+                            placeholder="Mobile number..."
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>

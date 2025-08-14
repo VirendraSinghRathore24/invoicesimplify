@@ -6,18 +6,6 @@ import { Printer } from "lucide-react";
 import { FaRegEdit } from "react-icons/fa";
 import { useReactToPrint } from "react-to-print";
 
-import {
-  addPdfCount,
-  getPdfCount,
-  updatePdfCount,
-  getPersonalData,
-  addPersonalData,
-  getAccountData,
-  addAccountData,
-  addInvoiceToData,
-  addPdfData,
-  getInvoiceToData,
-} from "../DatabaseHelper";
 import { CREATORS, INVOICE_INFO, LOGIN_INFO } from "../Constant";
 import {
   addDoc,
@@ -57,10 +45,30 @@ function CreatorInvoice() {
     contentRef: printRef,
   });
 
+  const getDate = (utcDate) => {
+    var today = new Date(utcDate);
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "July",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    var month = months[today.getMonth()];
+    const date = month + " " + today.getDate() + ", " + today.getFullYear();
+    return date;
+  };
   const handleDownloadPdf = async (e) => {
     e.preventDefault();
-    const url = "https://invoicesimplify.onrender.com";
-    //const url = "http://localhost:5001";
+    //const url = "https://invoicesimplify.onrender.com";
+    const url = "http://localhost:5001";
     try {
       setLoading(true);
       const html = printRef.current.innerHTML;
@@ -196,6 +204,7 @@ function CreatorInvoice() {
   const deleteLocalStorageAccountInfo = () => {
     localStorage.removeItem("creator_customername");
     localStorage.removeItem("creator_customeremail");
+    localStorage.removeItem("creator_productName");
     localStorage.removeItem("customer_address");
     localStorage.removeItem("customer_address1");
     localStorage.removeItem("customer_address2");
@@ -534,7 +543,7 @@ function CreatorInvoice() {
                       marginTop: "0.2rem",
                     }}
                   >
-                    {invoiceInfo?.date}
+                    {getDate(invoiceInfo?.date)}
                   </div>
                 </div>
               </div>
