@@ -952,7 +952,7 @@ function CreatorInvoice() {
                 marginTop: "0.25rem", // font-bold
               }}
             >
-              {additionalInfo.additionaldesc}
+              {additionalInfo?.additionaldesc}
             </div>
             <div
               style={{

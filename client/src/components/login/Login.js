@@ -136,6 +136,10 @@ const Login = () => {
       "creator_accountInfo",
       JSON.stringify(pInfo.accountInfo)
     );
+    localStorage.setItem(
+      "creator_additionalInfo",
+      JSON.stringify(pInfo.additionalInfo)
+    );
   };
 
   const signInWithUsernameAndPassword = async (e) => {
