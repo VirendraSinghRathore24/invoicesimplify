@@ -162,7 +162,7 @@ function CreatorViewInvoice() {
 
               <div>
                 <button
-                  onClick={() => handleMessage()}
+                  //onClick={() => handleMessage()}
                   className="flex items-center bg-[#E5E7EB] font-bold px-2 lg:px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
                 >
                   <span className="mr-2">

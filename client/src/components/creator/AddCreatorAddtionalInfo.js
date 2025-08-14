@@ -84,7 +84,7 @@ function AddCreatorAddtionalInfo() {
 
   useEffect(() => {
     handleLogin();
-    let info1 = localStorage.getItem("additionalInfo");
+    let info1 = localStorage.getItem("creator_additionalInfo");
 
     if (info1 === "undefined" || info1 === null) {
       info1 = JSON.stringify({

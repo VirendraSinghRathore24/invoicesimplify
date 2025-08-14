@@ -485,8 +485,12 @@ const CreatorDashboard = () => {
       ...doc.data(),
       id: doc.id,
     }));
-
-    localStorage.setItem("creator_dashboardInfo", JSON.stringify(invoiceInfo));
+    const data1 = invoiceInfo.sort((a, b) =>
+      b.invoiceInfo.date === a.invoiceInfo.date
+        ? b.invoiceInfo.invoiceNumber - a.invoiceInfo.invoiceNumber
+        : new Date(b.invoiceInfo.date) - new Date(a.invoiceInfo.date)
+    );
+    localStorage.setItem("creator_dashboardInfo", JSON.stringify(data1));
     return invoiceInfo;
   };
   //const invoiceInfo_CollectionRef = collection(db, "Invoice_Info");
@@ -496,8 +500,6 @@ const CreatorDashboard = () => {
 
     setFilteredData(invoiceInfo);
     setData(invoiceInfo);
-
-    console.log(invoiceInfo);
 
     const totalAmount = invoiceInfo.reduce((acc, item) => {
       const amount = Math.round(parseInt(item.amount));

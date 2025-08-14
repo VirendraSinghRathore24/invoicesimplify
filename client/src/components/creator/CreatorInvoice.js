@@ -35,6 +35,7 @@ function CreatorInvoice() {
   const [rows, setRows] = useState([]);
   const [amount, setAmount] = useState();
   const [invoiceInfo, setInvoiceInfo] = useState([]);
+  const [additionalInfo, setAdditionalInfo] = useState([]);
   const [signedInfo, setSignedInfo] = useState([]);
 
   const isMediumScreen = window.innerWidth >= 768;
@@ -259,6 +260,9 @@ function CreatorInvoice() {
 
     let si = localStorage.getItem("creator_signedInfo");
     setSignedInfo(JSON.parse(si));
+
+    let ad = localStorage.getItem("creator_additionalInfo");
+    setAdditionalInfo(JSON.parse(ad));
   }, []);
   return (
     <div>
@@ -347,16 +351,29 @@ function CreatorInvoice() {
                   >
                     {personalInfo.address}
                   </div>
-                  <div
-                    style={{
-                      color: "#6B7280",
-                      fontSize: "0.875rem",
-                      marginTop: "0.2rem",
-                    }}
-                  >
-                    {personalInfo.address1}, {personalInfo.address2} -{" "}
-                    {personalInfo.address3}
-                  </div>
+                  {personalInfo.address1 && (
+                    <div
+                      style={{
+                        color: "#6B7280",
+                        fontSize: "0.875rem",
+                        marginTop: "0.2rem",
+                      }}
+                    >
+                      {personalInfo.address1},
+                    </div>
+                  )}
+                  {personalInfo.address2 && (
+                    <div
+                      style={{
+                        color: "#6B7280",
+                        fontSize: "0.875rem",
+                        marginTop: "0.2rem",
+                      }}
+                    >
+                      {personalInfo.address2} - {personalInfo.address3}
+                    </div>
+                  )}
+
                   <div
                     style={{
                       color: "#6B7280",
@@ -376,6 +393,17 @@ function CreatorInvoice() {
                   >
                     Email: {personalInfo.email}
                   </div>
+                  {personalInfo.socialMedia && (
+                    <div
+                      style={{
+                        color: "#6B7280",
+                        fontSize: "0.875rem",
+                        marginTop: "0.2rem",
+                      }}
+                    >
+                      {personalInfo.socialMedia}
+                    </div>
+                  )}
                 </div>
                 <div>
                   <div
@@ -918,6 +946,13 @@ function CreatorInvoice() {
                   </div>
                 )}
               </div>
+            </div>
+            <div
+              style={{
+                marginTop: "0.25rem", // font-bold
+              }}
+            >
+              {additionalInfo.additionaldesc}
             </div>
             <div
               style={{
