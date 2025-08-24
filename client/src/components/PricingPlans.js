@@ -3,6 +3,7 @@ import { Check } from "lucide-react";
 import Footer1 from "./Footer1";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { BASE_URL } from "./Constant";
 
 const plans = [
   {
@@ -56,7 +57,7 @@ const PricingPlans = () => {
   const navigate = useNavigate();
 
   //const url = "http://localhost:5001";
-  const url = "https://invoicesimplify.onrender.com";
+  const url = BASE_URL;
 
   const loadRazorpay = (src) => {
     return new Promise((resolve) => {

@@ -15,3 +15,6 @@ export const PRO = "Pro";
 export const CONTENT_CREATOR = "Content Creator";
 export const CREATORS = "Creators";
 export const PERSONAL_INFO = "Personal_Info";
+
+export const BASE_URL = "https://invoicesimplify.onrender.com";
+//export const BASE_URL = "http://localhost:5001";

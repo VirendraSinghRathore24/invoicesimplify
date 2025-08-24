@@ -6,7 +6,7 @@ import { Mail } from "lucide-react";
 import { FaRegEdit } from "react-icons/fa";
 import { useReactToPrint } from "react-to-print";
 
-import { CREATORS, INVOICE_INFO, LOGIN_INFO } from "../Constant";
+import { BASE_URL, CREATORS, INVOICE_INFO, LOGIN_INFO } from "../Constant";
 import {
   addDoc,
   collection,
@@ -75,8 +75,8 @@ function CreatorInvoice() {
 
   const handleDownloadPdf = async (e) => {
     e.preventDefault();
-    //const url = "https://invoicesimplify.onrender.com";
-    const url = "http://localhost:5001";
+
+    const url = BASE_URL;
     try {
       setLoading(true);
       const html = printRef.current.innerHTML;

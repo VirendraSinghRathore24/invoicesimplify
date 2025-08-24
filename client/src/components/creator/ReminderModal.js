@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import Loader from "../Loader";
+import { BASE_URL } from "../Constant";
 
 const ReminderModal = ({ handleCloseReminderModal }) => {
   const [loading, setLoading] = useState(false);
@@ -29,8 +30,8 @@ const ReminderModal = ({ handleCloseReminderModal }) => {
       posts.customerInfo.productName,
     ];
 
-    const url = "https://invoicesimplify.onrender.com";
-    //const url = "http://localhost:5001";
+    const url = BASE_URL;
+
     const res = await fetch(url + "/send-reminderemail", {
       method: "POST",
       headers: { "Content-Type": "application/json" },

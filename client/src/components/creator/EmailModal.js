@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import Loader from "../Loader";
+import { BASE_URL } from "../Constant";
 
 const EmailModal = ({ handleCloseEmailModal }) => {
   const [loading, setLoading] = useState(false);
@@ -19,8 +20,7 @@ const EmailModal = ({ handleCloseEmailModal }) => {
         return;
       }
 
-      //const url = "https://invoicesimplify.onrender.com";
-      const url = "http://localhost:5001";
+      const url = BASE_URL;
 
       setLoading(true);
       const response = await fetch(url + "/send-email-pdf", {

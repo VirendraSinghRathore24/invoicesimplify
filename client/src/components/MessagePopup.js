@@ -3,7 +3,7 @@ import { X } from "lucide-react";
 import { collection, doc, getDocs } from "firebase/firestore";
 import { db } from "../config/firebase";
 import Loader from "./Loader";
-import { INVOICE_INFO, USERS } from "./Constant";
+import { BASE_URL, INVOICE_INFO, USERS } from "./Constant";
 
 const MessagePopup = ({
   handleCloseMessagePopup,
@@ -68,35 +68,32 @@ const MessagePopup = ({
 
       const linkStr = await getLinkStr();
 
-      const response = await fetch(
-        "https://invoicesimplify.onrender.com/send-sms",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: customerName,
-            to: "+91" + phone,
-            businessname: businessName,
-            amount: amount,
-            message:
-              "Dear " +
-              customerName +
-              ",\n\nThank you for your purchase! Your invoice is ready.\n\n" +
-              "You can view your invoice using the link below:\n\n" +
-              "https://invoicesimplify.com/ci/" +
-              linkStr +
-              "\n\nIf you have any questions, feel free to contact us.\n\n" +
-              "Best regards,\n" +
-              businessName +
-              "\n" +
-              businessPhone,
-            urllink: "https://invoicesimplify.com/ci/" + linkStr,
-            date: getCurrentDate(),
-          }),
-        }
-      );
+      const response = await fetch(BASE_URL + "/send-sms", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: customerName,
+          to: "+91" + phone,
+          businessname: businessName,
+          amount: amount,
+          message:
+            "Dear " +
+            customerName +
+            ",\n\nThank you for your purchase! Your invoice is ready.\n\n" +
+            "You can view your invoice using the link below:\n\n" +
+            "https://invoicesimplify.com/ci/" +
+            linkStr +
+            "\n\nIf you have any questions, feel free to contact us.\n\n" +
+            "Best regards,\n" +
+            businessName +
+            "\n" +
+            businessPhone,
+          urllink: "https://invoicesimplify.com/ci/" + linkStr,
+          date: getCurrentDate(),
+        }),
+      });
 
       const result = await response.json();
 

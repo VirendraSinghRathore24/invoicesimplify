@@ -22,6 +22,7 @@ import Header from "../Header";
 import MobileMenu from "../MobileMenu";
 import Loader from "../Loader";
 import {
+  BASE_URL,
   INVENTORY_INFO,
   INVOICE_INFO,
   INVOICE_LINK_INFO,
@@ -297,35 +298,32 @@ function Invoice() {
 
       linkStr = await getLinkStr(invoiceInfo.invoiceNumber);
       //const response = await fetch("http://localhost:5001/send-sms"
-      const response = await fetch(
-        "https://invoicesimplify.onrender.com/send-sms",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: customerInfo.customerName,
-            to: "+91" + customerInfo.customerPhone,
-            businessname: businessInfo.name,
-            amount: amountInfo?.amount,
-            message:
-              "Dear " +
-              customerInfo.customerName +
-              ",\n\nThank you for your purchase! Your invoice is ready.\n\n" +
-              "You can view your invoice using the link below:\n\n" +
-              "https://invoicesimplify.com/ci/" +
-              linkStr +
-              "\n\nIf you have any questions, feel free to contact us.\n\n" +
-              "Best regards,\n" +
-              businessInfo.name +
-              "\n" +
-              businessInfo.phonePrimary,
-            urllink: "https://invoicesimplify.com/ci/" + linkStr,
-            date: getCurrentDate(),
-          }),
-        }
-      );
+      const response = await fetch(BASE_URL + "/send-sms", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: customerInfo.customerName,
+          to: "+91" + customerInfo.customerPhone,
+          businessname: businessInfo.name,
+          amount: amountInfo?.amount,
+          message:
+            "Dear " +
+            customerInfo.customerName +
+            ",\n\nThank you for your purchase! Your invoice is ready.\n\n" +
+            "You can view your invoice using the link below:\n\n" +
+            "https://invoicesimplify.com/ci/" +
+            linkStr +
+            "\n\nIf you have any questions, feel free to contact us.\n\n" +
+            "Best regards,\n" +
+            businessInfo.name +
+            "\n" +
+            businessInfo.phonePrimary,
+          urllink: "https://invoicesimplify.com/ci/" + linkStr,
+          date: getCurrentDate(),
+        }),
+      });
 
       const result = await response.json();
 
