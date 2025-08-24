@@ -55,6 +55,7 @@ import EditAccountInfo from "./components/creator/EditAccountInfo";
 import AddCreatorAddtionalInfo from "./components/creator/AddCreatorAddtionalInfo";
 import CreatorAdditionalInformation from "./components/creator/CreatorAdditionalInformation";
 import EditCreatorAddtionalInfo from "./components/creator/EditCreatorAddtionalInfo";
+import EditBrandInfo from "./components/creator/EditBrandInfo";
 
 function App() {
   const type = localStorage.getItem("type");
@@ -174,6 +175,7 @@ function App() {
           <Route path="/creator/viewinvoice" element={<CreatorViewInvoice />} />
           <Route path="/creator/dashboard" element={<CreatorDashboard />} />
           <Route path="/creator/brands" element={<Brands />} />
+          <Route path="/creator/editbrandinfo" element={<EditBrandInfo />} />
         </Routes>
 
         <ToastContainer />

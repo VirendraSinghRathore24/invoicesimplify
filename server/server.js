@@ -74,8 +74,8 @@ app.use(express.json());
 
 app.use(
   cors({
-    //origin: "http://localhost:3000",
-    origin: "https://invoicesimplify.com",
+    origin: "http://localhost:3000",
+    //origin: "https://invoicesimplify.com",
     credentials: true,
   })
 );
@@ -100,6 +100,7 @@ transporter.verify((error, success) => {
 });
 
 const dns = require("dns");
+const { console } = require("inspector");
 dns.lookup("smtpout.secureserver.net", (err, address) => {
   if (err) console.error("DNS Error:", err);
   else console.log("SMTP IP:", address);
@@ -700,6 +701,68 @@ app.post("/generate-pdf1", async (req, res) => {
   } catch (err) {
     console.error("PDF generation error:", err);
     res.status(500).json({ error: "Failed to generate PDF" });
+  }
+});
+
+app.post("/send-email-pdf", async (req, res) => {
+  const { html, product, yourname, email } = req.body;
+  const pdfPath = path.join(__dirname, "invoice.pdf");
+
+  try {
+    if (!html) {
+      return res.status(400).json({ error: "HTML content is required" });
+    }
+    const fontLink = `<link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">`;
+    const html1 = `
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset="UTF-8" />
+      <title>Invoice</title>
+      ${fontLink}
+      <style>
+        body {
+          font-family: 'Inter', sans-serif;
+        }
+      </style>
+    </head>
+    <body>
+      ${html}
+    </body>
+  </html>
+`;
+
+    // Convert HTML to PDF
+    //const file = { content: html1 };
+    const options = { format: "A4", printBackground: true };
+
+    pdf.create(html1, options).toFile(pdfPath, (err, res) => {
+      if (err) return console.error(err);
+      console.log("PDF created:", res.filename);
+    });
+  } catch (err) {
+    console.error("PDF generation error:", err);
+    res.status(500).json({ error: "Failed to generate PDF" });
+  }
+
+  const mailOptions = {
+    from: "support@invoicesimplify.com",
+    to: email,
+    subject: `Invoice for ${product} by ${yourname}`,
+    text: `Hello, Please find the attached invoice for ${product} by ${yourname}.`,
+    attachments: [
+      {
+        filename: "invoice.pdf",
+        path: pdfPath,
+      },
+    ],
+  };
+
+  try {
+    // await transporter.sendMail(mailOptions);
+    console.log(`✅ Email sent to ${email} for ${frequency}`);
+  } catch (err) {
+    console.error(`❌ Error sending to ${email}:`, err);
   }
 });
 

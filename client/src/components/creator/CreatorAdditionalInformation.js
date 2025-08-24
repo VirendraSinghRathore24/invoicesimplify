@@ -19,7 +19,7 @@ const CreatorAdditionalInformation = () => {
   const handleDelete = async () => {
     const isDeleted = await deleteBusinessInfo();
     if (isDeleted) {
-      localStorage.removeItem("additionalInfo");
+      localStorage.removeItem("creator_additionalInfo");
       setPosts(null);
     }
   };

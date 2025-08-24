@@ -217,20 +217,28 @@ const CreatorAddInvoice = () => {
   const [showConfirm, setShowConfirm] = useState(false);
 
   const handleCreateInvoice = async () => {
-    // if (!inputs?.customerName?.trim()) {
-    //   setShowConfirm(true);
-    //   return;
-    // }
+    if (!inputs?.customerName?.trim()) {
+      setShowConfirm(true);
+      return;
+    }
 
-    // if (!invoiceNumber) {
-    //   alert("Please add invoice number !!!");
-    //   return;
-    // }
+    if (!inputs?.productName?.trim()) {
+      alert("Please add product name !!!");
+      document.querySelector('input[name="productName"]').focus();
+      return;
+    }
 
-    // if (!date) {
-    //   alert("Please add invoice date !!!");
-    //   return;
-    // }
+    if (!invoiceNumber) {
+      alert("Please add invoice number !!!");
+      document.querySelector('input[name="invoiceNumber"]').focus();
+      return;
+    }
+
+    if (!date) {
+      alert("Please add invoice date !!!");
+      document.querySelector('input[name="date"]').focus();
+      return;
+    }
 
     // let info1 = localStorage.getItem("creater_personalInfo");
     // if (!info1 || info1 === null || info1 === undefined || info1 === "null") {
@@ -238,26 +246,26 @@ const CreatorAddInvoice = () => {
     //   return;
     // }
 
-    // if (rows.length === 0) {
-    //   alert("Atleast one item should be added !!!");
-    //   return;
-    // }
-    // // validate each row before creating invoice
-    // for (let i = 0; i < rows.length; i++) {
-    //   const row = rows[i];
-    //   if (!row.desc.trim()) {
-    //     alert("Item description can not be empty !!!");
-    //     return;
-    //   }
-    //   if (!row.rate) {
-    //     alert("Price (Rate) can not be empty !!!");
-    //     return;
-    //   }
-    //   if (!row.qty) {
-    //     alert("Quantity can not be empty !!!");
-    //     return;
-    //   }
-    // }
+    if (rows.length === 0) {
+      alert("Atleast one item should be added !!!");
+      return;
+    }
+    // validate each row before creating invoice
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i];
+      if (!row.desc.trim()) {
+        alert("Item description can not be empty !!!");
+        return;
+      }
+      if (!row.rate) {
+        alert("Price (Rate) can not be empty !!!");
+        return;
+      }
+      if (!row.qty) {
+        alert("Quantity can not be empty !!!");
+        return;
+      }
+    }
 
     localStorage.setItem("creator_customerInfo", JSON.stringify(inputs));
 
@@ -491,15 +499,19 @@ const CreatorAddInvoice = () => {
   };
 
   const deleteLocalStoragePersonalInfo = () => {
-    localStorage.removeItem("custname");
-    localStorage.removeItem("email");
-    localStorage.removeItem("address1");
-    localStorage.removeItem("address2");
-    localStorage.removeItem("address3");
-    localStorage.removeItem("custphone");
-    localStorage.removeItem("vehicleNumber");
-    localStorage.removeItem("vehicleKM");
-    localStorage.removeItem("vehicleType");
+    localStorage.removeItem("creator_customername");
+    localStorage.removeItem("creator_customeremail");
+    localStorage.removeItem("customer_address");
+    localStorage.removeItem("customer_address1");
+    localStorage.removeItem("customer_address2");
+    localStorage.removeItem("customer_address3");
+    localStorage.removeItem("creator_productName");
+    localStorage.removeItem("customer_customerphone");
+    localStorage.removeItem("customer_gst");
+    localStorage.removeItem("customer_pan");
+    localStorage.removeItem("customer_tin");
+    localStorage.removeItem("customer_cin");
+    localStorage.removeItem("sign");
   };
 
   const deleteLocalStorageInvoiceInfo = () => {

@@ -142,9 +142,9 @@ const CreatorDashboard = () => {
       localStorage.setItem("dashboardInfo", JSON.stringify(items));
 
       // archive before deleting
-      await archiveInvoice(user);
+      //await archiveInvoice(user);
 
-      const invDoc = doc(db, USERS, uid, INVOICE_INFO, user.id);
+      const invDoc = doc(db, CREATORS, uid, INVOICE_INFO, user.id);
       await deleteDoc(invDoc);
 
       const totalAmount = amount - user?.amountInfo?.amount;
@@ -223,7 +223,13 @@ const CreatorDashboard = () => {
   };
 
   const handleUpdateStatus = async (id, status) => {
-    if (window.confirm("Are you sure you want to update the payment status?")) {
+    if (
+      window.confirm(
+        "Are you sure you want to update the payment status to " +
+          (status === "Received" ? "Pending" : "Received") +
+          "?"
+      )
+    ) {
       const codeDoc = doc(db, CREATORS, uid, INVOICE_INFO, id);
       await updateDoc(codeDoc, {
         paymentStatus: status === "Received" ? "Pending" : "Received",
@@ -764,11 +770,11 @@ const CreatorDashboard = () => {
                           className={`border-t ${
                             index % 2 === 0 &&
                             !(
-                              daysFromToday(user.invoiceInfo.date) > 14 &&
+                              daysFromToday(user.invoiceInfo.date) > 30 &&
                               user.paymentStatus === "Pending"
                             )
                               ? "bg-white"
-                              : daysFromToday(user.invoiceInfo.date) > 14 &&
+                              : daysFromToday(user.invoiceInfo.date) > 30 &&
                                 user.paymentStatus === "Pending"
                               ? "bg-orange-100"
                               : "bg-gray-50"

@@ -70,7 +70,7 @@ const ReminderModal = ({ handleCloseReminderModal }) => {
     const data = JSON.parse(localStorage.getItem("reminder_data"));
     setPosts(data);
 
-    setBrandEmail(data.customerInfo.email);
+    setBrandEmail(data.customerInfo.customerEmail);
     setCCEmail(data.personalInfo.email);
     setSubject(
       `Payment Reminder: ${data.customerInfo.productName} Collab by ${

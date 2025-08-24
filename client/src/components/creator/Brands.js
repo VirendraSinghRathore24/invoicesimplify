@@ -97,7 +97,7 @@ const Brands = () => {
       <div className="hidden max-lg:block mb-16">
         <CreatorMobileMenu />
       </div>
-      <div className=" mt-16 lg:mt-6 bg-white p-4 text-black rounded-xl w-full lg:w-7/12">
+      <div className=" mt-16 lg:mt-0 bg-white p-4 text-black rounded-xl w-full lg:ml-[17%]">
         <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-2">
           <div className="p-4">
             <input
@@ -148,7 +148,13 @@ const Brands = () => {
                       </td>
                       <td className="px-4 py-3 border-r whitespace-nowrap">
                         <button
-                          //onClick={() => handleView(user.id)}
+                          onClick={() =>
+                            navigate("/creator/editbrandinfo", {
+                              state: {
+                                post: post,
+                              },
+                            })
+                          }
                           className="text-blue-600 hover:text-blue-800 font-semibold text-xs"
                         >
                           Edit

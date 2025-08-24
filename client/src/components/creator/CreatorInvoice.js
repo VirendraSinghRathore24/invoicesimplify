@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import confetti from "canvas-confetti";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Download } from "lucide-react";
-import { Printer } from "lucide-react";
+import { Mail } from "lucide-react";
 import { FaRegEdit } from "react-icons/fa";
 import { useReactToPrint } from "react-to-print";
 
@@ -16,6 +16,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import Loader from "../Loader";
+import EmailModal from "./EmailModal";
 
 function CreatorInvoice() {
   const pdfExportComponent = React.useRef(null);
@@ -40,6 +41,11 @@ function CreatorInvoice() {
 
   const isMediumScreen = window.innerWidth >= 768;
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 768);
+
+  const [openEmailModal, setOpenEmailModal] = useState(false);
+  const handleCloseEmailModal = () => {
+    setOpenEmailModal(false);
+  };
 
   const handlePrint = useReactToPrint({
     documentTitle: "Invoice",
@@ -66,10 +72,11 @@ function CreatorInvoice() {
     const date = month + " " + today.getDate() + ", " + today.getFullYear();
     return date;
   };
+
   const handleDownloadPdf = async (e) => {
     e.preventDefault();
-    const url = "https://invoicesimplify.onrender.com";
-    //const url = "http://localhost:5001";
+    //const url = "https://invoicesimplify.onrender.com";
+    const url = "http://localhost:5001";
     try {
       setLoading(true);
       const html = printRef.current.innerHTML;
@@ -86,7 +93,7 @@ function CreatorInvoice() {
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.download = "personal-info.pdf";
+        link.download = customerInfo.productName + ".pdf";
         link.click();
         URL.revokeObjectURL(url);
 
@@ -215,6 +222,7 @@ function CreatorInvoice() {
     localStorage.removeItem("customer_pan");
     localStorage.removeItem("customer_tin");
     localStorage.removeItem("customer_cin");
+    localStorage.removeItem("creator_signedInfo");
   };
 
   const deleteLocalStorageInvoiceInfo = () => {
@@ -280,13 +288,13 @@ function CreatorInvoice() {
         </div>
         <div>
           <button
-            onClick={handlePrint}
+            onClick={() => setOpenEmailModal(true)}
             className="flex items-center bg-[#E5E7EB]  font-bold px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
           >
             <span className="mr-2">
-              <Printer />
+              <Mail />
             </span>
-            Print
+            Email Invoice
           </button>
         </div>
         <div className="flex gap-x-2">
@@ -626,14 +634,14 @@ function CreatorInvoice() {
                       >
                         Rate
                       </th>
-                      <th
+                      {/* <th
                         style={{
                           width: "10%",
                           display: isMediumScreen ? "none" : "block",
                         }}
                       >
                         Qty
-                      </th>
+                      </th> */}
                       <th
                         style={{
                           width: "10%",
@@ -949,6 +957,8 @@ function CreatorInvoice() {
             </div>
             <div
               style={{
+                color: "#6B7280",
+                fontSize: "0.875rem",
                 marginTop: "0.25rem", // font-bold
               }}
             >
@@ -971,6 +981,9 @@ function CreatorInvoice() {
           </div>
         </div>
       </div>
+      {openEmailModal && (
+        <EmailModal handleCloseEmailModal={handleCloseEmailModal} />
+      )}
     </div>
   );
 }
