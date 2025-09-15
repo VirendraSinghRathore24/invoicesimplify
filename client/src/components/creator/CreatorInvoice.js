@@ -465,15 +465,17 @@ function CreatorInvoice() {
                     {customerInfo.customerName}
                   </div>
 
-                  <div
-                    style={{
-                      color: "#6B7280",
-                      fontSize: "0.875rem",
-                      marginTop: "0.2rem",
-                    }}
-                  >
-                    {customerInfo.address}, {customerInfo.address1}
-                  </div>
+                  {customerInfo.address && (
+                    <div
+                      style={{
+                        color: "#6B7280",
+                        fontSize: "0.875rem",
+                        marginTop: "0.2rem",
+                      }}
+                    >
+                      {customerInfo.address}, {customerInfo.address1}
+                    </div>
+                  )}
 
                   {customerInfo.address2 && (
                     <div
