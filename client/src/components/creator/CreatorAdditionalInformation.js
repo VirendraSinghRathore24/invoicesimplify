@@ -7,7 +7,7 @@ import { db } from "../../config/firebase";
 import Header from "../Header";
 import MobileMenu from "../MobileMenu";
 import Loader from "../Loader";
-import { BASIC_INFO, USERS } from "../Constant";
+import { BASIC_INFO, CREATORS } from "../Constant";
 import CreatorMobileMenu from "./CreatorMobileMenu";
 
 const CreatorAdditionalInformation = () => {
@@ -23,7 +23,10 @@ const CreatorAdditionalInformation = () => {
       setPosts(null);
     }
   };
-  const basicInfo_CollectionRef = collection(doc(db, USERS, uid), BASIC_INFO);
+  const basicInfo_CollectionRef = collection(
+    doc(db, CREATORS, uid),
+    BASIC_INFO
+  );
   const deleteBusinessInfo = async () => {
     try {
       var res = window.confirm("Delete the item?");
@@ -35,7 +38,7 @@ const CreatorAdditionalInformation = () => {
           id: doc.id,
         }));
 
-        const codeDoc = doc(db, USERS, uid, BASIC_INFO, basicInfo[0].id);
+        const codeDoc = doc(db, CREATORS, uid, BASIC_INFO, basicInfo[0].id);
         await updateDoc(codeDoc, {
           additionalInfo: null,
         });

@@ -546,7 +546,7 @@ const CreatorAddInvoice = () => {
 
     getLocalStorageSignInfo();
     getLocalStorageUpiInfo();
-  }, []);
+  }, [inputs]);
 
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [openItem, setOpenItem] = useState(false);

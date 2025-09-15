@@ -45,7 +45,7 @@ const BrandModal = ({ handleCloseBrandModal }) => {
   const getBrands = async () => {
     setLoading(true);
     const existingBrands = await getBrandsData();
-    console.log(existingBrands);
+
     setPosts(existingBrands);
     setFilteredData(existingBrands);
     setLoading(false);

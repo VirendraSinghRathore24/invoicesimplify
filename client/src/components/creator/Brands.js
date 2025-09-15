@@ -62,7 +62,7 @@ const Brands = () => {
     const value = e.target.value;
     setSearchTerm(value);
     const filtered = posts.filter((post) =>
-      post.itemName.toLowerCase().includes(value.toLowerCase())
+      post.customerInfo.customerName.toLowerCase().includes(value.toLowerCase())
     );
     setFilteredData(filtered);
     if (value === "") {
