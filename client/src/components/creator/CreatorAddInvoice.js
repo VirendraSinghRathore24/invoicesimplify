@@ -537,6 +537,7 @@ const CreatorAddInvoice = () => {
   const [openBrandModal, setOpenBrandModal] = useState(false);
   const handleCloseBrandModal = async () => {
     setOpenBrandModal(false);
+    getLocalStoragePersonalInfo();
   };
 
   useEffect(() => {
@@ -546,7 +547,7 @@ const CreatorAddInvoice = () => {
 
     getLocalStorageSignInfo();
     getLocalStorageUpiInfo();
-  }, [inputs]);
+  }, []);
 
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [openItem, setOpenItem] = useState(false);
