@@ -89,7 +89,7 @@ const BrandModal = ({ handleCloseBrandModal }) => {
     const value = e.target.value;
     setSearchTerm(value);
     const filtered = posts.filter((post) =>
-      post.itemName.toLowerCase().includes(value.toLowerCase())
+      post.customerInfo.customerName.toLowerCase().includes(value.toLowerCase())
     );
     setFilteredData(filtered);
     if (value === "") {
@@ -208,7 +208,7 @@ const BrandModal = ({ handleCloseBrandModal }) => {
             <table className="min-w-full text-xs text-left text-gray-700">
               <thead className="sticky top-0 z-10 bg-gray-100 text-xs uppercase text-gray-600 border-b">
                 <tr>
-                  {["Name", "Code", "Price", "Stock"].map((header) => (
+                  {["S.No.", "Name", "Address", "Mobile"].map((header) => (
                     <th
                       key={header}
                       className="px-4 py-3 border-r min-w-[120px] bg-gray-100"
@@ -232,16 +232,18 @@ const BrandModal = ({ handleCloseBrandModal }) => {
                           : "hover:bg-amber-300 cursor-pointer"
                       }`}
                     >
-                      <td className="px-4 py-3 border-r">{post.itemName}</td>
-                      <td className="px-4 py-3 border-r">{post.itemCode}</td>
-                      <td className="px-4 py-3 border-r">{post.sellPrice}</td>
+                      <td className="px-4 py-3 border-r">{index + 1}.</td>
                       <td className="px-4 py-3 border-r">
-                        {post.itemQty}
-                        {post?.selectedUnit !== "none" && (
-                          <span className="ml-1 uppercase">
-                            {post.selectedUnit}
-                          </span>
-                        )}
+                        {post.customerInfo.customerName}
+                      </td>
+                      <td className="px-4 py-3 border-r">
+                        {post.customerInfo.address},{" "}
+                        {post.customerInfo.address1},{" "}
+                        {post.customerInfo.address2} -{" "}
+                        {post.customerInfo.address3}
+                      </td>
+                      <td className="px-4 py-3 border-r">
+                        {post.customerInfo.customerPhone}
                       </td>
                     </tr>
                   ))}

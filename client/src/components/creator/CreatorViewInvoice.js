@@ -298,16 +298,18 @@ function CreatorViewInvoice() {
                           {invoiceInfo?.customerInfo.customerName}
                         </div>
 
-                        <div
-                          style={{
-                            color: "#6B7280",
-                            fontSize: "0.875rem",
-                            marginTop: "0.2rem",
-                          }}
-                        >
-                          {invoiceInfo?.customerInfo.address},{" "}
-                          {invoiceInfo?.customerInfo.address1}
-                        </div>
+                        {invoiceInfo?.customerInfo.address && (
+                          <div
+                            style={{
+                              color: "#6B7280",
+                              fontSize: "0.875rem",
+                              marginTop: "0.2rem",
+                            }}
+                          >
+                            {invoiceInfo?.customerInfo.address},{" "}
+                            {invoiceInfo?.customerInfo.address1}
+                          </div>
+                        )}
 
                         {invoiceInfo?.customerInfo.address2 && (
                           <div

@@ -690,7 +690,16 @@ app.post("/generate-pdf1", async (req, res) => {
 
     // Convert HTML to PDF
     const file = { content: html1 };
-    const options = { format: "A4", printBackground: true };
+    const options = {
+      format: "A4",
+      printBackground: true,
+      margin: {
+        top: "2cm",
+        bottom: "2cm",
+        left: "1.5cm",
+        right: "1.5cm",
+      },
+    };
 
     const pdfBuffer = await pdf1.generatePdf(file, options);
 
