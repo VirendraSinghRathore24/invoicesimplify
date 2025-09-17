@@ -3,10 +3,10 @@ import { X } from "lucide-react";
 import Loader from "../Loader";
 import { BASE_URL } from "../Constant";
 
-const EmailModal = ({ handleCloseEmailModal }) => {
+const EmailModal = ({ handleCloseEmailModal, email }) => {
   const [loading, setLoading] = useState(false);
   const [posts, setPosts] = useState([]);
-  const [brandEmail, setBrandEmail] = useState("");
+  const [brandEmail, setBrandEmail] = useState(email);
   const [ccEmail, setCCEmail] = useState("");
   const [subject, setSubject] = useState("");
 
@@ -29,7 +29,7 @@ const EmailModal = ({ handleCloseEmailModal }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: "virendrasinghrathore24@gmail.com",
+          email: email,
         }),
       });
 

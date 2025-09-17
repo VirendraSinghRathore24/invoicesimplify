@@ -273,8 +273,8 @@ function CreatorInvoice() {
     setAdditionalInfo(JSON.parse(ad));
   }, []);
   return (
-    <div>
-      <div className="mt-2 flex w-full md:w-6/12 p-2 mx-auto justify-between">
+    <div className="ml-20">
+      <div className="mt-2 flex w-full lg:w-7/12 p-2 mx-auto justify-between">
         <div className="flex gap-x-2">
           <button
             onClick={handleEditInvoice}
@@ -326,7 +326,7 @@ function CreatorInvoice() {
         </div>
       </div>
       <div>
-        <div className="w-full md:w-6/12 mx-auto py-2 border-2 mb-10 mt-2">
+        <div className="w-full lg:w-7/12 mx-auto py-2 border-2 mb-10 mt-2">
           <div
             ref={printRef}
             style={{
@@ -984,7 +984,10 @@ function CreatorInvoice() {
         </div>
       </div>
       {openEmailModal && (
-        <EmailModal handleCloseEmailModal={handleCloseEmailModal} />
+        <EmailModal
+          handleCloseEmailModal={handleCloseEmailModal}
+          email={personalInfo.email}
+        />
       )}
     </div>
   );

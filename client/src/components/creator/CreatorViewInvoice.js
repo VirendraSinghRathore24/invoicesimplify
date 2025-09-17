@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Printer, MessageCircle, ChevronLeft } from "lucide-react";
+import { Printer, Mail, ChevronLeft, Download } from "lucide-react";
 import { collection } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import { useReactToPrint } from "react-to-print";
@@ -10,8 +10,9 @@ import { toast } from "react-toastify";
 import MobileMenu from "../MobileMenu";
 import Loader from "../Loader";
 import MessagePopup from "../MessagePopup";
-import { SERVICE_CENTER } from "../Constant";
+import { BASE_URL, SERVICE_CENTER } from "../Constant";
 import CreatorMobileMenu from "./CreatorMobileMenu";
+import EmailModal from "./EmailModal";
 
 function CreatorViewInvoice() {
   const [invoiceInfo, setInvoiceInfo] = useState({});
@@ -68,6 +69,39 @@ function CreatorViewInvoice() {
     });
   };
 
+  const handleDownloadPdf = async (e) => {
+    e.preventDefault();
+
+    const url = BASE_URL;
+    try {
+      setLoading(true);
+      const html = printRef.current.innerHTML;
+      const response = await fetch(url + "/generate-pdf1", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ html }),
+      });
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = invoiceInfo.customerInfo.productName + ".pdf";
+        link.click();
+        URL.revokeObjectURL(url);
+      } else {
+        console.error("PDF generation failed");
+      }
+    } catch (error) {
+      console.error("Error sending data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handlePrint = useReactToPrint({
     documentTitle: "Invoice",
     contentRef: printRef,
@@ -90,8 +124,9 @@ function CreatorViewInvoice() {
     }
   };
 
-  const handleMessage = () => {
-    //setOpenMessagePopup(true);
+  const [openEmailModal, setOpenEmailModal] = useState(false);
+  const handleCloseEmailModal = () => {
+    setOpenEmailModal(false);
   };
 
   const handleLogin = () => {
@@ -123,13 +158,13 @@ function CreatorViewInvoice() {
               </div>
               <div>
                 <button onClick={handlePrint}>
-                  <Printer />
+                  <Mail />
                 </button>
               </div>
 
               <div>
-                <button onClick={() => handleMessage()}>
-                  <MessageCircle size={22} />
+                <button onClick={handleDownloadPdf}>
+                  <Download size={22} />
                 </button>
               </div>
             </div>
@@ -140,7 +175,7 @@ function CreatorViewInvoice() {
               <div>
                 <button
                   onClick={() => navigate(-1)}
-                  className="flex items-center bg-[#E5E7EB]  font-bold px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
+                  className="flex items-center bg-[#E5E7EB] font-bold px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
                 >
                   <span className="mr-2">
                     <ChevronLeft />
@@ -150,25 +185,25 @@ function CreatorViewInvoice() {
               </div>
               <div>
                 <button
-                  onClick={handlePrint}
+                  onClick={() => setOpenEmailModal(true)}
                   className="flex items-center bg-[#E5E7EB]  font-bold px-2 lg:px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
                 >
                   <span className="mr-2">
-                    <Printer />
+                    <Mail />
                   </span>
-                  Print
+                  Email Invoice
                 </button>
               </div>
 
               <div>
                 <button
-                  //onClick={() => handleMessage()}
-                  className="flex items-center bg-[#E5E7EB] font-bold px-2 lg:px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
+                  onClick={handleDownloadPdf}
+                  className="flex items-center bg-[#444] text-white font-bold px-2 lg:px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
                 >
                   <span className="mr-2">
-                    <MessageCircle size={22} />
+                    <Download size={22} />
                   </span>
-                  Message
+                  PDF
                 </button>
               </div>
             </div>
@@ -816,6 +851,12 @@ function CreatorViewInvoice() {
 
         {loading && <Loader />}
       </div>
+      {openEmailModal && (
+        <EmailModal
+          handleCloseEmailModal={handleCloseEmailModal}
+          email={invoiceInfo.personalInfo.email}
+        />
+      )}
     </div>
   );
 }

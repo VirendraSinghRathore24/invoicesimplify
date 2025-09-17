@@ -116,7 +116,7 @@ const ContactUs = () => {
             <div>
               <h4 className="text-md font-semibold">📱 Phone</h4>
               <p className="text-gray-600 dark:text-gray-400 text-sm">
-                +91 91106 74036
+                +91 80955 28424
               </p>
             </div>
             <div>
