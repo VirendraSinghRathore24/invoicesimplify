@@ -641,6 +641,28 @@ const CreatorDashboard = () => {
               </div>
             </div>
           </div>
+
+          <div className="hidden max-lg:block">
+            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4 mb-2 py-1 rounded-md">
+              <div
+                className={`p-2 rounded-lg shadow bg-emerald-500 text-white`}
+              >
+                <div className="flex items-center justify-between">
+                  <p className="text-sm">Total Earnings</p>
+                  <ArrowUp />
+                </div>
+                <h3 className="mt-2 text-xl font-semibold">₹ {amount}</h3>
+              </div>
+              <div className={`p-2 rounded-lg shadow bg-red-400 text-white`}>
+                <div className="flex items-center justify-between">
+                  <p className="text-sm">Due Amount</p>
+                  <BanknoteX />
+                </div>
+                <h3 className="mt-2 text-xl font-semibold">₹ {balance}</h3>
+              </div>
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 text-xs">
             <input
               type="text"

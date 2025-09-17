@@ -855,6 +855,7 @@ function CreatorViewInvoice() {
         <EmailModal
           handleCloseEmailModal={handleCloseEmailModal}
           email={invoiceInfo.personalInfo.email}
+          id={id}
         />
       )}
     </div>
