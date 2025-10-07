@@ -1,8 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import confetti from "canvas-confetti";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Download } from "lucide-react";
-import { Mail } from "lucide-react";
+import { Mail, Edit, Download } from "lucide-react";
 import { FaRegEdit } from "react-icons/fa";
 import { useReactToPrint } from "react-to-print";
 
@@ -17,6 +15,7 @@ import {
 import { db } from "../../config/firebase";
 import Loader from "../Loader";
 import EmailModal from "./EmailModal";
+import CreatorMobileMenu from "./CreatorMobileMenu";
 
 function CreatorInvoice() {
   const pdfExportComponent = React.useRef(null);
@@ -273,67 +272,92 @@ function CreatorInvoice() {
     setAdditionalInfo(JSON.parse(ad));
   }, []);
   return (
-    <div className="ml-20">
-      <div className="mt-2 flex w-full lg:w-7/12 p-2 mx-auto justify-between">
-        <div className="flex gap-x-2">
-          <button
-            onClick={handleEditInvoice}
-            className="flex items-center bg-[#E5E7EB] font-bold px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
-          >
-            <span className="mr-2">
-              <FaRegEdit size={22} />
-            </span>
-            Edit
-          </button>
-        </div>
-        <div>
-          <button
-            onClick={() => setOpenEmailModal(true)}
-            className="flex items-center bg-[#E5E7EB]  font-bold px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
-          >
-            <span className="mr-2">
+    <div className="ml-0 lg:ml-20 p-2 lg:p-0">
+      <div className="hidden max-lg:block mb-16">
+        <CreatorMobileMenu />
+      </div>
+      <div className="hidden max-lg:block">
+        <div className="flex justify-between w-full lg:w-8/12 mx-auto px-2">
+          <div>
+            <button onClick={handleEditInvoice}>
+              <Edit />
+            </button>
+          </div>
+          <div>
+            <button onClick={() => setOpenEmailModal(true)}>
               <Mail />
-            </span>
-            Email Invoice
-          </button>
+            </button>
+          </div>
+
+          <div>
+            <button onClick={handleDownloadPdf}>
+              <Download size={22} />
+            </button>
+          </div>
         </div>
-        <div className="flex gap-x-2">
-          {/* <button
+      </div>
+      <div className="hidden lg:block">
+        <div className="mt-2 flex w-full lg:w-7/12 p-2 mx-auto justify-between">
+          <div className="flex gap-x-2">
+            <button
+              onClick={handleEditInvoice}
+              className="flex items-center bg-[#E5E7EB] font-bold px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
+            >
+              <span className="mr-2">
+                <FaRegEdit size={22} />
+              </span>
+              Edit
+            </button>
+          </div>
+          <div>
+            <button
+              onClick={() => setOpenEmailModal(true)}
+              className="flex items-center bg-[#E5E7EB]  font-bold px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
+            >
+              <span className="mr-2">
+                <Mail />
+              </span>
+              Email Invoice
+            </button>
+          </div>
+          <div className="flex gap-x-2">
+            {/* <button
             onClick={handleDownloadPdf}
             className="flex items-center bg-[#E5E7EB]  font-bold px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
           >
             <span className="mr-2"><Mail/></span> Email Invoice
           </button> */}
-          <button
-            onClick={handleDownloadPdf}
-            className="flex items-center font-bold bg-[#444] text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300"
-          >
-            <span className="flex items-center gap-1">
-              {loading ? (
-                <>
-                  <Loader />
-                </>
-              ) : (
-                <div className="flex gap-2">
-                  <div>
-                    <Download />{" "}
+            <button
+              onClick={handleDownloadPdf}
+              className="flex items-center font-bold bg-[#444] text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300"
+            >
+              <span className="flex items-center gap-1">
+                {loading ? (
+                  <>
+                    <Loader />
+                  </>
+                ) : (
+                  <div className="flex gap-2">
+                    <div>
+                      <Download />{" "}
+                    </div>
+                    <div>PDF </div>
                   </div>
-                  <div>PDF </div>
-                </div>
-              )}
-            </span>
-          </button>
+                )}
+              </span>
+            </button>
+          </div>
         </div>
       </div>
       <div>
-        <div className="w-full lg:w-7/12 mx-auto py-2 border-2 mb-10 mt-2">
+        <div className="w-full lg:w-7/12 mx-auto py-2 border-2 mb-10 mt-2 rounded-md">
           <div
             ref={printRef}
             style={{
               padding: "2rem",
               fontFamily: "'Inter', sans-serif",
               fontSize: "14px",
-              padding: "20px",
+              padding: "10px",
               textAlign: "left",
             }}
           >
@@ -357,7 +381,7 @@ function CreatorInvoice() {
                       marginTop: "0.2rem",
                     }}
                   >
-                    {personalInfo.address}
+                    {personalInfo.address},
                   </div>
                   {personalInfo.address1 && (
                     <div
@@ -987,6 +1011,12 @@ function CreatorInvoice() {
         <EmailModal
           handleCloseEmailModal={handleCloseEmailModal}
           email={personalInfo.email}
+          invoiceInfo={invoiceInfo}
+          personalInfo={personalInfo}
+          customerInfo={customerInfo}
+          rows={rows}
+          amountInfo={amount}
+          //taxCalculatedInfo={taxCalculatedInfo}
         />
       )}
     </div>

@@ -648,14 +648,14 @@ const CreatorDashboard = () => {
                 className={`p-2 rounded-lg shadow bg-emerald-500 text-white`}
               >
                 <div className="flex items-center justify-between">
-                  <p className="text-sm">Total Earnings</p>
+                  <p className="text-sm font-bold">Total Earnings</p>
                   <ArrowUp />
                 </div>
                 <h3 className="mt-2 text-xl font-semibold">₹ {amount}</h3>
               </div>
               <div className={`p-2 rounded-lg shadow bg-red-400 text-white`}>
                 <div className="flex items-center justify-between">
-                  <p className="text-sm">Due Amount</p>
+                  <p className="text-sm font-bold">Due Amount</p>
                   <BanknoteX />
                 </div>
                 <h3 className="mt-2 text-xl font-semibold">₹ {balance}</h3>

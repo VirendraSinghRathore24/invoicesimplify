@@ -1004,8 +1004,8 @@ const CreatorAddInvoice = () => {
                           <th className="w-[10%]">S.No.</th>
                           <th className="w-[30%] text-left">Description</th>
                           <th className="w-[15%]">Rate</th>
-                          <th className="w-[10%] max-md:hidden">Quantity</th>
-                          <th className="w-[10%] md:hidden">Qty</th>
+                          <th className="w-[10%] max-lg:hidden block">Qty</th>
+                          <th className="w-[10%] lg:hidden block">Quantity</th>
                           <th className="w-[20%] text-center">Amount</th>
                           <th className="w-[10%]"></th>
                         </tr>
@@ -1037,21 +1037,13 @@ const CreatorAddInvoice = () => {
                                         )
                                       }
                                     />
-                                    {/* <button
-                                  onClick={() => handleSearch(index)}
-                                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-blue-600"
-                                >
-                                  <FontAwesomeIcon icon={faSearch} />
-                                </button> */}
                                   </div>
                                 </td>
                                 <td className="w-[15%] text-center">
                                   <input
-                                    className={`w-full text-right block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600 ${
-                                      isLoss(row.rate, row.buyPrice)
-                                        ? "border-red-500 focus:ring-red-500 outline-red-500"
-                                        : "border-gray-300 focus:ring-indigo-500"
-                                    }`}
+                                    className={`w-full text-right block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600 
+                                      
+                                    `}
                                     required
                                     name="rate"
                                     placeholder="Price"
@@ -1064,11 +1056,6 @@ const CreatorAddInvoice = () => {
                                       )
                                     }
                                   />
-                                  {isLoss(row.rate, row.buyPrice) && (
-                                    <p className="text-sm text-red-600 mt-1">
-                                      Selling at a loss for this item!
-                                    </p>
-                                  )}
                                 </td>
                                 <td className="w-[10%] ">
                                   <div className="relative w-full max-w-md">
@@ -1134,11 +1121,8 @@ const CreatorAddInvoice = () => {
                                 <div className="w-full mx-auto flex gap-x-2">
                                   <td className="w-[30%] text-center">
                                     <input
-                                      className={`w-full text-right block text-xs rounded border border-gray-400 py-1 px-4 leading-5 focus:text-gray-600  ${
-                                        isLoss(row.rate, row.buyPrice)
-                                          ? "border-red-500 focus:ring-red-500 outline-red-500"
-                                          : "border-gray-300 focus:ring-indigo-500"
-                                      }`}
+                                      className={`w-full text-right block text-xs rounded border border-gray-400 py-1 px-4 leading-5 focus:text-gray-600
+                                       `}
                                       required
                                       name="rate"
                                       placeholder="Price"
@@ -1151,11 +1135,6 @@ const CreatorAddInvoice = () => {
                                         )
                                       }
                                     />
-                                    {isLoss(row.rate, row.buyPrice) && (
-                                      <p className="text-sm text-red-600 mt-1">
-                                        Selling at a loss for this item!
-                                      </p>
-                                    )}
                                   </td>
                                   <td className="w-[30%] ">
                                     <div className="relative w-full max-w-md">
@@ -1173,11 +1152,6 @@ const CreatorAddInvoice = () => {
                                           )
                                         }
                                       />
-                                      {row?.selectedUnit !== "none" && (
-                                        <div className="absolute right-0 top-1/2 transform -translate-y-1/2 text-white p-1 rounded-r bg-gray-600 uppercase">
-                                          {row?.selectedUnit}
-                                        </div>
-                                      )}
                                     </div>
                                   </td>
                                   <td className="w-[30%] text-center">
@@ -1187,12 +1161,6 @@ const CreatorAddInvoice = () => {
                                   </td>
                                   <td className="w-[10%]">
                                     <div>
-                                      {/* <button
-                                    className="border-2 px-2 py-1 rounded-md bg-gray-700 text-white font-bold mt-2"
-                                    onClick={handleAddRow}
-                                  >
-                                    +
-                                  </button> */}
                                       <div className="mt-1">
                                         <Trash2
                                           color="red"

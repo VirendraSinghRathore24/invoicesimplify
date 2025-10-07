@@ -218,7 +218,7 @@ function CreatorViewInvoice() {
                     padding: "2rem",
                     fontFamily: "'Inter', sans-serif",
                     fontSize: "14px",
-                    padding: "20px",
+                    padding: "10px",
                     textAlign: "left",
                   }}
                 >
@@ -240,7 +240,7 @@ function CreatorViewInvoice() {
                         <div style={{ fontWeight: "bold", fontSize: "1rem" }}>
                           {invoiceInfo?.personalInfo.name}
                         </div>
-                        <div
+                        {/* <div
                           style={{
                             color: "#6B7280",
                             fontSize: "0.875rem",
@@ -259,7 +259,39 @@ function CreatorViewInvoice() {
                           {invoiceInfo?.personalInfo.address1},{" "}
                           {invoiceInfo?.personalInfo.address2} -{" "}
                           {invoiceInfo?.personalInfo.address3}
+                        </div> */}
+                        <div
+                          style={{
+                            color: "#6B7280",
+                            fontSize: "0.875rem",
+                            marginTop: "0.2rem",
+                          }}
+                        >
+                          {invoiceInfo?.personalInfo?.address},
                         </div>
+                        {invoiceInfo?.personalInfo?.address1 && (
+                          <div
+                            style={{
+                              color: "#6B7280",
+                              fontSize: "0.875rem",
+                              marginTop: "0.2rem",
+                            }}
+                          >
+                            {invoiceInfo?.personalInfo?.address1},
+                          </div>
+                        )}
+                        {invoiceInfo?.personalInfo?.address2 && (
+                          <div
+                            style={{
+                              color: "#6B7280",
+                              fontSize: "0.875rem",
+                              marginTop: "0.2rem",
+                            }}
+                          >
+                            {invoiceInfo?.personalInfo?.address2} -{" "}
+                            {invoiceInfo?.personalInfo?.address3}
+                          </div>
+                        )}
                         <div
                           style={{
                             color: "#6B7280",

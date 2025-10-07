@@ -45,7 +45,7 @@ const CreatorMobileMenu = () => {
       return "creator/accountinfo";
     }
     if (input === "Additional Info") {
-      return "creator/addtionalinfo";
+      return "creator/creatoradditionalinfo";
     }
   };
 
