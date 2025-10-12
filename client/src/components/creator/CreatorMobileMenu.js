@@ -74,7 +74,12 @@ const CreatorMobileMenu = () => {
       {/* Top bar */}
       <div className="flex items-center justify-between p-4 bg-[#014459] text-white shadow-md">
         <NavLink className="text-xl font-bold" to={"/"}>
-          InvoiceSimplify
+          <img
+            src="../../images/invlogo2.png"
+            alt="Logo"
+            width={60}
+            loading="lazy"
+          />
         </NavLink>
         <button
           className="lg:hidden"

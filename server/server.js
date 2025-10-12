@@ -694,10 +694,10 @@ app.post("/generate-pdf1", async (req, res) => {
       format: "A4",
       printBackground: true,
       margin: {
-        top: "2cm",
-        bottom: "2cm",
-        left: "1.5cm",
-        right: "1.5cm",
+        top: "0.5cm",
+        bottom: "0.5cm",
+        left: "0.5cm",
+        right: "0.5cm",
       },
     };
 
@@ -711,6 +711,714 @@ app.post("/generate-pdf1", async (req, res) => {
     console.error("PDF generation error:", err);
     res.status(500).json({ error: "Failed to generate PDF" });
   }
+});
+
+app.post("/send-email-pdf1", async (req, res) => {
+  const { invoiceData } = req.body;
+  const pdfPath = path.join(__dirname, "invoice1.pdf");
+
+  const personalInfo = invoiceData.personalInfo;
+  const customerInfo = invoiceData.customerInfo;
+  const invoiceInfo = invoiceData.invoiceInfo;
+  const rows = invoiceData.rows;
+  const amountInfo = invoiceData.amountInfo;
+  const accountInfo = invoiceData.accountInfo;
+  const signedInfo = invoiceData.signedInfo;
+
+  //const taxCalculatedInfo = invoiceData.taxCalculatedInfo;
+
+  let html = ` 
+          <div
+            style={{
+              padding: "2rem",
+              fontFamily: "'Inter', sans-serif",
+              fontSize: "14px",
+              padding: "10px",
+              textAlign: "left",
+            }}
+          >`;
+  html += `
+             
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "flex-start",
+                  }}
+                >
+                  <div style={{ fontWeight: "bold", fontSize: "1rem" }}>
+                    ${personalInfo.name}
+                  </div>
+                  <div
+                    style={{
+                      color: "#6B7280",
+                      fontSize: "0.875rem",
+                      marginTop: "0.2rem",
+                    }}
+                  >
+                    ${personalInfo.address},
+                  </div>
+                  </div>`;
+
+  if (personalInfo.address1) {
+    html += `<div
+                      style={{
+                        color: "#6B7280",
+                        fontSize: "0.875rem",
+                        marginTop: "0.2rem",
+                      }}
+                    >
+                      ${personalInfo.address1},
+                    </div>`;
+  }
+
+  if (personalInfo.address2) {
+    html += `
+                    
+                  
+                 
+                    <div
+                      style={{
+                        color: "#6B7280",
+                        fontSize: "0.875rem",
+                        marginTop: "0.2rem",
+                      }}
+                    >
+                      ${personalInfo.address2} - ${personalInfo.address3}
+                    </div> 
+                  `;
+  }
+
+  html += `
+
+                  <div
+                    style={{
+                      color: "#6B7280",
+                      fontSize: "0.875rem",
+                      marginTop: "0.2rem",
+                    }}
+                  >
+                    Phone: ${personalInfo.phonePrimary}
+                  </div>
+
+                  <div
+                    style={{
+                      color: "#6B7280",
+                      fontSize: "0.875rem",
+                      marginTop: "0.2rem",
+                    }}
+                  >
+                    Email: ${personalInfo.email}
+                  </div>
+                  `;
+
+  if (personalInfo.socialMedia) {
+    html += ` <div
+                      style={{
+                        color: "#6B7280",
+                        fontSize: "0.875rem",
+                        marginTop: "0.2rem",
+                      }}
+                    >
+                      ${personalInfo.socialMedia}
+                    </div>
+                    `;
+  }
+  html += `
+                <div>
+                  <div
+                    style={{
+                      fontWeight: "bold",
+                      fontSize: "1rem",
+                      color: "#374151",
+                      textAlign: "right",
+                    }}
+                  >
+                    INVOICE
+                  </div>
+                  <div
+                    style={{
+                      fontWeight: "bold",
+                      fontSize: "0.875rem",
+                      color: "#6B7280",
+                      textAlign: "right",
+                    }}
+                  >
+                    ${invoiceInfo.invoiceNumber}
+                  </div>
+                </div>
+             
+              <div
+                style={{
+                  marginTop: "1.5rem",
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+               
+                  <div
+                    style={{
+                      textTransform: "uppercase",
+                      color: "#374151",
+                      fontWeight: "bold",
+                      fontSize: "0.875rem",
+                    }}
+                  >
+                    Invoice To
+                  </div>
+
+                  <div
+                    style={{
+                      fontWeight: "bold",
+                      fontSize: "1rem",
+                      marginTop: "0.25rem",
+                    }}
+                  >
+                    ${customerInfo.customerName}
+                  </div>
+                  `;
+
+  if (customerInfo.address) {
+    html += ` <div
+                      style={{
+                        color: "#6B7280",
+                        fontSize: "0.875rem",
+                        marginTop: "0.2rem",
+                      }}
+                    >
+                      ${customerInfo.address}, ${customerInfo.address1}
+                    </div>
+                    `;
+  }
+
+  if (customerInfo.address2) {
+    html += `
+                   <div
+                      style={{
+                        color: "#6B7280",
+                        fontSize: "0.875rem",
+                        marginTop: "0.2rem",
+                      }}
+                    >
+                      ${customerInfo.address2} - ${customerInfo.address3}
+                    </div>
+                    `;
+  }
+  if (customerInfo.customerPhone) {
+    html += `  <div
+                      style={{
+                        fontSize: "0.875rem",
+                        color: "#6B7280",
+                        display: "flex",
+                        columnGap: "0.5rem",
+                        marginTop: "0.2rem",
+                      }}
+                    >
+                      <div>Phone:</div>
+                      <div>${customerInfo.customerPhone}</div>
+                    </div>
+                    `;
+  }
+  if (customerInfo.customerEmail) {
+    html += `<div
+                      style={{
+                        fontSize: "0.875rem",
+                        color: "#6B7280",
+                        marginTop: "0.2rem",
+                      }}
+                    >
+                      Email : ${customerInfo.customerEmail}
+                    </div>
+                    `;
+  }
+  if (customerInfo.gst) {
+    html += `<div
+                      style={{
+                        marginTop: "0.5rem",
+                        fontSize: "0.875rem",
+                        color: "#6B7280",
+                      }}
+                    >
+                      GSTIN : ${customerInfo.gst}
+                    </div>
+                    `;
+  }
+  if (customerInfo.tin) {
+    html += `  <div
+                      style={{
+                        fontSize: "0.875rem",
+                        color: "#6B7280",
+                        marginTop: "0.2rem",
+                      }}
+                    >
+                      TIN : ${customerInfo.tin}{" "}
+                    </div>
+                    `;
+  }
+
+  if (customerInfo.cin) {
+    html += `  <div
+                      style={{
+                        fontSize: "0.875rem",
+                        color: "#6B7280",
+                        marginTop: "0.2rem",
+                      }}
+                    >
+                      CIN : ${customerInfo.cin}
+                    </div>  
+                    `;
+  }
+
+  if (customerInfo.pan) {
+    html += `      <div
+                      style={{
+                        fontSize: "0.875rem",
+                        color: "#6B7280",
+                        marginTop: "0.2rem",
+                      }}
+                    >
+                      PAN : ${customerInfo.pan}
+                    </div>
+                    `;
+  }
+  html += `
+                <div
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: "0.875rem",
+                    marginTop: "0.2rem",
+                  }}
+                >
+                  <div
+                    style={{
+                      textTransform: "uppercase",
+                      textAlign: "right",
+                    }}
+                  >
+                    Date
+                  </div>
+                  <div
+                    style={{
+                      color: "#6B7280",
+                      textAlign: "right",
+                      fontWeight: 600,
+                      marginTop: "0.2rem",
+                    }}
+                  >
+                    ${invoiceInfo?.date}
+                  </div>
+                  `;
+  html += `   
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  borderBottom: "1.2px solid black",
+                  marginTop: "1.5rem",
+                }}
+              ></div>
+              `;
+  html += `
+              <div
+                style={{
+                  overflow: "hidden",
+                  marginTop: "0.5rem",
+                }}
+              >
+                <table
+                  style={{
+                    width: "100%",
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                    textAlign: "center",
+                    fontSize: "0.475rem",
+                    fontWeight: 300,
+                  }}
+                >
+                  <thead
+                    style={{
+                      fontSize: "0.85rem",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    <tr
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <th
+                        style={{
+                          width: "40%",
+                          textAlign: "left",
+                        }}
+                      >
+                        Description
+                      </th>
+                      <th
+                        style={{
+                          width: "20%",
+                        }}
+                      >
+                        Rate
+                      </th>
+                      
+                      <th
+                        style={{
+                          width: "10%",
+                          display: isSmallScreen ? "none" : "block",
+                        }}
+                      >
+                        Quantity
+                      </th>
+                      <th
+                        style={{
+                          width: "20%",
+                        }}
+                      >
+                        Amount
+                      </th>
+                    </tr>
+                    <tr
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        borderBottom: "1.2px solid black",
+                        marginTop: "0.5rem", // Tailwind's mt-2 is 0.5rem
+                      }}
+                    ></tr>
+                  </thead>
+                  <tbody>
+                  `;
+  let index = -1;
+
+  if (rows && rows.length > 0) {
+    rows.forEach((row) => {
+      index++;
+      html += ` 
+                          <tr
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              fontSize: "0.82rem", // Tailwind's text-md ≈ 1rem
+                              marginTop: "0.25rem", // Tailwind's mt-1 = 0.25rem
+                              fontWeight: 300, // Tailwind's font-light = 300
+                            }}
+                          >
+                            <td
+                              style={{
+                                width: "40%",
+                                textAlign: "left",
+                              }}
+                            >
+                             ${row.desc}
+                            </td>
+                            <td
+                              style={{
+                                width: "20%",
+                              }}
+                            >
+                              ${row.rate}
+                            </td>
+                            <td
+                              style={{
+                                width: "10%",
+                              }}
+                            >
+                              ${row.qty}
+                            </td>
+                            <td
+                              style={{
+                                width: "20%",
+                              }}
+                            >
+                             
+                              ${row.amount}
+                            </td>
+                          </tr>
+                          `;
+    });
+  }
+
+  // Add dashed line after each row except the last one
+  if (rows.length > index + 1) {
+    html += `
+            <tr
+                              style={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                fontSize: "1rem", // Tailwind text-md ≈ 1rem
+                                marginTop: "0.5rem", // Tailwind mt-2 = 0.5rem
+                                borderBottom: "1px dashed gray", // Combines border thickness & style
+                              }}
+                            ></tr>`;
+  }
+
+  html += `          
+                  </tbody>
+                </table>
+                `;
+
+  html += `
+              </div>
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                borderBottom: "1.2px solid black",
+                marginTop: "0.5rem", // Tailwind's mt-2 = 0.5rem
+              }}
+            ></div>
+
+            {
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  width: "100%",
+                }}
+              >
+                <div
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <div
+                    style={{
+                      marginTop: "0.5rem", // mt-1
+                      marginBottom: "0.5rem", // mt-1
+                      paddingLeft: "0.5rem", // px-2
+                      paddingRight: "0.5rem", // px-2
+                      fontSize: "0.95rem", // text-md ≈ 1rem
+                      fontWeight: "bold", // font-bold
+                      borderRadius: "0.375rem", // rounded-md = 6px or 0.375rem
+                      textTransform: "uppercase", // uppercase
+                    }}
+                  >
+                    Total
+                  </div>
+                  <div
+                    style={{
+                      marginTop: "0.5rem", // mt-1
+                      marginBottom: "0.5rem", // mt-1
+                      paddingLeft: "0.5rem", // px-2
+                      paddingRight: "0.5rem", // px-2
+                      fontSize: "0.95rem", // text-md ≈ 1rem
+                      fontWeight: "bold", // font-bold
+                      borderRadius: "0.375rem", // rounded-md = 6px or 0.375rem
+                    }}
+                  >
+                    ₹ ${amountInfo?.amount}
+                  </div>
+                </div>
+              </div>
+            }
+
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                borderBottom: "1.2px solid black",
+                marginTop: "0.2rem", // Tailwind's mt-2 = 0.5rem
+              }}
+            ></div>
+
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              <div>
+                <div>
+                  <div
+                    style={{
+                      fontWeight: "bold", // font-bold
+                      fontSize: "0.875rem", // text-sm
+                      marginTop: "1.5rem", // mt-6
+                      color: "#374151", // text-gray-700
+                      textTransform: "uppercase", // uppercase
+                    }}
+                  >
+                    Account Information
+                  </div>
+                  <div
+                    style={{
+                      fontSize: "0.875rem", // text-sm
+                      marginTop: "1rem", // mt-4
+                    }}
+                  >
+                    <div>
+                      Bank Name :
+                      <span
+                        style={{
+                          fontWeight: "bold",
+                        }}
+                      >
+                        ${accountInfo.bankName}
+                      </span>
+                    </div>
+                    <div
+                      style={{
+                        marginTop: "0.25rem", // font-bold
+                      }}
+                    >
+                      Name :
+                      <span
+                        style={{
+                          fontWeight: "bold",
+                        }}
+                      >
+                        ${accountInfo.name}
+                      </span>
+                    </div>
+                    <div
+                      style={{
+                        marginTop: "0.25rem", // font-bold
+                      }}
+                    >
+                      Account Number :
+                      <span
+                        style={{
+                          fontWeight: "bold",
+                        }}
+                      >
+                        ${accountInfo.accountNumber}
+                      </span>
+                    </div>
+                    <div
+                      style={{
+                        marginTop: "0.25rem", // font-bold
+                      }}
+                    >
+                      Account Type :
+                      <span
+                        style={{
+                          fontWeight: "bold",
+                        }}
+                      >
+                        ${accountInfo.accountType}
+                      </span>
+                    </div>
+                    <div
+                      style={{
+                        marginTop: "0.25rem", // font-bold
+                      }}
+                    >
+                      IFSC Code :
+                      <span
+                        style={{
+                          fontWeight: "bold",
+                        }}
+                      >
+                        ${accountInfo.ifscCode}
+                      </span>
+                    </div>
+
+                    <div
+                      style={{
+                        marginTop: "0.25rem", // font-bold
+                      }}
+                    >
+                      Branch :
+                      <span
+                        style={{
+                          fontWeight: "bold",
+                        }}
+                      >
+                        ${accountInfo.branch}
+                      </span>
+                    </div>
+
+                    <div
+                      style={{
+                        marginTop: "0.25rem", // font-bold
+                      }}
+                    >
+                      PAN :
+                      <span
+                        style={{
+                          fontWeight: "bold",
+                        }}
+                      >
+                        ${accountInfo.pan}
+                      </span>
+                    </div>
+
+                    <br />
+                  </div>
+                </div>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  marginTop: "2rem", // 8 * 0.25rem = 2rem
+                }}
+              >
+              `;
+  if (signedInfo.signature) {
+    html += ` <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      fontSize: "0.875rem", // Tailwind's text-sm = 14px = 0.875rem
+                    }}
+                  >
+                    <div>
+                      <img
+                        style={{ width: "100px" }}
+                        src=${signedInfo.signature}
+                        alt="sign"
+                      />
+                      <div style={{ fontWeight: "bold" }}>Date Signed</div>
+                      <div>${signedInfo.signedDate}</div>
+                    </div>
+                  </div>`;
+  }
+
+  html += `
+            <div
+              style={{
+                color: "#6B7280",
+                fontSize: "0.875rem",
+                marginTop: "0.25rem", // font-bold
+              }}
+            >
+              ${additionalInfo?.additionaldesc}
+            </div>
+            <div
+              style={{
+                color: "#4B5563", // text-gray-600
+                textAlign: "right", // text-right
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "0.75rem", // text-xs (12px)
+                }}
+              >
+                Thank you for your business!
+              </div>
+            </div>
+      </div>`;
+
+  if (!html) {
+    console.log("No HTML generated for PDF.");
+    return false;
+  }
+
+  const options = { format: "A4" };
+
+  pdf.create(html, options).toFile(pdfPath, (err, res) => {
+    if (err) return console.error(err);
+    console.log("PDF created:", res.filename);
+  });
+  //return true;
 });
 
 app.post("/send-email-pdf", async (req, res) => {
@@ -1107,8 +1815,8 @@ app.post("/order/validate", async (req, res) => {
 });
 
 const razorpay = new Razorpay({
-  key_id: "rzp_test_kkMM3XGefJOEFm",
-  key_secret: "tJ1scFo8Dh6UJQff0otXd3fz",
+  key_id: "rzp_live_RSDNVBshEK8VH1",
+  key_secret: "W2q7FFABsH3qyXeJhG75IhNk",
 });
 
 app.post("/create-order", async (req, res) => {

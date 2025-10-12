@@ -67,9 +67,15 @@ const Home = () => {
       {/* Header */}
       <header className="bg-white dark:bg-gray-800 shadow-md fixed top-0 left-0 w-full z-50">
         <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-          <h1 className="text-xl font-bold text-indigo-600 dark:text-white">
+          {/* <h1 className="text-xl font-bold text-indigo-600 dark:text-white">
             InvoiceSimplify
-          </h1>
+          </h1> */}
+          <img
+            src="../../images/invlogo.png"
+            alt="Logo"
+            width={125}
+            loading="lazy"
+          />
           <div className="flex items-center gap-4">
             <button
               onClick={handleCreateInvoice}

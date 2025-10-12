@@ -22,7 +22,12 @@ const Header1 = () => {
           to={"/"}
           className="text-xl font-bold text-indigo-600 dark:text-white"
         >
-          InvoiceSimplify
+          <img
+            src="../../images/invlogo.png"
+            alt="Logo"
+            width={55}
+            loading="lazy"
+          />
         </NavLink>
         <div className="flex items-center gap-4">
           <button

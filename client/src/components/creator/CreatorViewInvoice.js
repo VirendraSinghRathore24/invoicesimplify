@@ -18,6 +18,7 @@ function CreatorViewInvoice() {
   const [invoiceInfo, setInvoiceInfo] = useState({});
   const [loading, setLoading] = useState(true);
   const printRef = useRef(null);
+  const [logoBase64, setLogoBase64] = useState("");
 
   const location = useLocation();
   const id = location.state.id;
@@ -138,13 +139,25 @@ function CreatorViewInvoice() {
   };
 
   useEffect(() => {
+    fetch("/invlogo.png")
+      .then((res) => res.blob())
+      .then((blob) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setLogoBase64(reader.result); // base64 string
+        };
+        reader.readAsDataURL(blob);
+      });
+  }, []);
+
+  useEffect(() => {
     handleLogin();
     getInvoiceData();
     window.scroll(0, 0);
   }, []);
   return (
     <div className="flex justify-evenly w-full h-full  ">
-      <div className="w-full lg:w-[82%] ml-0 lg:ml-[17%] my-3 top-0">
+      <div className="w-full lg:w-[82%] ml-0 lg:ml-[5%] my-3 top-0">
         <div className="hidden max-lg:block mb-16">
           <CreatorMobileMenu />
         </div>
@@ -211,7 +224,7 @@ function CreatorViewInvoice() {
 
           {invoiceInfo?.personalInfo && (
             <div>
-              <div className="w-full lg:w-8/12 mx-auto py-2 border-2 mb-10 mt-2">
+              <div className="w-full lg:w-8/12 mx-auto py-2 border-2 mb-10 mt-2 rounded-md">
                 <div
                   ref={printRef}
                   style={{
@@ -223,6 +236,11 @@ function CreatorViewInvoice() {
                   }}
                 >
                   <div>
+                    <img
+                      src={logoBase64}
+                      alt="Company Logo"
+                      style={{ width: "100px", marginBottom: "1rem" }}
+                    />
                     <div
                       style={{
                         display: "flex",

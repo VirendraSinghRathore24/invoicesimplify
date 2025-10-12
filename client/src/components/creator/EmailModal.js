@@ -11,6 +11,8 @@ const EmailModal = ({
   customerInfo,
   rows,
   amountInfo,
+  accountInfo,
+  signedInfo,
   // taxCalculatedInfo,
 }) => {
   const [loading, setLoading] = useState(false);
@@ -31,20 +33,28 @@ const EmailModal = ({
 
       const url = BASE_URL;
 
+      const invoiceData = {
+        email: brandEmail,
+        ccEmail: ccEmail,
+        subject: subject,
+        invoiceInfo: invoiceInfo,
+        personalInfo: personalInfo,
+        customerInfo: customerInfo,
+        rows: rows,
+        amountInfo: amountInfo,
+        accountInfo: accountInfo,
+        signedInfo: signedInfo,
+        // taxCalculatedInfo: taxCalculatedInfo,
+      };
+
       setLoading(true);
-      const response = await fetch(url + "/send-email-pdf", {
+      const response = await fetch(url + "/send-email-pdf1", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: email,
-          invoiceInfo: invoiceInfo,
-          personalInfo: personalInfo,
-          customerInfo: customerInfo,
-          rows: rows,
-          amountInfo: amountInfo,
-          // taxCalculatedInfo: taxCalculatedInfo,
+          invoiceData: invoiceData,
         }),
       });
 

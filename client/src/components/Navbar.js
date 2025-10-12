@@ -13,7 +13,7 @@ function Navbar() {
 
   return (
     <>
-      <IconContext.Provider value={{ color: "undefined"}}>
+      <IconContext.Provider value={{ color: "undefined" }}>
         {/* <div className="navbar">
           <Link to="#" className="menu-bars">
             <FaIcons.FaBars onClick={showSidebar} />
@@ -26,10 +26,12 @@ function Navbar() {
                 <AiIcons.AiOutlineClose />
               </Link>
             </li> */}
-            <li><div className="mt-4 text-2xl text-white">
-              InvoiceSimplify
-            </div></li>
-            <li className="mt-9"><hr/></li>
+            <li>
+              <div className="mt-4 text-2xl text-white">InvoiceSimplify</div>
+            </li>
+            <li className="mt-9">
+              <hr />
+            </li>
             {SidebarData.map((item, index) => {
               return (
                 <li key={index} className={item.cName}>

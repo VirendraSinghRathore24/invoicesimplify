@@ -42,6 +42,8 @@ function CreatorInvoice() {
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 768);
 
   const [openEmailModal, setOpenEmailModal] = useState(false);
+  const [logoBase64, setLogoBase64] = useState("");
+
   const handleCloseEmailModal = () => {
     setOpenEmailModal(false);
   };
@@ -242,6 +244,18 @@ function CreatorInvoice() {
   };
 
   useEffect(() => {
+    fetch("/invlogo.png")
+      .then((res) => res.blob())
+      .then((blob) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setLogoBase64(reader.result); // base64 string
+        };
+        reader.readAsDataURL(blob);
+      });
+  }, []);
+
+  useEffect(() => {
     const auth = localStorage.getItem("auth");
     if (auth !== "Logged In") {
       navigate("/login");
@@ -362,6 +376,11 @@ function CreatorInvoice() {
             }}
           >
             <div>
+              <img
+                src={logoBase64}
+                alt="Company Logo"
+                style={{ width: "100px", marginBottom: "1rem" }}
+              />
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <div
                   style={{
@@ -1016,6 +1035,8 @@ function CreatorInvoice() {
           customerInfo={customerInfo}
           rows={rows}
           amountInfo={amount}
+          accountInfo={accountInfo}
+          signedInfo={signedInfo}
           //taxCalculatedInfo={taxCalculatedInfo}
         />
       )}

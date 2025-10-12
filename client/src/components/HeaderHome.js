@@ -28,10 +28,15 @@ function HeaderHome() {
       >
         <Link to="/">
           <div className="flex">
-            {/* <img src="../../images/logosvg12.svg" alt="Logo" width={55} loading='lazy'/> */}
-            <div className="mt-3 text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-black quicksand-bold">
+            <img
+              src="../../images/invlogo.png"
+              alt="Logo"
+              width={55}
+              loading="lazy"
+            />
+            {/* <div className="mt-3 text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-black quicksand-bold">
               InvoiceSimplify
-            </div>
+            </div> */}
           </div>
         </Link>
         <div className="md:hidden flex justify-end w-full">
