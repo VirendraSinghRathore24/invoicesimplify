@@ -713,10 +713,97 @@ app.post("/generate-pdf1", async (req, res) => {
   }
 });
 
+const getDate = (utcDate) => {
+  var today = new Date(utcDate);
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "July",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  var month = months[today.getMonth()];
+  const date = month + " " + today.getDate() + ", " + today.getFullYear();
+  return date;
+};
+
 app.post("/send-email-pdf1", async (req, res) => {
   const { invoiceData } = req.body;
-  const pdfPath = path.join(__dirname, "invoice1.pdf");
 
+  try {
+    await sendEmailPdf(invoiceData, invoiceData.email);
+    res.status(200).json({ success: true, message: "Email sent successfully" });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to create and send email" });
+  }
+});
+
+app.post("/send-email-pdf-view", async (req, res) => {
+  const { emailData } = req.body;
+
+  const id = emailData.id;
+  const email = emailData.email;
+  const uid = emailData.uid;
+
+  // call to db to get invoice data
+  const invoiceSnapshot = await db
+    .collection("Creators")
+    .doc(uid)
+    .collection("Invoice_Info")
+    .get();
+
+  const filteredDocs = invoiceSnapshot.docs.filter((doc) => doc.id === id);
+
+  const data = filteredDocs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+
+  if (data.length === 0) {
+    return res.status(404).json({ error: "No invoice data found" });
+  }
+
+  const result = data[0]; // Assuming you want the first document
+
+  console.log("Fetched invoice data:", result);
+
+  const personalInfo = result.personalInfo;
+  const customerInfo = result.customerInfo;
+  const invoiceInfo = result.invoiceInfo;
+  const rows = result.rows;
+  const amountInfo = result.amountInfo;
+  const accountInfo = result.accountInfo;
+  const signedInfo = result.signedInfo;
+  const additionalInfo = result.additionalInfo;
+
+  const invoiceData = {
+    personalInfo,
+    customerInfo,
+    invoiceInfo,
+    rows,
+    amountInfo,
+    accountInfo,
+    signedInfo,
+    additionalInfo,
+    logoBase64: result.logoBase64, // Assuming logo is sent as base64 string
+  };
+
+  try {
+    await sendEmailPdf(invoiceData, emailData.email);
+    res.status(200).json({ success: true, message: "Email sent successfully" });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to create and send email" });
+  }
+});
+
+const sendEmailPdf = async (invoiceData, email) => {
   const personalInfo = invoiceData.personalInfo;
   const customerInfo = invoiceData.customerInfo;
   const invoiceInfo = invoiceData.invoiceInfo;
@@ -724,702 +811,275 @@ app.post("/send-email-pdf1", async (req, res) => {
   const amountInfo = invoiceData.amountInfo;
   const accountInfo = invoiceData.accountInfo;
   const signedInfo = invoiceData.signedInfo;
+  const additionalInfo = invoiceData.additionalInfo;
 
   //const taxCalculatedInfo = invoiceData.taxCalculatedInfo;
 
-  let html = ` 
-          <div
-            style={{
-              padding: "2rem",
-              fontFamily: "'Inter', sans-serif",
-              fontSize: "14px",
-              padding: "10px",
-              textAlign: "left",
-            }}
-          >`;
+  let html = "";
+  const logoBase64 = invoiceData.logoBase64; // Assuming logo is sent as base64 string
   html += `
-             
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "flex-start",
-                  }}
-                >
-                  <div style={{ fontWeight: "bold", fontSize: "1rem" }}>
+          <div style="padding: 2rem; font-family: 'Inter', sans-serif; font-size: 14px; text-align: left;">
+            <div>
+              <img
+                src="${logoBase64}"
+                alt="Company Logo"
+                style="width: 100px; margin-bottom: 1rem;"
+              />
+              <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div style="display: flex; flex-direction: column;">
+                  <div style="font-weight: bold; font-size: 1rem;">
                     ${personalInfo.name}
                   </div>
-                  <div
-                    style={{
-                      color: "#6B7280",
-                      fontSize: "0.875rem",
-                      marginTop: "0.2rem",
-                    }}
-                  >
+                  <div style="color: #6B7280; font-size: 0.875rem; margin-top: 0.2rem;">
                     ${personalInfo.address},
-                  </div>
                   </div>`;
-
   if (personalInfo.address1) {
-    html += `<div
-                      style={{
-                        color: "#6B7280",
-                        fontSize: "0.875rem",
-                        marginTop: "0.2rem",
-                      }}
-                    >
+    html += `
+                    <div style="color: #6B7280; font-size: 0.875rem; margin-top: 0.2rem;">
                       ${personalInfo.address1},
                     </div>`;
   }
-
   if (personalInfo.address2) {
     html += `
-                    
-                  
-                 
-                    <div
-                      style={{
-                        color: "#6B7280",
-                        fontSize: "0.875rem",
-                        marginTop: "0.2rem",
-                      }}
-                    >
+                    <div style="color: #6B7280; font-size: 0.875rem; margin-top: 0.2rem;">
                       ${personalInfo.address2} - ${personalInfo.address3}
-                    </div> 
-                  `;
+                    </div>`;
   }
-
   html += `
-
-                  <div
-                    style={{
-                      color: "#6B7280",
-                      fontSize: "0.875rem",
-                      marginTop: "0.2rem",
-                    }}
-                  >
+                  <div style="color: #6B7280; font-size: 0.875rem; margin-top: 0.2rem;">
                     Phone: ${personalInfo.phonePrimary}
                   </div>
-
-                  <div
-                    style={{
-                      color: "#6B7280",
-                      fontSize: "0.875rem",
-                      marginTop: "0.2rem",
-                    }}
-                  >
+                  <div style="color: #6B7280; font-size: 0.875rem; margin-top: 0.2rem;">
                     Email: ${personalInfo.email}
-                  </div>
-                  `;
-
+                  </div>`;
   if (personalInfo.socialMedia) {
-    html += ` <div
-                      style={{
-                        color: "#6B7280",
-                        fontSize: "0.875rem",
-                        marginTop: "0.2rem",
-                      }}
-                    >
+    html += `
+                    <div style="color: #6B7280; font-size: 0.875rem; margin-top: 0.2rem;">
                       ${personalInfo.socialMedia}
-                    </div>
-                    `;
+                    </div>`;
   }
   html += `
-                <div>
-                  <div
-                    style={{
-                      fontWeight: "bold",
-                      fontSize: "1rem",
-                      color: "#374151",
-                      textAlign: "right",
-                    }}
-                  >
+                </div>
+                <div style="text-align: right;">
+                  <div style="font-weight: bold; font-size: 1rem; color: #374151;">
                     INVOICE
                   </div>
-                  <div
-                    style={{
-                      fontWeight: "bold",
-                      fontSize: "0.875rem",
-                      color: "#6B7280",
-                      textAlign: "right",
-                    }}
-                  >
+                  <div style="font-weight: bold; font-size: 0.875rem; color: #6B7280;">
                     ${invoiceInfo.invoiceNumber}
                   </div>
                 </div>
-             
-              <div
-                style={{
-                  marginTop: "1.5rem",
-                  display: "flex",
-                  justifyContent: "space-between",
-                }}
-              >
-               
-                  <div
-                    style={{
-                      textTransform: "uppercase",
-                      color: "#374151",
-                      fontWeight: "bold",
-                      fontSize: "0.875rem",
-                    }}
-                  >
+              </div>
+              <div style="margin-top: 1.5rem; display: flex; justify-content: space-between;">
+                <div>
+                  <div style="text-transform: uppercase; color: #374151; font-weight: bold; font-size: 0.875rem;">
                     Invoice To
                   </div>
-
-                  <div
-                    style={{
-                      fontWeight: "bold",
-                      fontSize: "1rem",
-                      marginTop: "0.25rem",
-                    }}
-                  >
+                  <div style="font-weight: bold; font-size: 1rem; margin-top: 0.25rem;">
                     ${customerInfo.customerName}
-                  </div>
-                  `;
-
+                  </div>`;
   if (customerInfo.address) {
-    html += ` <div
-                      style={{
-                        color: "#6B7280",
-                        fontSize: "0.875rem",
-                        marginTop: "0.2rem",
-                      }}
-                    >
+    html += `
+                    <div style="color: #6B7280; font-size: 0.875rem; margin-top: 0.2rem;">
                       ${customerInfo.address}, ${customerInfo.address1}
-                    </div>
-                    `;
+                    </div>`;
   }
-
   if (customerInfo.address2) {
     html += `
-                   <div
-                      style={{
-                        color: "#6B7280",
-                        fontSize: "0.875rem",
-                        marginTop: "0.2rem",
-                      }}
-                    >
+                    <div style="color: #6B7280; font-size: 0.875rem; margin-top: 0.2rem;">
                       ${customerInfo.address2} - ${customerInfo.address3}
-                    </div>
-                    `;
+                    </div>`;
   }
   if (customerInfo.customerPhone) {
-    html += `  <div
-                      style={{
-                        fontSize: "0.875rem",
-                        color: "#6B7280",
-                        display: "flex",
-                        columnGap: "0.5rem",
-                        marginTop: "0.2rem",
-                      }}
-                    >
+    html += `
+                    <div style="font-size: 0.875rem; color: #6B7280; display: flex; column-gap: 0.5rem; margin-top: 0.2rem;">
                       <div>Phone:</div>
                       <div>${customerInfo.customerPhone}</div>
-                    </div>
-                    `;
+                    </div>`;
   }
   if (customerInfo.customerEmail) {
-    html += `<div
-                      style={{
-                        fontSize: "0.875rem",
-                        color: "#6B7280",
-                        marginTop: "0.2rem",
-                      }}
-                    >
-                      Email : ${customerInfo.customerEmail}
-                    </div>
-                    `;
+    html += `
+                    <div style="font-size: 0.875rem; color: #6B7280; margin-top: 0.2rem;">
+                      Email: ${customerInfo.customerEmail}
+                    </div>`;
   }
   if (customerInfo.gst) {
-    html += `<div
-                      style={{
-                        marginTop: "0.5rem",
-                        fontSize: "0.875rem",
-                        color: "#6B7280",
-                      }}
-                    >
-                      GSTIN : ${customerInfo.gst}
-                    </div>
-                    `;
+    html += `
+                    <div style="margin-top: 0.5rem; font-size: 0.875rem; color: #6B7280;">
+                      GSTIN: ${customerInfo.gst}
+                    </div>`;
   }
   if (customerInfo.tin) {
-    html += `  <div
-                      style={{
-                        fontSize: "0.875rem",
-                        color: "#6B7280",
-                        marginTop: "0.2rem",
-                      }}
-                    >
-                      TIN : ${customerInfo.tin}{" "}
-                    </div>
-                    `;
+    html += `
+                    <div style="font-size: 0.875rem; color: #6B7280; margin-top: 0.2rem;">
+                      TIN: ${customerInfo.tin}
+                    </div>`;
   }
-
   if (customerInfo.cin) {
-    html += `  <div
-                      style={{
-                        fontSize: "0.875rem",
-                        color: "#6B7280",
-                        marginTop: "0.2rem",
-                      }}
-                    >
-                      CIN : ${customerInfo.cin}
-                    </div>  
-                    `;
+    html += `
+                    <div style="font-size: 0.875rem; color: #6B7280; margin-top: 0.2rem;">
+                      CIN: ${customerInfo.cin}
+                    </div>`;
   }
-
   if (customerInfo.pan) {
-    html += `      <div
-                      style={{
-                        fontSize: "0.875rem",
-                        color: "#6B7280",
-                        marginTop: "0.2rem",
-                      }}
-                    >
-                      PAN : ${customerInfo.pan}
-                    </div>
-                    `;
+    html += `
+                    <div style="font-size: 0.875rem; color: #6B7280; margin-top: 0.2rem;">
+                      PAN: ${customerInfo.pan}
+                    </div>`;
   }
   html += `
-                <div
-                  style={{
-                    fontWeight: "bold",
-                    fontSize: "0.875rem",
-                    marginTop: "0.2rem",
-                  }}
-                >
-                  <div
-                    style={{
-                      textTransform: "uppercase",
-                      textAlign: "right",
-                    }}
-                  >
+                </div>
+                <div style="font-weight: bold; font-size: 0.875rem; margin-top: 0.2rem;">
+                  <div style="text-transform: uppercase; text-align: right;">
                     Date
                   </div>
-                  <div
-                    style={{
-                      color: "#6B7280",
-                      textAlign: "right",
-                      fontWeight: 600,
-                      marginTop: "0.2rem",
-                    }}
-                  >
-                    ${invoiceInfo?.date}
+                  <div style="color: #6B7280; text-align: right; font-weight: 600; margin-top: 0.2rem;">
+                    ${getDate(invoiceInfo?.date)}
                   </div>
-                  `;
-  html += `   
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  borderBottom: "1.2px solid black",
-                  marginTop: "1.5rem",
-                }}
-              ></div>
-              `;
-  html += `
-              <div
-                style={{
-                  overflow: "hidden",
-                  marginTop: "0.5rem",
-                }}
-              >
-                <table
-                  style={{
-                    width: "100%",
-                    marginLeft: "auto",
-                    marginRight: "auto",
-                    textAlign: "center",
-                    fontSize: "0.475rem",
-                    fontWeight: 300,
-                  }}
-                >
-                  <thead
-                    style={{
-                      fontSize: "0.85rem",
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    <tr
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <th
-                        style={{
-                          width: "40%",
-                          textAlign: "left",
-                        }}
-                      >
-                        Description
-                      </th>
-                      <th
-                        style={{
-                          width: "20%",
-                        }}
-                      >
-                        Rate
-                      </th>
-                      
-                      <th
-                        style={{
-                          width: "10%",
-                          display: isSmallScreen ? "none" : "block",
-                        }}
-                      >
-                        Quantity
-                      </th>
-                      <th
-                        style={{
-                          width: "20%",
-                        }}
-                      >
-                        Amount
-                      </th>
+                </div>
+              </div>
+              <div style="display: flex; justify-content: space-between; border-bottom: 1.2px solid black; margin-top: 1.5rem;"></div>
+              <div style="overflow: hidden; margin-top: 0.5rem;">
+                <table style="width: 100%; margin: auto; text-align: center; font-size: 0.475rem; font-weight: 300;">
+                  <thead style="font-size: 0.85rem; text-transform: uppercase;">
+                    <tr style="display: flex; justify-content: space-between;">
+                      <th style="width: 40%; text-align: left;">Description</th>
+                      <th style="width: 20%;">Rate</th>
+                      <th style="width: 10%;">Quantity</th>
+                      <th style="width: 20%;">Amount</th>
                     </tr>
-                    <tr
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        borderBottom: "1.2px solid black",
-                        marginTop: "0.5rem", // Tailwind's mt-2 is 0.5rem
-                      }}
-                    ></tr>
+                    <tr style="display: flex; justify-content: space-between; border-bottom: 1.2px solid black; margin-top: 0.5rem;"></tr>
                   </thead>
-                  <tbody>
-                  `;
+                  <tbody>`;
   let index = -1;
-
+  let amount = 0;
   if (rows && rows.length > 0) {
     rows.forEach((row) => {
       index++;
-      html += ` 
-                          <tr
-                            style={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              fontSize: "0.82rem", // Tailwind's text-md ≈ 1rem
-                              marginTop: "0.25rem", // Tailwind's mt-1 = 0.25rem
-                              fontWeight: 300, // Tailwind's font-light = 300
-                            }}
-                          >
-                            <td
-                              style={{
-                                width: "40%",
-                                textAlign: "left",
-                              }}
-                            >
-                             ${row.desc}
-                            </td>
-                            <td
-                              style={{
-                                width: "20%",
-                              }}
-                            >
-                              ${row.rate}
-                            </td>
-                            <td
-                              style={{
-                                width: "10%",
-                              }}
-                            >
-                              ${row.qty}
-                            </td>
-                            <td
-                              style={{
-                                width: "20%",
-                              }}
-                            >
-                             
-                              ${row.amount}
-                            </td>
-                          </tr>
-                          `;
+      html += `
+                        <tr style="display: flex; justify-content: space-between; font-size: 0.82rem; margin-top: 0.25rem; font-weight: 300;">
+                          <td style="width: 40%; text-align: left;">${row.desc}</td>
+                          <td style="width: 20%;">${row.rate}</td>
+                          <td style="width: 10%;">${row.qty}</td>
+                          <td style="width: 20%;">${row.amount}</td>
+                        </tr>`;
+      amount += parseFloat(row.amount);
+      if (rows.length > index + 1) {
+        html += `
+                          <tr style="display: flex; justify-content: space-between; font-size: 1rem;  margin-top: 0.5rem;  border-bottom: 1px dashed black;"></tr>`;
+      }
     });
   }
-
-  // Add dashed line after each row except the last one
-  if (rows.length > index + 1) {
-    html += `
-            <tr
-                              style={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                fontSize: "1rem", // Tailwind text-md ≈ 1rem
-                                marginTop: "0.5rem", // Tailwind mt-2 = 0.5rem
-                                borderBottom: "1px dashed gray", // Combines border thickness & style
-                              }}
-                            ></tr>`;
-  }
-
-  html += `          
+  html += `
                   </tbody>
                 </table>
-                `;
-
-  html += `
               </div>
-            </div>
-
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                borderBottom: "1.2px solid black",
-                marginTop: "0.5rem", // Tailwind's mt-2 = 0.5rem
-              }}
-            ></div>
-
-            {
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  width: "100%",
-                }}
-              >
-                <div
-                  style={{
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <div
-                    style={{
-                      marginTop: "0.5rem", // mt-1
-                      marginBottom: "0.5rem", // mt-1
-                      paddingLeft: "0.5rem", // px-2
-                      paddingRight: "0.5rem", // px-2
-                      fontSize: "0.95rem", // text-md ≈ 1rem
-                      fontWeight: "bold", // font-bold
-                      borderRadius: "0.375rem", // rounded-md = 6px or 0.375rem
-                      textTransform: "uppercase", // uppercase
-                    }}
-                  >
+              <div style="display: flex; justify-content: space-between; border-bottom: 1.2px solid black; margin-top: 0.5rem;"></div>
+              <div style="display: flex; justify-content: flex-end; width: 100%;">
+                <div style="width: 100%; display: flex; justify-content: space-between;">
+                  <div style="margin-top: 0.5rem; margin-bottom: 0.5rem; padding: 0.5rem; font-size: 0.95rem; font-weight: bold; border-radius: 0.375rem; text-transform: uppercase;">
                     Total
                   </div>
-                  <div
-                    style={{
-                      marginTop: "0.5rem", // mt-1
-                      marginBottom: "0.5rem", // mt-1
-                      paddingLeft: "0.5rem", // px-2
-                      paddingRight: "0.5rem", // px-2
-                      fontSize: "0.95rem", // text-md ≈ 1rem
-                      fontWeight: "bold", // font-bold
-                      borderRadius: "0.375rem", // rounded-md = 6px or 0.375rem
-                    }}
-                  >
-                    ₹ ${amountInfo?.amount}
+                  <div style="margin-top: 0.5rem; margin-bottom: 0.5rem; padding: 0.5rem; font-size: 0.95rem; font-weight: bold; border-radius: 0.375rem;">
+                    ₹ ${amount}
                   </div>
                 </div>
               </div>
-            }
-
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                borderBottom: "1.2px solid black",
-                marginTop: "0.2rem", // Tailwind's mt-2 = 0.5rem
-              }}
-            ></div>
-
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-              }}
-            >
-              <div>
+              <div style="display: flex; justify-content: space-between; border-bottom: 1.2px solid black; margin-top: 0.2rem;"></div>
+              <div style="display: flex; justify-content: space-between;">
                 <div>
-                  <div
-                    style={{
-                      fontWeight: "bold", // font-bold
-                      fontSize: "0.875rem", // text-sm
-                      marginTop: "1.5rem", // mt-6
-                      color: "#374151", // text-gray-700
-                      textTransform: "uppercase", // uppercase
-                    }}
-                  >
+                  <div style="font-weight: bold; font-size: 0.875rem; margin-top: 1.5rem; color: #374151; text-transform: uppercase;">
                     Account Information
                   </div>
-                  <div
-                    style={{
-                      fontSize: "0.875rem", // text-sm
-                      marginTop: "1rem", // mt-4
-                    }}
-                  >
-                    <div>
-                      Bank Name :
-                      <span
-                        style={{
-                          fontWeight: "bold",
-                        }}
-                      >
-                        ${accountInfo.bankName}
-                      </span>
-                    </div>
-                    <div
-                      style={{
-                        marginTop: "0.25rem", // font-bold
-                      }}
-                    >
-                      Name :
-                      <span
-                        style={{
-                          fontWeight: "bold",
-                        }}
-                      >
-                        ${accountInfo.name}
-                      </span>
-                    </div>
-                    <div
-                      style={{
-                        marginTop: "0.25rem", // font-bold
-                      }}
-                    >
-                      Account Number :
-                      <span
-                        style={{
-                          fontWeight: "bold",
-                        }}
-                      >
-                        ${accountInfo.accountNumber}
-                      </span>
-                    </div>
-                    <div
-                      style={{
-                        marginTop: "0.25rem", // font-bold
-                      }}
-                    >
-                      Account Type :
-                      <span
-                        style={{
-                          fontWeight: "bold",
-                        }}
-                      >
-                        ${accountInfo.accountType}
-                      </span>
-                    </div>
-                    <div
-                      style={{
-                        marginTop: "0.25rem", // font-bold
-                      }}
-                    >
-                      IFSC Code :
-                      <span
-                        style={{
-                          fontWeight: "bold",
-                        }}
-                      >
-                        ${accountInfo.ifscCode}
-                      </span>
-                    </div>
-
-                    <div
-                      style={{
-                        marginTop: "0.25rem", // font-bold
-                      }}
-                    >
-                      Branch :
-                      <span
-                        style={{
-                          fontWeight: "bold",
-                        }}
-                      >
-                        ${accountInfo.branch}
-                      </span>
-                    </div>
-
-                    <div
-                      style={{
-                        marginTop: "0.25rem", // font-bold
-                      }}
-                    >
-                      PAN :
-                      <span
-                        style={{
-                          fontWeight: "bold",
-                        }}
-                      >
-                        ${accountInfo.pan}
-                      </span>
-                    </div>
-
-                    <br />
+                  <div style="font-size: 0.875rem; margin-top: 1rem;">
+                    <div>Bank Name: <span style="font-weight: bold;">${accountInfo.bankName}</span></div>
+                    <div style="margin-top: 0.25rem;">Name: <span style="font-weight: bold;">${accountInfo.name}</span></div>
+                    <div style="margin-top: 0.25rem;">Account Number: <span style="font-weight: bold;">${accountInfo.accountNumber}</span></div>
+                    <div style="margin-top: 0.25rem;">Account Type: <span style="font-weight: bold;">${accountInfo.accountType}</span></div>
+                    <div style="margin-top: 0.25rem;">IFSC Code: <span style="font-weight: bold;">${accountInfo.ifscCode}</span></div>
+                    <div style="margin-top: 0.25rem;">Branch: <span style="font-weight: bold;">${accountInfo.branch}</span></div>
+                    <div style="margin-top: 0.25rem;">PAN: <span style="font-weight: bold;">${accountInfo.pan}</span></div>
                   </div>
                 </div>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  marginTop: "2rem", // 8 * 0.25rem = 2rem
-                }}
-              >
-              `;
+                <div style="display: flex; flex-direction: column; margin-top: 2rem;">`;
   if (signedInfo.signature) {
-    html += ` <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "flex-end",
-                      fontSize: "0.875rem", // Tailwind's text-sm = 14px = 0.875rem
-                    }}
-                  >
+    html += `
+                  <div style="display: flex; justify-content: flex-end; font-size: 0.875rem;">
                     <div>
-                      <img
-                        style={{ width: "100px" }}
-                        src=${signedInfo.signature}
-                        alt="sign"
-                      />
-                      <div style={{ fontWeight: "bold" }}>Date Signed</div>
-                      <div>${signedInfo.signedDate}</div>
+                      <img style="width: 100px;" src="${signedInfo?.signature}" alt="sign" />
+                      <div style="font-weight: bold;">Date Signed</div>
+                      <div>${signedInfo?.signedDate}</div>
                     </div>
                   </div>`;
   }
-
   html += `
-            <div
-              style={{
-                color: "#6B7280",
-                fontSize: "0.875rem",
-                marginTop: "0.25rem", // font-bold
-              }}
-            >
-              ${additionalInfo?.additionaldesc}
-            </div>
-            <div
-              style={{
-                color: "#4B5563", // text-gray-600
-                textAlign: "right", // text-right
-              }}
-            >
-              <div
-                style={{
-                  fontSize: "0.75rem", // text-xs (12px)
-                }}
-              >
-                Thank you for your business!
+                </div>
+              </div>`;
+  if (additionalInfo?.additionaldesc) {
+    html += `
+              <div style="color: #6B7280; font-size: 0.875rem; margin-top: 0.25rem;">
+               ${additionalInfo?.additionaldesc}
+              </div>`;
+  }
+  html += `
+              <div style="color: #4B5563; text-align: right;">
+                <div style="font-size: 0.75rem;">
+                  Thank you for your business!
+                </div>
               </div>
             </div>
-      </div>`;
+          </div>`;
 
   if (!html) {
     console.log("No HTML generated for PDF.");
     return false;
   }
 
-  const options = { format: "A4" };
+  const fontLink = `<link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">`;
+  const html1 = `
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset="UTF-8" />
+      <title>Invoice</title>
+      ${fontLink}
+      <style>
+        body {
+          font-family: 'Inter', sans-serif;
+        }
+      </style>
+    </head>
+    <body>
+      ${html}
+    </body>
+  </html>
+`;
 
-  pdf.create(html, options).toFile(pdfPath, (err, res) => {
-    if (err) return console.error(err);
-    console.log("PDF created:", res.filename);
-  });
-  //return true;
-});
+  const browser = await puppeteer.launch({ headless: true });
+  const page = await browser.newPage();
+  await page.setContent(html1, { waitUntil: "networkidle0" });
+  const pdfBuffer = await page.pdf({ format: "A4", printBackground: true });
+  await browser.close();
+
+  const mailOptions = {
+    from: "support@invoicesimplify.com",
+    to: email,
+    subject: `Your Invoice for ${customerInfo.productName} via InvoiceSimplify`,
+    text: `Hello, Please find the attached invoice for ${customerInfo.productName}.`,
+    attachments: [
+      {
+        filename: `${customerInfo.productName}.pdf`,
+        content: pdfBuffer,
+      },
+    ],
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log(`✅ Email sent to ${email}`);
+  } catch (err) {
+    console.error(`❌ Error sending to ${email}:`, err);
+  }
+};
 
 app.post("/send-email-pdf", async (req, res) => {
   const { html, product, yourname, email } = req.body;

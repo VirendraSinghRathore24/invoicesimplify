@@ -4,25 +4,10 @@ import Loader from "../Loader";
 import { BASE_URL } from "../Constant";
 import { toast } from "react-toastify";
 
-const EmailModal = ({
-  handleCloseEmailModal,
-  email,
-  invoiceInfo,
-  personalInfo,
-  customerInfo,
-  rows,
-  amountInfo,
-  accountInfo,
-  signedInfo,
-  logoBase64,
-  additionalInfo,
-  // taxCalculatedInfo,
-}) => {
+const EmailViewModal = ({ handleCloseEmailModal, id, email }) => {
   const [loading, setLoading] = useState(false);
   const [posts, setPosts] = useState([]);
   const [brandEmail, setBrandEmail] = useState(email);
-  const [ccEmail, setCCEmail] = useState("");
-  const [subject, setSubject] = useState("");
 
   const handleEmailInvoice = async (e) => {
     try {
@@ -35,31 +20,22 @@ const EmailModal = ({
       }
 
       const url = BASE_URL;
+      const uid = localStorage.getItem("uid");
 
-      const invoiceData = {
+      const emailData = {
         email: brandEmail,
-        ccEmail: ccEmail,
-        subject: subject,
-        invoiceInfo: invoiceInfo,
-        personalInfo: personalInfo,
-        customerInfo: customerInfo,
-        rows: rows,
-        amountInfo: amountInfo,
-        accountInfo: accountInfo,
-        signedInfo: signedInfo,
-        logoBase64: logoBase64,
-        additionalInfo: additionalInfo,
-        // taxCalculatedInfo: taxCalculatedInfo,
+        id: id,
+        uid: uid,
       };
 
       setLoading(true);
-      const response = await fetch(url + "/send-email-pdf1", {
+      const response = await fetch(url + "/send-email-pdf-view", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          invoiceData: invoiceData,
+          emailData: emailData,
         }),
       });
       const data = await response.json();
@@ -136,4 +112,4 @@ const EmailModal = ({
   );
 };
 
-export default EmailModal;
+export default EmailViewModal;

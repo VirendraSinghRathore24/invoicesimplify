@@ -13,6 +13,7 @@ import MessagePopup from "../MessagePopup";
 import { BASE_URL, SERVICE_CENTER } from "../Constant";
 import CreatorMobileMenu from "./CreatorMobileMenu";
 import EmailModal from "./EmailModal";
+import EmailViewModal from "./EmailViewModal";
 
 function CreatorViewInvoice() {
   const [invoiceInfo, setInvoiceInfo] = useState({});
@@ -170,7 +171,7 @@ function CreatorViewInvoice() {
                 </button>
               </div>
               <div>
-                <button onClick={handlePrint}>
+                <button onClick={() => setOpenEmailModal(true)}>
                   <Mail />
                 </button>
               </div>
@@ -204,7 +205,7 @@ function CreatorViewInvoice() {
                   <span className="mr-2">
                     <Mail />
                   </span>
-                  Email Invoice
+                  Email
                 </button>
               </div>
 
@@ -329,6 +330,17 @@ function CreatorViewInvoice() {
                         >
                           Email: {invoiceInfo?.personalInfo.email}
                         </div>
+                        {invoiceInfo?.personalInfo.socialMedia && (
+                          <div
+                            style={{
+                              color: "#6B7280",
+                              fontSize: "0.875rem",
+                              marginTop: "0.2rem",
+                            }}
+                          >
+                            {invoiceInfo?.personalInfo.socialMedia}
+                          </div>
+                        )}
                       </div>
                       <div>
                         <div
@@ -902,10 +914,10 @@ function CreatorViewInvoice() {
         {loading && <Loader />}
       </div>
       {openEmailModal && (
-        <EmailModal
+        <EmailViewModal
           handleCloseEmailModal={handleCloseEmailModal}
-          email={invoiceInfo.personalInfo.email}
           id={id}
+          email={invoiceInfo?.personalInfo?.email}
         />
       )}
     </div>

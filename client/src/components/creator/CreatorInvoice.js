@@ -131,6 +131,7 @@ function CreatorInvoice() {
       invoiceInfo: invoiceInfo,
       signedInfo: signedInfo,
       loggedInUser: loggedInUser,
+      logoBase64: logoBase64,
       paymentStatus: "Pending",
     });
 
@@ -1037,6 +1038,8 @@ function CreatorInvoice() {
           amountInfo={amount}
           accountInfo={accountInfo}
           signedInfo={signedInfo}
+          logoBase64={logoBase64}
+          additionalInfo={additionalInfo}
           //taxCalculatedInfo={taxCalculatedInfo}
         />
       )}
