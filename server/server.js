@@ -741,7 +741,9 @@ app.post("/send-email-pdf1", async (req, res) => {
     await sendEmailPdf(invoiceData, invoiceData.email);
     res.status(200).json({ success: true, message: "Email sent successfully" });
   } catch (err) {
-    res.status(500).json({ error: "Failed to create and send email" });
+    res
+      .status(500)
+      .json({ error: err.message || "Failed to create and send email" });
   }
 });
 
