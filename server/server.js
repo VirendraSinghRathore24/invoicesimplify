@@ -1060,7 +1060,10 @@ const sendEmailPdf = async (invoiceData, email) => {
   console.log(await chromium.executablePath);
   const browser = await puppeteerCore.launch({
     args: chromium.args,
-    executablePath: await chromium.executablePath,
+    executablePath:
+      process.env.PUPPETEER_EXECUTABLE_PATH ||
+      (await chromium.executablePath) ||
+      "/usr/bin/google-chrome",
     headless: chromium.headless,
   });
   const page = await browser.newPage();
