@@ -1,6 +1,6 @@
 const express = require("express");
 const twilio = require("twilio");
-const puppeteer = require("puppeteer");
+//const puppeteer = require("puppeteer");
 const fs = require("fs");
 const path = require("path");
 const axios = require("axios");
@@ -598,7 +598,7 @@ app.post("/send-whatsapp", async (req, res) => {
 });
 
 app.get("/download-pdf", async (req, res) => {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteerCore.launch();
   const page = await browser.newPage();
 
   const data = {
@@ -1159,7 +1159,7 @@ app.post("/generate-pdf", async (req, res) => {
   if (!html) return res.status(400).send("No HTML content provided.");
 
   try {
-    const browser = await puppeteer.launch({
+    const browser = await puppeteerCore.launch({
       headless: true,
       ignoreDefaultArgs: ["--disable-extensions"],
       args: ["--no-sandbox", "--use-gl=egl", "--disable-setuid-sandbox"],
@@ -1387,7 +1387,7 @@ app.get("/send-pdf-whatsapp", async (req, res) => {
 
   try {
     // Generate PDF
-    const browser = await puppeteer.launch({ headless: "new" });
+    const browser = await puppeteerCore.launch({ headless: "new" });
     const page = await browser.newPage();
     await page.setContent(html);
     await page.pdf({ path: filePath, format: "A4" });
