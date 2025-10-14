@@ -21,7 +21,7 @@
     "nodemailer": "^7.0.5",
     "pdfkit": "^0.17.1",
     "puppeteer": "^24.10.0",
-    "puppeteer-core": "^24.24.1",
+    "puppeteer-core": "^10.4.0",
     "razorpay": "^2.9.6",
     "twilio": "^5.7.1"
   }

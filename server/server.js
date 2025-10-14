@@ -1058,7 +1058,7 @@ const sendEmailPdf = async (invoiceData, email) => {
   </html>
 `;
 
-  const browser = await puppeteer.launch({
+  const browser = await puppeteerCore.launch({
     args: chromium.args,
     executablePath: await chromium.executablePath,
     headless: chromium.headless,
