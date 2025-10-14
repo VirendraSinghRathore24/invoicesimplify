@@ -17,6 +17,7 @@ const serviceAccount = require("./firebaseServiceAccount.json");
 const bodyParser = require("body-parser");
 const pdf1 = require("html-pdf-node");
 const puppeteerCore = require("puppeteer-core");
+const chromium = require("chrome-aws-lambda");
 dotenv.config();
 
 app.use(bodyParser.json({ limit: "10mb" }));
@@ -1058,14 +1059,19 @@ const sendEmailPdf = async (invoiceData, email) => {
 `;
 
   const browser = await puppeteerCore.launch({
-    executablePath: "/usr/bin/chromium", // use system Chromium
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    headless: true,
-    ignoreHTTPSErrors: true,
+    args: chromium.args,
+    executablePath: await chromium.executablePath,
+    headless: chromium.headless,
   });
+
   const page = await browser.newPage();
   await page.setContent(html1, { waitUntil: "networkidle0" });
-  const pdfBuffer = await page.pdf({ format: "A4", printBackground: true });
+
+  const pdfBuffer = await page.pdf({
+    format: "A4",
+    printBackground: true,
+  });
+
   await browser.close();
 
   const mailOptions = {
