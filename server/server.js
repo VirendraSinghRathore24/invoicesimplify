@@ -16,7 +16,6 @@ const admin = require("firebase-admin");
 const serviceAccount = require("./firebaseServiceAccount.json");
 const bodyParser = require("body-parser");
 const pdf1 = require("html-pdf-node");
-const chromium = require("chrome-aws-lambda");
 const puppeteerCore = require("puppeteer-core");
 dotenv.config();
 
@@ -1057,11 +1056,10 @@ const sendEmailPdf = async (invoiceData, email) => {
     </body>
   </html>
 `;
-  console.log(await chromium.executablePath);
+
   const browser = await puppeteerCore.launch({
-    args: chromium.args,
-    executablePath:
-      process.env.PUPPETEER_EXECUTABLE_PATH || (await chromium.executablePath),
+    executablePath: "/usr/bin/chromium", // use system Chromium
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
     headless: true,
     ignoreHTTPSErrors: true,
   });
