@@ -1,6 +1,6 @@
 const express = require("express");
 const twilio = require("twilio");
-const puppeteer = require("puppeteer");
+// const puppeteer = require("puppeteer");
 const fs = require("fs");
 const path = require("path");
 const axios = require("axios");
@@ -17,6 +17,8 @@ const serviceAccount = require("./firebaseServiceAccount.json");
 const bodyParser = require("body-parser");
 const pdf1 = require("html-pdf-node");
 dotenv.config();
+
+let puppeteer = "";
 
 app.use(bodyParser.json({ limit: "10mb" }));
 
