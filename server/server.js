@@ -1061,7 +1061,8 @@ const sendEmailPdf = async (invoiceData, email) => {
   const executablePath = await chromium.executablePath;
   console.log(executablePath);
   if (!executablePath) {
-    throw new Error("❌ Chromium binary not found!");
+    throw new Error(executablePath);
+    //throw new Error("❌ Chromium binary not found!");
   }
   const browser = await puppeteerCore.launch({
     args: chromium.args,
