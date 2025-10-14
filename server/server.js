@@ -16,7 +16,6 @@ const admin = require("firebase-admin");
 const serviceAccount = require("./firebaseServiceAccount.json");
 const bodyParser = require("body-parser");
 const pdf1 = require("html-pdf-node");
-const chromium = require("chrome-aws-lambda");
 dotenv.config();
 
 app.use(bodyParser.json({ limit: "10mb" }));
