@@ -740,7 +740,7 @@ app.post("/send-email-pdf1", async (req, res) => {
   const { invoiceData } = req.body;
 
   try {
-    await sendEmailPdf(invoiceData, invoiceData.email);
+    await sendEmailPdf(invoiceData, invoiceData.email, res);
     res.status(200).json({ success: true, message: "Email sent successfully" });
   } catch (err) {
     res
@@ -800,14 +800,14 @@ app.post("/send-email-pdf-view", async (req, res) => {
   };
 
   try {
-    await sendEmailPdf(invoiceData, emailData.email);
+    await sendEmailPdf(invoiceData, emailData.email, res);
     res.status(200).json({ success: true, message: "Email sent successfully" });
   } catch (err) {
     res.status(500).json({ error: "Failed to create and send email" });
   }
 });
 
-const sendEmailPdf = async (invoiceData, email) => {
+const sendEmailPdf = async (invoiceData, email, res) => {
   const personalInfo = invoiceData.personalInfo;
   const customerInfo = invoiceData.customerInfo;
   const invoiceInfo = invoiceData.invoiceInfo;
@@ -1098,9 +1098,15 @@ const sendEmailPdf = async (invoiceData, email) => {
 
   try {
     await transporter.sendMail(mailOptions);
+    res
+      .status(200)
+      .json({ success: true, message: "Email sent successfully1" });
     console.log(`✅ Email sent to ${email}`);
   } catch (err) {
     console.error(`❌ Error sending to ${email}:`, err);
+    res
+      .status(200)
+      .json({ success: true, message: err.message || "Email sent failed" });
   }
 };
 
