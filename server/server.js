@@ -1,6 +1,6 @@
 const express = require("express");
 const twilio = require("twilio");
-//const puppeteer = require("puppeteer");
+const puppeteer = require("puppeteer");
 const fs = require("fs");
 const path = require("path");
 const axios = require("axios");
@@ -16,7 +16,6 @@ const admin = require("firebase-admin");
 const serviceAccount = require("./firebaseServiceAccount.json");
 const bodyParser = require("body-parser");
 const pdf1 = require("html-pdf-node");
-const puppeteerCore = require("puppeteer-core");
 const chromium = require("chrome-aws-lambda");
 dotenv.config();
 
@@ -598,7 +597,7 @@ app.post("/send-whatsapp", async (req, res) => {
 });
 
 app.get("/download-pdf", async (req, res) => {
-  const browser = await puppeteerCore.launch();
+  const browser = await puppeteer.launch();
   const page = await browser.newPage();
 
   const data = {
@@ -1058,26 +1057,14 @@ const sendEmailPdf = async (invoiceData, email) => {
   </html>
 `;
 
-  const executablePath = await chromium.executablePath;
-  console.log(executablePath);
-  if (!executablePath) {
-    throw new Error(executablePath);
-    //throw new Error("❌ Chromium binary not found!");
-  }
-  const browser = await puppeteerCore.launch({
-    args: chromium.args,
-    executablePath: executablePath,
-    headless: chromium.headless,
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
 
   const page = await browser.newPage();
   await page.setContent(html1, { waitUntil: "networkidle0" });
-
-  const pdfBuffer = await page.pdf({
-    format: "A4",
-    printBackground: true,
-  });
-
+  const pdfBuffer = await page.pdf({ format: "A4", printBackground: true });
   await browser.close();
 
   const mailOptions = {
@@ -1171,7 +1158,7 @@ app.post("/generate-pdf", async (req, res) => {
   if (!html) return res.status(400).send("No HTML content provided.");
 
   try {
-    const browser = await puppeteerCore.launch({
+    const browser = await puppeteer.launch({
       headless: true,
       ignoreDefaultArgs: ["--disable-extensions"],
       args: ["--no-sandbox", "--use-gl=egl", "--disable-setuid-sandbox"],
@@ -1399,7 +1386,7 @@ app.get("/send-pdf-whatsapp", async (req, res) => {
 
   try {
     // Generate PDF
-    const browser = await puppeteerCore.launch({ headless: "new" });
+    const browser = await puppeteer.launch({ headless: "new" });
     const page = await browser.newPage();
     await page.setContent(html);
     await page.pdf({ path: filePath, format: "A4" });

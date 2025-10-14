@@ -6,7 +6,6 @@
   "dependencies": {
     "axios": "^1.9.0",
     "body-parser": "^2.2.0",
-    "chrome-aws-lambda": "^10.1.0",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "dayjs": "^1.11.13",
@@ -20,7 +19,7 @@
     "node-cron": "^4.2.1",
     "nodemailer": "^7.0.5",
     "pdfkit": "^0.17.1",
-    "puppeteer-core": "^10.4.0",
+    "puppeteer": "^24.24.1",
     "razorpay": "^2.9.6",
     "twilio": "^5.7.1"
   }
