@@ -89,6 +89,9 @@ const transporter = nodemailer.createTransport({
     user: "support@invoicesimplify.com",
     pass: process.env.EMAIL_PASSWORD,
   },
+  tls: {
+    rejectUnauthorized: false, // Important on VPS to bypass strict cert checks
+  },
 });
 
 transporter.verify((error, success) => {
