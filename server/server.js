@@ -156,10 +156,12 @@ app.post("/send-reminderemail", async (req, res) => {
         email,
     });
 
-    res.status(200).send({ success: true, message: "Email sent successfully" });
+    return res
+      .status(200)
+      .send({ success: true, message: "Email sent successfully" });
   } catch (error) {
     console.error("Email send error:", error);
-    res.status(500).send({ success: false, message: "Failed to send email" });
+    return res.status(500).send({ success: false, message: error });
   }
 });
 
