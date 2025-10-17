@@ -734,7 +734,7 @@ const CreatorDashboard = () => {
                       "Amount",
                       "Status",
                       "Update",
-                      "Payment Reminder",
+                      // "Payment Reminder",
                       "View",
                       "Delete",
                     ].map((header, i) => (
@@ -747,7 +747,7 @@ const CreatorDashboard = () => {
                             "View",
                             "Delete",
                             "Update",
-                            "Payment Reminder",
+                            // "Payment Reminder",
                           ].includes(header) && handleSort(header)
                         }
                       >
@@ -757,7 +757,7 @@ const CreatorDashboard = () => {
                           "View",
                           "Delete",
                           "Update",
-                          "Payment Reminder",
+                          // "Payment Reminder",
                         ].includes(header) && (
                           <span>
                             {sortConfig.key === header.toLowerCase()
@@ -854,7 +854,7 @@ const CreatorDashboard = () => {
                               Update Status
                             </button>
                           </td>
-                          {user.paymentStatus === "Pending" ? (
+                          {/* {user.paymentStatus === "Pending" ? (
                             <td className="px-4 py-3 border-r whitespace-nowrap">
                               <button
                                 onClick={() => {
@@ -875,7 +875,7 @@ const CreatorDashboard = () => {
                                 Completed
                               </div>
                             </td>
-                          )}
+                          )} */}
                           <td className="px-4 py-3 border-r whitespace-nowrap">
                             <button
                               onClick={() => handleView(user.id)}

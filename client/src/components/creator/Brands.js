@@ -97,7 +97,7 @@ const Brands = () => {
       <div className="hidden max-lg:block mb-16">
         <CreatorMobileMenu />
       </div>
-      <div className=" mt-16 lg:mt-0 bg-white p-4 text-black rounded-xl w-full lg:ml-[17%]">
+      <div className="mt-16 lg:mt-0 bg-white p-2 text-black rounded-xl w-full lg:ml-[17%]">
         <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-2">
           <div className="p-4">
             <input

@@ -312,7 +312,7 @@ function CreatorInvoice() {
         </div>
       </div>
       <div className="hidden lg:block">
-        <div className="mt-2 flex w-full lg:w-7/12 p-2 mx-auto justify-between">
+        <div className="mt-2 flex w-full lg:w-[82%] ml-0 lg:ml-[13%] p-2 mx-auto justify-between border-2 mt-3 rounded-md">
           <div className="flex gap-x-2">
             <button
               onClick={handleEditInvoice}
@@ -365,7 +365,7 @@ function CreatorInvoice() {
         </div>
       </div>
       <div>
-        <div className="w-full lg:w-7/12 mx-auto py-2 border-2 mb-10 mt-2 rounded-md">
+        <div className="w-full lg:w-[82%] ml-0 lg:ml-[13%] mx-auto py-2 border-2 mb-10 mt-4 rounded-md p-4">
           <div
             ref={printRef}
             style={{
