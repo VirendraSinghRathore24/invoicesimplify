@@ -113,6 +113,25 @@ dns.lookup("smtpout.secureserver.net", (err, address) => {
 app.post("/send-reminderemail", async (req, res) => {
   const { brandEmail, ccEmail, subject, textData } = req.body;
 
+  try {
+    await sendReminderEmail(brandEmail, ccEmail, subject, textData, res);
+    return res
+      .status(200)
+      .json({ success: true, message: "Email sent successfully" });
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ error: err.message || "Failed to create and send email" });
+  }
+});
+
+const sendReminderEmail = async (
+  brandEmail,
+  ccEmail,
+  subject,
+  textData,
+  res
+) => {
   const customerName = textData[0];
   const invoiceNumber = textData[1];
   const amount = textData[2];
@@ -122,48 +141,48 @@ app.post("/send-reminderemail", async (req, res) => {
   const email = textData[6];
   const product = textData[7];
 
-  try {
-    await transporter.sendMail({
-      from: "support@invoicesimplify.com",
-      to: brandEmail,
-      cc: ccEmail || undefined, // only add CC if provided
-      subject: subject,
-      text:
-        "Hi " +
-        customerName +
-        "," +
-        "\n\n" +
-        "I hope you’re doing well." +
-        "\n" +
-        "This is a friendly reminder that " +
-        product +
-        " Collab for ₹" +
-        amount +
-        " is due on " +
-        date +
-        "." +
-        "\n\n" +
-        "If you’ve already made the payment, please disregard this message." +
-        "\n\n" +
-        "Thank you for your prompt attention!" +
-        "\n\n" +
-        "Best regards," +
-        "\n" +
-        yourName +
-        "\n" +
-        phoneNumber +
-        "\n" +
-        email,
-    });
+  const mailOptions = {
+    from: "support@invoicesimplify.com",
+    to: brandEmail,
+    cc: ccEmail || undefined, // only add CC if provided
+    subject: subject,
+    text:
+      "Hi " +
+      customerName +
+      "," +
+      "\n\n" +
+      "I hope you’re doing well." +
+      "\n" +
+      "This is a friendly reminder that " +
+      product +
+      " Collab for ₹" +
+      amount +
+      " is due on " +
+      date +
+      "." +
+      "\n\n" +
+      "If you’ve already made the payment, please disregard this message." +
+      "\n\n" +
+      "Thank you for your prompt attention!" +
+      "\n\n" +
+      "Best regards," +
+      "\n" +
+      yourName +
+      "\n" +
+      phoneNumber +
+      "\n" +
+      email,
+  };
 
-    return res
-      .status(200)
-      .send({ success: true, message: "Email sent successfully" });
+  try {
+    await transporter.sendMail(mailOptions);
+
+    res.status(200).send({ success: true, message: "Email sent successfully" });
   } catch (error) {
     console.error("Email send error:", error);
-    return res.status(500).send({ success: false, message: error });
+    res.status(500).send({ success: false, message: error });
   }
-});
+};
 
 const tableHeaders = [
   "Invoice #",
