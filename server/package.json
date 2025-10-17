@@ -19,6 +19,7 @@
     "node-cron": "^4.2.1",
     "nodemailer": "^7.0.5",
     "pdfkit": "^0.17.1",
+    "puppeteer": "^24.25.0",
     "razorpay": "^2.9.6",
     "twilio": "^5.7.1"
   }
