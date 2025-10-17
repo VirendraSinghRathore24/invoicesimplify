@@ -176,11 +176,8 @@ const sendReminderEmail = async (
 
   try {
     await transporter.sendMail(mailOptions);
-
-    res.status(200).send({ success: true, message: "Email sent successfully" });
   } catch (error) {
     console.error("Email send error:", error);
-    res.status(500).send({ success: false, message: error });
   }
 };
 
