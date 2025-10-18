@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { db } from "../../config/firebase";
 import { collection, doc, getDocs } from "firebase/firestore";
 
-const EmailViewModal = ({ handleCloseEmailModal, id, email }) => {
+const EmailViewModal = ({ handleCloseEmailModal, id, email, logoBase64 }) => {
   const [loading, setLoading] = useState(false);
   const [posts, setPosts] = useState([]);
   const [brandEmail, setBrandEmail] = useState(email);
@@ -34,7 +34,7 @@ const EmailViewModal = ({ handleCloseEmailModal, id, email }) => {
         amountInfo: invoiceData1.amountInfo,
         accountInfo: invoiceData1.accountInfo,
         signedInfo: invoiceData1.signedInfo,
-        logoBase64: invoiceData1.logoBase64,
+        logoBase64: logoBase64,
         additionalInfo: invoiceData1.additionalInfo,
         // taxCalculatedInfo: taxCalculatedInfo,
       };
