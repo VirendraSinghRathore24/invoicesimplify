@@ -74,7 +74,7 @@ const CreatorSidebar = () => {
   return (
     <div className="w-60 h-[96.7%] bg-[#014459] text-white flex flex-col shadow-lg fixed top-0 left-0 rounded-lg m-3">
       <NavLink
-        className="text-xl font-bold p-2 items-center flex justify-center border-b border-gray rounded-t-md bg-white border-2"
+        className="text-xl font-bold p-2 items-center flex justify-center border-b border-gray "
         to={"/"}
       >
         <img

@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import Loader from "../Loader";
-import { BASE_URL } from "../Constant";
+import { BASE_URL, CREATORS, INVOICE_INFO } from "../Constant";
 import { toast } from "react-toastify";
+import { db } from "../../config/firebase";
+import { collection, doc, getDocs } from "firebase/firestore";
 
 const EmailViewModal = ({ handleCloseEmailModal, id, email }) => {
   const [loading, setLoading] = useState(false);
@@ -20,30 +22,36 @@ const EmailViewModal = ({ handleCloseEmailModal, id, email }) => {
       }
 
       const url = BASE_URL;
-      const uid = localStorage.getItem("uid");
 
-      const emailData = {
+      const invoiceData1 = await getInvoiceDataById();
+
+      const invoiceData = {
         email: brandEmail,
-        id: id,
-        uid: uid,
+        invoiceInfo: invoiceData1.invoiceInfo,
+        personalInfo: invoiceData1.personalInfo,
+        customerInfo: invoiceData1.customerInfo,
+        rows: invoiceData1.rows,
+        amountInfo: invoiceData1.amountInfo,
+        accountInfo: invoiceData1.accountInfo,
+        signedInfo: invoiceData1.signedInfo,
+        logoBase64: invoiceData1.logoBase64,
+        additionalInfo: invoiceData1.additionalInfo,
+        // taxCalculatedInfo: taxCalculatedInfo,
       };
 
       setLoading(true);
-      const response = await fetch(url + "/send-email-pdf-view", {
+      const response = await fetch(url + "/send-email-pdf1", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          emailData: emailData,
+          invoiceData: invoiceData,
         }),
       });
       const data = await response.json();
-      console.log("Response from server:", data);
+
       if (response.ok) {
-        // await InsertToDB();
-        // await updateInvoiceNumber();
-        // clearLocalStorageForPdf();
         handleCloseEmailModal();
         toast("Email sent successfully!");
       } else {
@@ -54,6 +62,27 @@ const EmailViewModal = ({ handleCloseEmailModal, id, email }) => {
       console.log(er);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const uid = localStorage.getItem("uid");
+  const invoiceInfo_CollectionRef = collection(
+    doc(db, CREATORS, uid),
+    INVOICE_INFO
+  );
+
+  const getInvoiceDataById = async () => {
+    try {
+      const data = await getDocs(invoiceInfo_CollectionRef);
+      const filteredData = data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+
+      const invoiceInfo = filteredData.filter((x) => x.id === id)[0];
+      return invoiceInfo;
+    } catch (err) {
+      console.log(err);
     }
   };
 

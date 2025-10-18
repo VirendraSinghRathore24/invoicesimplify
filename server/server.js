@@ -770,63 +770,63 @@ app.post("/send-email-pdf1", async (req, res) => {
   }
 });
 
-app.post("/send-email-pdf-view", async (req, res) => {
-  const { emailData } = req.body;
+// app.post("/send-email-pdf-view", async (req, res) => {
+//   const { emailData } = req.body;
 
-  const id = emailData.id;
-  const email = emailData.email;
-  const uid = emailData.uid;
+//   const id = emailData.id;
+//   const email = emailData.email;
+//   const uid = emailData.uid;
 
-  // call to db to get invoice data
-  const invoiceSnapshot = await db
-    .collection("Creators")
-    .doc(uid)
-    .collection("Invoice_Info")
-    .get();
+//   // call to db to get invoice data
+//   const invoiceSnapshot = await db
+//     .collection("Creators")
+//     .doc(uid)
+//     .collection("Invoice_Info")
+//     .get();
 
-  const filteredDocs = invoiceSnapshot.docs.filter((doc) => doc.id === id);
+//   const filteredDocs = invoiceSnapshot.docs.filter((doc) => doc.id === id);
 
-  const data = filteredDocs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  }));
+//   const data = filteredDocs.map((doc) => ({
+//     id: doc.id,
+//     ...doc.data(),
+//   }));
 
-  if (data.length === 0) {
-    return res.status(404).json({ error: "No invoice data found" });
-  }
+//   if (data.length === 0) {
+//     return res.status(404).json({ error: "No invoice data found" });
+//   }
 
-  const result = data[0]; // Assuming you want the first document
+//   const result = data[0]; // Assuming you want the first document
 
-  console.log("Fetched invoice data:", result);
+//   const personalInfo = result.personalInfo;
+//   const customerInfo = result.customerInfo;
+//   const invoiceInfo = result.invoiceInfo;
+//   const rows = result.rows;
+//   const amountInfo = result.amountInfo;
+//   const accountInfo = result.accountInfo;
+//   const signedInfo = result.signedInfo;
+//   const additionalInfo = result.additionalInfo;
 
-  const personalInfo = result.personalInfo;
-  const customerInfo = result.customerInfo;
-  const invoiceInfo = result.invoiceInfo;
-  const rows = result.rows;
-  const amountInfo = result.amountInfo;
-  const accountInfo = result.accountInfo;
-  const signedInfo = result.signedInfo;
-  const additionalInfo = result.additionalInfo;
+//   const invoiceData = {
+//     personalInfo,
+//     customerInfo,
+//     invoiceInfo,
+//     rows,
+//     amountInfo,
+//     accountInfo,
+//     signedInfo,
+//     additionalInfo,
+//     logoBase64: result.logoBase64, // Assuming logo is sent as base64 string
+//   };
 
-  const invoiceData = {
-    personalInfo,
-    customerInfo,
-    invoiceInfo,
-    rows,
-    amountInfo,
-    accountInfo,
-    signedInfo,
-    additionalInfo,
-    logoBase64: result.logoBase64, // Assuming logo is sent as base64 string
-  };
-
-  try {
-    await sendEmailPdf(invoiceData, emailData.email, res);
-    res.status(200).json({ success: true, message: "Email sent successfully" });
-  } catch (err) {
-    res.status(500).json({ error: "Failed to create and send email" });
-  }
-});
+//   try {
+//     await sendEmailPdf(invoiceData, email, res);
+//     return res
+//       .status(200)
+//       .json({ success: true, message: "Email sent successfully" });
+//   } catch (err) {
+//     return res.status(500).json({ error: "Failed to create and send email" });
+//   }
+// });
 
 const sendEmailPdf = async (invoiceData, email, res) => {
   const personalInfo = invoiceData.personalInfo;

@@ -98,6 +98,11 @@ function CreatorInvoice() {
         link.click();
         URL.revokeObjectURL(url);
 
+        if (await checkIfInvoiceAlreadyDownloadOrEmailed()) {
+          setLoading(false);
+          return;
+        }
+
         await InsertToDB();
         await updateInvoiceNumber();
         clearLocalStorageForPdf();
@@ -109,6 +114,19 @@ function CreatorInvoice() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const checkIfInvoiceAlreadyDownloadOrEmailed = async () => {
+    const printedInvoiceNumber = localStorage.getItem(
+      "downloadedInvoiceNumber"
+    );
+    if (
+      printedInvoiceNumber &&
+      parseInt(printedInvoiceNumber) === invoiceInfo.invoiceNumber
+    ) {
+      return true;
+    }
+    return false;
   };
 
   const invoiceInfo_CollectionRef = collection(
@@ -134,6 +152,8 @@ function CreatorInvoice() {
       logoBase64: logoBase64,
       paymentStatus: "Pending",
     });
+
+    localStorage.setItem("downloadedInvoiceNumber", invoiceInfo?.invoiceNumber);
 
     // check if brand info already exist, yes-ignore
     const data = await getDocs(brandInfo_CollectionRef);
@@ -230,6 +250,7 @@ function CreatorInvoice() {
   const deleteLocalStorageInvoiceInfo = () => {
     localStorage.removeItem("invoiceNumber");
     localStorage.removeItem("date");
+    localStorage.removeItem("sign");
   };
 
   const clearLocalStorageForPdf = () => {
@@ -245,7 +266,7 @@ function CreatorInvoice() {
   };
 
   useEffect(() => {
-    fetch("/invlogo.png")
+    fetch("/invlogo2.png")
       .then((res) => res.blob())
       .then((blob) => {
         const reader = new FileReader();

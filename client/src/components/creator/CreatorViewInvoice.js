@@ -140,7 +140,7 @@ function CreatorViewInvoice() {
   };
 
   useEffect(() => {
-    fetch("/invlogo.png")
+    fetch("/invlogo2.png")
       .then((res) => res.blob())
       .then((blob) => {
         const reader = new FileReader();

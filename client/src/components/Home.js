@@ -71,7 +71,7 @@ const Home = () => {
             InvoiceSimplify
           </h1> */}
           <img
-            src="../../images/invlogo.png"
+            src="../../images/invlogo2.png"
             alt="Logo"
             width={125}
             loading="lazy"

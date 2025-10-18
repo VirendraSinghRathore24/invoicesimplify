@@ -103,8 +103,13 @@ const CreatorMobileMenu = () => {
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="p-4 border-b text-xl font-bold text-blue-600">
-          InvoiceSimplify
+        <div className="p-4 border-b text-xl font-bold text-blue-600 flex justify-center">
+          <img
+            src="../../images/invlogo2.png"
+            alt="Logo"
+            width={75}
+            loading="lazy"
+          />
         </div>
 
         <div className="text-sm font-bold py-2 border-b border-white text-center flex items-center break-all justify-start px-6 break-words">
