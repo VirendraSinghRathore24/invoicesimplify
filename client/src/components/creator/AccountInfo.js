@@ -99,6 +99,7 @@ const AccountInfo = () => {
                     <th className="px-4 py-3 border-r">IFSC Code</th>
                     <th className="px-4 py-3 border-r">Branch</th>
                     <th className="px-4 py-3 border-r">PAN #</th>
+                    <th className="px-4 py-3 border-r">UPI</th>
                     <th className="px-4 py-3 border-r">Edit</th>
                     <th className="px-4 py-3">Delete</th>
                   </tr>
@@ -114,6 +115,7 @@ const AccountInfo = () => {
                     <td className="px-4 py-3 border-r">{posts?.ifscCode}</td>
                     <td className="px-4 py-3 border-r">{posts?.branch}</td>
                     <td className="px-4 py-3 border-r">{posts?.pan}</td>
+                    <td className="px-4 py-3 border-r">{posts?.upi}</td>
                     <td className="px-4 py-3 border-r">
                       <button
                         onClick={() => navigate("/creator/editaccountinfo")}

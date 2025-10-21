@@ -88,10 +88,7 @@ function AddCreatorAddtionalInfo() {
 
     if (info1 === "undefined" || info1 === null) {
       info1 = JSON.stringify({
-        note1: "",
-        note2: "",
-        note3: "",
-        note4: "",
+        additionaldesc: "",
       });
     }
     setInputs(JSON.parse(info1));
@@ -121,6 +118,7 @@ function AddCreatorAddtionalInfo() {
                   <textarea
                     className="form-input w-full block text-xs text-start rounded border border-gray-400 py-2 px-4 leading-5 h-24 focus:text-gray-600"
                     name="additionaldesc"
+                    required
                     type="text"
                     placeholder="Enter additional information"
                     value={inputs?.additionaldesc || ""}
