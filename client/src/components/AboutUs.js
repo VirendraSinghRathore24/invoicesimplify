@@ -22,7 +22,7 @@ const AboutUs = () => {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-white transition-colors duration-300">
       {/* Header */}
       <Header1 />
-      <div className="max-w-5xl mx-auto py-12 mt-20">
+      <div className="max-w-5xl mx-auto py-12 mt-24">
         {/* Heading */}
         <h1 className="text-xl lg:text-3xl font-extrabold mb-6 text-center">
           About InvoiceSimplify

@@ -56,6 +56,7 @@ import AddCreatorAddtionalInfo from "./components/creator/AddCreatorAddtionalInf
 import CreatorAdditionalInformation from "./components/creator/CreatorAdditionalInformation";
 import EditCreatorAddtionalInfo from "./components/creator/EditCreatorAddtionalInfo";
 import EditBrandInfo from "./components/creator/EditBrandInfo";
+import PreOrderScreen from "./components/PreOrderScreen";
 
 function App() {
   const type = localStorage.getItem("type");
@@ -70,6 +71,7 @@ function App() {
     "/privacypolicy",
     "/termsofuse",
     "/plans",
+    "/preorder",
     "/success",
     "/admin/allusers",
   ].includes(location.pathname);
@@ -132,6 +134,7 @@ function App() {
           <Route path="/refresh" element={<Refresh />} />
 
           <Route path="/admin/allusers" element={<AllUsers />} />
+          <Route path="/preorder" element={<PreOrderScreen />} />
 
           <Route path="/emailscheduler" element={<EmailScheduler />} />
           <Route path="/addemailscheduler" element={<AddEmailScheduler />} />

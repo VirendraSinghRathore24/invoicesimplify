@@ -1,9 +1,7 @@
 import React, { useEffect } from "react";
 import { Check } from "lucide-react";
 import Footer1 from "./Footer1";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { BASE_URL } from "./Constant";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const plans = [
   {
@@ -12,43 +10,46 @@ const plans = [
     days: "month",
     description: "Ideal for individuals and freelancers starting out.",
     features: [
-      "Up to 20 invoices/month",
-      "Basic invoice templates",
-      "Custom logo",
-      "Inventory management",
-      "Email support",
+      "Create Unlimited invoices",
+      "Dashboard to Manage Invoices",
+      "Dowanlodable PDF Invoices",
+      "Send Invoices via Email",
+      "Mobile Web Support",
+      "Free for 1 month only",
     ],
     button: "Start for Free",
     highlight: false,
   },
   {
-    name: "Standard",
-    price: "499",
+    name: "Monthly",
+    price: "299",
     days: "month",
-    description: "Perfect for small businesses.",
+    description: "Perfect for content creators.",
     features: [
-      "Unlimited invoices",
-      "Custom logo & branding",
-      "Send message to customers",
-      "Create and manage invoices",
-      "Inventory management",
+      "Create Unlimited invoices",
+      "Dashboard to Manage Invoices",
+      "Dowanlodable PDF Invoices",
+      "Send Invoices via Email",
+      "Payment Reminders",
+      "Mobile Web Support",
     ],
     button: "Choose Standard",
     highlight: true,
   },
   {
-    name: "Pro",
-    price: "4999",
+    name: "Yearly",
+    price: "2999",
     days: "year",
-    description: "Advanced features for growing businesses.",
+    description: "Perfect for content creators.",
     features: [
-      "All Standard features",
-      "Settle Payments",
-      "Automated reports",
-      "Schedule reports",
-      "Email support",
+      "Create Unlimited invoices",
+      "Dashboard to Manage Invoices",
+      "Dowanlodable PDF Invoices",
+      "Send Invoices via Email",
+      "Payment Reminders",
+      "Mobile Web Support",
     ],
-    button: "Go Pro",
+    button: "Choose Standard",
     highlight: false,
   },
 ];
@@ -56,63 +57,8 @@ const plans = [
 const PricingPlans = () => {
   const navigate = useNavigate();
 
-  //const url = "http://localhost:5001";
-  const url = BASE_URL;
-
-  const loadRazorpay = (src) => {
-    return new Promise((resolve) => {
-      const script = document.createElement("script");
-      script.src = src;
-      script.onload = () => resolve(true);
-      script.onerror = () => resolve(false);
-      document.body.appendChild(script);
-    });
-  };
-
   const handlePayment1 = async (plan) => {
-    const res = await loadRazorpay(
-      "https://checkout.razorpay.com/v1/checkout.js"
-    );
-
-    if (!res) {
-      alert("Razorpay SDK failed to load. Are you online?");
-      return;
-    }
-
-    // Create order on backend
-    const order = await axios.post(url + "/create-order", {
-      amount: plan.price, // ₹499
-    });
-
-    const options = {
-      key: "rzp_test_kkMM3XGefJOEFm", // from Razorpay dashboard
-      amount: order.data.amount,
-      currency: "INR",
-      name: "Invoice Simplify",
-      description: plan.name + " Plan",
-      image: "/logo.png",
-      order_id: order.data.id,
-      handler: function (response) {
-        console.log("Payment ID:", response.razorpay_payment_id);
-        navigate("/success", {
-          state: {
-            order: response,
-            plan: plan, // Pass the selected plan details
-          },
-        });
-      },
-      prefill: {
-        name: "Virendra Singh",
-        email: "virendra@example.com",
-        contact: "8095528424",
-      },
-      theme: {
-        color: "#3399cc",
-      },
-    };
-
-    const paymentObject = new window.Razorpay(options);
-    paymentObject.open();
+    navigate("/preorder", { state: { plan: plan } });
   };
 
   useEffect(() => {
@@ -123,9 +69,17 @@ const PricingPlans = () => {
     <div>
       <header className="bg-white dark:bg-gray-800 shadow-md fixed top-0 left-0 w-full z-50">
         <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-          <h1 className="text-xl font-bold text-indigo-600 dark:text-white">
-            InvoiceSimplify
-          </h1>
+          <NavLink
+            to={"/"}
+            className="text-xl font-bold text-indigo-600 dark:text-white"
+          >
+            <img
+              src="../../images/invlogo2.png"
+              alt="Logo"
+              width={125}
+              loading="lazy"
+            />
+          </NavLink>
           <div className="flex items-center gap-4">
             <button
               onClick={() => navigate("/createinvoice")}

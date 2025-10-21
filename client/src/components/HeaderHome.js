@@ -29,9 +29,9 @@ function HeaderHome() {
         <Link to="/">
           <div className="flex">
             <img
-              src="../../images/invlogo.png"
+              src="../../images/invlogo2.png"
               alt="Logo"
-              width={55}
+              width={125}
               loading="lazy"
             />
             {/* <div className="mt-3 text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-black quicksand-bold">

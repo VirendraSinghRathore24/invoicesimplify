@@ -23,9 +23,9 @@ const Header1 = () => {
           className="text-xl font-bold text-indigo-600 dark:text-white"
         >
           <img
-            src="../../images/invlogo.png"
+            src="../../images/invlogo2.png"
             alt="Logo"
-            width={55}
+            width={125}
             loading="lazy"
           />
         </NavLink>

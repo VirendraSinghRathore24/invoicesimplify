@@ -43,7 +43,7 @@ const ContactUs = () => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-white transition-colors duration-300">
       <Header1 />
-      <div className="max-w-4xl mx-auto bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md mt-20 mb-5">
+      <div className="max-w-4xl mx-auto bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md mt-24 mb-5">
         <h2 className="text-xl lg:text-2xl font-bold mb-4 text-center">
           Contact Us
         </h2>
