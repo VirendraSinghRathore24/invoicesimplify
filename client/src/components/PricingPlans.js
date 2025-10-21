@@ -18,6 +18,7 @@ const plans = [
       "Free for 1 month only",
     ],
     button: "Start for Free",
+    isFreePlan: true,
     highlight: false,
   },
   {
@@ -34,6 +35,7 @@ const plans = [
       "Mobile Web Support",
     ],
     button: "Choose Standard",
+    isFreePlan: false,
     highlight: true,
   },
   {
@@ -50,12 +52,14 @@ const plans = [
       "Mobile Web Support",
     ],
     button: "Choose Standard",
+    isFreePlan: false,
     highlight: false,
   },
 ];
 
 const PricingPlans = () => {
   const navigate = useNavigate();
+  const isFreePlan = localStorage.getItem("isFreePlan");
 
   const handlePayment1 = async (plan) => {
     navigate("/preorder", { state: { plan: plan } });
@@ -129,17 +133,25 @@ const PricingPlans = () => {
                     </li>
                   ))}
                 </ul>
-
-                <button
-                  onClick={() => handlePayment1(plan)}
-                  className={`w-full py-2 rounded-xl font-semibold ${
-                    plan.highlight
-                      ? "bg-blue-600 text-white hover:bg-blue-700"
-                      : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                  }`}
-                >
-                  {plan.button}
-                </button>
+                {plan.isFreePlan ? (
+                  <button
+                    disabled
+                    className="w-full py-2 rounded-xl font-semibold bg-yellow-300 text-gray-600 cursor-not-allowed"
+                  >
+                    Current Plan
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => handlePayment1(plan)}
+                    className={`w-full py-2 rounded-xl font-semibold ${
+                      plan.highlight
+                        ? "bg-blue-600 text-white hover:bg-blue-700"
+                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                    }`}
+                  >
+                    {plan.button}
+                  </button>
+                )}
               </div>
             ))}
           </div>
