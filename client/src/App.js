@@ -24,7 +24,7 @@ import Inventory from "./components/inventory/Inventory";
 import ArchivedDashboard from "./components/archived/ArchivedDashboard";
 import ArchivedViewInvoice from "./components/archived/ArchivedViewInvoice";
 import Success from "./components/Success";
-import PaymentHistory from "./components/PaymentHistory";
+import PaymentHistory from "./components/creator/PaymentHistory";
 import ViewInvoiceByCustomer from "./components/invoice/ViewInvoiceByCustomer";
 import ForgotPassword from "./components/login/ForgotPassword";
 import AboutUs from "./components/AboutUs";

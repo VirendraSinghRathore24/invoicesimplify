@@ -58,8 +58,6 @@ const CreatorMobileMenu = () => {
 
       const diff = endDate - today;
       const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
-      console.log(days);
-      console.log("end date", endDate);
 
       if (days <= 0) {
         setRemainingDays(0);

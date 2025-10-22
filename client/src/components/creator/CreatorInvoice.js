@@ -340,11 +340,13 @@ function CreatorInvoice() {
         <div className="hidden max-lg:block mb-16">
           <CreatorMobileMenu />
         </div>
-        <div className="top-14 lg:top-0 mx-auto w-full h-[56px] lg:h-[68px] text-white fixed lg:sticky border-b-2">
+        <div className="top-14 lg:top-0 mx-auto w-full h-[56px] lg:h-[64px] text-white fixed lg:sticky border-b-2">
           <div className="flex justify-between mx-auto font-bold text-md p-2 rounded-md fixed w-full lg:w-[81.5%]">
-            <div className="text-xl text-black hidden lg:block">Invoice</div>
+            <div className="text-xl text-black hidden lg:block mt-1">
+              Invoice
+            </div>
             <div className="hidden lg:block">
-              <div className="flex justify-between gap-x-4 text-sm text-black font-bold">
+              <div className="flex justify-between gap-x-4 text-sm text-black font-bold mt-1">
                 <div className="flex gap-x-2">
                   <button
                     onClick={handleEditInvoice}

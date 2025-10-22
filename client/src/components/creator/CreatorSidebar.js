@@ -12,7 +12,7 @@ import {
   ShieldCheck,
   CircleCheckBig,
   RefreshCcw,
-  Mail,
+  IndianRupee,
 } from "lucide-react";
 
 const CreatorSidebar = () => {
@@ -182,12 +182,12 @@ const CreatorSidebar = () => {
             active={location.pathname === "/refresh"}
           />
 
-          {/* <SubMenuItem
-            icon={<Trash2 size={18} />}
-            text="Archived Invoices"
-            to="/archiveddashboard"
-            active={location.pathname === "/archiveddashboard"}
-          /> */}
+          <SubMenuItem
+            icon={<IndianRupee size={18} />}
+            text="Payment History"
+            to="/paymenthistory"
+            active={location.pathname === "/paymenthistory"}
+          />
         </SidebarItem>
 
         <SidebarItem
