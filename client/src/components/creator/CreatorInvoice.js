@@ -313,6 +313,13 @@ function CreatorInvoice() {
     let pi = localStorage.getItem("creator_personalInfo");
     setPersonalInfo(JSON.parse(pi));
 
+    if (pi === null) {
+      alert(
+        "Personal Informations are missing !!! Please add to create invoice."
+      );
+      navigate("/creator/addpersonalinfo");
+    }
+
     let ci = localStorage.getItem("creator_customerInfo");
     setCustomerInfo(JSON.parse(ci));
 
@@ -416,7 +423,7 @@ function CreatorInvoice() {
         </div>
 
         <div className="mt-24 lg:mt-0">
-          <div className="w-full mx-auto py-2 mb-10 px-4 lg:overflow-y-auto lg:h-[calc(100vh-150px)]">
+          <div className="w-full mx-auto py-2 mb-10 px-4 lg:overflow-y-auto lg:h-[calc(100vh-137px)]">
             <div
               ref={printRef}
               style={{
@@ -447,15 +454,17 @@ function CreatorInvoice() {
                     <div style={{ fontWeight: "bold", fontSize: "1rem" }}>
                       {personalInfo?.name}
                     </div>
-                    <div
-                      style={{
-                        color: "#6B7280",
-                        fontSize: "0.875rem",
-                        marginTop: "0.2rem",
-                      }}
-                    >
-                      {personalInfo?.address},
-                    </div>
+                    {personalInfo?.address && (
+                      <div
+                        style={{
+                          color: "#6B7280",
+                          fontSize: "0.875rem",
+                          marginTop: "0.2rem",
+                        }}
+                      >
+                        {personalInfo?.address},
+                      </div>
+                    )}
                     {personalInfo?.address1 && (
                       <div
                         style={{
@@ -479,25 +488,29 @@ function CreatorInvoice() {
                       </div>
                     )}
 
-                    <div
-                      style={{
-                        color: "#6B7280",
-                        fontSize: "0.875rem",
-                        marginTop: "0.2rem",
-                      }}
-                    >
-                      Phone: {personalInfo?.phonePrimary}
-                    </div>
+                    {personalInfo?.phonePrimary && (
+                      <div
+                        style={{
+                          color: "#6B7280",
+                          fontSize: "0.875rem",
+                          marginTop: "0.2rem",
+                        }}
+                      >
+                        Phone: {personalInfo?.phonePrimary}
+                      </div>
+                    )}
 
-                    <div
-                      style={{
-                        color: "#6B7280",
-                        fontSize: "0.875rem",
-                        marginTop: "0.2rem",
-                      }}
-                    >
-                      Email: {personalInfo?.email}
-                    </div>
+                    {personalInfo?.email && (
+                      <div
+                        style={{
+                          color: "#6B7280",
+                          fontSize: "0.875rem",
+                          marginTop: "0.2rem",
+                        }}
+                      >
+                        Email: {personalInfo?.email}
+                      </div>
+                    )}
                     {personalInfo?.socialMedia && (
                       <div
                         style={{
@@ -901,124 +914,126 @@ function CreatorInvoice() {
                 }}
               >
                 <div>
-                  <div>
-                    <div
-                      style={{
-                        fontWeight: "bold", // font-bold
-                        fontSize: "0.875rem", // text-sm
-                        marginTop: "1.5rem", // mt-6
-                        color: "#374151", // text-gray-700
-                        textTransform: "uppercase", // uppercase
-                      }}
-                    >
-                      Account Information
+                  {accountInfo && (
+                    <div>
+                      <div
+                        style={{
+                          fontWeight: "bold", // font-bold
+                          fontSize: "0.875rem", // text-sm
+                          marginTop: "1.5rem", // mt-6
+                          color: "#374151", // text-gray-700
+                          textTransform: "uppercase", // uppercase
+                        }}
+                      >
+                        Account Information
+                      </div>
+                      <div
+                        style={{
+                          fontSize: "0.875rem", // text-sm
+                          marginTop: "1rem", // mt-4
+                        }}
+                      >
+                        <div>
+                          Bank Name :{" "}
+                          <span
+                            style={{
+                              fontWeight: "bold",
+                            }}
+                          >
+                            {accountInfo?.bankName}
+                          </span>
+                        </div>
+                        <div
+                          style={{
+                            marginTop: "0.25rem", // font-bold
+                          }}
+                        >
+                          Name :{" "}
+                          <span
+                            style={{
+                              fontWeight: "bold",
+                            }}
+                          >
+                            {accountInfo?.name}
+                          </span>
+                        </div>
+                        <div
+                          style={{
+                            marginTop: "0.25rem", // font-bold
+                          }}
+                        >
+                          Account Number :{" "}
+                          <span
+                            style={{
+                              fontWeight: "bold",
+                            }}
+                          >
+                            {accountInfo?.accountNumber}
+                          </span>
+                        </div>
+                        <div
+                          style={{
+                            marginTop: "0.25rem", // font-bold
+                          }}
+                        >
+                          Account Type :{" "}
+                          <span
+                            style={{
+                              fontWeight: "bold",
+                            }}
+                          >
+                            {accountInfo?.accountType}
+                          </span>
+                        </div>
+                        <div
+                          style={{
+                            marginTop: "0.25rem", // font-bold
+                          }}
+                        >
+                          IFSC Code :{" "}
+                          <span
+                            style={{
+                              fontWeight: "bold",
+                            }}
+                          >
+                            {accountInfo?.ifscCode}
+                          </span>
+                        </div>
+
+                        <div
+                          style={{
+                            marginTop: "0.25rem", // font-bold
+                          }}
+                        >
+                          Branch :{" "}
+                          <span
+                            style={{
+                              fontWeight: "bold",
+                            }}
+                          >
+                            {accountInfo?.branch}
+                          </span>
+                        </div>
+
+                        <div
+                          style={{
+                            marginTop: "0.25rem", // font-bold
+                          }}
+                        >
+                          PAN :{" "}
+                          <span
+                            style={{
+                              fontWeight: "bold",
+                            }}
+                          >
+                            {accountInfo?.pan}
+                          </span>
+                        </div>
+
+                        <br />
+                      </div>
                     </div>
-                    <div
-                      style={{
-                        fontSize: "0.875rem", // text-sm
-                        marginTop: "1rem", // mt-4
-                      }}
-                    >
-                      <div>
-                        Bank Name :{" "}
-                        <span
-                          style={{
-                            fontWeight: "bold",
-                          }}
-                        >
-                          {accountInfo?.bankName}
-                        </span>
-                      </div>
-                      <div
-                        style={{
-                          marginTop: "0.25rem", // font-bold
-                        }}
-                      >
-                        Name :{" "}
-                        <span
-                          style={{
-                            fontWeight: "bold",
-                          }}
-                        >
-                          {accountInfo?.name}
-                        </span>
-                      </div>
-                      <div
-                        style={{
-                          marginTop: "0.25rem", // font-bold
-                        }}
-                      >
-                        Account Number :{" "}
-                        <span
-                          style={{
-                            fontWeight: "bold",
-                          }}
-                        >
-                          {accountInfo?.accountNumber}
-                        </span>
-                      </div>
-                      <div
-                        style={{
-                          marginTop: "0.25rem", // font-bold
-                        }}
-                      >
-                        Account Type :{" "}
-                        <span
-                          style={{
-                            fontWeight: "bold",
-                          }}
-                        >
-                          {accountInfo?.accountType}
-                        </span>
-                      </div>
-                      <div
-                        style={{
-                          marginTop: "0.25rem", // font-bold
-                        }}
-                      >
-                        IFSC Code :{" "}
-                        <span
-                          style={{
-                            fontWeight: "bold",
-                          }}
-                        >
-                          {accountInfo?.ifscCode}
-                        </span>
-                      </div>
-
-                      <div
-                        style={{
-                          marginTop: "0.25rem", // font-bold
-                        }}
-                      >
-                        Branch :{" "}
-                        <span
-                          style={{
-                            fontWeight: "bold",
-                          }}
-                        >
-                          {accountInfo?.branch}
-                        </span>
-                      </div>
-
-                      <div
-                        style={{
-                          marginTop: "0.25rem", // font-bold
-                        }}
-                      >
-                        PAN :{" "}
-                        <span
-                          style={{
-                            fontWeight: "bold",
-                          }}
-                        >
-                          {accountInfo?.pan}
-                        </span>
-                      </div>
-
-                      <br />
-                    </div>
-                  </div>
+                  )}
 
                   {/* {accountInfo.upi && (
                   <div className="mt-2 text-sm">

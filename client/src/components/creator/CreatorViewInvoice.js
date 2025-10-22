@@ -233,7 +233,7 @@ function CreatorViewInvoice() {
         </div>
 
         <div className="mt-24 lg:mt-0">
-          <div className="w-full mx-auto py-2 mb-10 px-4 lg:overflow-y-auto lg:h-[calc(100vh-150px)]">
+          <div className="w-full mx-auto py-2 mb-10 px-4 lg:overflow-y-auto lg:h-[calc(100vh-137px)]">
             <div
               ref={printRef}
               style={{
@@ -267,35 +267,17 @@ function CreatorViewInvoice() {
                     <div style={{ fontWeight: "bold", fontSize: "1rem" }}>
                       {invoiceInfo?.personalInfo?.name}
                     </div>
-                    {/* <div
-                          style={{
-                            color: "#6B7280",
-                            fontSize: "0.875rem",
-                            marginTop: "0.2rem",
-                          }}
-                        >
-                          {invoiceInfo?.personalInfo.address}
-                        </div>
-                        <div
-                          style={{
-                            color: "#6B7280",
-                            fontSize: "0.875rem",
-                            marginTop: "0.2rem",
-                          }}
-                        >
-                          {invoiceInfo?.personalInfo.address1},{" "}
-                          {invoiceInfo?.personalInfo.address2} -{" "}
-                          {invoiceInfo?.personalInfo.address3}
-                        </div> */}
-                    <div
-                      style={{
-                        color: "#6B7280",
-                        fontSize: "0.875rem",
-                        marginTop: "0.2rem",
-                      }}
-                    >
-                      {invoiceInfo?.personalInfo?.address},
-                    </div>
+                    {invoiceInfo?.personalInfo?.address && (
+                      <div
+                        style={{
+                          color: "#6B7280",
+                          fontSize: "0.875rem",
+                          marginTop: "0.2rem",
+                        }}
+                      >
+                        {invoiceInfo?.personalInfo?.address},
+                      </div>
+                    )}
                     {invoiceInfo?.personalInfo?.address1 && (
                       <div
                         style={{
@@ -319,25 +301,29 @@ function CreatorViewInvoice() {
                         {invoiceInfo?.personalInfo?.address3}
                       </div>
                     )}
-                    <div
-                      style={{
-                        color: "#6B7280",
-                        fontSize: "0.875rem",
-                        marginTop: "0.2rem",
-                      }}
-                    >
-                      Phone: {invoiceInfo?.personalInfo?.phonePrimary}
-                    </div>
+                    {invoiceInfo?.personalInfo?.phonePrimary && (
+                      <div
+                        style={{
+                          color: "#6B7280",
+                          fontSize: "0.875rem",
+                          marginTop: "0.2rem",
+                        }}
+                      >
+                        Phone: {invoiceInfo?.personalInfo?.phonePrimary}
+                      </div>
+                    )}
 
-                    <div
-                      style={{
-                        color: "#6B7280",
-                        fontSize: "0.875rem",
-                        marginTop: "0.2rem",
-                      }}
-                    >
-                      Email: {invoiceInfo?.personalInfo?.email}
-                    </div>
+                    {invoiceInfo?.personalInfo?.email && (
+                      <div
+                        style={{
+                          color: "#6B7280",
+                          fontSize: "0.875rem",
+                          marginTop: "0.2rem",
+                        }}
+                      >
+                        Email: {invoiceInfo?.personalInfo?.email}
+                      </div>
+                    )}
                     {invoiceInfo?.personalInfo?.socialMedia && (
                       <div
                         style={{
@@ -744,124 +730,126 @@ function CreatorViewInvoice() {
                 }}
               >
                 <div>
-                  <div>
-                    <div
-                      style={{
-                        fontWeight: "bold", // font-bold
-                        fontSize: "0.875rem", // text-sm
-                        marginTop: "1.5rem", // mt-6
-                        color: "#374151", // text-gray-700
-                        textTransform: "uppercase", // uppercase
-                      }}
-                    >
-                      Account Information
+                  {invoiceInfo?.accountInfo && (
+                    <div>
+                      <div
+                        style={{
+                          fontWeight: "bold", // font-bold
+                          fontSize: "0.875rem", // text-sm
+                          marginTop: "1.5rem", // mt-6
+                          color: "#374151", // text-gray-700
+                          textTransform: "uppercase", // uppercase
+                        }}
+                      >
+                        Account Information
+                      </div>
+                      <div
+                        style={{
+                          fontSize: "0.875rem", // text-sm
+                          marginTop: "1rem", // mt-4
+                        }}
+                      >
+                        <div>
+                          Bank Name :{" "}
+                          <span
+                            style={{
+                              fontWeight: "bold",
+                            }}
+                          >
+                            {invoiceInfo?.accountInfo?.bankName}
+                          </span>
+                        </div>
+                        <div
+                          style={{
+                            marginTop: "0.25rem", // font-bold
+                          }}
+                        >
+                          Name :{" "}
+                          <span
+                            style={{
+                              fontWeight: "bold",
+                            }}
+                          >
+                            {invoiceInfo?.accountInfo?.name}
+                          </span>
+                        </div>
+                        <div
+                          style={{
+                            marginTop: "0.25rem", // font-bold
+                          }}
+                        >
+                          Account Number :{" "}
+                          <span
+                            style={{
+                              fontWeight: "bold",
+                            }}
+                          >
+                            {invoiceInfo?.accountInfo?.accountNumber}
+                          </span>
+                        </div>
+                        <div
+                          style={{
+                            marginTop: "0.25rem", // font-bold
+                          }}
+                        >
+                          Account Type :{" "}
+                          <span
+                            style={{
+                              fontWeight: "bold",
+                            }}
+                          >
+                            {invoiceInfo?.accountInfo?.accountType}
+                          </span>
+                        </div>
+                        <div
+                          style={{
+                            marginTop: "0.25rem", // font-bold
+                          }}
+                        >
+                          IFSC Code :{" "}
+                          <span
+                            style={{
+                              fontWeight: "bold",
+                            }}
+                          >
+                            {invoiceInfo?.accountInfo?.ifscCode}
+                          </span>
+                        </div>
+
+                        <div
+                          style={{
+                            marginTop: "0.25rem", // font-bold
+                          }}
+                        >
+                          Branch :{" "}
+                          <span
+                            style={{
+                              fontWeight: "bold",
+                            }}
+                          >
+                            {invoiceInfo?.accountInfo?.branch}
+                          </span>
+                        </div>
+
+                        <div
+                          style={{
+                            marginTop: "0.25rem", // font-bold
+                          }}
+                        >
+                          PAN :{" "}
+                          <span
+                            style={{
+                              fontWeight: "bold",
+                            }}
+                          >
+                            {invoiceInfo?.accountInfo?.pan}
+                          </span>
+                        </div>
+
+                        <br />
+                      </div>
                     </div>
-                    <div
-                      style={{
-                        fontSize: "0.875rem", // text-sm
-                        marginTop: "1rem", // mt-4
-                      }}
-                    >
-                      <div>
-                        Bank Name :{" "}
-                        <span
-                          style={{
-                            fontWeight: "bold",
-                          }}
-                        >
-                          {invoiceInfo?.accountInfo?.bankName}
-                        </span>
-                      </div>
-                      <div
-                        style={{
-                          marginTop: "0.25rem", // font-bold
-                        }}
-                      >
-                        Name :{" "}
-                        <span
-                          style={{
-                            fontWeight: "bold",
-                          }}
-                        >
-                          {invoiceInfo?.accountInfo?.name}
-                        </span>
-                      </div>
-                      <div
-                        style={{
-                          marginTop: "0.25rem", // font-bold
-                        }}
-                      >
-                        Account Number :{" "}
-                        <span
-                          style={{
-                            fontWeight: "bold",
-                          }}
-                        >
-                          {invoiceInfo?.accountInfo?.accountNumber}
-                        </span>
-                      </div>
-                      <div
-                        style={{
-                          marginTop: "0.25rem", // font-bold
-                        }}
-                      >
-                        Account Type :{" "}
-                        <span
-                          style={{
-                            fontWeight: "bold",
-                          }}
-                        >
-                          {invoiceInfo?.accountInfo?.accountType}
-                        </span>
-                      </div>
-                      <div
-                        style={{
-                          marginTop: "0.25rem", // font-bold
-                        }}
-                      >
-                        IFSC Code :{" "}
-                        <span
-                          style={{
-                            fontWeight: "bold",
-                          }}
-                        >
-                          {invoiceInfo?.accountInfo?.ifscCode}
-                        </span>
-                      </div>
-
-                      <div
-                        style={{
-                          marginTop: "0.25rem", // font-bold
-                        }}
-                      >
-                        Branch :{" "}
-                        <span
-                          style={{
-                            fontWeight: "bold",
-                          }}
-                        >
-                          {invoiceInfo?.accountInfo?.branch}
-                        </span>
-                      </div>
-
-                      <div
-                        style={{
-                          marginTop: "0.25rem", // font-bold
-                        }}
-                      >
-                        PAN :{" "}
-                        <span
-                          style={{
-                            fontWeight: "bold",
-                          }}
-                        >
-                          {invoiceInfo?.accountInfo?.pan}
-                        </span>
-                      </div>
-
-                      <br />
-                    </div>
-                  </div>
+                  )}
 
                   {/* {accountInfo.upi && (
                   <div className="mt-2 text-sm">

@@ -854,10 +854,13 @@ const sendEmailPdf = async (invoiceData, email, res) => {
                 <div style="display: flex; flex-direction: column;">
                   <div style="font-weight: bold; font-size: 1rem;">
                     ${personalInfo.name}
-                  </div>
-                  <div style="color: #6B7280; font-size: 0.875rem; margin-top: 0.2rem;">
+                  </div>`;
+  if (personalInfo.address) {
+    html += ` <div style="color: #6B7280; font-size: 0.875rem; margin-top: 0.2rem;">
                     ${personalInfo.address},
                   </div>`;
+  }
+
   if (personalInfo.address1) {
     html += `
                     <div style="color: #6B7280; font-size: 0.875rem; margin-top: 0.2rem;">
@@ -870,13 +873,18 @@ const sendEmailPdf = async (invoiceData, email, res) => {
                       ${personalInfo.address2} - ${personalInfo.address3}
                     </div>`;
   }
-  html += `
-                  <div style="color: #6B7280; font-size: 0.875rem; margin-top: 0.2rem;">
+  if (personalInfo.phonePrimary) {
+    html += ` <div style="color: #6B7280; font-size: 0.875rem; margin-top: 0.2rem;">
                     Phone: ${personalInfo.phonePrimary}
-                  </div>
-                  <div style="color: #6B7280; font-size: 0.875rem; margin-top: 0.2rem;">
-                    Email: ${personalInfo.email}
                   </div>`;
+  }
+  if (personalInfo.email) {
+    html += `      
+    <div style="color: #6B7280; font-size: 0.875rem; margin-top: 0.2rem;">
+      Email: ${personalInfo.email}
+    </div>`;
+  }
+
   if (personalInfo.socialMedia) {
     html += `
                     <div style="color: #6B7280; font-size: 0.875rem; margin-top: 0.2rem;">
@@ -1010,12 +1018,16 @@ const sendEmailPdf = async (invoiceData, email, res) => {
                 </div>
               </div>
               <div style="display: flex; justify-content: space-between; border-bottom: 1.2px solid black; margin-top: 0.2rem;"></div>
-              <div style="display: flex; justify-content: space-between;">
+              <div style="display: flex; justify-content: space-between;">`;
+  if (accountInfo) {
+    html += `
                 <div>
                   <div style="font-weight: bold; font-size: 0.875rem; margin-top: 1.5rem; color: #374151; text-transform: uppercase;">
                     Account Information
                   </div>
                   <div style="font-size: 0.875rem; margin-top: 1rem;">
+
+  
                     <div>Bank Name: <span style="font-weight: bold;">${accountInfo.bankName}</span></div>
                     <div style="margin-top: 0.25rem;">Name: <span style="font-weight: bold;">${accountInfo.name}</span></div>
                     <div style="margin-top: 0.25rem;">Account Number: <span style="font-weight: bold;">${accountInfo.accountNumber}</span></div>
@@ -1026,6 +1038,7 @@ const sendEmailPdf = async (invoiceData, email, res) => {
                   </div>
                 </div>
                 <div style="display: flex; flex-direction: column; margin-top: 2rem;">`;
+  }
   if (signedInfo.signature) {
     html += `
                   <div style="display: flex; justify-content: flex-end; font-size: 0.875rem;">
@@ -1104,15 +1117,15 @@ const sendEmailPdf = async (invoiceData, email, res) => {
 
   try {
     await transporter.sendMail(mailOptions);
-    res
-      .status(200)
-      .json({ success: true, message: "Email sent successfully1" });
+    // res
+    //   .status(200)
+    //   .json({ success: true, message: "Email sent successfully1" });
     console.log(`✅ Email sent to ${email}`);
   } catch (err) {
     console.error(`❌ Error sending to ${email}:`, err);
-    res
-      .status(200)
-      .json({ success: true, message: err.message || "Email sent failed" });
+    // res
+    //   .status(200)
+    //   .json({ success: true, message: err.message || "Email sent failed" });
   }
 };
 

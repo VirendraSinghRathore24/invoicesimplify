@@ -97,6 +97,7 @@ const Brands = () => {
       <div className="hidden max-lg:block mb-16">
         <CreatorMobileMenu />
       </div>
+
       <div className="mt-16 lg:mt-0 bg-white p-2 text-black rounded-xl w-full lg:ml-[17%]">
         <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-2">
           <div className="p-4">
@@ -109,7 +110,7 @@ const Brands = () => {
             />
           </div>
           {/* Desktop view with sticky header */}
-          <div className="h-[600px] overflow-auto hidden lg:block border border-gray-300 rounded-md">
+          <div className="h-[600px] overflow-auto hidden lg:block border border-gray-300 rounded-md m-2">
             <table className="min-w-full text-sm text-left text-gray-700">
               <thead className="sticky top-0 z-10 bg-gray-100 text-xs uppercase text-gray-600 border-b">
                 <tr>
@@ -193,7 +194,7 @@ const Brands = () => {
           </div>
 
           {/* Mobile view with sticky header */}
-          <div className="h-[400px] overflow-auto lg:hidden border border-gray-300 rounded-md mt-4">
+          <div className="h-[400px] overflow-auto lg:hidden border border-gray-300 rounded-md m-2">
             <table className="min-w-full text-xs text-left text-gray-700">
               <thead className="sticky top-0 z-10 bg-gray-100 text-xs uppercase text-gray-600 border-b">
                 <tr>
