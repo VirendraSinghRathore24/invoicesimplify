@@ -74,6 +74,12 @@ function CreatorViewInvoice() {
   const handleDownloadPdf = async (e) => {
     e.preventDefault();
 
+    const isActivePlan = getCurrentPlanStatus();
+
+    if (!isActivePlan) {
+      return;
+    }
+
     const url = BASE_URL;
     try {
       setLoading(true);
@@ -104,6 +110,27 @@ function CreatorViewInvoice() {
     }
   };
 
+  const getCurrentPlanStatus = () => {
+    const isPlanExpired = localStorage.getItem("subscriptionPlan");
+
+    if (isPlanExpired === "Expired") {
+      alert("There is no Active Plan, Please upgrade your plan to continue.");
+
+      navigate("/plans");
+      return false;
+    }
+    return true;
+  };
+
+  const handleEmail = () => {
+    const isActivePlan = getCurrentPlanStatus();
+
+    if (!isActivePlan) {
+      return;
+    }
+
+    setOpenEmailModal(true);
+  };
   const handlePrint = useReactToPrint({
     documentTitle: "Invoice",
     contentRef: printRef,
@@ -171,7 +198,7 @@ function CreatorViewInvoice() {
                 </button>
               </div>
               <div>
-                <button onClick={() => setOpenEmailModal(true)}>
+                <button onClick={handleEmail}>
                   <Mail />
                 </button>
               </div>
@@ -199,7 +226,7 @@ function CreatorViewInvoice() {
               </div>
               <div>
                 <button
-                  onClick={() => setOpenEmailModal(true)}
+                  onClick={handleEmail}
                   className="flex items-center bg-[#E5E7EB]  font-bold px-2 lg:px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
                 >
                   <span className="mr-2">

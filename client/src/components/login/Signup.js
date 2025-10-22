@@ -115,8 +115,9 @@ const Signup = () => {
           localStorage.setItem("type", type);
           localStorage.setItem("subscription", "Free");
           localStorage.setItem("uid", uid);
+          localStorage.setItem("isFreePlan", true);
           localStorage.setItem(
-            "loginDate",
+            "subStartDate",
             new Date().toISOString().slice(0, 10)
           );
 
@@ -147,7 +148,7 @@ const Signup = () => {
     }
   };
 
-  const login_CollectionRef = collection(db, "Login_Info");
+  const login_CollectionRef = collection(db, LOGIN_INFO);
 
   const signInWithGoogle = async () => {
     try {
@@ -172,6 +173,8 @@ const Signup = () => {
       localStorage.setItem("user", code);
       localStorage.setItem("userName", userName);
       localStorage.setItem("invoiceNumber", 1);
+      localStorage.setItem("isFreePlan", true);
+      localStorage.setItem("subscription", "Free");
       navigate("/businessinfo");
       setLoading(false);
     } catch (err) {
@@ -182,6 +185,9 @@ const Signup = () => {
 
   const initializeDB = async (code, userName, uid) => {
     const orgCode = Math.random().toString(36).slice(2);
+    const date = new Date();
+    date.setDate(date.getDate() + 30);
+    const nextMonthDate = date.toISOString().slice(0, 10);
 
     await addDoc(login_CollectionRef, {
       orgCode: orgCode,
@@ -192,8 +198,12 @@ const Signup = () => {
       usedInvoiceNumbers: [],
       type: type,
       subscription: "Free",
+      subStarts: new Date().toISOString().slice(0, 10),
+      subEnds: nextMonthDate,
       loginDate: new Date().toISOString().slice(0, 10),
     });
+
+    localStorage.setItem("subEndDate", nextMonthDate);
 
     if (type === CONTENT_CREATOR) {
       const basicInfo_CollectionRef = collection(

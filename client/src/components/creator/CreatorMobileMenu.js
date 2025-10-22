@@ -5,7 +5,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 const CreatorMobileMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
   const loggedInUser = localStorage.getItem("user");
-  const subscription = localStorage.getItem("subscription");
+  const [subscription, setSubscription] = useState("");
   const name = localStorage.getItem("name1");
   const navigate = useNavigate();
 
@@ -50,16 +50,26 @@ const CreatorMobileMenu = () => {
   };
 
   const [remainingDays, setRemainingDays] = useState(null);
-  const loginDate = localStorage.getItem("loginDate");
+  const subEndDate = localStorage.getItem("subEndDate");
   useEffect(() => {
     const calculateRemainingDays = () => {
       const today = new Date();
-      const future = new Date(loginDate); // replace with login date
-      future.setMonth(future.getMonth() + 2);
+      const endDate = new Date(subEndDate); // replace with login date
 
-      const diff = future - today;
+      const diff = endDate - today;
       const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+      console.log(days);
+      console.log("end date", endDate);
 
+      if (days <= 0) {
+        setRemainingDays(0);
+        setSubscription("Expired");
+        localStorage.setItem("subscriptionPlan", "Expired");
+        return;
+      }
+      localStorage.removeItem("subscriptionPlan");
+      const subs = localStorage.getItem("subscription");
+      setSubscription(subs);
       setRemainingDays(days);
     };
 

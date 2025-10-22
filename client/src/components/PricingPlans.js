@@ -15,7 +15,7 @@ const plans = [
       "Dowanlodable PDF Invoices",
       "Send Invoices via Email",
       "Mobile Web Support",
-      "Free for 1 month only",
+      "Free for 30 days only",
     ],
     button: "Start for Free",
     isFreePlan: true,
@@ -23,7 +23,7 @@ const plans = [
   },
   {
     name: "Monthly",
-    price: "299",
+    price: "1",
     days: "month",
     description: "Perfect for content creators.",
     features: [
@@ -59,7 +59,7 @@ const plans = [
 
 const PricingPlans = () => {
   const navigate = useNavigate();
-  const isFreePlan = localStorage.getItem("isFreePlan");
+  const planName = localStorage.getItem("subscription");
 
   const handlePayment1 = async (plan) => {
     navigate("/preorder", { state: { plan: plan } });
@@ -86,7 +86,7 @@ const PricingPlans = () => {
           </NavLink>
           <div className="flex items-center gap-4">
             <button
-              onClick={() => navigate("/createinvoice")}
+              onClick={() => navigate("/creator/createinvoice")}
               className="bg-indigo-600 text-white px-4 py-2 rounded-xl hover:bg-indigo-700 transition"
             >
               Create Invoice
@@ -117,9 +117,11 @@ const PricingPlans = () => {
                 <h3 className="text-lg lg:text-xl font-bold text-gray-800">
                   {plan.name}
                 </h3>
+
                 <p className="text-2xl lg:text-3xl font-extrabold text-blue-600 mt-4 mb-2">
                   ₹{plan.price}/{plan.days}
                 </p>
+
                 <p className="text-gray-500 text-sm mb-6">{plan.description}</p>
 
                 <ul className="text-left mb-6 space-y-2">
@@ -133,10 +135,19 @@ const PricingPlans = () => {
                     </li>
                   ))}
                 </ul>
+
+                {/* ---- Button Section ---- */}
                 {plan.isFreePlan ? (
                   <button
                     disabled
-                    className="w-full py-2 rounded-xl font-semibold bg-yellow-300 text-gray-600 cursor-not-allowed"
+                    className="w-full py-2 rounded-xl font-semibold bg-yellow-600 text-white cursor-not-allowed"
+                  >
+                    {planName === "Free" ? "Current Plan" : "Thanks !!!"}
+                  </button>
+                ) : planName === plan.name ? (
+                  <button
+                    disabled
+                    className="w-full py-2 rounded-xl font-semibold bg-green-600 text-white cursor-not-allowed"
                   >
                     Current Plan
                   </button>

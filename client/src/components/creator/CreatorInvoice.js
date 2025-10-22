@@ -74,8 +74,24 @@ function CreatorInvoice() {
     return date;
   };
 
+  const handleEmail = () => {
+    const isActivePlan = getCurrentPlanStatus();
+
+    if (!isActivePlan) {
+      return;
+    }
+
+    setOpenEmailModal(true);
+  };
+
   const handleDownloadPdf = async (e) => {
     e.preventDefault();
+
+    const isActivePlan = getCurrentPlanStatus();
+
+    if (!isActivePlan) {
+      return;
+    }
 
     const url = BASE_URL;
     try {
@@ -116,6 +132,17 @@ function CreatorInvoice() {
     }
   };
 
+  const getCurrentPlanStatus = () => {
+    const isPlanExpired = localStorage.getItem("subscriptionPlan");
+
+    if (isPlanExpired === "Expired") {
+      alert("There is no Active Plan, Please upgrade your plan to continue.");
+
+      navigate("/plans");
+      return false;
+    }
+    return true;
+  };
   const checkIfInvoiceAlreadyDownloadOrEmailed = async () => {
     const printedInvoiceNumber = localStorage.getItem(
       "downloadedInvoiceNumber"
@@ -331,7 +358,7 @@ function CreatorInvoice() {
                 </div>
                 <div>
                   <button
-                    onClick={() => setOpenEmailModal(true)}
+                    onClick={handleEmail}
                     className="flex items-center bg-[#E5E7EB]  font-bold px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
                   >
                     <span className="mr-2">
@@ -373,7 +400,7 @@ function CreatorInvoice() {
               </button>
             </div>
             <div>
-              <button onClick={() => setOpenEmailModal(true)}>
+              <button onClick={handleEmail}>
                 <Mail />
               </button>
             </div>
@@ -416,7 +443,7 @@ function CreatorInvoice() {
                   >
                     {/* <div className='text-gray-500 font-bold text-lg'>From</div> */}
                     <div style={{ fontWeight: "bold", fontSize: "1rem" }}>
-                      {personalInfo.name}
+                      {personalInfo?.name}
                     </div>
                     <div
                       style={{
@@ -425,9 +452,9 @@ function CreatorInvoice() {
                         marginTop: "0.2rem",
                       }}
                     >
-                      {personalInfo.address},
+                      {personalInfo?.address},
                     </div>
-                    {personalInfo.address1 && (
+                    {personalInfo?.address1 && (
                       <div
                         style={{
                           color: "#6B7280",
@@ -435,10 +462,10 @@ function CreatorInvoice() {
                           marginTop: "0.2rem",
                         }}
                       >
-                        {personalInfo.address1},
+                        {personalInfo?.address1},
                       </div>
                     )}
-                    {personalInfo.address2 && (
+                    {personalInfo?.address2 && (
                       <div
                         style={{
                           color: "#6B7280",
@@ -446,7 +473,7 @@ function CreatorInvoice() {
                           marginTop: "0.2rem",
                         }}
                       >
-                        {personalInfo.address2} - {personalInfo.address3}
+                        {personalInfo?.address2} - {personalInfo?.address3}
                       </div>
                     )}
 
@@ -457,7 +484,7 @@ function CreatorInvoice() {
                         marginTop: "0.2rem",
                       }}
                     >
-                      Phone: {personalInfo.phonePrimary}
+                      Phone: {personalInfo?.phonePrimary}
                     </div>
 
                     <div
@@ -467,9 +494,9 @@ function CreatorInvoice() {
                         marginTop: "0.2rem",
                       }}
                     >
-                      Email: {personalInfo.email}
+                      Email: {personalInfo?.email}
                     </div>
-                    {personalInfo.socialMedia && (
+                    {personalInfo?.socialMedia && (
                       <div
                         style={{
                           color: "#6B7280",
@@ -477,7 +504,7 @@ function CreatorInvoice() {
                           marginTop: "0.2rem",
                         }}
                       >
-                        {personalInfo.socialMedia}
+                        {personalInfo?.socialMedia}
                       </div>
                     )}
                   </div>
@@ -500,7 +527,7 @@ function CreatorInvoice() {
                         textAlign: "right",
                       }}
                     >
-                      {invoiceInfo && invoiceInfo.invoiceNumber}
+                      {invoiceInfo && invoiceInfo?.invoiceNumber}
                     </div>
                   </div>
                 </div>
@@ -530,10 +557,10 @@ function CreatorInvoice() {
                         marginTop: "0.25rem",
                       }}
                     >
-                      {customerInfo.customerName}
+                      {customerInfo?.customerName}
                     </div>
 
-                    {customerInfo.address && (
+                    {customerInfo?.address && (
                       <div
                         style={{
                           color: "#6B7280",
@@ -897,7 +924,7 @@ function CreatorInvoice() {
                             fontWeight: "bold",
                           }}
                         >
-                          {accountInfo.bankName}
+                          {accountInfo?.bankName}
                         </span>
                       </div>
                       <div
@@ -911,7 +938,7 @@ function CreatorInvoice() {
                             fontWeight: "bold",
                           }}
                         >
-                          {accountInfo.name}
+                          {accountInfo?.name}
                         </span>
                       </div>
                       <div
@@ -925,7 +952,7 @@ function CreatorInvoice() {
                             fontWeight: "bold",
                           }}
                         >
-                          {accountInfo.accountNumber}
+                          {accountInfo?.accountNumber}
                         </span>
                       </div>
                       <div
@@ -939,7 +966,7 @@ function CreatorInvoice() {
                             fontWeight: "bold",
                           }}
                         >
-                          {accountInfo.accountType}
+                          {accountInfo?.accountType}
                         </span>
                       </div>
                       <div
@@ -953,7 +980,7 @@ function CreatorInvoice() {
                             fontWeight: "bold",
                           }}
                         >
-                          {accountInfo.ifscCode}
+                          {accountInfo?.ifscCode}
                         </span>
                       </div>
 
@@ -968,7 +995,7 @@ function CreatorInvoice() {
                             fontWeight: "bold",
                           }}
                         >
-                          {accountInfo.branch}
+                          {accountInfo?.branch}
                         </span>
                       </div>
 
@@ -983,7 +1010,7 @@ function CreatorInvoice() {
                             fontWeight: "bold",
                           }}
                         >
-                          {accountInfo.pan}
+                          {accountInfo?.pan}
                         </span>
                       </div>
 
@@ -1004,7 +1031,7 @@ function CreatorInvoice() {
                     marginTop: "2rem", // 8 * 0.25rem = 2rem
                   }}
                 >
-                  {signedInfo.signature && (
+                  {signedInfo?.signature && (
                     <div
                       style={{
                         display: "flex",
@@ -1015,11 +1042,11 @@ function CreatorInvoice() {
                       <div>
                         <img
                           style={{ width: "100px" }}
-                          src={signedInfo.signature}
+                          src={signedInfo?.signature}
                           alt="sign"
                         />
                         <div style={{ fontWeight: "bold" }}>Date Signed</div>
-                        <div>{signedInfo.signedDate}</div>
+                        <div>{signedInfo?.signedDate}</div>
                       </div>
                     </div>
                   )}

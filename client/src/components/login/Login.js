@@ -95,7 +95,8 @@ const Login = () => {
     localStorage.setItem("subscription", loginInfo.subscription);
     localStorage.setItem("invoiceNumber", loginInfo.invoiceNumber);
     localStorage.setItem("usedInvoiceNumbers", loginInfo.usedInvoiceNumbers);
-    localStorage.setItem("loginDate", loginInfo.loginDate);
+    localStorage.setItem("subStartDate", loginInfo.subStarts);
+    localStorage.setItem("subEndDate", loginInfo.subEnds);
   };
 
   const getInvoiceInfo = async (loggedInUser, uid) => {

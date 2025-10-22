@@ -1,8 +1,16 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Header1 from "./Header1";
-import { BASE_URL } from "./Constant";
+import { BASE_URL, CREATORS, LOGIN_INFO } from "./Constant";
 import axios from "axios";
+import { db } from "../config/firebase";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDocs,
+  updateDoc,
+} from "firebase/firestore";
 
 const PlanSummaryWithDiscount = () => {
   const [coupon, setCoupon] = useState("");
@@ -87,7 +95,20 @@ const PlanSummaryWithDiscount = () => {
       image: "/logo.png",
       order_id: order.data.id,
       handler: function (response) {
-        console.log("Payment ID:", response.razorpay_payment_id);
+        // update login db with plan details
+        updateLoginDBForPlanDetail(plan.name);
+        // update cache
+        localStorage.setItem("isFreePlan", false);
+        localStorage.setItem("subscription", plan.name);
+        localStorage.setItem(
+          "subStartDate",
+          new Date().toISOString().slice(0, 10)
+        );
+
+        // update payment history db
+        updatePaymentHistory(response);
+
+        // Navigate to success page with order details
         navigate("/success", {
           state: {
             order: response,
@@ -107,6 +128,68 @@ const PlanSummaryWithDiscount = () => {
 
     const paymentObject = new window.Razorpay(options);
     paymentObject.open();
+  };
+
+  const login_CollectionRef = collection(db, LOGIN_INFO);
+  const updateLoginDBForPlanDetail = async (planName) => {
+    const data = await getDocs(login_CollectionRef);
+    const filteredData = data.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+
+    const loggedInUser = localStorage.getItem("user");
+    const loginInfo = filteredData.filter((x) => x.code === loggedInUser)[0];
+
+    const codeDoc = doc(db, LOGIN_INFO, loginInfo.id);
+    await updateDoc(codeDoc, {
+      subscription: planName,
+      subStarts: new Date().toISOString().slice(0, 10),
+      subEnds: getNextDate(planName),
+    });
+  };
+
+  const getNextDate = (planName) => {
+    const oldEndDate = localStorage.getItem("subEndDate");
+    const today = new Date().toISOString().slice(0, 10);
+    let remainingDays = 0;
+    if (oldEndDate && oldEndDate > today) {
+      const date1 = new Date(today);
+      const date2 = new Date(oldEndDate);
+      const diffTime = Math.abs(date2 - date1);
+      remainingDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    }
+
+    if (planName === "Monthly") {
+      const date = new Date();
+      date.setDate(date.getDate() + 30 + remainingDays);
+      const nextDate = date.toISOString().slice(0, 10);
+      localStorage.setItem("subEndDate", nextDate);
+      return nextDate;
+    } else if (planName === "Yearly") {
+      const date = new Date();
+      date.setDate(date.getDate() + 365 + remainingDays);
+      const nextDate = date.toISOString().slice(0, 10);
+      localStorage.setItem("subEndDate", nextDate);
+      return nextDate;
+    }
+  };
+
+  const updatePaymentHistory = async (response) => {
+    const paymentHistory_CollectionRef = collection(
+      doc(db, CREATORS, localStorage.getItem("uid")),
+      "Payment_History"
+    );
+    console.log(response);
+    await addDoc(paymentHistory_CollectionRef, {
+      planName: plan.name,
+      amountPaid: finalTotal,
+      paymentDate: new Date().toISOString().slice(0, 10),
+      planStartsDate: new Date().toISOString().slice(0, 10),
+      planEndsDate: localStorage.getItem("subEndDate"),
+      razorpayPaymentId: response.razorpay_payment_id,
+      loggedInUser: localStorage.getItem("user"),
+    });
   };
 
   return (

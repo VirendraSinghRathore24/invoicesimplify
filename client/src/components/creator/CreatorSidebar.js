@@ -20,7 +20,7 @@ const CreatorSidebar = () => {
   const location = useLocation();
   const name = localStorage.getItem("name1");
   const loggedInUser = localStorage.getItem("user");
-  const subscription = localStorage.getItem("subscription");
+  const [subscription, setSubscription] = useState("");
   const sidebarRef = useRef(null);
   const [isScrollable, setIsScrollable] = useState(false);
 
@@ -39,16 +39,26 @@ const CreatorSidebar = () => {
     }
   };
   const [remainingDays, setRemainingDays] = useState(null);
-  const loginDate = localStorage.getItem("loginDate");
+
   useEffect(() => {
     const calculateRemainingDays = () => {
       const today = new Date();
-      const future = new Date(loginDate); // replace with login date
-      future.setMonth(future.getMonth() + 2);
+      const subEndDate = localStorage.getItem("subEndDate");
+      const endDate = new Date(subEndDate); // replace with login date
 
-      const diff = future - today;
+      const diff = endDate - today;
       const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+      //const days = 0;
 
+      if (days <= 0) {
+        setRemainingDays(0);
+        setSubscription("Expired");
+        localStorage.setItem("subscriptionPlan", "Expired");
+        return;
+      }
+      localStorage.removeItem("subscriptionPlan");
+      const subs = localStorage.getItem("subscription");
+      setSubscription(subs);
       setRemainingDays(days);
     };
 
@@ -202,7 +212,11 @@ const CreatorSidebar = () => {
       <div className="bg-white rounded-xl p-4 m-2 text-gray-800 shadow-inner">
         <h3 className="text-sm font-medium text-gray-600 mb-1">
           Plan Type :
-          <span className="inline-block bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full">
+          <span
+            className={`inline-block bg-green-100 ${
+              subscription === "Expired" ? "text-red-700" : "text-green-700"
+            }  text-xs font-semibold px-3 py-1 rounded-full`}
+          >
             {subscription}
           </span>
         </h3>
