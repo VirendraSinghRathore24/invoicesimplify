@@ -6,7 +6,7 @@ const Header1 = () => {
     const user = localStorage.getItem("user");
 
     if (user && user !== "undefined" && user !== "null") {
-      const newWindow = window.open("/createinvoice", "_blank");
+      const newWindow = window.open("/creator/createinvoice", "_blank");
       if (newWindow) newWindow.opener = null;
     } else {
       const newWindow = window.open("/login", "_blank");
@@ -25,7 +25,7 @@ const Header1 = () => {
           <img
             src="../../images/invlogo2.png"
             alt="Logo"
-            width={125}
+            width={85}
             loading="lazy"
           />
         </NavLink>

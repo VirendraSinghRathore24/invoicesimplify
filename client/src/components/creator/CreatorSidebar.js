@@ -39,29 +39,30 @@ const CreatorSidebar = () => {
     }
   };
   const [remainingDays, setRemainingDays] = useState(null);
+  const calculateRemainingDays = () => {
+    const today = new Date();
+    const subEndDate = localStorage.getItem("subEndDate");
+    const endDate = new Date(subEndDate); // replace with login date
+
+    const diff = endDate - today;
+    const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+    //const days = 0;
+
+    console.log(endDate, today, diff);
+    console.log("Days remaining: ", days);
+    if (days <= 0) {
+      setRemainingDays(0);
+      setSubscription("Expired");
+      localStorage.setItem("subscriptionPlan", "Expired");
+      return;
+    }
+    localStorage.removeItem("subscriptionPlan");
+    const subs = localStorage.getItem("subscription");
+    setSubscription(subs);
+    setRemainingDays(days);
+  };
 
   useEffect(() => {
-    const calculateRemainingDays = () => {
-      const today = new Date();
-      const subEndDate = localStorage.getItem("subEndDate");
-      const endDate = new Date(subEndDate); // replace with login date
-
-      const diff = endDate - today;
-      const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
-      //const days = 0;
-
-      if (days <= 0) {
-        setRemainingDays(0);
-        setSubscription("Expired");
-        localStorage.setItem("subscriptionPlan", "Expired");
-        return;
-      }
-      localStorage.removeItem("subscriptionPlan");
-      const subs = localStorage.getItem("subscription");
-      setSubscription(subs);
-      setRemainingDays(days);
-    };
-
     calculateRemainingDays();
 
     const interval = setInterval(calculateRemainingDays, 24 * 60 * 60 * 1000); // Update daily

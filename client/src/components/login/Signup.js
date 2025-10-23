@@ -188,6 +188,7 @@ const Signup = () => {
     const date = new Date();
     date.setDate(date.getDate() + 30);
     const nextMonthDate = date.toISOString().slice(0, 10);
+    localStorage.setItem("subEndDate", nextMonthDate);
 
     await addDoc(login_CollectionRef, {
       orgCode: orgCode,
@@ -202,8 +203,6 @@ const Signup = () => {
       subEnds: nextMonthDate,
       loginDate: new Date().toISOString().slice(0, 10),
     });
-
-    localStorage.setItem("subEndDate", nextMonthDate);
 
     if (type === CONTENT_CREATOR) {
       const basicInfo_CollectionRef = collection(

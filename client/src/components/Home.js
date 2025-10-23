@@ -5,9 +5,9 @@ import Footer1 from "./Footer1";
 import { CONTENT_CREATOR } from "./Constant";
 const features = [
   "Create invoices in seconds",
-  "Print or message with one click",
+  "Download invoices and send them via email",
   "Works great on mobile and desktop",
-  "Dashboard to track invoices",
+  "Dashboard to track invoices & payments",
 ];
 
 const testimonials = [
@@ -73,7 +73,7 @@ const Home = () => {
           <img
             src="../../images/invlogo2.png"
             alt="Logo"
-            width={125}
+            width={85}
             loading="lazy"
           />
           <div className="flex items-center gap-4">

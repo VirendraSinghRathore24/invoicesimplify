@@ -80,7 +80,7 @@ const PricingPlans = () => {
             <img
               src="../../images/invlogo2.png"
               alt="Logo"
-              width={125}
+              width={85}
               loading="lazy"
             />
           </NavLink>
