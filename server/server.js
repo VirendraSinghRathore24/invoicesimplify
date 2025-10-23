@@ -155,7 +155,8 @@ const sendReminderEmail = async (
       "\n" +
       "This is a friendly reminder that " +
       product +
-      " Collab for ₹" +
+      " Collab for " +
+      currencySymbol +
       amount +
       " is due on " +
       date +
@@ -425,9 +426,9 @@ const generateHtmlTableHtml = async (uid, frequency, yesterday) => {
       <tr>
         <td>${index + 1}.</td>
         <td>${row1.desc}</td>
-        <td>₹${row1.rate}</td>
+        <td>${currencySymbol}${row1.rate}</td>
         <td>${row1.qty}</td>
-        <td>₹${rowAmount}</td>
+        <td>${currencySymbol}${rowAmount}</td>
       </tr>
     `;
     });
@@ -435,13 +436,15 @@ const generateHtmlTableHtml = async (uid, frequency, yesterday) => {
     html += `
       </tbody>
     </table>
-    <h4 style="text-align: right; font-size: 12px;">Total Amount: ₹${totalAmount}</h4>
+    <h4 style="text-align: right; font-size: 12px;">Total Amount: ${currencySymbol}${totalAmount}</h4>
      
       <h4 style="text-align: right; font-size: 12px;">
       ${
         row?.amountInfo?.paymentType === "fullyPaid"
           ? "Fully Paid"
-          : `Advance: ₹${row?.amountInfo?.advance || 0} <br> Balance: ₹${
+          : `Advance: ${currencySymbol}${
+              row?.amountInfo?.advance || 0
+            } <br> Balance:${currencySymbol}${
               totalAmount - (row?.amountInfo?.advance || 0)
             }`
       }
@@ -837,6 +840,7 @@ const sendEmailPdf = async (invoiceData, email, res) => {
   const accountInfo = invoiceData.accountInfo;
   const signedInfo = invoiceData.signedInfo;
   const additionalInfo = invoiceData.additionalInfo;
+  const currencySymbol = invoiceData.currencySymbol || "₹";
 
   //const taxCalculatedInfo = invoiceData.taxCalculatedInfo;
 
@@ -991,9 +995,9 @@ const sendEmailPdf = async (invoiceData, email, res) => {
       html += `
                         <tr style="display: flex; justify-content: space-between; font-size: 0.82rem; margin-top: 0.25rem; font-weight: 300;">
                           <td style="width: 40%; text-align: left;">${row.desc}</td>
-                          <td style="width: 20%;">${row.rate}</td>
+                          <td style="width: 20%;">${currencySymbol}${row.rate}</td>
                           <td style="width: 10%;">${row.qty}</td>
-                          <td style="width: 20%;">${row.amount}</td>
+                          <td style="width: 20%;">${currencySymbol}${row.amount}</td>
                         </tr>`;
       amount += parseFloat(row.amount);
       if (rows.length > index + 1) {
@@ -1013,7 +1017,7 @@ const sendEmailPdf = async (invoiceData, email, res) => {
                     Total
                   </div>
                   <div style="margin-top: 0.5rem; margin-bottom: 0.5rem; padding: 0.5rem; font-size: 0.95rem; font-weight: bold; border-radius: 0.375rem;">
-                    ₹ ${amount}
+                    ${currencySymbol} ${amount}
                   </div>
                 </div>
               </div>

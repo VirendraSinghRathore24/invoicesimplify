@@ -623,6 +623,9 @@ function CreatorViewInvoice() {
                                   width: "20%",
                                 }}
                               >
+                                {invoiceInfo?.invoiceCurrency
+                                  ? invoiceInfo?.invoiceCurrency
+                                  : "₹"}{" "}
                                 {row.rate}
                               </td>
                               <td
@@ -638,6 +641,9 @@ function CreatorViewInvoice() {
                                 }}
                               >
                                 {" "}
+                                {invoiceInfo?.invoiceCurrency
+                                  ? invoiceInfo?.invoiceCurrency
+                                  : "₹"}{" "}
                                 {row.amount}
                               </td>
                             </tr>
@@ -708,7 +714,10 @@ function CreatorViewInvoice() {
                         borderRadius: "0.375rem", // rounded-md = 6px or 0.375rem
                       }}
                     >
-                      ₹ {invoiceInfo?.amount}
+                      {invoiceInfo?.invoiceCurrency
+                        ? invoiceInfo?.invoiceCurrency
+                        : "₹"}{" "}
+                      {invoiceInfo?.amount}
                     </div>
                   </div>
                 </div>

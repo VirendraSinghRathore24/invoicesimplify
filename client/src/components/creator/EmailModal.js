@@ -34,6 +34,7 @@ const EmailModal = ({
 
   const loggedInUser = localStorage.getItem("user");
   const uid = localStorage.getItem("uid");
+  const currencySymbol = localStorage.getItem("invoiceCurrency") || "₹";
 
   const handleEmailInvoice = async (e) => {
     try {
@@ -60,6 +61,7 @@ const EmailModal = ({
         signedInfo: signedInfo,
         logoBase64: logoBase64,
         additionalInfo: additionalInfo,
+        currencySymbol: currencySymbol,
         // taxCalculatedInfo: taxCalculatedInfo,
       };
 

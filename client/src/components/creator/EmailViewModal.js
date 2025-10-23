@@ -36,6 +36,7 @@ const EmailViewModal = ({ handleCloseEmailModal, id, email, logoBase64 }) => {
         signedInfo: invoiceData1.signedInfo,
         logoBase64: logoBase64,
         additionalInfo: invoiceData1.additionalInfo,
+        currencySymbol: invoiceData1.invoiceCurrency,
         // taxCalculatedInfo: taxCalculatedInfo,
       };
 

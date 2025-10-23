@@ -4,6 +4,7 @@ import Header1 from "./Header1";
 import { toast } from "react-toastify";
 import { addDoc, collection, doc } from "firebase/firestore";
 import { db } from "../config/firebase";
+import { CREATORS } from "./Constant";
 
 const ContactUs = () => {
   const [formData, setFormData] = useState({
@@ -27,7 +28,7 @@ const ContactUs = () => {
   const addContactUsDataToDB = async () => {
     const uid = localStorage.getItem("uid");
     const contactInfo_CollectionRef = collection(
-      doc(db, "Shop", uid),
+      doc(db, CREATORS, uid),
       "Contact_Info"
     );
     await addDoc(contactInfo_CollectionRef, {

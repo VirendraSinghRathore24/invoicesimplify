@@ -44,6 +44,8 @@ function CreatorInvoice() {
   const [openEmailModal, setOpenEmailModal] = useState(false);
   const [logoBase64, setLogoBase64] = useState("");
 
+  const currencySymbol = localStorage.getItem("invoiceCurrency") || "₹";
+
   const handleCloseEmailModal = () => {
     setOpenEmailModal(false);
   };
@@ -178,6 +180,7 @@ function CreatorInvoice() {
       loggedInUser: loggedInUser,
       logoBase64: logoBase64,
       paymentStatus: "Pending",
+      invoiceCurrency: currencySymbol ? currencySymbol : "₹",
     });
 
     localStorage.setItem("downloadedInvoiceNumber", invoiceInfo?.invoiceNumber);
@@ -807,7 +810,7 @@ function CreatorInvoice() {
                                   width: "20%",
                                 }}
                               >
-                                {row.rate}
+                                {currencySymbol} {row.rate}
                               </td>
                               <td
                                 style={{
@@ -822,7 +825,7 @@ function CreatorInvoice() {
                                 }}
                               >
                                 {" "}
-                                {row.amount}
+                                {currencySymbol} {row.amount}
                               </td>
                             </tr>
                             {rows.length > index + 1 && (
@@ -892,7 +895,7 @@ function CreatorInvoice() {
                         borderRadius: "0.375rem", // rounded-md = 6px or 0.375rem
                       }}
                     >
-                      ₹ {amount}
+                      {currencySymbol} {amount}
                     </div>
                   </div>
                 </div>

@@ -97,6 +97,7 @@ const Login = () => {
     localStorage.setItem("usedInvoiceNumbers", loginInfo.usedInvoiceNumbers);
     localStorage.setItem("subStartDate", loginInfo.subStarts);
     localStorage.setItem("subEndDate", loginInfo.subEnds);
+    localStorage.setItem("invoiceCurrency", loginInfo.invoiceCurrency);
   };
 
   const getInvoiceInfo = async (loggedInUser, uid) => {

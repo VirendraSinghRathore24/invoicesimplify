@@ -116,6 +116,7 @@ const Signup = () => {
           localStorage.setItem("subscription", "Free");
           localStorage.setItem("uid", uid);
           localStorage.setItem("isFreePlan", true);
+          localStorage.setItem("invoiceCurrency", "₹");
           localStorage.setItem(
             "subStartDate",
             new Date().toISOString().slice(0, 10)
@@ -199,6 +200,7 @@ const Signup = () => {
       usedInvoiceNumbers: [],
       type: type,
       subscription: "Free",
+      invoiceCurrency: "₹",
       subStarts: new Date().toISOString().slice(0, 10),
       subEnds: nextMonthDate,
       loginDate: new Date().toISOString().slice(0, 10),

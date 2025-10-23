@@ -57,6 +57,7 @@ import CreatorAdditionalInformation from "./components/creator/CreatorAdditional
 import EditCreatorAddtionalInfo from "./components/creator/EditCreatorAddtionalInfo";
 import EditBrandInfo from "./components/creator/EditBrandInfo";
 import PreOrderScreen from "./components/PreOrderScreen";
+import Config from "./components/creator/Config";
 
 function App() {
   const type = localStorage.getItem("type");
@@ -179,6 +180,8 @@ function App() {
           <Route path="/creator/dashboard" element={<CreatorDashboard />} />
           <Route path="/creator/brands" element={<Brands />} />
           <Route path="/creator/editbrandinfo" element={<EditBrandInfo />} />
+
+          <Route path="/configuration" element={<Config />} />
         </Routes>
 
         <ToastContainer />

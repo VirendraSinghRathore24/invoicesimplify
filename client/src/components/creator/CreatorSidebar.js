@@ -12,7 +12,8 @@ import {
   ShieldCheck,
   CircleCheckBig,
   RefreshCcw,
-  IndianRupee,
+  History,
+  Cog,
 } from "lucide-react";
 
 const CreatorSidebar = () => {
@@ -46,10 +47,7 @@ const CreatorSidebar = () => {
 
     const diff = endDate - today;
     const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
-    //const days = 0;
 
-    console.log(endDate, today, diff);
-    console.log("Days remaining: ", days);
     if (days <= 0) {
       setRemainingDays(0);
       setSubscription("Expired");
@@ -184,10 +182,16 @@ const CreatorSidebar = () => {
           />
 
           <SubMenuItem
-            icon={<IndianRupee size={18} />}
+            icon={<History size={18} />}
             text="Payment History"
             to="/paymenthistory"
             active={location.pathname === "/paymenthistory"}
+          />
+          <SubMenuItem
+            icon={<Cog size={18} />}
+            text="Configuration"
+            to="/configuration"
+            active={location.pathname === "/configuration"}
           />
         </SidebarItem>
 

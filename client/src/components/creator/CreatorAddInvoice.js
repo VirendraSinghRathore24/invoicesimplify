@@ -21,6 +21,7 @@ const CreatorAddInvoice = () => {
   const [isBusinessInfo, setIsBusinessInfo] = useState(false);
 
   const countryCode = localStorage.getItem("countryCode");
+  const currencySymbol = localStorage.getItem("invoiceCurrency");
   const refreshPage = () => {
     navigate(0); // React Router v6+
   };
@@ -88,7 +89,7 @@ const CreatorAddInvoice = () => {
   const signedDate = month + " " + today.getDate() + ", " + today.getFullYear();
   const [currency, setCurrency] = useState("INR");
   const [item, setItem] = useState("");
-  const [symbol, setSymbol] = useState("₹");
+  const [symbol, setSymbol] = useState(currencySymbol ? currencySymbol : "₹");
 
   const [loss, setLoss] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -1077,7 +1078,7 @@ const CreatorAddInvoice = () => {
                                 </td>
                                 <td className="w-[20%] text-center">
                                   <div className="w-full  mt-3 font-extrabold text-xs">
-                                    ₹ {row.amount}
+                                    {currencySymbol} {row.amount}
                                   </div>
                                 </td>
                                 <td className="w-[10%]">
@@ -1156,7 +1157,7 @@ const CreatorAddInvoice = () => {
                                   </td>
                                   <td className="w-[30%] text-center">
                                     <div className="w-full text-xs mt-2 ">
-                                      ₹ {row.amount}
+                                      {currencySymbol} {row.amount}
                                     </div>
                                   </td>
                                   <td className="w-[10%]">
@@ -1201,7 +1202,7 @@ const CreatorAddInvoice = () => {
                           className="w-3/12 mx-auto flex justify-end mt-1 px-2  text-sm font-bold rounded-md"
                           name="total"
                         >
-                          ₹ {Math.round(amount)}
+                          {currencySymbol} {Math.round(amount)}
                         </div>
                       </div>
                     </div>
