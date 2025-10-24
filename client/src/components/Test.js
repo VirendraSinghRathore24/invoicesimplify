@@ -8,6 +8,7 @@ import {
   Wand2,
   CreditCard,
 } from "lucide-react";
+import Footer1 from "./Footer1";
 //import heroImg from "../assets/hero.png";
 //import invoicePreview from "../assets/invoice-preview.png";
 //import logo from "../assets/logo.png";
@@ -46,14 +47,10 @@ const Home = () => {
             alt="InvoiceSimplify"
             className="h-10"
           />
-          <span className="font-bold text-xl">InvoiceSimplify</span>
         </div>
         <div className="flex gap-4">
-          <a href="/pricing" className="font-medium hover:text-blue-600">
-            Pricing
-          </a>
           <button
-            onClick={() => (window.location.href = "/create-invoice")}
+            onClick={() => (window.location.href = "/creator/createinvoice")}
             className="px-6 py-2 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition"
           >
             Start Free
@@ -63,31 +60,69 @@ const Home = () => {
 
       {/* HERO */}
       <section className="px-8 md:px-20 grid md:grid-cols-2 items-center gap-14 py-24">
-        <div>
-          <h1 className="text-5xl font-extrabold leading-tight text-gray-900">
-            Get Paid Faster with{" "}
-            <span className="text-blue-600">Beautiful Invoices</span>
+        <div className="block lg:hidden mb-8">
+          <h1 className="text-2xl font-extrabold leading-tight text-gray-900">
+            Create & Send Invoices in
+            <p className="text-blue-600">30 Seconds</p>
           </h1>
           <p className="mt-5 text-gray-600 text-lg">
             Create & share branded invoices for your brand deals — trusted by
-            influencers and creators across India.
+            influencers and creators across world.
           </p>
           <div className="mt-8 flex gap-4">
             <button
               className="px-8 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition flex items-center gap-2"
-              onClick={() => (window.location.href = "/create-invoice")}
+              onClick={() => (window.location.href = "/creator/createinvoice")}
             >
               Create Invoice <ArrowRight />
             </button>
             <button
               className="px-8 py-3 border border-gray-400 rounded-xl font-semibold hover:bg-gray-200 transition"
-              onClick={() => (window.location.href = "/demo")}
+              onClick={() =>
+                document
+                  .getElementById("demo-video")
+                  .scrollIntoView({ behavior: "smooth" })
+              }
             >
               View Demo
             </button>
           </div>
         </div>
-        <img src={""} alt="Hero" className="w-full drop-shadow-2xl" />
+        <div className="block max-lg:hidden mb-8">
+          <h1 className="text-5xl font-extrabold leading-tight text-gray-900">
+            Create & Send Invoices in
+            <p className="text-blue-600">30 Seconds</p>
+          </h1>
+          <p className="mt-5 text-gray-600 text-lg">
+            Create & share branded invoices for your brand deals — trusted by
+            influencers and creators across world.
+          </p>
+          <div className="mt-8 flex gap-4">
+            <button
+              className="px-8 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition flex items-center gap-2"
+              onClick={() => (window.location.href = "/creator/createinvoice")}
+            >
+              Create Invoice <ArrowRight />
+            </button>
+            <button
+              className="px-8 py-3 border border-gray-400 rounded-xl font-semibold hover:bg-gray-200 transition"
+              onClick={() =>
+                document
+                  .getElementById("demo-video")
+                  .scrollIntoView({ behavior: "smooth" })
+              }
+            >
+              View Demo
+            </button>
+          </div>
+        </div>
+        <div className="border-2 rounded-md border-gray-400 p-4 bg-white shadow-lg">
+          <img
+            src={"../../images/invp1.png"}
+            alt="Hero"
+            className="w-full drop-shadow-2xl"
+          />
+        </div>
       </section>
 
       {/* TRUST BADGES */}
@@ -105,14 +140,14 @@ const Home = () => {
         </p>
         <div className="grid md:grid-cols-4 gap-8 mt-12 max-w-6xl mx-auto">
           {[
-            "Branded Invoices with logo & colors",
+            "Branded Invoices",
             "Email directly to brands & agencies",
-            "Track payments & reminders",
             "Download PDFs anytime",
-            "Recurring invoices for campaigns",
+            "Track payments & reminders",
+            "Recurring invoices for brands & agencies",
             "Multi-currency support",
-            "GST-ready & accounting export",
-            "Fast UPI & payment gateway collection",
+            "Signature support",
+            "Data privacy",
           ].map((item, i) => (
             <div
               key={i}
@@ -163,7 +198,7 @@ const Home = () => {
       </section>
 
       {/* DEMO VIDEO */}
-      <section className="px-8 py-24 bg-gray-50 text-center">
+      <section id="demo-video" className="px-8 py-24 bg-gray-50 text-center">
         <h3 className="text-3xl font-bold text-gray-900 mb-6">
           See InvoiceSimplify in Action
         </h3>
@@ -174,7 +209,7 @@ const Home = () => {
 
         <div
           className="max-w-4xl mx-auto relative"
-          style={{ paddingTop: "56.25%" /* 16:9 ratio */ }}
+          style={{ paddingTop: "40.25%" /* 16:9 ratio */ }}
         >
           <iframe
             src="https://www.youtube.com/embed/your-demo-video-id" // replace with your video link
@@ -188,22 +223,24 @@ const Home = () => {
       </section>
 
       {/* INVOICE PREVIEW */}
-      <section className="px-8 py-24 bg-white text-center">
-        <h3 className="text-3xl font-bold text-gray-900 mb-6">
-          Invoice Templates
-        </h3>
-        <p className="text-gray-600 mb-10">
-          Show your brand professionalism with clean, modern templates
-        </p>
+      {/* <section className="px-8 py-24 bg-white text-center flex ">
+        <div>
+          <h3 className="text-3xl font-bold text-gray-900 mb-6">
+            Invoice Templates
+          </h3>
+          <p className="text-gray-600 mb-10">
+            Show your brand professionalism with clean, modern templates
+          </p>
+        </div>
         <img
-          src={""}
+          src={"../images/invpreview.png"}
           alt="Invoice Preview"
-          className="max-w-4xl mx-auto rounded-xl shadow-2xl"
+          className="max-w-4xl mx-auto rounded-xl shadow-2xl w-64 h-[400px]"
         />
-      </section>
+      </section> */}
 
       {/* SUPPORTED PAYMENT METHODS */}
-      <section className="px-8 py-20 bg-gray-100 text-center">
+      {/* <section className="px-8 py-20 bg-gray-100 text-center">
         <h3 className="text-3xl font-bold mb-8">Payments Made Easy</h3>
         <div className="flex flex-wrap justify-center gap-8 items-center">
           <CreditCard className="w-12 h-12 text-blue-600" />
@@ -223,7 +260,7 @@ const Home = () => {
             className="w-12 h-12"
           />
         </div>
-      </section>
+      </section> */}
 
       {/* ADVANCED FEATURES */}
       <section className="px-8 py-20 bg-white">
@@ -233,11 +270,11 @@ const Home = () => {
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {[
             "Recurring Invoices",
-            "Discounts & Coupons",
+            "Update Payment Status",
             "Payment Reminders",
-            "Custom Branding",
-            "Client Management",
-            "Invoice Metrics & Dashboard",
+            "Access Anywhere",
+            "Currency Support",
+            "Stunning Dashboard",
           ].map((feature, i) => (
             <div
               key={i}
@@ -299,7 +336,7 @@ const Home = () => {
                     </p>
                   </div>
                 </div>
-                <p className="text-gray-700 dark:text-gray-300 italic mb-4">
+                <p className="text-gray-700 dark:text-gray-300  mb-4">
                   “{user.quote}”
                 </p>
                 <div className="flex space-x-1 text-yellow-400">
@@ -348,13 +385,13 @@ const Home = () => {
       {/* CTA */}
       <section className="text-center px-6 py-20 bg-blue-600 text-white">
         <h2 className="text-4xl font-bold">
-          Start invoicing in less than 60 seconds
+          Start invoicing in less than 30 seconds
         </h2>
         <p className="mt-2 mb-6">
           Create your first branded invoice and impress your clients today.
         </p>
         <button
-          onClick={() => (window.location.href = "/create-invoice")}
+          onClick={() => (window.location.href = "/creator/createinvoice")}
           className="px-10 py-4 bg-white text-blue-600 rounded-xl font-semibold hover:bg-gray-100 transition"
         >
           Start Free Now
@@ -362,9 +399,7 @@ const Home = () => {
       </section>
 
       {/* FOOTER */}
-      <footer className="bg-gray-950 text-gray-400 text-center py-10 text-sm">
-        © {new Date().getFullYear()} InvoiceSimplify.com — All rights reserved.
-      </footer>
+      <Footer1 />
     </div>
   );
 };

@@ -93,8 +93,8 @@ function App() {
 
       <div className="flex-1 overflow-y-auto">
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/home" element={<Home />} />
+          <Route path="/" element={<Test />} />
+          <Route path="/home" element={<Test />} />
           {/* Login and Signup routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/logout" element={<Logout />} />

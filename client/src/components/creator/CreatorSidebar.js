@@ -228,7 +228,7 @@ const CreatorSidebar = () => {
         <div className="text-sm font-medium text-gray-600">
           Expires in :{" "}
           <span className="inline-block bg-yellow-100 text-green-700 text-xs font-semibold px-1 py-1 rounded-full">
-            {remainingDays} days{" "}
+            28 days{" "}
           </span>
         </div>
         <button
