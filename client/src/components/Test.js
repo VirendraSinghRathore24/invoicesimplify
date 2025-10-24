@@ -1,17 +1,10 @@
-import React from "react";
-import {
-  Check,
-  ArrowRight,
-  Sparkles,
-  Shield,
-  Star,
-  Wand2,
-  CreditCard,
-} from "lucide-react";
+import React, { useState } from "react";
+import { Check, ArrowRight, Sparkles, Shield, Star, Wand2 } from "lucide-react";
 import Footer1 from "./Footer1";
-//import heroImg from "../assets/hero.png";
-//import invoicePreview from "../assets/invoice-preview.png";
-//import logo from "../assets/logo.png";
+import { toast } from "react-toastify";
+import { addDoc, collection, doc } from "firebase/firestore";
+import { CREATORS } from "./Constant";
+import { db } from "../config/firebase";
 
 const Home = () => {
   const testimonials = [
@@ -37,6 +30,37 @@ const Home = () => {
       image: "../images/amit.png",
     },
   ];
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // Add form submission logic here (e.g., send to backend or email)
+    await addContactUsDataToDB();
+    toast("Thank you for contacting us!");
+    setFormData({ name: "", email: "", message: "" });
+  };
+
+  const addContactUsDataToDB = async () => {
+    const uid = localStorage.getItem("uid");
+    const contactInfo_CollectionRef = collection(
+      doc(db, "Contact_US", uid),
+      "Contact_Info"
+    );
+    await addDoc(contactInfo_CollectionRef, {
+      contactData: formData,
+      messageDate: new Date().toISOString().slice(0, 10),
+    });
+  };
+
   return (
     <div className="bg-gray-50 text-gray-800">
       {/* HEADER */}
@@ -118,7 +142,7 @@ const Home = () => {
         </div>
         <div className="border-2 rounded-md border-gray-400 p-4 bg-white shadow-lg">
           <img
-            src={"../../images/invp1.png"}
+            src={"../../images/invp2.webp"}
             alt="Hero"
             className="w-full drop-shadow-2xl"
           />
@@ -382,8 +406,74 @@ const Home = () => {
         </div>
       </section>
 
+      <section id="contact-section" className="py-20 bg-gray-100 mt-16">
+        <div className="max-w-4xl mx-auto text-center px-6">
+          <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-4">
+            We’re Here to Support Your Growth 🚀
+          </h2>
+          <p className="text-gray-600 tex-sm lg:text-lg mb-8">
+            Whether you're a content creator, freelancer, influencer, or small
+            business — InvoiceSimplify helps you send professional invoices and
+            get paid faster.
+            <br />
+            Have questions, feedback, or want to work with us? Just reach out!
+          </p>
+
+          <div className="bg-white shadow-xl rounded-3xl p-8 max-w-xl mx-auto">
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <input
+                type="text"
+                placeholder="Your Name"
+                value={formData.name}
+                required
+                onChange={handleChange}
+                name="name"
+                className="w-full border rounded-xl p-3 focus:ring-2 focus:ring-blue-400"
+              />
+              <input
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                name="email"
+                placeholder="Your Email"
+                className="w-full border rounded-xl p-3 focus:ring-2 focus:ring-blue-400"
+              />
+              <textarea
+                placeholder="Your Message"
+                rows="4"
+                required
+                value={formData.message}
+                onChange={handleChange}
+                name="message"
+                className="w-full border rounded-xl p-3 focus:ring-2 focus:ring-blue-400"
+              />
+
+              <button className="w-full py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition">
+                Send Message
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
-      <section className="text-center px-6 py-20 bg-blue-600 text-white">
+      <section className="text-center px-6 py-20 bg-blue-600 text-white block lg:hidden">
+        <h2 className="text-2xl font-bold">
+          Start invoicing in less than 30 seconds
+        </h2>
+        <p className="mt-2 mb-6">
+          Create your first branded invoice and impress your clients today.
+        </p>
+        <button
+          onClick={() => (window.location.href = "/creator/createinvoice")}
+          className="px-10 py-4 bg-white text-blue-600 rounded-xl font-semibold hover:bg-gray-100 transition"
+        >
+          Start Free Now
+        </button>
+      </section>
+
+      <section className="text-center px-6 py-20 bg-blue-600 text-white block max-lg:hidden">
         <h2 className="text-4xl font-bold">
           Start invoicing in less than 30 seconds
         </h2>
