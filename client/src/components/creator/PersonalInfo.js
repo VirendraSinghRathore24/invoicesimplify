@@ -135,7 +135,7 @@ const PersonalInfo = () => {
             )}
 
             {!posts && (
-              <div className=" flex items-center justify-center">
+              <div className=" flex h-screen items-center justify-center">
                 <div onClick={() => navigate("/creator/addpersonalinfo")}>
                   <button className="border-2 bg-[#444] text-white fond-bold text-md py-4 px-8 rounded-md cursor-pointer">
                     {" "}
@@ -184,7 +184,7 @@ const PersonalInfo = () => {
             )}
 
             {!posts && (
-              <div className="flex h-screen items-center justify-center ">
+              <div className="flex items-center justify-center">
                 <div onClick={() => navigate("/creator/addpersonalinfo")}>
                   <button className="border-2 bg-[#444] text-white fond-bold text-lg py-4 px-8 rounded-md cursor-pointer">
                     {" "}

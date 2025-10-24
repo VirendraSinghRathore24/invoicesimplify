@@ -79,9 +79,9 @@ const Home = () => {
           <div className="flex items-center gap-4">
             <button
               onClick={handleCreateInvoice}
-              className="bg-indigo-600 text-white px-4 py-2 rounded-xl hover:bg-indigo-700 transition"
+              className="bg-indigo-600 text-white px-4 py-2 rounded-xl hover:bg-orange-700 transition"
             >
-              Create Invoice
+              Try it Free !
             </button>
             <button
               onClick={() => setDarkMode(!darkMode)}

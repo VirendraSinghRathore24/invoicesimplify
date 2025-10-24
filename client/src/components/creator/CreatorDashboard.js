@@ -31,6 +31,7 @@ const CreatorDashboard = () => {
   const [settled, setSettled] = useState(0);
   const [paidInvoices, setPaidInvoices] = useState(0);
   const type = localStorage.getItem("type");
+  const currencySymbol = localStorage.getItem("invoiceCurrency") || "₹";
 
   const [totalProfit, setTotalProft] = useState(0);
 
@@ -590,7 +591,7 @@ const CreatorDashboard = () => {
 
   return (
     <div className="flex justify-evenly w-full h-full ">
-      <div className="w-full lg:w-[82%] ml-0 lg:ml-[17%] border-2 my-3 rounded-lg border-gray-300 bg-white shadow-lg top-0 fixed">
+      <div className="w-full lg:w-[82%] ml-0 lg:ml-[17%] h-[97%] border-2 my-3 rounded-lg border-gray-300 bg-white shadow-lg top-0 fixed">
         <div className="hidden lg:block top-0 mx-auto w-[82%] h-[68px] text-white fixed border-b-2 my-3">
           <div className="flex justify-between mx-auto font-bold text-md py-4 px-2 rounded-lg ">
             <div className="text-xl text-black">Dashboard</div>
@@ -619,7 +620,9 @@ const CreatorDashboard = () => {
                   <p className="text-md">Paid</p>
                   <BanknoteArrowUp />
                 </div>
-                <h3 className="mt-2 text-2xl font-semibold">₹ {paid}</h3>
+                <h3 className="mt-2 text-2xl font-semibold">
+                  {currencySymbol} {paid}
+                </h3>
               </div>
 
               <div className={`p-5 rounded-lg shadow bg-red-400 text-white`}>
@@ -627,7 +630,9 @@ const CreatorDashboard = () => {
                   <p className="text-md">Due Amount</p>
                   <BanknoteX />
                 </div>
-                <h3 className="mt-2 text-2xl font-semibold">₹ {balance}</h3>
+                <h3 className="mt-2 text-2xl font-semibold">
+                  {currencySymbol} {balance}
+                </h3>
               </div>
 
               <div
@@ -637,13 +642,15 @@ const CreatorDashboard = () => {
                   <p className="text-md">Total Earnings</p>
                   <ArrowUp />
                 </div>
-                <h3 className="mt-2 text-2xl font-semibold">₹ {amount}</h3>
+                <h3 className="mt-2 text-2xl font-semibold">
+                  {currencySymbol} {amount}
+                </h3>
               </div>
             </div>
           </div>
 
           <div className="hidden max-lg:block">
-            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4 mb-2 py-1 rounded-md">
+            <div className="grid gap-4 grid-cols-2 mb-4 rounded-md">
               <div
                 className={`p-2 rounded-lg shadow bg-emerald-500 text-white`}
               >
@@ -663,47 +670,94 @@ const CreatorDashboard = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 text-xs">
-            <input
-              type="text"
-              placeholder="Search..."
-              value={searchTerm}
-              onChange={handleSearch}
-              className="px-4 py-2 border rounded-lg w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
+          <div className="hidden max-lg:block">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4 text-xs">
+              <input
+                type="text"
+                placeholder="Search..."
+                value={searchTerm}
+                onChange={handleSearch}
+                className="px-4 py-2 border rounded-lg w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
 
-            <select
-              className="px-4 py-2 border rounded-lg text-xs w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-              value={quickOption}
-              onChange={(e) => handleQuickFilterChange(e.target.value)}
-            >
-              <option value="any">Any Date</option>
-              <option value="today">Today</option>
-              <option value="month">This Month</option>
-              <option value="sixmonths">Last 6 Months</option>
-              <option value="range">Custom Range</option>
-            </select>
+              <select
+                className="px-4 py-2 border rounded-lg text-xs w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                value={quickOption}
+                onChange={(e) => handleQuickFilterChange(e.target.value)}
+              >
+                <option value="any">Any Date</option>
+                <option value="today">Today</option>
+                <option value="month">This Month</option>
+                <option value="sixmonths">Last 6 Months</option>
+                <option value="range">Custom Range</option>
+              </select>
 
-            {/* Show range inputs only if 'range' is selected */}
-            {quickOption === "range" && (
-              <>
-                <input
-                  type="date"
-                  name="startdate"
-                  className="border px-3 py-1 rounded w-full"
-                  value={startDate}
-                  onChange={(e) => handleCustomRangeFilter(e)}
-                />
+              {/* Show range inputs only if 'range' is selected */}
+              {quickOption === "range" && (
+                <>
+                  <input
+                    type="date"
+                    name="startdate"
+                    className="border px-3 py-1 rounded w-full"
+                    value={startDate}
+                    onChange={(e) => handleCustomRangeFilter(e)}
+                  />
 
-                <input
-                  type="date"
-                  name="enddate"
-                  className="border px-3 py-1 rounded w-full"
-                  value={endDate}
-                  onChange={(e) => handleCustomRangeFilter(e)}
-                />
-              </>
-            )}
+                  <input
+                    type="date"
+                    name="enddate"
+                    className="border px-3 py-1 rounded w-full"
+                    value={endDate}
+                    onChange={(e) => handleCustomRangeFilter(e)}
+                  />
+                </>
+              )}
+            </div>
+          </div>
+
+          <div className="hidden lg:block">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 text-xs">
+              <input
+                type="text"
+                placeholder="Search..."
+                value={searchTerm}
+                onChange={handleSearch}
+                className="px-4 py-2 border rounded-lg w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
+
+              <select
+                className="px-4 py-2 border rounded-lg text-xs w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                value={quickOption}
+                onChange={(e) => handleQuickFilterChange(e.target.value)}
+              >
+                <option value="any">Any Date</option>
+                <option value="today">Today</option>
+                <option value="month">This Month</option>
+                <option value="sixmonths">Last 6 Months</option>
+                <option value="range">Custom Range</option>
+              </select>
+
+              {/* Show range inputs only if 'range' is selected */}
+              {quickOption === "range" && (
+                <>
+                  <input
+                    type="date"
+                    name="startdate"
+                    className="border px-3 py-1 rounded w-full"
+                    value={startDate}
+                    onChange={(e) => handleCustomRangeFilter(e)}
+                  />
+
+                  <input
+                    type="date"
+                    name="enddate"
+                    className="border px-3 py-1 rounded w-full"
+                    value={endDate}
+                    onChange={(e) => handleCustomRangeFilter(e)}
+                  />
+                </>
+              )}
+            </div>
           </div>
           <div className="flex gap-2">
             {["All", "Paid", "Unpaid"].map((status) => (
@@ -721,7 +775,7 @@ const CreatorDashboard = () => {
             ))}
           </div>
           <div className="overflow-hidden border border-gray-300 shadow-md mt-4 rounded-md">
-            <div className="max-h-[65vh] lg:max-h-[51vh] overflow-y-auto overflow-x-auto">
+            <div className="max-h-[57vh] lg:max-h-[51vh] overflow-y-auto overflow-x-auto">
               <table className="min-w-full text-xs text-left text-gray-700">
                 <thead className="bg-gray-100 text-gray-600 border-b sticky top-0 z-10">
                   <tr>

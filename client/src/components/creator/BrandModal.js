@@ -135,7 +135,7 @@ const BrandModal = ({ handleCloseBrandModal }) => {
         </div>
 
         <hr />
-        <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-2">
+        <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-2 p-2">
           <div className="p-4">
             <input
               type="text"

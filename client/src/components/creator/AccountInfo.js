@@ -87,7 +87,7 @@ const AccountInfo = () => {
           <CreatorMobileMenu />
         </div>
         <div className="p-2">
-          <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4 hidden lg:block">
+          <div className="overflow-x-auto rounded-lg border border-gray-300 hidden lg:block">
             {posts && (
               <table className="min-w-full text-sm text-left text-gray-700">
                 <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
@@ -138,7 +138,7 @@ const AccountInfo = () => {
             )}
 
             {!posts && (
-              <div className=" flex items-center justify-center  ">
+              <div className=" flex h-screen items-center justify-center  ">
                 <div onClick={() => navigate("/creator/addaccountinfo")}>
                   <button className="border-2 bg-[#444] text-white fond-bold text-md py-4 px-8 rounded-md cursor-pointer">
                     {" "}

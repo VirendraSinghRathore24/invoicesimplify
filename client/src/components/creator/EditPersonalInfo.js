@@ -119,9 +119,9 @@ function EditPersonalInfo() {
           <CreatorMobileMenu />
         </div>
 
-        <div className="flex flex-col bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 ">
-          <main className="flex-grow container mx-auto px-1 py-2 scroll-y-auto h-screen">
-            <div className="max-w-10xl mx-auto bg-white dark:bg-gray-800 border-2 rounded-xl p-2">
+        <div className="flex flex-col  bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 ">
+          <main className="flex-grow container mx-auto px-1 py-2 scroll-y-auto h-[96.7%]">
+            <div className="max-w-10xl mx-auto bg-white dark:bg-gray-800 rounded-xl p-2">
               <div className="text-xl font-semibold mb-6 text-center">
                 Edit Personal Information
               </div>
@@ -222,7 +222,6 @@ function EditPersonalInfo() {
                             className=" w-[120px] dark:bg-gray-700 border border-gray-400 border-[1.4px] px-4 py-2 dark:border-gray-600 pl-[10px] rounded-r focus:outline-none focus:ring-2 focus:ring-indigo-500"
                             type="text"
                             name="phonePrimary"
-                            required
                             value={inputs?.phonePrimary || ""}
                             onChange={(e) => handlePhoneChange(e)}
                             minLength={10}
@@ -263,7 +262,6 @@ function EditPersonalInfo() {
                     <div>
                       <input
                         className="w-full dark:bg-gray-700 border border-gray-400 border-[1.4px] dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        required
                         name="socialMedia"
                         placeholder="instagram link"
                         value={inputs?.socialMedia || ""}

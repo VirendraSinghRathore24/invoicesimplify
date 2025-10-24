@@ -48,6 +48,7 @@ function AddAccountInfo() {
       setLoading(false);
 
       alert("Business Info Saved Successfully !!!");
+      navigate("/creator/accountinfo");
     } catch (er) {
       console.log(er);
       setLoading(false);
@@ -135,9 +136,9 @@ function AddAccountInfo() {
           <CreatorMobileMenu />
         </div>
 
-        <div className="flex flex-col bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 ">
-          <main className="flex-grow container mx-auto px-1 py-2 scroll-y-auto h-screen">
-            <div className="max-w-10xl mx-auto bg-white dark:bg-gray-800 border-2 rounded-xl p-2">
+        <div className="flex flex-col bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 ">
+          <main className="flex-grow container mx-auto px-1 py-2 scroll-y-auto h-[96.7%]">
+            <div className="max-w-10xl mx-auto bg-white dark:bg-gray-800 p-2">
               <div className="text-xl font-semibold mb-6 text-center">
                 Add Account Information
               </div>
@@ -325,7 +326,7 @@ function AddAccountInfo() {
                     <div className="rounded-md flex justify-between gap-x-20 w-full mx-auto text-sm">
                       <button
                         type="button"
-                        onClick={() => navigate("/businessinfo")}
+                        onClick={() => navigate("/creator/accountinfo")}
                         className="px-5 py-2 rounded-md border border-gray-500 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition"
                       >
                         Cancel
