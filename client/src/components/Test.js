@@ -382,20 +382,20 @@ const Home = () => {
         <div className="max-w-4xl mx-auto space-y-6">
           {[
             {
-              q: "Can I customize my invoice?",
-              a: "Yes, add your logo, colors, and branding easily.",
+              q: "What are the way to get invoices?",
+              a: "Download PDF or email directly to brands.",
+            },
+            {
+              q: "Can I create invoice using mobile?",
+              a: "Yes, InvoiceSimplify is mobile-friendly and works seamlessly on any device.",
+            },
+            {
+              q: "Can I track pending payments from brands or agencies?",
+              a: "Yes, Dashboard helps you track paid and unpaid invoices easily.",
             },
             {
               q: "Do you support multiple currencies?",
               a: "Yes, you can invoice in INR, USD, EUR, and more.",
-            },
-            {
-              q: "Can I set recurring invoices?",
-              a: "Absolutely, for monthly brand collaborations.",
-            },
-            {
-              q: "How do I get paid?",
-              a: "Send invoice links with UPI, Razorpay, Stripe, or PayPal.",
             },
           ].map((item, i) => (
             <div key={i} className="bg-white p-6 rounded-xl shadow-md">
