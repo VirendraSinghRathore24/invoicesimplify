@@ -1109,8 +1109,19 @@ const sendEmailPdf = async (invoiceData, email, res) => {
   const mailOptions = {
     from: "support@invoicesimplify.com",
     to: email,
-    subject: `Your Invoice for ${customerInfo.productName} via InvoiceSimplify`,
-    text: `Hello, Please find the attached invoice for ${customerInfo.productName}.`,
+    subject: `Your Invoice for ${customerInfo.productName} — InvoiceSimplify`,
+    text: `Hello ${customerInfo.customerName || ""},
+  
+  Thank you for using InvoiceSimplify!
+  
+  Please find the attached invoice for : ${customerInfo.productName}.
+  
+  Explore more features and manage all your invoices easily:
+  https://invoicesimplify.com
+  
+  Best regards,  
+  InvoiceSimplify Support Team
+  support@invoicesimplify.com`,
     attachments: [
       {
         filename: `${customerInfo.productName}.pdf`,

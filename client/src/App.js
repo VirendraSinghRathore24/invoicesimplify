@@ -58,6 +58,7 @@ import EditCreatorAddtionalInfo from "./components/creator/EditCreatorAddtionalI
 import EditBrandInfo from "./components/creator/EditBrandInfo";
 import PreOrderScreen from "./components/PreOrderScreen";
 import Config from "./components/creator/Config";
+import Test from "./components/Test";
 
 function App() {
   const type = localStorage.getItem("type");
@@ -75,6 +76,7 @@ function App() {
     "/preorder",
     "/success",
     "/admin/allusers",
+    "/test",
   ].includes(location.pathname);
 
   const showSidebar1 = !location.pathname.includes("/ci");
@@ -126,6 +128,7 @@ function App() {
           <Route path="/success" element={<Success />} />
           <Route path="/paymenthistory" element={<PaymentHistory />} />
           <Route path="/ci/:id" element={<ViewInvoiceByCustomer />} />
+          <Route path="/test" element={<Test />} />
           {/* About Us */}
           <Route path="/aboutus" element={<AboutUs />} />
           <Route path="/contactus" element={<ContactUs />} />

@@ -775,7 +775,7 @@ const CreatorDashboard = () => {
             ))}
           </div>
           <div className="overflow-hidden border border-gray-300 shadow-md mt-4 rounded-md">
-            <div className="max-h-[57vh] lg:max-h-[51vh] overflow-y-auto overflow-x-auto">
+            <div className="max-h-[50vh] lg:max-h-[51vh] overflow-y-auto overflow-x-auto">
               <table className="min-w-full text-xs text-left text-gray-700">
                 <thead className="bg-gray-100 text-gray-600 border-b sticky top-0 z-10">
                   <tr>

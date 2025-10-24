@@ -233,7 +233,7 @@ function CreatorViewInvoice() {
         </div>
 
         <div className="mt-24 lg:mt-0">
-          <div className="w-full mx-auto py-2 mb-10 px-4 lg:overflow-y-auto lg:h-[calc(100vh-137px)]">
+          <div className="w-full mx-auto py-2 mb-10 px-1 lg:overflow-y-auto lg:h-[calc(100vh-137px)]">
             <div
               ref={printRef}
               style={{
@@ -576,7 +576,7 @@ function CreatorViewInvoice() {
                             display: isSmallScreen ? "none" : "block",
                           }}
                         >
-                          Quantity
+                          Qty
                         </th>
                         <th
                           style={{
