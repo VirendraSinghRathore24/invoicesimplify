@@ -87,11 +87,7 @@ const Home = () => {
             </button>
           </div>
         </div>
-        <img
-          src={"../../images/invlogo2.png"}
-          alt="Hero"
-          className="w-full drop-shadow-2xl"
-        />
+        <img src={""} alt="Hero" className="w-full drop-shadow-2xl" />
       </section>
 
       {/* TRUST BADGES */}
@@ -200,7 +196,7 @@ const Home = () => {
           Show your brand professionalism with clean, modern templates
         </p>
         <img
-          src={"../../images/invlogo2.png"}
+          src={""}
           alt="Invoice Preview"
           className="max-w-4xl mx-auto rounded-xl shadow-2xl"
         />
