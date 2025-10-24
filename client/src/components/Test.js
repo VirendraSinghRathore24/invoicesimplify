@@ -165,13 +165,13 @@ const Home = () => {
         <div className="grid md:grid-cols-4 gap-8 mt-12 max-w-6xl mx-auto">
           {[
             "Branded Invoices",
-            "Email directly to brands & agencies",
-            "Download PDFs anytime",
-            "Track payments & reminders",
-            "Recurring invoices for brands & agencies",
-            "Multi-currency support",
-            "Signature support",
-            "Data privacy",
+            "Email PDF",
+            "Download PDF",
+            "Track Payments",
+            "Dashboard",
+            "Multi-Currency Support",
+            "Signature Support",
+            "Data Privacy",
           ].map((item, i) => (
             <div
               key={i}

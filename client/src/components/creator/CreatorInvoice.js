@@ -77,27 +77,32 @@ function CreatorInvoice() {
   };
 
   const handleEmail = () => {
-    const isActivePlan = getCurrentPlanStatus();
+    try {
+      const isActivePlan = getCurrentPlanStatus();
 
-    if (!isActivePlan) {
-      return;
+      if (!isActivePlan) {
+        return;
+      }
+
+      setOpenEmailModal(true);
+    } catch (err) {
+      console.log(err);
     }
-
-    setOpenEmailModal(true);
   };
 
   const handleDownloadPdf = async (e) => {
     e.preventDefault();
 
-    const isActivePlan = getCurrentPlanStatus();
-
-    if (!isActivePlan) {
-      return;
-    }
-
-    const url = BASE_URL;
     try {
       setLoading(true);
+
+      const url = BASE_URL;
+      const isActivePlan = getCurrentPlanStatus();
+
+      if (!isActivePlan) {
+        return;
+      }
+
       const html = printRef.current.innerHTML;
       const response = await fetch(url + "/generate-pdf1", {
         method: "POST",
