@@ -6,7 +6,7 @@ const CreatorMobileMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
   const loggedInUser = localStorage.getItem("user");
   const [subscription, setSubscription] = useState("");
-  const name = localStorage.getItem("userName");
+  const name = localStorage.getItem("name1");
   const navigate = useNavigate();
 
   const handleLogout = () => {

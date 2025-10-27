@@ -19,7 +19,7 @@ import {
 const CreatorSidebar = () => {
   const [openSubMenu, setOpenSubMenu] = useState(null);
   const location = useLocation();
-  const name = localStorage.getItem("userName");
+  const name = localStorage.getItem("name1");
   const loggedInUser = localStorage.getItem("user");
   const [subscription, setSubscription] = useState("");
   const sidebarRef = useRef(null);

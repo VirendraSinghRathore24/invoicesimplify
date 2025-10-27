@@ -11,6 +11,7 @@ import {
   getDocs,
   updateDoc,
 } from "firebase/firestore";
+import Footer1 from "./Footer1";
 
 const PlanSummaryWithDiscount = () => {
   const [coupon, setCoupon] = useState("");
@@ -285,6 +286,7 @@ const PlanSummaryWithDiscount = () => {
           </button>
         </div>
       </div>
+      <Footer1 />
     </div>
   );
 };
