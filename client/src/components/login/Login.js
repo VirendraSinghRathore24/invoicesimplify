@@ -50,6 +50,8 @@ const Login = () => {
       (x) => x.loggedInUser === loggedInUser
     )[0];
 
+    if (!basicInfo) return;
+
     localStorage.setItem(
       "businessInfo",
       JSON.stringify(basicInfo?.businessInfo)
@@ -74,6 +76,8 @@ const Login = () => {
     const inventoryInfo = filteredData.filter(
       (x) => x.loggedInUser === loggedInUser
     )[0];
+
+    if (!inventoryInfo) return;
     localStorage.setItem(
       "inventoryItems",
       JSON.stringify(inventoryInfo?.inventory)
@@ -89,6 +93,8 @@ const Login = () => {
     }));
 
     const loginInfo = filteredData.filter((x) => x.code === loggedInUser)[0];
+
+    if (!loginInfo) return;
 
     localStorage.setItem("type", loginInfo.type);
     localStorage.setItem("name1", loginInfo.name);
@@ -114,6 +120,7 @@ const Login = () => {
     const invoiceInfo = filteredData.filter(
       (x) => x.loggedInUser === loggedInUser
     );
+    if (!invoiceInfo) return;
     localStorage.setItem("dashboardInfo", JSON.stringify(invoiceInfo));
   };
 
@@ -130,6 +137,8 @@ const Login = () => {
     const pInfo = filteredData.filter(
       (x) => x.loggedInUser === loggedInUser
     )[0];
+
+    if (!pInfo) return;
     localStorage.setItem(
       "creator_personalInfo",
       JSON.stringify(pInfo.personalInfo)
@@ -306,7 +315,7 @@ const Login = () => {
         await initializeData(code, uid, userName);
         navigate("/creator/createinvoice");
       } else {
-        await initializeDBForNewUser(code, uid, userName);
+        await initializeDBForNewUser(code, userName, uid);
         navigate("/selectbusinesstype");
       }
 

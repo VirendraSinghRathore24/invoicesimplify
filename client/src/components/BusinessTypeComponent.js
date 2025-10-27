@@ -19,7 +19,6 @@ const BusinessTypeComponent = () => {
   const businessTypes = [
     "Content Creator",
     "Small Business",
-    "Content Creator",
     "IT Services",
     "E‑Commerce",
     "Other",
