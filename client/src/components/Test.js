@@ -83,7 +83,7 @@ const Home = () => {
       </header>
 
       {/* HERO */}
-      <section className="px-8 md:px-20 grid md:grid-cols-2 items-center gap-14 py-24">
+      <section className="px-8 md:px-20 grid md:grid-cols-2 items-center gap-x-14 py-24">
         <div className="block lg:hidden mb-8">
           <h1 className="text-2xl font-extrabold leading-tight text-gray-900">
             Create & Send Invoices in

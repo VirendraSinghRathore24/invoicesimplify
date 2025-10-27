@@ -270,7 +270,13 @@ const Signup = () => {
           to={"/"}
           className="text-2xl font-bold text-indigo-600 dark:text-white"
         >
-          InvoiceSimplify
+          <div className="flex items-center gap-2">
+            <img
+              src={"../../images/invlogo2.png"}
+              alt="InvoiceSimplify"
+              className="h-10"
+            />
+          </div>
         </NavLink>
       </header>
       {/* 🔽 Page Dropdown */}

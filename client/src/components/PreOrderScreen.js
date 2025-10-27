@@ -180,7 +180,7 @@ const PlanSummaryWithDiscount = () => {
       doc(db, CREATORS, localStorage.getItem("uid")),
       "Payment_History"
     );
-    console.log(response);
+
     await addDoc(paymentHistory_CollectionRef, {
       planName: plan.name,
       amountPaid: finalTotal,

@@ -21,7 +21,7 @@ const CreatorAddInvoice = () => {
   const [isBusinessInfo, setIsBusinessInfo] = useState(false);
 
   const countryCode = localStorage.getItem("countryCode");
-  const currencySymbol = localStorage.getItem("invoiceCurrency");
+  const currencySymbol = localStorage.getItem("invoiceCurrency") || "₹";
   const refreshPage = () => {
     navigate(0); // React Router v6+
   };
@@ -329,6 +329,8 @@ const CreatorAddInvoice = () => {
 
     const loggedInUser = localStorage.getItem("user");
     const loginInfo = filteredData.filter((x) => x.code === loggedInUser)[0];
+
+    if (!loginInfo) return;
 
     // const invNumber = localStorage.getItem("invoiceNumber");
     const invNumber = loginInfo.invoiceNumber;
