@@ -59,6 +59,7 @@ import EditBrandInfo from "./components/creator/EditBrandInfo";
 import PreOrderScreen from "./components/PreOrderScreen";
 import Config from "./components/creator/Config";
 import Test from "./components/Test";
+import BusinessTypeComponent from "./components/BusinessTypeComponent";
 
 function App() {
   const type = localStorage.getItem("type");
@@ -77,6 +78,7 @@ function App() {
     "/success",
     "/admin/allusers",
     "/test",
+    "/selectbusinesstype",
   ].includes(location.pathname);
 
   const showSidebar1 = !location.pathname.includes("/ci");
@@ -185,6 +187,10 @@ function App() {
           <Route path="/creator/editbrandinfo" element={<EditBrandInfo />} />
 
           <Route path="/configuration" element={<Config />} />
+          <Route
+            path="/selectbusinesstype"
+            element={<BusinessTypeComponent />}
+          />
         </Routes>
 
         <ToastContainer />

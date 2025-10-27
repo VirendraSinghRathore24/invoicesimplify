@@ -1,4 +1,4 @@
-import { collection, doc, getDocs } from "firebase/firestore";
+import { addDoc, collection, doc, getDocs } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { auth, db, googleProvider } from "../../config/firebase";
 
@@ -158,44 +158,7 @@ const Login = () => {
           const userName = auth?.currentUser?.displayName;
           const uid = auth?.currentUser?.uid;
 
-          localStorage.setItem("uid", auth?.currentUser?.uid);
-          localStorage.setItem("auth", "Logged In");
-          localStorage.setItem("user", code);
-          localStorage.setItem("userName", userName);
-
-          await getBusinessType(code);
-
-          const type = localStorage.getItem("type");
-
-          if (type === CONTENT_CREATOR) {
-            // for content cretor
-            await getPersonalInfo(code, uid);
-
-            const info = localStorage.getItem("creator_personalInfo");
-
-            if (info === "undefined") {
-              navigate("/creator/personalinfo");
-            } else {
-              navigate("/creator/createinvoice");
-            }
-            return;
-          }
-
-          // get all data and add to local storage
-          await getAllData(code, uid);
-
-          await getInventoryList(code, uid);
-
-          // this is dashboard data
-          await getInvoiceInfo(code, uid);
-
-          const info = localStorage.getItem("businessInfo");
-
-          if (info === "undefined") {
-            navigate("/businessinfo");
-          } else {
-            navigate("/createinvoice");
-          }
+          await initializeData(code, uid, userName);
 
           setLoading(false);
           // // ...
@@ -215,7 +178,118 @@ const Login = () => {
     }
   };
 
-  const getLoginInfo = async () => {};
+  const addLocalStorageForNewUser = async (code, userName, uid, name) => {
+    localStorage.setItem("auth", "Logged In");
+    localStorage.setItem("user", code);
+    localStorage.setItem("userName", userName);
+    localStorage.setItem("name1", name);
+    localStorage.setItem("invoiceNumber", 1);
+    localStorage.setItem("usedInvoiceNumbers", []);
+    localStorage.setItem("subscription", "Free");
+    localStorage.setItem("uid", uid);
+    localStorage.setItem("isFreePlan", true);
+    localStorage.setItem("invoiceCurrency", "₹");
+    localStorage.setItem("subStartDate", new Date().toISOString().slice(0, 10));
+  };
+
+  const initializeDBForNewUser = async (code, userName, uid) => {
+    await addLocalStorageForNewUser(code, userName, uid, userName);
+
+    const orgCode = Math.random().toString(36).slice(2);
+    const date = new Date();
+    date.setDate(date.getDate() + 30);
+    const nextMonthDate = date.toISOString().slice(0, 10);
+    localStorage.setItem("subEndDate", nextMonthDate);
+
+    await addDoc(login_CollectionRef, {
+      orgCode: orgCode,
+      code: code,
+      userName: userName,
+      name: userName,
+      invoiceNumber: 1,
+      usedInvoiceNumbers: [],
+      type: "",
+      subscription: "Free",
+      invoiceCurrency: "₹",
+      subStarts: new Date().toISOString().slice(0, 10),
+      subEnds: nextMonthDate,
+      loginDate: new Date().toISOString().slice(0, 10),
+    });
+
+    const basicInfo_CollectionRef = collection(doc(db, USERS, uid), BASIC_INFO);
+    // also create db for business, tax and additional info
+    await addDoc(basicInfo_CollectionRef, {
+      businessInfo: null,
+      imageUrl: null,
+      taxInfo: null,
+      additionalInfo: null,
+      loggedInUser: code,
+    });
+
+    const inventoryInfo_CollectionRef = collection(
+      doc(db, USERS, uid),
+      INVENTORY_INFO
+    );
+    // initialize inventory info
+    await addDoc(inventoryInfo_CollectionRef, {
+      orgCode: orgCode,
+      loggedInUser: code,
+      inventory: [],
+    });
+  };
+  const initializeData = async (code, uid, userName) => {
+    localStorage.setItem("uid", auth?.currentUser?.uid);
+    localStorage.setItem("auth", "Logged In");
+    localStorage.setItem("user", code);
+    localStorage.setItem("userName", userName);
+
+    await getBusinessType(code);
+
+    const type = localStorage.getItem("type");
+
+    if (type === CONTENT_CREATOR) {
+      // for content cretor
+      await getPersonalInfo(code, uid);
+
+      const info = localStorage.getItem("creator_personalInfo");
+
+      if (info === "undefined") {
+        navigate("/creator/personalinfo");
+      } else {
+        navigate("/creator/createinvoice");
+      }
+      return;
+    }
+
+    // get all data and add to local storage
+    await getAllData(code, uid);
+
+    await getInventoryList(code, uid);
+
+    // this is dashboard data
+    await getInvoiceInfo(code, uid);
+
+    const info = localStorage.getItem("businessInfo");
+
+    if (info === "undefined") {
+      navigate("/businessinfo");
+    } else {
+      navigate("/createinvoice");
+    }
+  };
+
+  const checkIfUserExists = async (email) => {
+    const loginCollectionRef = collection(db, "Login_Info");
+    const data = await getDocs(loginCollectionRef);
+    const filteredData = data.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+
+    const userExists = filteredData.some((user) => user.code === email);
+    return userExists;
+  };
+
   const signInWithGoogle = async () => {
     try {
       await signInWithPopup(auth, googleProvider);
@@ -224,21 +298,16 @@ const Login = () => {
 
       const code = auth?.currentUser?.email;
       const userName = auth?.currentUser?.displayName;
+      const uid = auth?.currentUser?.uid;
 
-      localStorage.setItem("auth", "Logged In");
-      localStorage.setItem("user", code);
-      localStorage.setItem("userName", userName);
+      const userExists = await checkIfUserExists(code);
 
-      // get all data and add to local storage
-      await getAllData();
-      await getInventoryList(code);
-
-      const info = localStorage.getItem("businessInfo");
-
-      if (!info) {
-        navigate("/businessinfo");
+      if (userExists) {
+        await initializeData(code, uid, userName);
+        navigate("/creator/createinvoice");
       } else {
-        navigate("/createinvoice");
+        await initializeDBForNewUser(code, uid, userName);
+        navigate("/selectbusinesstype");
       }
 
       setLoading(false);
@@ -341,6 +410,14 @@ const Login = () => {
                 </NavLink>
               </div>
             </form>
+            <button
+              className="w-full flex justify-center items-center rounded-[8px] font-medium text-richblack-700 border border-richblack-700
+                        px-[12px] py-[8px] gap-x-2 mt-6 bg-yellow-300 hover:bg-green-300"
+              onClick={signInWithGoogle}
+            >
+              <FcGoogle />
+              <p>Sign in with Google</p>
+            </button>
           </div>
         </div>
         {loading && <Loader />}
