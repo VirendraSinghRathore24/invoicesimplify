@@ -93,25 +93,25 @@ const Brands = () => {
   }, []);
 
   return (
-    <div className="flex justify-evenly w-full h-full ">
-      <div className="w-full lg:w-[82%] ml-0 lg:ml-[17%] h-[97%] border-2 my-3 rounded-lg border-gray-300 bg-white shadow-lg top-0 fixed">
-        <div className="hidden lg:block top-0 mx-auto w-[82%] h-[68px] text-white fixed border-b-2 my-3">
+    <div className="">
+      <div className="lg:left-64 right-0 top-0 left-0 lg:fixed bg-white">
+        <div className="hidden lg:block top-0 mx-auto w-full h-[64px] text-white fixed border-b-2">
           <div className="flex justify-between mx-auto font-bold text-md py-4 px-2 rounded-lg ">
             <div className="text-xl text-black">Brands/Agencies</div>
           </div>
         </div>
 
-        <div className="hidden max-lg:block  mx-auto w-full text-white fixed border-b-2 mt-10">
+        {/* <div className="hidden max-lg:block  mx-auto w-full text-white fixed border-b-2 mt-10">
           <div className="flex justify-between mx-auto font-bold text-md py-4 px-2 rounded-lg ">
             <div className="text-xl text-black">Brands/Agencies</div>
           </div>
-        </div>
+        </div> */}
         <div className="flex justify-center items-center w-full mx-auto">
           <div className="hidden max-lg:block mb-16">
             <CreatorMobileMenu />
           </div>
 
-          <div className="mt-8 lg:mt-0 bg-white p-2 text-black rounded-xl w-full">
+          <div className=" lg:mt-0 bg-white p-2 text-black rounded-xl w-full">
             <div className="overflow-x-auto rounded-lg mt-16">
               <div className="p-4">
                 <input

@@ -160,8 +160,8 @@ function CreatorViewInvoice() {
     window.scroll(0, 0);
   }, []);
   return (
-    <div className="flex justify-evenly w-full h-full  ">
-      <div className="w-full lg:w-[82%] ml-0 lg:ml-[17%] lg:border-2 my-3 rounded-lg lg:border-gray-300 lg:bg-white lg:shadow-lg top-0 lg:fixed">
+    <div className="">
+      <div className="lg:left-64 right-0 top-0 left-0 lg:fixed bg-white">
         <div className="hidden max-lg:block mb-16">
           <CreatorMobileMenu />
         </div>
@@ -187,7 +187,7 @@ function CreatorViewInvoice() {
           </div>
         </div>
         <div className="top-14 lg:top-0 mx-auto w-full h-[56px] lg:h-[64px] text-white fixed lg:sticky border-b-2">
-          <div className="flex justify-between mx-auto font-bold text-md p-2 rounded-md fixed w-full lg:w-[81.5%]">
+          <div className="flex justify-between mx-auto font-bold text-md p-2 rounded-md  w-full ">
             <div className="text-xl text-black hidden lg:block mt-1">
               Invoice
             </div>

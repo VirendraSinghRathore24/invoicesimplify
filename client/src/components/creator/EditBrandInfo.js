@@ -70,9 +70,9 @@ const EditBrandInfo = () => {
   }, []);
 
   return (
-    <div className="flex justify-evenly w-full h-full ">
-      <div className="w-full lg:w-[82%] ml-0 lg:ml-[17%] h-[97%] border-2 my-3 rounded-lg border-gray-300 bg-white shadow-lg top-0 fixed">
-        <div className="hidden lg:block top-0 mx-auto w-[82%] h-[68px] text-white fixed border-b-2 my-3">
+    <div className="">
+      <div className="lg:left-64 right-0 top-0 left-0 lg:fixed bg-white">
+        <div className="hidden lg:block top-0 mx-auto w-full h-[64px] text-white fixed border-b-2">
           <div className="flex justify-between mx-auto font-bold text-md py-4 px-2 rounded-lg ">
             <div className="text-xl text-black">Brands/Agencies</div>
           </div>

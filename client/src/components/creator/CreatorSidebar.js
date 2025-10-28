@@ -81,7 +81,8 @@ const CreatorSidebar = () => {
     return () => window.removeEventListener("resize", checkScroll);
   }, []);
   return (
-    <div className="w-60 h-[96.7%] bg-[#014459] text-white flex flex-col shadow-lg fixed top-0 left-0 rounded-lg m-3">
+    // <div className="w-60 h-[96.7%] bg-[#014459] text-white flex flex-col shadow-lg fixed top-0 left-0 rounded-lg m-3">
+    <aside className="fixed inset-y-0 left-0 w-64 bg-[#014459] border-r border-gray-200 text-white overflow-auto z-50 transform transition-transform duration-300 ">
       <NavLink
         className="text-xl font-bold p-2 items-center flex justify-center border-b border-gray "
         to={"/"}
@@ -249,7 +250,7 @@ const CreatorSidebar = () => {
           <div>ISO Certified</div>
         </div>
       </div>
-    </div>
+    </aside>
   );
 };
 

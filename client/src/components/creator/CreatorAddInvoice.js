@@ -655,248 +655,174 @@ const CreatorAddInvoice = () => {
   }, []);
 
   return (
-    <div className="flex justify-evenly w-full h-full">
-      <div className="w-full lg:w-[82%] ml-0 lg:ml-[17%] lg:border-2 my-3 rounded-lg lg:border-gray-300 lg:bg-white lg:shadow-lg top-0 lg:fixed">
+    <div className=" ">
+      <div className=" lg:left-64 right-0 top-0 left-0 lg:fixed bg-gray-100 ">
         <div className="hidden max-lg:block mb-16">
           <CreatorMobileMenu />
         </div>
-        <div>
-          <div className="top-14 lg:top-0 mx-auto w-full h-[56px] lg:h-[68px] text-white fixed lg:sticky border-b-2">
-            <div className="flex justify-between mx-auto font-bold text-md p-2 rounded-md fixed w-full lg:w-[81.5%]">
-              <div className="text-xl text-black hidden lg:block">
+
+        <header className="top-14 lg:top-0 mx-auto bg-white h-[56px] lg:h-[64px] max-lg:w-full text-white fixed lg:sticky border-b-2">
+          <div className="flex justify-between items-center mx-auto font-bold text-md p-2 rounded-md">
+            <div className="text-xl text-black hidden lg:block">
+              Create Invoice
+            </div>
+            <div className="flex gap-x-4 text-sm">
+              <button
+                onClick={handleResetInvoice}
+                className="bg-[#146eb4]  text-white border-[1.4px] border-gray-400  py-2 px-6 font-semibold rounded-md  hover:scale-110 transition duration-300 ease-in cursor-pointer "
+              >
+                Reset
+              </button>
+              <button
+                onClick={handleCreateInvoice}
+                className="bg-amber-600  border-[1.4px] border-gray-400 text-white py-2 px-6 font-semibold rounded-md text-richblack-700 hover:scale-110 transition duration-300 ease-in cursor-pointer "
+              >
                 Create Invoice
-              </div>
-              <div className="flex justify-between gap-x-4 text-sm">
-                <button
-                  onClick={handleResetInvoice}
-                  className="bg-[#146eb4] top-14 text-white border-[1.4px] border-gray-400  py-2 px-6 font-semibold rounded-md  hover:scale-110 transition duration-300 ease-in cursor-pointer "
-                >
-                  Reset
-                </button>
-                <button
-                  onClick={handleCreateInvoice}
-                  className="bg-amber-600 top-14 border-[1.4px] border-gray-400 text-white py-2 px-6 font-semibold rounded-md text-richblack-700 hover:scale-110 transition duration-300 ease-in cursor-pointer "
-                >
-                  Create Invoice
-                </button>
-              </div>
+              </button>
             </div>
           </div>
+        </header>
 
-          <div className="px-3">
-            <div>
-              <div className="flex flex-col w-full gap-y-3 mx-auto  lg:overflow-y-auto  lg:h-[calc(100vh-100px)]">
-                <div className="flex flex-col lg:flex-row justify-between gap-x-2 w-full mx-auto">
-                  <div className="flex flex-col w-full lg:w-6/12 mx-auto justify-start items-left mt-16 lg:mt-4  border-[1.2px] p-2 lg:p-5 bg-white gap-y-2 lg:gap-y-4 rounded-md">
-                    <div className="flex flex-col justify-start items-left gap-y-0 lg:gap-y-4 ">
-                      <div className="flex justify-between">
-                        <div className="text-md lg:text-lg text-gray-600 font-medium">
-                          Brand Information
-                        </div>
-                        <div
-                          onClick={() => setOpenBrandModal(true)}
-                          className="border-[1.4px] border-black rounded-md px-4 py-1 bg-[#146eb4] text-white flex gap-x-2"
-                        >
-                          <Search size={21} className="mt-1" />
-                          <button>Brands</button>
-                        </div>
+        <main className="p-2">
+          <div>
+            <div className="flex flex-col w-full gap-y-3 mx-auto  lg:overflow-y-auto  lg:h-[calc(100vh-100px)]">
+              <div className="flex flex-col lg:flex-row justify-between gap-x-2 w-full mx-auto">
+                <div className="flex flex-col w-full lg:w-6/12 mx-auto justify-start items-left mt-16 lg:mt-4  border-[1.2px] p-2 lg:p-5 bg-white gap-y-2 lg:gap-y-4 rounded-md">
+                  <div className="flex flex-col justify-start items-left gap-y-0 lg:gap-y-4 ">
+                    <div className="flex justify-between">
+                      <div className="text-md lg:text-lg text-gray-600 font-medium">
+                        Brand Information
                       </div>
-
-                      <div className="flex flex-col justify-start items-left">
-                        <div className="text-[13px] font-bold leading-5 mt-2">
-                          Name
-                        </div>
-                        <div>
-                          <input
-                            className="form-input w-full lg:w-8/12 block font-semibold text-[13px] rounded border border-gray-400 p-2 leading-5 "
-                            required
-                            name="customerName"
-                            placeholder="Enter Brand/Agency Name"
-                            value={inputs?.customerName}
-                            onChange={(e) => {
-                              localStorage.setItem(
-                                "creator_customername",
-                                e.target.value
-                              );
-                              handleChange(e);
-                            }}
-                          />
-                        </div>
-                      </div>
-                      <div className="flex flex-col w-full">
-                        <div className="text-[13px] font-bold leading-5 mt-2">
-                          Product Name
-                        </div>
-                        <div>
-                          <input
-                            className="form-input w-full lg:w-8/12 block font-semibold text-[13px] rounded border border-gray-400 p-2 leading-5 "
-                            required
-                            name="productName"
-                            placeholder="Enter Product Name"
-                            value={inputs?.productName}
-                            onChange={(e) => {
-                              localStorage.setItem(
-                                "creator_productName",
-                                e.target.value
-                              );
-                              handleChange(e);
-                            }}
-                          />
-                        </div>
+                      <div
+                        onClick={() => setOpenBrandModal(true)}
+                        className="border-[1.4px] border-black rounded-md px-4 py-1 bg-[#146eb4] text-white flex gap-x-2"
+                      >
+                        <Search size={21} className="mt-1" />
+                        <button>Brands</button>
                       </div>
                     </div>
 
-                    <div className="flex flex-col text-sm">
-                      <div className="font-medium leading-5 text-gray-700 mb-1">
-                        Address
+                    <div className="flex flex-col justify-start items-left">
+                      <div className="text-[13px] font-bold leading-5 mt-2">
+                        Name
                       </div>
-                      <div className="flex flex-col gap-y-3">
+                      <div>
                         <input
-                          className="w-full dark:bg-gray-700 border border-gray-400 border-[1.4px] dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                          name="address"
-                          placeholder="Enter Brand address"
-                          value={inputs?.address || ""}
+                          className="form-input w-full lg:w-8/12 block font-semibold text-[13px] rounded border border-gray-400 p-2 leading-5 "
+                          required
+                          name="customerName"
+                          placeholder="Enter Brand/Agency Name"
+                          value={inputs?.customerName}
                           onChange={(e) => {
                             localStorage.setItem(
-                              "customer_address",
+                              "creator_customername",
                               e.target.value
                             );
                             handleChange(e);
                           }}
                         />
+                      </div>
+                    </div>
+                    <div className="flex flex-col w-full">
+                      <div className="text-[13px] font-bold leading-5 mt-2">
+                        Product Name
+                      </div>
+                      <div>
                         <input
-                          className="w-full dark:bg-gray-700 border border-gray-400 border-[1.4px] dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                          name="address1"
-                          placeholder="Enter address"
-                          value={inputs?.address1 || ""}
+                          className="form-input w-full lg:w-8/12 block font-semibold text-[13px] rounded border border-gray-400 p-2 leading-5 "
+                          required
+                          name="productName"
+                          placeholder="Enter Product Name"
+                          value={inputs?.productName}
                           onChange={(e) => {
                             localStorage.setItem(
-                              "customer_address1",
+                              "creator_productName",
                               e.target.value
                             );
                             handleChange(e);
                           }}
                         />
-                        <div className="flex gap-x-3 justify-between">
-                          <input
-                            className="w-8/12 dark:bg-gray-700 border border-gray-400 border-[1.4px] dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                            name="address2"
-                            placeholder="City, State"
-                            value={inputs?.address2 || ""}
-                            onChange={(e) => {
-                              localStorage.setItem(
-                                "customer_address2",
-                                e.target.value
-                              );
-                              handleChange(e);
-                            }}
-                          />
-                          <input
-                            className="w-3/12 dark:bg-gray-700 border border-gray-400 border-[1.4px] dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                            name="address3"
-                            placeholder="Zip Code"
-                            maxLength={6}
-                            value={inputs?.address3 || ""}
-                            onChange={(e) => {
-                              localStorage.setItem(
-                                "customer_address3",
-                                e.target.value
-                              );
-                              handleChange(e);
-                            }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex justify-between gap-x-4">
-                      <div className="flex flex-col justify-start items-left w-full">
-                        <div className="text-[13px] font-bold leading-5 mt-2">
-                          Email
-                        </div>
-                        <div>
-                          <input
-                            className="form-input w-full block font-semibold text-[13px] rounded border border-gray-400 p-2 leading-5 "
-                            required
-                            name="customerEmail"
-                            placeholder="Enter Brand Email"
-                            value={inputs?.customerEmail}
-                            onChange={(e) => {
-                              localStorage.setItem(
-                                "creator_customeremail",
-                                e.target.value
-                              );
-                              handleChange(e);
-                            }}
-                          />
-                        </div>
-                      </div>
-                      <div className="flex flex-col ">
-                        <div className="text-[13px] font-bold leading-5 mt-2">
-                          Mobile
-                        </div>
-                        <div className="flex justify-start items-left -ml-4">
-                          <span className="p-[8px] bg-[#eee] border border-[#ccc] border-r-0 rounded-l font-medium text-[13px]">
-                            +91
-                          </span>
-                          <input
-                            className="p-[5px] pl-[10px] border border-[#ccc] rounded-r text-[13px] text-left"
-                            type="text"
-                            name="customerPhone"
-                            value={inputs?.customerPhone}
-                            onChange={(e) => {
-                              localStorage.setItem(
-                                "customer_customerphone",
-                                e.target.value
-                              );
-                              handleChange(e);
-                            }}
-                            minLength={10}
-                            maxLength={10}
-                            placeholder="Mobile number..."
-                          />
-                        </div>
                       </div>
                     </div>
                   </div>
 
-                  <div className="flex flex-col w-full lg:w-6/12 mx-auto justify-start items-left mt-16 lg:mt-4  border-[1.2px] p-2 lg:p-5 bg-white gap-y-2 lg:gap-y-4 rounded-md">
-                    <div className="flex flex-col justify-start items-left gap-y-0 lg:gap-y-4 ">
-                      <div className="flex flex-col justify-start items-left">
-                        <div className="text-[13px] font-bold leading-5 mt-2">
-                          GST #
-                        </div>
-                        <div>
-                          <input
-                            className="form-input w-full lg:w-6/12 block font-semibold text-[13px] rounded border border-gray-400 p-2 leading-5 "
-                            required
-                            name="gst"
-                            placeholder="Enter GST Number"
-                            value={inputs?.gst}
-                            onChange={(e) => {
-                              localStorage.setItem(
-                                "customer_gst",
-                                e.target.value
-                              );
-                              handleChange(e);
-                            }}
-                          />
-                        </div>
+                  <div className="flex flex-col text-sm">
+                    <div className="font-medium leading-5 text-gray-700 mb-1">
+                      Address
+                    </div>
+                    <div className="flex flex-col gap-y-3">
+                      <input
+                        className="w-full dark:bg-gray-700 border border-gray-400 border-[1.4px] dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        name="address"
+                        placeholder="Enter Brand address"
+                        value={inputs?.address || ""}
+                        onChange={(e) => {
+                          localStorage.setItem(
+                            "customer_address",
+                            e.target.value
+                          );
+                          handleChange(e);
+                        }}
+                      />
+                      <input
+                        className="w-full dark:bg-gray-700 border border-gray-400 border-[1.4px] dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        name="address1"
+                        placeholder="Enter address"
+                        value={inputs?.address1 || ""}
+                        onChange={(e) => {
+                          localStorage.setItem(
+                            "customer_address1",
+                            e.target.value
+                          );
+                          handleChange(e);
+                        }}
+                      />
+                      <div className="flex gap-x-3 justify-between">
+                        <input
+                          className="w-8/12 dark:bg-gray-700 border border-gray-400 border-[1.4px] dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                          name="address2"
+                          placeholder="City, State"
+                          value={inputs?.address2 || ""}
+                          onChange={(e) => {
+                            localStorage.setItem(
+                              "customer_address2",
+                              e.target.value
+                            );
+                            handleChange(e);
+                          }}
+                        />
+                        <input
+                          className="w-3/12 dark:bg-gray-700 border border-gray-400 border-[1.4px] dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                          name="address3"
+                          placeholder="Zip Code"
+                          maxLength={6}
+                          value={inputs?.address3 || ""}
+                          onChange={(e) => {
+                            localStorage.setItem(
+                              "customer_address3",
+                              e.target.value
+                            );
+                            handleChange(e);
+                          }}
+                        />
                       </div>
                     </div>
-                    <div className="flex flex-col justify-start items-left">
+                  </div>
+                  <div className="flex justify-between gap-x-4">
+                    <div className="flex flex-col justify-start items-left w-full">
                       <div className="text-[13px] font-bold leading-5 mt-2">
-                        PAN #
+                        Email
                       </div>
                       <div>
                         <input
-                          className="form-input w-full lg:w-6/12 block font-semibold text-[13px] rounded border border-gray-400 p-2 leading-5 "
+                          className="form-input w-full block font-semibold text-[13px] rounded border border-gray-400 p-2 leading-5 "
                           required
-                          name="pan"
-                          placeholder="Enter PAN Number"
-                          value={inputs?.pan}
+                          name="customerEmail"
+                          placeholder="Enter Brand Email"
+                          value={inputs?.customerEmail}
                           onChange={(e) => {
                             localStorage.setItem(
-                              "customer_pan",
+                              "creator_customeremail",
                               e.target.value
                             );
                             handleChange(e);
@@ -904,153 +830,297 @@ const CreatorAddInvoice = () => {
                         />
                       </div>
                     </div>
-                    <div className="flex flex-col text-sm">
-                      <div className="font-medium leading-5 text-gray-700 mb-1">
-                        TIN #
+                    <div className="flex flex-col ">
+                      <div className="text-[13px] font-bold leading-5 mt-2">
+                        Mobile
                       </div>
-                      <div className="flex flex-col gap-y-3">
+                      <div className="flex justify-start items-left -ml-4">
+                        <span className="p-[8px] bg-[#eee] border border-[#ccc] border-r-0 rounded-l font-medium text-[13px]">
+                          +91
+                        </span>
                         <input
-                          className="w-full lg:w-6/12 dark:bg-gray-700 border border-gray-400 border-[1.4px] dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                          name="tin"
-                          placeholder="Enter TIN Number"
-                          value={inputs?.tin || ""}
+                          className="p-[5px] pl-[10px] border border-[#ccc] rounded-r text-[13px] text-left"
+                          type="text"
+                          name="customerPhone"
+                          value={inputs?.customerPhone}
                           onChange={(e) => {
                             localStorage.setItem(
-                              "customer_tin",
+                              "customer_customerphone",
                               e.target.value
                             );
                             handleChange(e);
                           }}
+                          minLength={10}
+                          maxLength={10}
+                          placeholder="Mobile number..."
                         />
-                      </div>
-                    </div>
-                    <div className="flex flex-col text-sm">
-                      <div className="font-medium leading-5 text-gray-700 mb-1">
-                        CIN #
-                      </div>
-                      <div className="flex flex-col gap-y-3">
-                        <input
-                          className="w-full lg:w-6/12 dark:bg-gray-700 border border-gray-400 border-[1.4px] dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                          name="cin"
-                          placeholder="Enter CIN Number"
-                          value={inputs?.cin || ""}
-                          onChange={(e) => {
-                            localStorage.setItem(
-                              "customer_cin",
-                              e.target.value
-                            );
-                            handleChange(e);
-                          }}
-                        />
-                      </div>
-                    </div>
-                    <div className="w-full mx-auto flex flex-col mt-4  border-[1.2px] p-2 lg:p-4 bg-white gap-y-2 lg:gap-y-4 rounded-md">
-                      <div className="flex hidden lg:block">
-                        <div className="text-xl text-gray-600 font-medium">
-                          Invoice
-                        </div>
-                      </div>
-                      <div className="flex justify-between w-full mx-auto">
-                        <div className="flex flex-col">
-                          <div className="text-xs font-medium leading-5 mt-2">
-                            Invoice #
-                          </div>
-                          <div>
-                            <input
-                              className="w-6/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5"
-                              required
-                              name="invoiceNumber"
-                              placeholder="10"
-                              value={invoiceNumber}
-                              onChange={(e) => {
-                                setInvoiceNumber(e.target.value);
-                                localStorage.setItem(
-                                  "customer_invoiceNumber",
-                                  e.target.value
-                                );
-                              }}
-                            />
-                          </div>
-                        </div>
-                        <div className="flex flex-col">
-                          <div className="text-xs font-medium leading-5 mt-2">
-                            Date
-                          </div>
-                          <div>
-                            <input
-                              className="w-12/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5 "
-                              required
-                              name="date"
-                              placeholder="Date"
-                              type="date"
-                              value={date}
-                              onChange={(e) => {
-                                setDate(e.target.value);
-                                localStorage.setItem(
-                                  "customer_date",
-                                  e.target.value
-                                );
-                              }}
-                            />
-                          </div>
-                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="w-full mx-auto  border-[1.2px] p-2 lg:p-4 bg-white gap-y-4 rounded-md">
-                  <div className="overflow-hidden ">
-                    <table className="w-full mx-auto text-center text-sm font-light">
-                      <thead className="text-[12px] md:text-md uppercase max-md:hidden">
-                        <tr className="flex justify-between border-y-2 py-2 border-black">
-                          <th className="w-[10%]">S.No.</th>
-                          <th className="w-[30%] text-left">Description</th>
-                          <th className="w-[15%]">Rate</th>
-                          <th className="w-[10%] max-lg:hidden block">Qty</th>
-                          <th className="w-[10%] lg:hidden block">Quantity</th>
-                          <th className="w-[20%] text-center">Amount</th>
-                          <th className="w-[10%]"></th>
-                        </tr>
-                      </thead>
+                <div className="flex flex-col w-full lg:w-6/12 mx-auto justify-start items-left mt-16 lg:mt-4  border-[1.2px] p-2 lg:p-5 bg-white gap-y-2 lg:gap-y-4 rounded-md">
+                  <div className="flex flex-col justify-start items-left gap-y-0 lg:gap-y-4 ">
+                    <div className="flex flex-col justify-start items-left">
+                      <div className="text-[13px] font-bold leading-5 mt-2">
+                        GST #
+                      </div>
+                      <div>
+                        <input
+                          className="form-input w-full lg:w-6/12 block font-semibold text-[13px] rounded border border-gray-400 p-2 leading-5 "
+                          required
+                          name="gst"
+                          placeholder="Enter GST Number"
+                          value={inputs?.gst}
+                          onChange={(e) => {
+                            localStorage.setItem(
+                              "customer_gst",
+                              e.target.value
+                            );
+                            handleChange(e);
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex flex-col justify-start items-left">
+                    <div className="text-[13px] font-bold leading-5 mt-2">
+                      PAN #
+                    </div>
+                    <div>
+                      <input
+                        className="form-input w-full lg:w-6/12 block font-semibold text-[13px] rounded border border-gray-400 p-2 leading-5 "
+                        required
+                        name="pan"
+                        placeholder="Enter PAN Number"
+                        value={inputs?.pan}
+                        onChange={(e) => {
+                          localStorage.setItem("customer_pan", e.target.value);
+                          handleChange(e);
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-col text-sm">
+                    <div className="font-medium leading-5 text-gray-700 mb-1">
+                      TIN #
+                    </div>
+                    <div className="flex flex-col gap-y-3">
+                      <input
+                        className="w-full lg:w-6/12 dark:bg-gray-700 border border-gray-400 border-[1.4px] dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        name="tin"
+                        placeholder="Enter TIN Number"
+                        value={inputs?.tin || ""}
+                        onChange={(e) => {
+                          localStorage.setItem("customer_tin", e.target.value);
+                          handleChange(e);
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-col text-sm">
+                    <div className="font-medium leading-5 text-gray-700 mb-1">
+                      CIN #
+                    </div>
+                    <div className="flex flex-col gap-y-3">
+                      <input
+                        className="w-full lg:w-6/12 dark:bg-gray-700 border border-gray-400 border-[1.4px] dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        name="cin"
+                        placeholder="Enter CIN Number"
+                        value={inputs?.cin || ""}
+                        onChange={(e) => {
+                          localStorage.setItem("customer_cin", e.target.value);
+                          handleChange(e);
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <div className="w-full mx-auto flex flex-col mt-4  border-[1.2px] p-2 lg:p-4 bg-white gap-y-2 lg:gap-y-4 rounded-md">
+                    <div className="flex hidden lg:block">
+                      <div className="text-xl text-gray-600 font-medium">
+                        Invoice
+                      </div>
+                    </div>
+                    <div className="flex justify-between w-full mx-auto">
+                      <div className="flex flex-col">
+                        <div className="text-xs font-medium leading-5 mt-2">
+                          Invoice #
+                        </div>
+                        <div>
+                          <input
+                            className="w-6/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5"
+                            required
+                            name="invoiceNumber"
+                            placeholder="10"
+                            value={invoiceNumber}
+                            onChange={(e) => {
+                              setInvoiceNumber(e.target.value);
+                              localStorage.setItem(
+                                "customer_invoiceNumber",
+                                e.target.value
+                              );
+                            }}
+                          />
+                        </div>
+                      </div>
+                      <div className="flex flex-col">
+                        <div className="text-xs font-medium leading-5 mt-2">
+                          Date
+                        </div>
+                        <div>
+                          <input
+                            className="w-12/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5 "
+                            required
+                            name="date"
+                            placeholder="Date"
+                            type="date"
+                            value={date}
+                            onChange={(e) => {
+                              setDate(e.target.value);
+                              localStorage.setItem(
+                                "customer_date",
+                                e.target.value
+                              );
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-                      <tbody className="max-lg:hidden ">
-                        {rows &&
-                          rows.length > 0 &&
-                          rows.map((row, index) => (
-                            <div>
-                              <tr className="flex justify-between text-[12px] md:text-md w-full mt-4">
-                                <td className="w-[10%] text-center mt-2">
-                                  {index + 1}.
-                                </td>
-                                <td className="w-[30%] text-left">
-                                  <div className="relative w-full max-w-md">
-                                    <input
-                                      type="text"
-                                      placeholder="Description"
-                                      className="w-full py-2 pr-10 pl-4 border border-gray-300 rounded-md "
-                                      name="desc"
-                                      required
-                                      value={row.desc || rows[index].desc}
-                                      onChange={(e) =>
-                                        handleInputChange(
-                                          e.target.name,
-                                          e.target.value,
-                                          index
-                                        )
-                                      }
-                                    />
-                                  </div>
-                                </td>
-                                <td className="w-[15%] text-center">
+              <div className="w-full mx-auto  border-[1.2px] p-2 lg:p-4 bg-white gap-y-4 rounded-md">
+                <div className="overflow-hidden ">
+                  <table className="w-full mx-auto text-center text-sm font-light">
+                    <thead className="text-[12px] md:text-md uppercase max-md:hidden">
+                      <tr className="flex justify-between border-y-2 py-2 border-black">
+                        <th className="w-[10%]">S.No.</th>
+                        <th className="w-[30%] text-left">Description</th>
+                        <th className="w-[15%]">Rate</th>
+                        <th className="w-[10%] max-lg:hidden block">Qty</th>
+                        <th className="w-[10%] lg:hidden block">Quantity</th>
+                        <th className="w-[20%] text-center">Amount</th>
+                        <th className="w-[10%]"></th>
+                      </tr>
+                    </thead>
+
+                    <tbody className="max-lg:hidden ">
+                      {rows &&
+                        rows.length > 0 &&
+                        rows.map((row, index) => (
+                          <div>
+                            <tr className="flex justify-between text-[12px] md:text-md w-full mt-4">
+                              <td className="w-[10%] text-center mt-2">
+                                {index + 1}.
+                              </td>
+                              <td className="w-[30%] text-left">
+                                <div className="relative w-full max-w-md">
                                   <input
-                                    className={`w-full text-right block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600 
+                                    type="text"
+                                    placeholder="Description"
+                                    className="w-full py-2 pr-10 pl-4 border border-gray-300 rounded-md "
+                                    name="desc"
+                                    required
+                                    value={row.desc || rows[index].desc}
+                                    onChange={(e) =>
+                                      handleInputChange(
+                                        e.target.name,
+                                        e.target.value,
+                                        index
+                                      )
+                                    }
+                                  />
+                                </div>
+                              </td>
+                              <td className="w-[15%] text-center">
+                                <input
+                                  className={`w-full text-right block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600 
                                       
                                     `}
+                                  required
+                                  name="rate"
+                                  placeholder="Price"
+                                  value={row.rate || rows[index].rate}
+                                  onChange={(e) =>
+                                    handleInputChange(
+                                      e.target.name,
+                                      e.target.value,
+                                      index
+                                    )
+                                  }
+                                />
+                              </td>
+                              <td className="w-[10%] ">
+                                <div className="relative w-full max-w-md">
+                                  <input
+                                    className="w-full text-right pr-14 block text-xs rounded border border-gray-400 py-2 px-4 leading-5"
+                                    required
+                                    name="quantity"
+                                    placeholder="Qty"
+                                    value={row.qty}
+                                    onChange={(e) =>
+                                      handleInputChange(
+                                        e.target.name,
+                                        e.target.value,
+                                        index
+                                      )
+                                    }
+                                  />
+                                </div>
+                              </td>
+                              <td className="w-[20%] text-center">
+                                <div className="w-full  mt-3 font-extrabold text-xs">
+                                  {currencySymbol} {row.amount}
+                                </div>
+                              </td>
+                              <td className="w-[10%]">
+                                <div className="mt-2">
+                                  <Trash2
+                                    color="red"
+                                    className="cursor-pointer text-red-500 hover:text-red-700"
+                                    size={20}
+                                    onClick={(e) => handleDeleteRow(index, e)}
+                                  />
+                                </div>
+                              </td>
+                            </tr>
+                            <div className="border-b-2 border-dashed py-2"></div>
+                          </div>
+                        ))}
+                    </tbody>
+
+                    <tbody className="lg:hidden">
+                      {rows &&
+                        rows.length > 0 &&
+                        rows.map((row, index) => (
+                          <tr className="flex justify-between text-[12px] md:text-md w-full mt-4">
+                            <div className="w-full mx-auto flex flex-col gap-y-2">
+                              <td className="w-full text-left">
+                                <input
+                                  className=" w-full block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
+                                  required
+                                  name="desc"
+                                  placeholder="Description"
+                                  value={row.desc}
+                                  onChange={(e) =>
+                                    handleInputChange(
+                                      e.target.name,
+                                      e.target.value,
+                                      index
+                                    )
+                                  }
+                                />
+                              </td>
+                              <div className="w-full mx-auto flex gap-x-2">
+                                <td className="w-[30%] text-center">
+                                  <input
+                                    className={`w-full text-right block text-xs rounded border border-gray-400 py-1 px-4 leading-5 focus:text-gray-600
+                                       `}
                                     required
                                     name="rate"
                                     placeholder="Price"
-                                    value={row.rate || rows[index].rate}
+                                    value={row.rate}
                                     onChange={(e) =>
                                       handleInputChange(
                                         e.target.name,
@@ -1060,13 +1130,13 @@ const CreatorAddInvoice = () => {
                                     }
                                   />
                                 </td>
-                                <td className="w-[10%] ">
+                                <td className="w-[30%] ">
                                   <div className="relative w-full max-w-md">
                                     <input
-                                      className="w-full text-right pr-14 block text-xs rounded border border-gray-400 py-2 px-4 leading-5"
+                                      className="w-full text-left block px-4 text-xs rounded border border-gray-400 py-1 leading-5 focus:text-gray-600"
                                       required
                                       name="quantity"
-                                      placeholder="Qty"
+                                      placeholder="Quantity"
                                       value={row.qty}
                                       onChange={(e) =>
                                         handleInputChange(
@@ -1078,166 +1148,87 @@ const CreatorAddInvoice = () => {
                                     />
                                   </div>
                                 </td>
-                                <td className="w-[20%] text-center">
-                                  <div className="w-full  mt-3 font-extrabold text-xs">
+                                <td className="w-[30%] text-center">
+                                  <div className="w-full text-xs mt-2 ">
                                     {currencySymbol} {row.amount}
                                   </div>
                                 </td>
                                 <td className="w-[10%]">
-                                  <div className="mt-2">
-                                    <Trash2
-                                      color="red"
-                                      className="cursor-pointer text-red-500 hover:text-red-700"
-                                      size={20}
-                                      onClick={(e) => handleDeleteRow(index, e)}
-                                    />
-                                  </div>
-                                </td>
-                              </tr>
-                              <div className="border-b-2 border-dashed py-2"></div>
-                            </div>
-                          ))}
-                      </tbody>
-
-                      <tbody className="lg:hidden">
-                        {rows &&
-                          rows.length > 0 &&
-                          rows.map((row, index) => (
-                            <tr className="flex justify-between text-[12px] md:text-md w-full mt-4">
-                              <div className="w-full mx-auto flex flex-col gap-y-2">
-                                <td className="w-full text-left">
-                                  <input
-                                    className=" w-full block text-xs rounded border border-gray-400 py-2 px-4 leading-5 focus:text-gray-600"
-                                    required
-                                    name="desc"
-                                    placeholder="Description"
-                                    value={row.desc}
-                                    onChange={(e) =>
-                                      handleInputChange(
-                                        e.target.name,
-                                        e.target.value,
-                                        index
-                                      )
-                                    }
-                                  />
-                                </td>
-                                <div className="w-full mx-auto flex gap-x-2">
-                                  <td className="w-[30%] text-center">
-                                    <input
-                                      className={`w-full text-right block text-xs rounded border border-gray-400 py-1 px-4 leading-5 focus:text-gray-600
-                                       `}
-                                      required
-                                      name="rate"
-                                      placeholder="Price"
-                                      value={row.rate}
-                                      onChange={(e) =>
-                                        handleInputChange(
-                                          e.target.name,
-                                          e.target.value,
-                                          index
-                                        )
-                                      }
-                                    />
-                                  </td>
-                                  <td className="w-[30%] ">
-                                    <div className="relative w-full max-w-md">
-                                      <input
-                                        className="w-full text-left block px-4 text-xs rounded border border-gray-400 py-1 leading-5 focus:text-gray-600"
-                                        required
-                                        name="quantity"
-                                        placeholder="Quantity"
-                                        value={row.qty}
-                                        onChange={(e) =>
-                                          handleInputChange(
-                                            e.target.name,
-                                            e.target.value,
-                                            index
-                                          )
+                                  <div>
+                                    <div className="mt-1">
+                                      <Trash2
+                                        color="red"
+                                        className="cursor-pointer text-red-500 hover:text-red-700"
+                                        size={20}
+                                        onClick={(e) =>
+                                          handleDeleteRow(index, e)
                                         }
                                       />
                                     </div>
-                                  </td>
-                                  <td className="w-[30%] text-center">
-                                    <div className="w-full text-xs mt-2 ">
-                                      {currencySymbol} {row.amount}
-                                    </div>
-                                  </td>
-                                  <td className="w-[10%]">
-                                    <div>
-                                      <div className="mt-1">
-                                        <Trash2
-                                          color="red"
-                                          className="cursor-pointer text-red-500 hover:text-red-700"
-                                          size={20}
-                                          onClick={(e) =>
-                                            handleDeleteRow(index, e)
-                                          }
-                                        />
-                                      </div>
-                                    </div>
-                                  </td>
-                                </div>
+                                  </div>
+                                </td>
                               </div>
-                            </tr>
-                          ))}
-                      </tbody>
-                    </table>
-                  </div>
-                  {/* <hr className="w-full mt-4"></hr> */}
-                  <div className="flex justify-start">
-                    <button
-                      className="border-2 px-3 py-1 rounded-md bg-gray-700 text-2xl text-white font-bold mt-2"
-                      onClick={() => handleSearch()}
-                    >
-                      +
-                    </button>
-                  </div>
-                  <hr className="w-full mt-2"></hr>
-
-                  <div className="flex flex-col justify-between w-full mx-auto gap-x-3">
-                    <div className="w-full text-sm">
-                      <div className="w-full flex justify-end gap-x-10 mt-2">
-                        <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-md font-bold rounded-md uppercase">
-                          Total
-                        </div>
-                        <div
-                          className="w-3/12 mx-auto flex justify-end mt-1 px-2  text-sm font-bold rounded-md"
-                          name="total"
-                        >
-                          {currencySymbol} {Math.round(amount)}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div
-                    onClick={() => setOpenSign(true)}
-                    className="bg-[#146eb4] text-center w-4/12 lg:w-2/12 border-[1.4px] border-gray-400 text-white py-2 font-semibold rounded-md text-richblack-700 mb-2 cursor-pointer "
+                            </div>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
+                {/* <hr className="w-full mt-4"></hr> */}
+                <div className="flex justify-start">
+                  <button
+                    className="border-2 px-3 py-1 rounded-md bg-gray-700 text-2xl text-white font-bold mt-2"
+                    onClick={() => handleSearch()}
                   >
-                    {" "}
-                    <button>+ Add Signature</button>
-                  </div>
+                    +
+                  </button>
+                </div>
+                <hr className="w-full mt-2"></hr>
 
-                  {sign && (
-                    <div className="w-[35%] md:w-[20%] border-2">
-                      <img src={signature} alt="sign" />
-                      <div className="flex justify-between">
-                        <div className="px-2 text-xs">
-                          {" "}
-                          Signed on: {signedDate}
-                        </div>
-                        <div>
-                          {" "}
-                          <button onClick={handleCloseSign1}>
-                            <X />
-                          </button>
-                        </div>
+                <div className="flex flex-col justify-between w-full mx-auto gap-x-3">
+                  <div className="w-full text-sm">
+                    <div className="w-full flex justify-end gap-x-10 mt-2">
+                      <div className="w-11/12 flex justify-end mx-auto mt-2 px-2 text-md font-bold rounded-md uppercase">
+                        Total
+                      </div>
+                      <div
+                        className="w-3/12 mx-auto flex justify-end mt-1 px-2  text-sm font-bold rounded-md"
+                        name="total"
+                      >
+                        {currencySymbol} {Math.round(amount)}
                       </div>
                     </div>
-                  )}
-                  {/* <hr className="w-full my-4"></hr> */}
+                  </div>
+                </div>
 
-                  {/* <div className="w-full flex justify-end gap-x-10 mt-2">
+                <div
+                  onClick={() => setOpenSign(true)}
+                  className="bg-[#146eb4] text-center w-4/12 lg:w-2/12 border-[1.4px] border-gray-400 text-white py-2 font-semibold rounded-md text-richblack-700 mb-2 cursor-pointer "
+                >
+                  {" "}
+                  <button>+ Add Signature</button>
+                </div>
+
+                {sign && (
+                  <div className="w-[35%] md:w-[20%] border-2">
+                    <img src={signature} alt="sign" />
+                    <div className="flex justify-between">
+                      <div className="px-2 text-xs">
+                        {" "}
+                        Signed on: {signedDate}
+                      </div>
+                      <div>
+                        {" "}
+                        <button onClick={handleCloseSign1}>
+                          <X />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                {/* <hr className="w-full my-4"></hr> */}
+
+                {/* <div className="w-full flex justify-end gap-x-10 mt-2">
                 <div className="w-9/12 flex justify-end mx-auto mt-2 px-2 text-sm font-bold rounded-md uppercase">
                   Advance
                 </div>
@@ -1253,33 +1244,32 @@ const CreatorAddInvoice = () => {
                   />
                 </div>
               </div> */}
-                </div>
               </div>
-              {loading1 && <Loader />}
             </div>
-            {openSign && (
-              <SignModal
-                setSignature={setSignature}
-                handleSignOpen={handleSignOpen}
-                handleCloseSign={handleCloseSign}
-              ></SignModal>
-            )}
-            {openBrandModal && (
-              <BrandModal
-                handleCloseBrandModal={handleCloseBrandModal}
-              ></BrandModal>
-            )}
-            <AlertModal
-              isOpen={showConfirm}
-              onClose={() => {
-                setShowConfirm(false);
-                document.querySelector('input[name="customerName"]').focus();
-              }}
-              title="Required"
-              message="Customer Name is required."
-            />
+            {loading1 && <Loader />}
           </div>
-        </div>
+          {openSign && (
+            <SignModal
+              setSignature={setSignature}
+              handleSignOpen={handleSignOpen}
+              handleCloseSign={handleCloseSign}
+            ></SignModal>
+          )}
+          {openBrandModal && (
+            <BrandModal
+              handleCloseBrandModal={handleCloseBrandModal}
+            ></BrandModal>
+          )}
+          <AlertModal
+            isOpen={showConfirm}
+            onClose={() => {
+              setShowConfirm(false);
+              document.querySelector('input[name="customerName"]').focus();
+            }}
+            title="Required"
+            message="Customer Name is required."
+          />
+        </main>
       </div>
     </div>
   );

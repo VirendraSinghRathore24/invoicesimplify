@@ -590,19 +590,19 @@ const CreatorDashboard = () => {
   }, []);
 
   return (
-    <div className="flex justify-evenly w-full h-full ">
-      <div className="w-full lg:w-[82%] ml-0 lg:ml-[17%] h-[97%] border-2 my-3 rounded-lg border-gray-300 bg-white shadow-lg top-0 fixed">
-        <div className="hidden lg:block top-0 mx-auto w-[82%] h-[68px] text-white fixed border-b-2 my-3">
-          <div className="flex justify-between mx-auto font-bold text-md py-4 px-2 rounded-lg ">
+    <div className="">
+      <div className="lg:left-64 right-0 top-0 left-0 lg:fixed bg-gray-100">
+        <header className="fixed top-0 left-0 md:left-64 right-0 h-16 bg-white shadow flex items-center justify-between px-4 z-40">
+          <div className="mx-auto font-bold text-md py-2 px-2 rounded-lg text-left w-full lg:left-64">
             <div className="text-xl text-black">Dashboard</div>
           </div>
-        </div>
+        </header>
 
         <div className="hidden max-lg:block mb-16">
           <CreatorMobileMenu />
         </div>
 
-        <div className="p-2 lg:py-6 mt-10 ">
+        <div className="p-4 lg:py-6 mt-10 ">
           <div className="hidden lg:block">
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-2 py-3 rounded-md">
               <div className={`p-5 rounded-lg shadow bg-indigo-500 text-white`}>
@@ -649,7 +649,7 @@ const CreatorDashboard = () => {
             </div>
           </div>
 
-          <div className="hidden max-lg:block">
+          <main className="hidden max-lg:block">
             <div className="grid gap-4 grid-cols-2 mb-4 rounded-md">
               <div
                 className={`p-2 rounded-lg shadow bg-emerald-500 text-white`}
@@ -668,7 +668,7 @@ const CreatorDashboard = () => {
                 <h3 className="mt-2 text-xl font-semibold">₹ {balance}</h3>
               </div>
             </div>
-          </div>
+          </main>
 
           <div className="hidden max-lg:block">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4 text-xs">
@@ -775,7 +775,7 @@ const CreatorDashboard = () => {
             ))}
           </div>
           <div className="overflow-hidden border border-gray-300 shadow-md mt-4 rounded-md">
-            <div className="max-h-[50vh] lg:max-h-[51vh] overflow-y-auto overflow-x-auto">
+            <div className="max-h-[calc(100vh-21rem)] overflow-y-auto overflow-x-auto">
               <table className="min-w-full text-xs text-left text-gray-700">
                 <thead className="bg-gray-100 text-gray-600 border-b sticky top-0 z-10">
                   <tr>
