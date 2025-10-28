@@ -321,13 +321,6 @@ function CreatorInvoice() {
     let pi = localStorage.getItem("creator_personalInfo");
     setPersonalInfo(JSON.parse(pi));
 
-    if (pi === null) {
-      alert(
-        "Personal Informations are missing !!! Please add to create invoice."
-      );
-      navigate("/creator/addpersonalinfo");
-    }
-
     let ci = localStorage.getItem("creator_customerInfo");
     setCustomerInfo(JSON.parse(ci));
 

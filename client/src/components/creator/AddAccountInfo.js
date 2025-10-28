@@ -286,7 +286,6 @@ function AddAccountInfo() {
                       <div>
                         <input
                           className="w-full dark:bg-gray-700 border border-gray-400 border-[1.4px] dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                          required
                           name="pan"
                           placeholder="Enter PAN number"
                           value={inputs?.pan || ""}
@@ -307,7 +306,6 @@ function AddAccountInfo() {
                       <div>
                         <input
                           className="w-full dark:bg-gray-700 border border-gray-400 border-[1.4px] dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                          required
                           name="upi"
                           placeholder="Enter UPI ID"
                           value={inputs?.upi || ""}

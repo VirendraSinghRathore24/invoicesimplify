@@ -691,14 +691,14 @@ const CreatorAddInvoice = () => {
                   <div className="flex flex-col justify-start items-left gap-y-0 lg:gap-y-4 ">
                     <div className="flex justify-between">
                       <div className="text-md lg:text-lg text-gray-600 font-medium">
-                        Brand Information
+                        Brand/Agency Information
                       </div>
                       <div
                         onClick={() => setOpenBrandModal(true)}
-                        className="border-[1.4px] border-black rounded-md px-4 py-1 bg-blue-600 text-white flex gap-x-2"
+                        className="border-[1.4px] border-black rounded-md px-4 py-1 bg-blue-600 text-white flex gap-x-2 cursor-pointer"
                       >
-                        <Search size={21} className="mt-1" />
-                        <button>Brands</button>
+                        <Search size={18} />
+                        <button className="text-sm">Search</button>
                       </div>
                     </div>
 
@@ -1203,7 +1203,7 @@ const CreatorAddInvoice = () => {
 
                 <div
                   onClick={() => setOpenSign(true)}
-                  className="bg-blue-600 text-center w-4/12 lg:w-2/12 border-[1.4px] border-gray-400 text-white py-2 font-semibold rounded-md text-richblack-700 mb-2 cursor-pointer "
+                  className="bg-blue-600 text-center w-4/12 lg:w-2/12 border-[1.4px] border-gray-400 text-white py-2 text-sm rounded-md text-richblack-700 mb-2 cursor-pointer "
                 >
                   {" "}
                   <button>+ Add Signature</button>

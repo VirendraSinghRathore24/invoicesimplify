@@ -136,7 +136,11 @@ const CreatorDashboard = () => {
   };
 
   const handleDelete = async (user) => {
-    if (window.confirm("Are you sure you want to delete this entry?")) {
+    if (
+      window.confirm(
+        "Are you sure you want to delete this entry? You will not be able to revert it back?"
+      )
+    ) {
       const items = data.filter((item) => item.id !== user.id);
       setData(items);
 

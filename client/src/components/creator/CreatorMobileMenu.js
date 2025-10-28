@@ -27,7 +27,6 @@ const CreatorMobileMenu = () => {
     "Additional Info",
     "Payment History",
     "Configuration",
-    "Refresh",
   ];
 
   const getPath = (input) => {
@@ -55,9 +54,9 @@ const CreatorMobileMenu = () => {
     if (input === "Configuration") {
       return "configuration";
     }
-    if (input === "Refresh") {
-      return "refresh";
-    }
+    // if (input === "Refresh") {
+    //   return "refresh";
+    // }
   };
 
   const [remainingDays, setRemainingDays] = useState(null);

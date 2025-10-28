@@ -175,12 +175,12 @@ const CreatorSidebar = () => {
           isOpen={openSubMenu === "settings"}
           onClick={() => toggleSubMenu("settings")}
         >
-          <SubMenuItem
+          {/* <SubMenuItem
             icon={<RefreshCcw size={18} />}
             text="Sync (Refresh)"
             to="/refresh"
             active={location.pathname === "/refresh"}
-          />
+          /> */}
 
           <SubMenuItem
             icon={<History size={18} />}
