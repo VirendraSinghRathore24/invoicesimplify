@@ -74,7 +74,7 @@ const PersonalInfo = () => {
 
   return (
     <div className="">
-      <div className="lg:left-64 right-0 top-0 left-0 lg:fixed bg-gray-100">
+      <div className="lg:left-64 right-0 top-0 left-0 lg:fixed bg-white">
         <div className="hidden lg:block">
           <div className="top-0 mx-auto w-full h-[64px] bg-white text-white border-b-2">
             <div className="font-bold text-md py-4 px-2 rounded-md ">

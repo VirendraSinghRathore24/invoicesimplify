@@ -663,10 +663,10 @@ const CreatorAddInvoice = () => {
 
         <header className="top-14 lg:top-0 mx-auto bg-white h-[56px] lg:h-[64px] max-lg:w-full text-white fixed lg:sticky border-b-2">
           <div className="flex justify-between items-center mx-auto font-bold text-md p-2 rounded-md">
-            <div className="text-lg text-black hidden lg:block">
+            <div className="text-lg text-black mt-1 hidden lg:block">
               Create Invoice
             </div>
-            <div className="flex gap-x-4 text-sm">
+            <div className="flex gap-x-4 text-sm mt-1">
               <button
                 onClick={handleResetInvoice}
                 className="bg-white text-gray-900 border-[1.4px] border-gray-400  py-2 px-6 font-semibold rounded-md  hover:scale-110 transition duration-300 ease-in cursor-pointer "

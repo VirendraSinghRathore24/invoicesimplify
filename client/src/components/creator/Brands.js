@@ -94,7 +94,7 @@ const Brands = () => {
 
   return (
     <div className="">
-      <div className="lg:left-64 right-0 top-0 left-0 lg:fixed bg-white">
+      <div className="lg:left-64 right-0 top-0 left-0 lg:fixed bg-gray-100">
         <div className="hidden lg:block top-0 mx-auto w-full h-[64px] text-white fixed border-b-2">
           <div className="flex justify-between mx-auto font-bold text-md py-4 px-2 rounded-lg ">
             <div className="text-xl text-black">Brands/Agencies</div>

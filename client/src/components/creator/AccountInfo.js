@@ -87,7 +87,7 @@ const AccountInfo = () => {
           <CreatorMobileMenu />
         </div>
         <div className="p-2">
-          <div className="overflow-x-auto rounded-lg border border-gray-300 hidden lg:block">
+          <div className="overflow-x-auto rounded-lg border border-gray-300 hidden mt-4 lg:block">
             {posts && (
               <table className="min-w-full text-sm text-left text-gray-700">
                 <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
