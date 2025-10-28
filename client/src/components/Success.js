@@ -7,17 +7,25 @@ import Footer1 from "./Footer1";
 const Success = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  let order, plan;
 
-  const { order, plan } = location.state;
-  console.log(order);
+  if (location.state !== null) {
+    order = location.state.order;
+    plan = location.state.plan;
+  }
+
   const date = new Date().toString();
   useEffect(() => {
-    confetti({
-      particleCount: 500,
-      spread: 75,
-    });
+    if (location.state === null) {
+      navigate("/");
+    } else {
+      confetti({
+        particleCount: 500,
+        spread: 75,
+      });
 
-    window.scrollTo(0, 0);
+      window.scrollTo(0, 0);
+    }
   }, []);
   return (
     <div>
@@ -52,15 +60,18 @@ const Success = () => {
           <div className="text-sm font-semibold text-left px-4">
             <div>
               ✅ Order ID:{" "}
-              <span className="font-normal"> {order.razorpay_payment_id} </span>
+              <span className="font-normal">
+                {" "}
+                {order?.razorpay_payment_id}{" "}
+              </span>
             </div>
             <div className="mt-2">
               ✅ Amount Paid:{" "}
-              <span className="font-normal"> ₹{plan.price}</span>
+              <span className="font-normal"> ₹{plan?.price}</span>
             </div>
             <div className="mt-2">
               ✅ Plan Type:{" "}
-              <span className="font-normal"> {plan.name} Plan </span>
+              <span className="font-normal"> {plan?.name} Plan </span>
             </div>
             <div className="mt-2">
               ✅ Date: <span className="font-normal"> {date}</span>

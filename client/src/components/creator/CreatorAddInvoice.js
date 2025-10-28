@@ -663,19 +663,19 @@ const CreatorAddInvoice = () => {
 
         <header className="top-14 lg:top-0 mx-auto bg-white h-[56px] lg:h-[64px] max-lg:w-full text-white fixed lg:sticky border-b-2">
           <div className="flex justify-between items-center mx-auto font-bold text-md p-2 rounded-md">
-            <div className="text-xl text-black hidden lg:block">
+            <div className="text-lg text-black hidden lg:block">
               Create Invoice
             </div>
             <div className="flex gap-x-4 text-sm">
               <button
                 onClick={handleResetInvoice}
-                className="bg-[#146eb4]  text-white border-[1.4px] border-gray-400  py-2 px-6 font-semibold rounded-md  hover:scale-110 transition duration-300 ease-in cursor-pointer "
+                className="bg-white text-gray-900 border-[1.4px] border-gray-400  py-2 px-6 font-semibold rounded-md  hover:scale-110 transition duration-300 ease-in cursor-pointer "
               >
                 Reset
               </button>
               <button
                 onClick={handleCreateInvoice}
-                className="bg-amber-600  border-[1.4px] border-gray-400 text-white py-2 px-6 font-semibold rounded-md text-richblack-700 hover:scale-110 transition duration-300 ease-in cursor-pointer "
+                className="bg-blue-600 text-white font-medium hover:bg-blue-700 transition border-[1.4px] border-gray-400 py-2 px-6 font-semibold rounded-md text-richblack-700 hover:scale-110 transition duration-300 ease-in cursor-pointer "
               >
                 Create Invoice
               </button>
@@ -685,9 +685,9 @@ const CreatorAddInvoice = () => {
 
         <main className="p-2">
           <div>
-            <div className="flex flex-col w-full gap-y-3 mx-auto  lg:overflow-y-auto  lg:h-[calc(100vh-100px)]">
+            <div className="flex flex-col w-full gap-y-3 mx-auto lg:overflow-y-auto  lg:h-[calc(100vh-100px)]">
               <div className="flex flex-col lg:flex-row justify-between gap-x-2 w-full mx-auto">
-                <div className="flex flex-col w-full lg:w-6/12 mx-auto justify-start items-left mt-16 lg:mt-4  border-[1.2px] p-2 lg:p-5 bg-white gap-y-2 lg:gap-y-4 rounded-md">
+                <div className="flex flex-col w-full lg:w-6/12 mx-auto justify-start items-left mt-12 lg:mt-0  border-[1.2px] p-2 lg:p-5 bg-white gap-y-2 lg:gap-y-4 rounded-md">
                   <div className="flex flex-col justify-start items-left gap-y-0 lg:gap-y-4 ">
                     <div className="flex justify-between">
                       <div className="text-md lg:text-lg text-gray-600 font-medium">
@@ -695,7 +695,7 @@ const CreatorAddInvoice = () => {
                       </div>
                       <div
                         onClick={() => setOpenBrandModal(true)}
-                        className="border-[1.4px] border-black rounded-md px-4 py-1 bg-[#146eb4] text-white flex gap-x-2"
+                        className="border-[1.4px] border-black rounded-md px-4 py-1 bg-blue-600 text-white flex gap-x-2"
                       >
                         <Search size={21} className="mt-1" />
                         <button>Brands</button>
@@ -859,7 +859,7 @@ const CreatorAddInvoice = () => {
                   </div>
                 </div>
 
-                <div className="flex flex-col w-full lg:w-6/12 mx-auto justify-start items-left mt-16 lg:mt-4  border-[1.2px] p-2 lg:p-5 bg-white gap-y-2 lg:gap-y-4 rounded-md">
+                <div className="flex flex-col w-full lg:w-6/12 mx-auto justify-start items-left mt-2 lg:mt-0  border-[1.2px] p-2 lg:p-5 bg-white gap-y-2 lg:gap-y-4 rounded-md">
                   <div className="flex flex-col justify-start items-left gap-y-0 lg:gap-y-4 ">
                     <div className="flex flex-col justify-start items-left">
                       <div className="text-[13px] font-bold leading-5 mt-2">
@@ -1203,7 +1203,7 @@ const CreatorAddInvoice = () => {
 
                 <div
                   onClick={() => setOpenSign(true)}
-                  className="bg-[#146eb4] text-center w-4/12 lg:w-2/12 border-[1.4px] border-gray-400 text-white py-2 font-semibold rounded-md text-richblack-700 mb-2 cursor-pointer "
+                  className="bg-blue-600 text-center w-4/12 lg:w-2/12 border-[1.4px] border-gray-400 text-white py-2 font-semibold rounded-md text-richblack-700 mb-2 cursor-pointer "
                 >
                   {" "}
                   <button>+ Add Signature</button>

@@ -430,7 +430,7 @@ function CreatorInvoice() {
           </div>
         </div>
 
-        <div className="mt-24 lg:mt-0">
+        <div className="mt-24 lg:mt-0 p-0 lg:p-2">
           <div className="w-full mx-auto py-2 mb-10 px-1 lg:overflow-y-auto lg:h-[calc(100vh-137px)]">
             <div
               ref={printRef}
