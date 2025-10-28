@@ -1099,7 +1099,7 @@ function CreatorInvoice() {
         {openEmailModal && (
           <EmailModal
             handleCloseEmailModal={handleCloseEmailModal}
-            email={personalInfo.email}
+            email={personalInfo?.email}
             invoiceInfo={invoiceInfo}
             personalInfo={personalInfo}
             customerInfo={customerInfo}

@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Mail, ChevronLeft, Download } from "lucide-react";
 import { useReactToPrint } from "react-to-print";
 import { toast } from "react-toastify";
-
 import Loader from "../Loader";
 import { BASE_URL } from "../Constant";
 import CreatorMobileMenu from "./CreatorMobileMenu";
