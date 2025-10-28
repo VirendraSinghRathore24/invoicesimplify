@@ -109,7 +109,10 @@ const EmailViewModal = ({ handleCloseEmailModal, id, email, logoBase64 }) => {
         </div>
 
         <hr className="mb-4 border-gray-300 dark:border-gray-700" />
-
+        <div className="text-sm text-gray-600 mb-2">
+          To send an email to multiple accounts, add the email addresses as a
+          comma-separated: (abc@gmail.com, cde@gmail.com)
+        </div>
         {/* Form */}
         <form className="space-y-5">
           {/* Summary */}
