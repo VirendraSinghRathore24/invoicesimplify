@@ -855,10 +855,12 @@ const sendEmailPdf = async (invoiceData, email, res) => {
                 style="width: 100px; margin-bottom: 1rem;"
               />
               <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                <div style="display: flex; flex-direction: column;">
-                  <div style="font-weight: bold; font-size: 1rem;">
+                <div style="display: flex; flex-direction: column;">`;
+  if (personalInfo?.name) {
+    html += ` <div style="font-weight: bold; font-size: 1rem;">
                     ${personalInfo?.name}
                   </div>`;
+  }
   if (personalInfo?.address) {
     html += ` <div style="color: #6B7280; font-size: 0.875rem; margin-top: 0.2rem;">
                     ${personalInfo?.address},
