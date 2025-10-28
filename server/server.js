@@ -857,42 +857,42 @@ const sendEmailPdf = async (invoiceData, email, res) => {
               <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                 <div style="display: flex; flex-direction: column;">
                   <div style="font-weight: bold; font-size: 1rem;">
-                    ${personalInfo.name}
+                    ${personalInfo?.name}
                   </div>`;
-  if (personalInfo.address) {
+  if (personalInfo?.address) {
     html += ` <div style="color: #6B7280; font-size: 0.875rem; margin-top: 0.2rem;">
-                    ${personalInfo.address},
+                    ${personalInfo?.address},
                   </div>`;
   }
 
-  if (personalInfo.address1) {
+  if (personalInfo?.address1) {
     html += `
                     <div style="color: #6B7280; font-size: 0.875rem; margin-top: 0.2rem;">
-                      ${personalInfo.address1},
+                      ${personalInfo?.address1},
                     </div>`;
   }
-  if (personalInfo.address2) {
+  if (personalInfo?.address2) {
     html += `
                     <div style="color: #6B7280; font-size: 0.875rem; margin-top: 0.2rem;">
-                      ${personalInfo.address2} - ${personalInfo.address3}
+                      ${personalInfo?.address2} - ${personalInfo?.address3}
                     </div>`;
   }
-  if (personalInfo.phonePrimary) {
+  if (personalInfo?.phonePrimary) {
     html += ` <div style="color: #6B7280; font-size: 0.875rem; margin-top: 0.2rem;">
-                    Phone: ${personalInfo.phonePrimary}
+                    Phone: ${personalInfo?.phonePrimary}
                   </div>`;
   }
-  if (personalInfo.email) {
+  if (personalInfo?.email) {
     html += `      
     <div style="color: #6B7280; font-size: 0.875rem; margin-top: 0.2rem;">
-      Email: ${personalInfo.email}
+      Email: ${personalInfo?.email}
     </div>`;
   }
 
-  if (personalInfo.socialMedia) {
+  if (personalInfo?.socialMedia) {
     html += `
                     <div style="color: #6B7280; font-size: 0.875rem; margin-top: 0.2rem;">
-                      ${personalInfo.socialMedia}
+                      ${personalInfo?.socialMedia}
                     </div>`;
   }
   html += `
