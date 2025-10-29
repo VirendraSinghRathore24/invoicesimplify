@@ -687,7 +687,9 @@ app.get("/download-pdf", async (req, res) => {
 
 app.post("/generate-pdf1", async (req, res) => {
   try {
-    const { html } = req.body;
+    const { invoiceData } = req.body;
+
+    const html = buildHtml(invoiceData);
 
     if (!html) {
       return res.status(400).json({ error: "HTML content is required" });
@@ -831,7 +833,7 @@ app.post("/send-email-pdf1", async (req, res) => {
 //   }
 // });
 
-const sendEmailPdf = async (invoiceData, email, res) => {
+const buildHtml = (invoiceData) => {
   const personalInfo = invoiceData.personalInfo;
   const customerInfo = invoiceData.customerInfo;
   const invoiceInfo = invoiceData.invoiceInfo;
@@ -841,8 +843,6 @@ const sendEmailPdf = async (invoiceData, email, res) => {
   const signedInfo = invoiceData.signedInfo;
   const additionalInfo = invoiceData.additionalInfo;
   const currencySymbol = invoiceData.currencySymbol || "₹";
-
-  //const taxCalculatedInfo = invoiceData.taxCalculatedInfo;
 
   let html = "";
   const logoBase64 = invoiceData.logoBase64; // Assuming logo is sent as base64 string
@@ -1082,6 +1082,13 @@ const sendEmailPdf = async (invoiceData, email, res) => {
               </div>
             </div>
           </div>`;
+
+  return html;
+};
+
+const sendEmailPdf = async (invoiceData, email, res) => {
+  const customerInfo = invoiceData.customerInfo;
+  const html = buildHtml(invoiceData);
 
   if (!html) {
     console.log("No HTML generated for PDF.");

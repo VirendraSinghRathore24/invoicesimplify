@@ -57,13 +57,26 @@ function CreatorViewInvoice() {
     const url = BASE_URL;
     try {
       setLoading(true);
-      const html = printRef.current.innerHTML;
+
+      const invoiceData = {
+        invoiceInfo: invoiceInfo.invoiceInfo,
+        personalInfo: invoiceInfo.personalInfo,
+        customerInfo: invoiceInfo.customerInfo,
+        rows: invoiceInfo.rows,
+        amountInfo: invoiceInfo.amount,
+        accountInfo: invoiceInfo.accountInfo,
+        signedInfo: invoiceInfo.signedInfo,
+        logoBase64: invoiceInfo.logoBase64,
+        additionalInfo: invoiceInfo.additionalInfo,
+        currencySymbol: invoiceInfo.currencySymbol,
+      };
+
       const response = await fetch(url + "/generate-pdf1", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ html }),
+        body: JSON.stringify({ invoiceData: invoiceData }),
       });
 
       if (response.ok) {

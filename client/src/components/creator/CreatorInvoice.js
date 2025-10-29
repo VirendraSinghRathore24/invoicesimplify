@@ -103,13 +103,26 @@ function CreatorInvoice() {
         return;
       }
 
-      const html = printRef.current.innerHTML;
+      const invoiceData = {
+        invoiceInfo: invoiceInfo,
+        personalInfo: personalInfo,
+        customerInfo: customerInfo,
+        rows: rows,
+        amountInfo: amount,
+        accountInfo: accountInfo,
+        signedInfo: signedInfo,
+        logoBase64: logoBase64,
+        additionalInfo: additionalInfo,
+        currencySymbol: currencySymbol,
+        // taxCalculatedInfo: taxCalculatedInfo,
+      };
+
       const response = await fetch(url + "/generate-pdf1", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ html }),
+        body: JSON.stringify({ invoiceData: invoiceData }),
       });
 
       if (response.ok) {
