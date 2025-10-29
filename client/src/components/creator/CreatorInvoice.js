@@ -424,7 +424,7 @@ function CreatorInvoice() {
         </div>
 
         <div className="mt-24 lg:mt-0 p-0 lg:p-2">
-          <div className="w-full mx-auto py-2 mb-10 px-1 lg:overflow-y-auto lg:h-[calc(100vh-137px)]">
+          <div className="w-full mx-auto py-2 mb-10 px-1 lg:overflow-y-auto lg:h-[calc(100vh-120px)]">
             <div
               ref={printRef}
               style={{
@@ -1016,20 +1016,39 @@ function CreatorInvoice() {
                           </span>
                         </div>
 
-                        <div
-                          style={{
-                            marginTop: "0.25rem", // font-bold
-                          }}
-                        >
-                          PAN :{" "}
-                          <span
+                        {accountInfo?.pan && (
+                          <div
                             style={{
-                              fontWeight: "bold",
+                              marginTop: "0.25rem", // font-bold
                             }}
                           >
-                            {accountInfo?.pan}
-                          </span>
-                        </div>
+                            PAN :{" "}
+                            <span
+                              style={{
+                                fontWeight: "bold",
+                              }}
+                            >
+                              {accountInfo?.pan}
+                            </span>
+                          </div>
+                        )}
+
+                        {accountInfo?.upi && (
+                          <div
+                            style={{
+                              marginTop: "0.25rem", // font-bold
+                            }}
+                          >
+                            UPI :{" "}
+                            <span
+                              style={{
+                                fontWeight: "bold",
+                              }}
+                            >
+                              {accountInfo?.upi}
+                            </span>
+                          </div>
+                        )}
 
                         <br />
                       </div>

@@ -838,21 +838,39 @@ function CreatorViewInvoice() {
                           </span>
                         </div>
 
-                        <div
-                          style={{
-                            marginTop: "0.25rem", // font-bold
-                          }}
-                        >
-                          PAN :{" "}
-                          <span
+                        {invoiceInfo?.accountInfo?.pan && (
+                          <div
                             style={{
-                              fontWeight: "bold",
+                              marginTop: "0.25rem", // font-bold
                             }}
                           >
-                            {invoiceInfo?.accountInfo?.pan}
-                          </span>
-                        </div>
+                            PAN :{" "}
+                            <span
+                              style={{
+                                fontWeight: "bold",
+                              }}
+                            >
+                              {invoiceInfo?.accountInfo?.pan}
+                            </span>
+                          </div>
+                        )}
 
+                        {invoiceInfo?.accountInfo?.upi && (
+                          <div
+                            style={{
+                              marginTop: "0.25rem", // font-bold
+                            }}
+                          >
+                            UPI :{" "}
+                            <span
+                              style={{
+                                fontWeight: "bold",
+                              }}
+                            >
+                              {invoiceInfo?.accountInfo?.upi}
+                            </span>
+                          </div>
+                        )}
                         <br />
                       </div>
                     </div>

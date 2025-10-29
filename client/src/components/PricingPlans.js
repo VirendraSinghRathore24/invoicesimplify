@@ -8,11 +8,11 @@ const plans = [
     name: "Free",
     price: "0",
     days: "month",
-    description: "Ideal for individuals and freelancers starting out.",
+    description: "Perfect for content creators.",
     features: [
       "Create Unlimited invoices",
       "Dashboard to Manage Invoices",
-      "Dowanlodable PDF Invoices",
+      "Download PDF Invoices",
       "Send Invoices via Email",
       "Mobile Web Support",
       "Free for 30 days only",
@@ -29,29 +29,29 @@ const plans = [
     features: [
       "Create Unlimited invoices",
       "Dashboard to Manage Invoices",
-      "Dowanlodable PDF Invoices",
+      "Download PDF Invoices",
       "Send Invoices via Email",
       "Payment Reminders",
       "Mobile Web Support",
     ],
-    button: "Choose Standard",
+    button: "Choose Monthly",
     isFreePlan: false,
     highlight: true,
   },
   {
     name: "Yearly",
-    price: "2999",
+    price: "2",
     days: "year",
     description: "Perfect for content creators.",
     features: [
       "Create Unlimited invoices",
       "Dashboard to Manage Invoices",
-      "Dowanlodable PDF Invoices",
+      "Download PDF Invoices",
       "Send Invoices via Email",
       "Payment Reminders",
       "Mobile Web Support",
     ],
-    button: "Choose Standard",
+    button: "Choose Yearly",
     isFreePlan: false,
     highlight: false,
   },
@@ -97,10 +97,10 @@ const PricingPlans = () => {
 
       <section className="bg-gray-50 py-12 px-1 px-2 mt-20">
         <div className="w-full lg:max-w-5xl mx-auto text-center px-4 lg:px-0">
-          <h2 className="text-2xl lg:text-4xl font-bold text-gray-800 mb-4">
+          <h2 className="text-2xl lg:text-4xl font-bold text-gray-800 mb-4 tracking-wide">
             Choose Your Plan
           </h2>
-          <p className="text-sm lg:text-md text-gray-600 mb-10">
+          <p className="text-sm lg:text-md text-gray-600 mb-10 tracking-wide">
             Simple pricing for every stage of your business.
           </p>
 
@@ -114,7 +114,7 @@ const PricingPlans = () => {
                     : "bg-white border-gray-200"
                 }`}
               >
-                <h3 className="text-lg lg:text-xl font-bold text-gray-800">
+                <h3 className="text-lg md:text-xl font-semibold tracking-tight text-gray-800">
                   {plan.name}
                 </h3>
 
@@ -122,13 +122,15 @@ const PricingPlans = () => {
                   ₹{plan.price}/{plan.days}
                 </p>
 
-                <p className="text-gray-500 text-sm mb-6">{plan.description}</p>
+                <p className="text-gray-600 text-[13px] tracking-wide mb-6">
+                  {plan.description}
+                </p>
 
                 <ul className="text-left mb-6 space-y-2">
                   {plan.features.map((feature, i) => (
                     <li
                       key={i}
-                      className="flex items-center gap-2 text-gray-700"
+                      className="flex items-center gap-2 text-gray-700 tracking-wide"
                     >
                       <Check className="text-green-500 w-4 h-4" />
                       <span>{feature}</span>
@@ -147,14 +149,14 @@ const PricingPlans = () => {
                 ) : planName === plan.name ? (
                   <button
                     disabled
-                    className="w-full py-2 rounded-xl font-semibold bg-green-600 text-white cursor-not-allowed"
+                    className="w-full py-2 rounded-xl font-semibold bg-green-600 text-white cursor-not-allowed tracking-wide"
                   >
                     Current Plan
                   </button>
                 ) : (
                   <button
                     onClick={() => handlePayment1(plan)}
-                    className={`w-full py-2 rounded-xl font-semibold ${
+                    className={`w-full py-2 rounded-xl font-semibold tracking-wide ${
                       plan.highlight
                         ? "bg-blue-600 text-white hover:bg-blue-700"
                         : "bg-gray-200 text-gray-700 hover:bg-gray-300"

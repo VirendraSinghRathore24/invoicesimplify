@@ -1039,8 +1039,13 @@ const sendEmailPdf = async (invoiceData, email, res) => {
                     <div style="margin-top: 0.25rem;">Account Number: <span style="font-weight: bold;">${accountInfo.accountNumber}</span></div>
                     <div style="margin-top: 0.25rem;">Account Type: <span style="font-weight: bold;">${accountInfo.accountType}</span></div>
                     <div style="margin-top: 0.25rem;">IFSC Code: <span style="font-weight: bold;">${accountInfo.ifscCode}</span></div>
-                    <div style="margin-top: 0.25rem;">Branch: <span style="font-weight: bold;">${accountInfo.branch}</span></div>
+                    <div style="margin-top: 0.25rem;">Branch: <span style="font-weight: bold;">${accountInfo.branch}</span></div>`;
+  }
+  if (accountInfo && accountInfo.pan) {
+    html += `
+                    
                     <div style="margin-top: 0.25rem;">PAN: <span style="font-weight: bold;">${accountInfo.pan}</span></div>
+                    
                   </div>
                 </div>
                 <div style="display: flex; flex-direction: column; margin-top: 2rem;">`;
