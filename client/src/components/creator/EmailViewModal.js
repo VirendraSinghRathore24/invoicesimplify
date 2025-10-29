@@ -6,7 +6,12 @@ import { toast } from "react-toastify";
 import { db } from "../../config/firebase";
 import { collection, doc, getDocs } from "firebase/firestore";
 
-const EmailViewModal = ({ handleCloseEmailModal, id, email, logoBase64 }) => {
+const EmailViewModal = ({
+  handleCloseEmailModal,
+  invoiceInfo,
+  email,
+  logoBase64,
+}) => {
   const [loading, setLoading] = useState(false);
   const [posts, setPosts] = useState([]);
   const [brandEmail, setBrandEmail] = useState(email);
@@ -20,27 +25,23 @@ const EmailViewModal = ({ handleCloseEmailModal, id, email, logoBase64 }) => {
         document.querySelector('input[name="brandEmail"]').focus();
         return;
       }
-
+      setLoading(true);
       const url = BASE_URL;
-
-      const invoiceData1 = await getInvoiceDataById();
 
       const invoiceData = {
         email: brandEmail,
-        invoiceInfo: invoiceData1.invoiceInfo,
-        personalInfo: invoiceData1.personalInfo,
-        customerInfo: invoiceData1.customerInfo,
-        rows: invoiceData1.rows,
-        amountInfo: invoiceData1.amountInfo,
-        accountInfo: invoiceData1.accountInfo,
-        signedInfo: invoiceData1.signedInfo,
+        invoiceInfo: invoiceInfo.invoiceInfo,
+        personalInfo: invoiceInfo.personalInfo,
+        customerInfo: invoiceInfo.customerInfo,
+        rows: invoiceInfo.rows,
+        amountInfo: invoiceInfo.amountInfo,
+        accountInfo: invoiceInfo.accountInfo,
+        signedInfo: invoiceInfo.signedInfo,
         logoBase64: logoBase64,
-        additionalInfo: invoiceData1.additionalInfo,
-        currencySymbol: invoiceData1.invoiceCurrency,
-        // taxCalculatedInfo: taxCalculatedInfo,
+        additionalInfo: invoiceInfo.additionalInfo,
+        currencySymbol: invoiceInfo.invoiceCurrency,
       };
 
-      setLoading(true);
       const response = await fetch(url + "/send-email-pdf1", {
         method: "POST",
         headers: {
@@ -50,7 +51,6 @@ const EmailViewModal = ({ handleCloseEmailModal, id, email, logoBase64 }) => {
           invoiceData: invoiceData,
         }),
       });
-      const data = await response.json();
 
       if (response.ok) {
         handleCloseEmailModal();
@@ -66,33 +66,12 @@ const EmailViewModal = ({ handleCloseEmailModal, id, email, logoBase64 }) => {
     }
   };
 
-  const uid = localStorage.getItem("uid");
-  const invoiceInfo_CollectionRef = collection(
-    doc(db, CREATORS, uid),
-    INVOICE_INFO
-  );
+  // useEffect(() => {
+  //   const data = JSON.parse(localStorage.getItem("email_data"));
+  //   setPosts(data);
 
-  const getInvoiceDataById = async () => {
-    try {
-      const data = await getDocs(invoiceInfo_CollectionRef);
-      const filteredData = data.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
-
-      const invoiceInfo = filteredData.filter((x) => x.id === id)[0];
-      return invoiceInfo;
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  useEffect(() => {
-    const data = JSON.parse(localStorage.getItem("email_data"));
-    setPosts(data);
-
-    // setBrandEmail(data.customerInfo.email);
-  }, []);
+  //   // setBrandEmail(data.customerInfo.email);
+  // }, []);
 
   return (
     <div className="fixed inset-0 z-50 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center">
