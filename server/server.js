@@ -1044,12 +1044,17 @@ const sendEmailPdf = async (invoiceData, email, res) => {
   if (accountInfo && accountInfo.pan) {
     html += `
                     
-                    <div style="margin-top: 0.25rem;">PAN: <span style="font-weight: bold;">${accountInfo.pan}</span></div>
-                    
+                    <div style="margin-top: 0.25rem;">PAN: <span style="font-weight: bold;">${accountInfo.pan}</span></div>`;
+  }
+  if (accountInfo && accountInfo.upi) {
+    html += `
+                    <div style="margin-top: 0.25rem;">PAN: <span style="font-weight: bold;">${accountInfo.upi}</span></div>`;
+  }
+  html += `
                   </div>
                 </div>
                 <div style="display: flex; flex-direction: column; margin-top: 2rem;">`;
-  }
+
   if (signedInfo.signature) {
     html += `
                   <div style="display: flex; justify-content: flex-end; font-size: 0.875rem;">
