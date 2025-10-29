@@ -1034,7 +1034,7 @@ const buildHtml = (invoiceData) => {
   }
   if (accountInfo && accountInfo.upi) {
     html += `
-                    <div style="margin-top: 0.25rem;">PAN: <span style="font-weight: bold;">${accountInfo.upi}</span></div>`;
+                    <div style="margin-top: 0.25rem;">UPI: <span style="font-weight: bold;">${accountInfo.upi}</span></div>`;
   }
   html += `
                   </div>
