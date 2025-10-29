@@ -15,7 +15,6 @@ const cron = require("node-cron");
 const admin = require("firebase-admin");
 const serviceAccount = require("./firebaseServiceAccount.json");
 const bodyParser = require("body-parser");
-const pdf1 = require("html-pdf-node");
 dotenv.config();
 
 app.use(bodyParser.json({ limit: "10mb" }));
@@ -714,20 +713,7 @@ app.post("/generate-pdf1", async (req, res) => {
   </html>
 `;
 
-    // Convert HTML to PDF
-    const file = { content: html1 };
-    const options = {
-      format: "A4",
-      printBackground: true,
-      margin: {
-        top: "0.5cm",
-        bottom: "0.5cm",
-        left: "0.5cm",
-        right: "0.5cm",
-      },
-    };
-
-    const pdfBuffer = await pdf1.generatePdf(file, options);
+    const pdfBuffer = await getPdfBuffer(html1);
 
     // Send as downloadable PDF
     res.setHeader("Content-Type", "application/pdf");
@@ -1086,6 +1072,19 @@ const buildHtml = (invoiceData) => {
   return html;
 };
 
+const getPdfBuffer = async (html1) => {
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  });
+
+  const page = await browser.newPage();
+  await page.setContent(html1, { waitUntil: "networkidle0" });
+  const pdfBuffer = await page.pdf({ format: "A4", printBackground: true });
+  await browser.close();
+  return pdfBuffer;
+};
+
 const sendEmailPdf = async (invoiceData, email, res) => {
   const customerInfo = invoiceData.customerInfo;
   const html = buildHtml(invoiceData);
@@ -1115,15 +1114,7 @@ const sendEmailPdf = async (invoiceData, email, res) => {
   </html>
 `;
 
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
-  });
-
-  const page = await browser.newPage();
-  await page.setContent(html1, { waitUntil: "networkidle0" });
-  const pdfBuffer = await page.pdf({ format: "A4", printBackground: true });
-  await browser.close();
+  const pdfBuffer = await getPdfBuffer(html1);
 
   const mailOptions = {
     from: "support@invoicesimplify.com",
