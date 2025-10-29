@@ -62,7 +62,6 @@ const EmailModal = ({
         logoBase64: logoBase64,
         additionalInfo: additionalInfo,
         currencySymbol: currencySymbol,
-        // taxCalculatedInfo: taxCalculatedInfo,
       };
 
       setLoading(true);

@@ -1056,7 +1056,7 @@ const buildHtml = (invoiceData) => {
               </div>`;
   if (additionalInfo?.additionaldesc) {
     html += `
-              <div style="color: #6B7280; font-size: 0.875rem; margin-top: 0.25rem;">
+              <div style="color: #6B7280; font-size: 0.875rem; margin-top: 1.5rem;">
                ${additionalInfo?.additionaldesc}
               </div>`;
   }
