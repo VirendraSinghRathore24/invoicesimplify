@@ -82,7 +82,7 @@ const CreatorSidebar = () => {
   }, []);
   return (
     // <div className="w-60 h-[96.7%] bg-[#014459] text-white flex flex-col shadow-lg fixed top-0 left-0 rounded-lg m-3">
-    <aside className="fixed inset-y-0 left-0 w-64 bg-[#0F172A] text-gray-200 border-r border-gray-200  overflow-auto z-50 transform transition-transform duration-300 ">
+    <aside className="fixed inset-y-0 left-0 w-64 bg-white text-black border-r border-gray-200  overflow-auto z-50 transform transition-transform duration-300 ">
       <NavLink
         className="text-xl font-bold p-2 items-center flex justify-center border-b border-gray "
         to={"/"}
@@ -94,8 +94,8 @@ const CreatorSidebar = () => {
           loading="lazy"
         />
       </NavLink>
-      <div className="text-sm font-bold break-all py-2 border-b border-white text-center flex items-center justify-start px-6 break-words">
-        <div className="w-8 h-8 bg-amber-500 text-white rounded-full flex items-center justify-center mr-2">
+      <div className="text-sm font-bold break-all py-2 border-b border-gray text-center flex items-center justify-start px-6 break-words">
+        <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center mr-2">
           {name?.charAt(0).toUpperCase()}
         </div>
         {name}
@@ -267,8 +267,8 @@ const SidebarItem = ({
   const baseClasses =
     "flex items-center space-x-3 px-2 py-2 rounded-md transition my-4";
   const activeClasses = active
-    ? "bg-blue-600 font-semibold"
-    : "hover:bg-blue-600";
+    ? "bg-blue-600 font-semibold text-white"
+    : "hover:bg-blue-600 hover:text-white";
 
   return (
     <div>
@@ -306,8 +306,8 @@ const SubMenuItem = ({ text, to, active, icon, onClick }) => {
   const baseClasses =
     "flex items-center space-x-3 px-3 py-2 rounded-md transition my-2 text-sm";
   const activeClasses = active
-    ? "bg-blue-600 font-semibold"
-    : "hover:bg-blue-600";
+    ? "bg-blue-600 font-semibold text-white"
+    : "hover:bg-blue-600 hover:text-white";
 
   return (
     <Link
