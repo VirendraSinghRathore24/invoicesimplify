@@ -210,39 +210,27 @@ function CreatorViewInvoice() {
             </div>
             <div className="hidden lg:block">
               <div className="flex justify-between gap-x-4 text-sm text-black font-bold mt-1">
-                <div>
-                  <button
-                    onClick={() => navigate(-1)}
-                    className="flex items-center bg-[#E5E7EB] font-bold px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
-                  >
-                    <span className="mr-2">
-                      <ChevronLeft />
-                    </span>
-                    Back
-                  </button>
+                <div
+                  onClick={() => navigate(-1)}
+                  className="flex gap-x-2 justify-center items-center cursor-pointer px-4 py-2 bg-[#E5E7EB] rounded-md font-bold rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
+                >
+                  <ChevronLeft />
+                  <button>Back</button>
                 </div>
-                <div>
-                  <button
-                    onClick={handleEmail}
-                    className="flex items-center bg-[#E5E7EB]  font-bold px-2 lg:px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
-                  >
-                    <span className="mr-2">
-                      <Mail />
-                    </span>
-                    Email
-                  </button>
+                <div
+                  onClick={handleEmail}
+                  className="flex gap-x-2 justify-center items-center cursor-pointer px-4 py-2 bg-[#E5E7EB] rounded-md font-bold rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
+                >
+                  <Mail />
+                  <button>Email</button>
                 </div>
 
-                <div>
-                  <button
-                    onClick={handleDownloadPdf}
-                    className="flex items-center bg-[#444] text-white font-bold px-2 lg:px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
-                  >
-                    <span className="mr-2">
-                      <Download size={22} />
-                    </span>
-                    PDF
-                  </button>
+                <div
+                  onClick={handleDownloadPdf}
+                  className="flex gap-x-2 justify-center bg-[#444] cursor-pointer text-white items-center px-4 py-2 rounded-md font-bold rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
+                >
+                  <Download size={22} />
+                  <button>PDF</button>
                 </div>
               </div>
             </div>

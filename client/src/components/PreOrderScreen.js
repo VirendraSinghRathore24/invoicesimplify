@@ -143,10 +143,13 @@ const PlanSummaryWithDiscount = () => {
     const loginInfo = filteredData.filter((x) => x.code === loggedInUser)[0];
 
     const codeDoc = doc(db, LOGIN_INFO, loginInfo.id);
+    // get updated end date
+    getNextDate(planName);
+
     await updateDoc(codeDoc, {
       subscription: planName,
       subStarts: new Date().toISOString().slice(0, 10),
-      subEnds: getNextDate(planName),
+      subEnds: localStorage.getItem("subEndDate"),
     });
   };
 

@@ -602,7 +602,7 @@ const CreatorDashboard = () => {
   return (
     <div className="">
       <div className="lg:left-64 right-0 top-0 left-0 lg:fixed bg-gray-100">
-        <header className="fixed top-0 left-0 md:left-64 right-0 h-16 bg-white shadow flex items-center justify-between px-4 z-40">
+        <header className="fixed top-0 left-0 md:left-64 right-0 h-[63px] bg-white shadow flex items-center justify-between px-4 z-40">
           <div className="mx-auto font-bold text-md py-2 px-2 rounded-lg text-left w-full lg:left-64">
             <div className="text-xl text-black">Dashboard</div>
           </div>

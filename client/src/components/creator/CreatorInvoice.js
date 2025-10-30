@@ -374,48 +374,26 @@ function CreatorInvoice() {
             </div>
             <div className="hidden lg:block">
               <div className="flex justify-between gap-x-4 text-sm text-black font-bold mt-1">
-                <div className="flex gap-x-2">
-                  <button
-                    onClick={handleEditInvoice}
-                    className="flex items-center bg-[#E5E7EB] font-bold px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
-                  >
-                    <span className="mr-2">
-                      <FaRegEdit size={22} />
-                    </span>
-                    Edit
-                  </button>
+                <div
+                  onClick={handleEditInvoice}
+                  className="flex gap-x-2 justify-center items-center cursor-pointer px-4 py-2 bg-[#E5E7EB] rounded-md font-bold rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
+                >
+                  <FaRegEdit size={22} />
+                  <button>Edit</button>
                 </div>
-                <div>
-                  <button
-                    onClick={handleEmail}
-                    className="flex items-center bg-[#E5E7EB]  font-bold px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
-                  >
-                    <span className="mr-2">
-                      <Mail />
-                    </span>
-                    Email Invoice
-                  </button>
+                <div
+                  onClick={handleEmail}
+                  className="flex gap-x-2 justify-center items-center cursor-pointer px-4 py-2 bg-[#E5E7EB] rounded-md font-bold rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
+                >
+                  <Mail />
+                  <button>Email</button>
                 </div>
-                <div className="flex gap-x-2">
-                  <button
-                    onClick={handleDownloadPdf}
-                    className="flex items-center font-bold bg-[#444] text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300"
-                  >
-                    <span className="flex items-center gap-1">
-                      {loading ? (
-                        <>
-                          <Loader />
-                        </>
-                      ) : (
-                        <div className="flex gap-2">
-                          <div>
-                            <Download />{" "}
-                          </div>
-                          <div>PDF </div>
-                        </div>
-                      )}
-                    </span>
-                  </button>
+                <div
+                  onClick={handleDownloadPdf}
+                  className="flex gap-x-2 justify-center bg-[#444] cursor-pointer text-white items-center px-4 py-2 rounded-md font-bold rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
+                >
+                  <Download />
+                  <button>PDF</button>
                 </div>
               </div>
             </div>
