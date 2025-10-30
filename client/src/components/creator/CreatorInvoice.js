@@ -329,10 +329,12 @@ function CreatorInvoice() {
     const auth = localStorage.getItem("auth");
     if (auth !== "Logged In") {
       navigate("/login");
+      return;
     }
     const type = localStorage.getItem("type");
     if (!type || type === "undefined" || type === "null") {
       navigate("/selectbusinesstype");
+      return;
     }
 
     let pi = localStorage.getItem("creator_personalInfo");

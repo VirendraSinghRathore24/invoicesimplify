@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import LoginFooter from "./login/LoginFooter";
 import { BASIC_INFO, CONTENT_CREATOR, CREATORS, LOGIN_INFO } from "./Constant";
@@ -71,6 +71,13 @@ const BusinessTypeComponent = () => {
       type: businessType,
     });
   };
+
+  useEffect(() => {
+    const type = localStorage.getItem("type");
+    if (type) {
+      navigate("/");
+    }
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-white">

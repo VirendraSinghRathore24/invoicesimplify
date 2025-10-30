@@ -55,10 +55,12 @@ const Brands = () => {
 
     if (!user || user === "undefined" || user === "null") {
       navigate("/login");
+      return;
     }
     const type = localStorage.getItem("type");
     if (!type || type === "undefined" || type === "null") {
       navigate("/selectbusinesstype");
+      return;
     }
   };
 
@@ -158,12 +160,16 @@ const Brands = () => {
                           <td className="px-4 py-3 border-r">
                             {post.customerInfo.customerName}
                           </td>
-                          <td className="px-4 py-3 border-r">
-                            {post.customerInfo.address},{" "}
-                            {post.customerInfo.address1},{" "}
-                            {post.customerInfo.address2} -{" "}
-                            {post.customerInfo.address3}
-                          </td>
+                          {post.customerInfo.address ? (
+                            <td className="px-4 py-3 border-r">
+                              {post.customerInfo.address},{" "}
+                              {post.customerInfo.address1},{" "}
+                              {post.customerInfo.address2} -{" "}
+                              {post.customerInfo.address3}
+                            </td>
+                          ) : (
+                            <td className="px-4 py-3 border-r"></td>
+                          )}
                           <td className="px-4 py-3 border-r whitespace-nowrap">
                             <button
                               onClick={() =>

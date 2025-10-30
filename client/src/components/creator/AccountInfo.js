@@ -56,10 +56,12 @@ const AccountInfo = () => {
 
     if (!user || user === "undefined" || user === "null") {
       navigate("/login");
+      return;
     }
     const type = localStorage.getItem("type");
     if (!type || type === "undefined" || type === "null") {
       navigate("/selectbusinesstype");
+      return;
     }
   };
 
