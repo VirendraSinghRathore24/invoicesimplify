@@ -330,6 +330,10 @@ function CreatorInvoice() {
     if (auth !== "Logged In") {
       navigate("/login");
     }
+    const type = localStorage.getItem("type");
+    if (!type || type === "undefined" || type === "null") {
+      navigate("/selectbusinesstype");
+    }
 
     let pi = localStorage.getItem("creator_personalInfo");
     setPersonalInfo(JSON.parse(pi));

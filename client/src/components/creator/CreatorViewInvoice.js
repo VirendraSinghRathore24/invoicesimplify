@@ -151,6 +151,10 @@ function CreatorViewInvoice() {
     if (!user || user === "undefined" || user === "null") {
       navigate("/login");
     }
+    const type = localStorage.getItem("type");
+    if (!type || type === "undefined" || type === "null") {
+      navigate("/selectbusinesstype");
+    }
   };
 
   useEffect(() => {

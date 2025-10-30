@@ -4,6 +4,7 @@ import CreatorMobileMenu from "./CreatorMobileMenu";
 import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
 import { LOGIN_INFO } from "../Constant";
 import { db } from "../../config/firebase";
+import { useNavigate } from "react-router-dom";
 
 const currencies = [
   { code: "INR", name: "Indian Rupee", symbol: "₹", flag: "🇮🇳" },
@@ -20,6 +21,7 @@ const currencies = [
 const Config = ({ onCurrencyChange }) => {
   const [selectedCurrency, setSelectedCurrency] = useState(currencies[0]);
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   // 🧠 Load saved currency from localStorage
   useEffect(() => {
@@ -60,6 +62,21 @@ const Config = ({ onCurrencyChange }) => {
     });
   };
 
+  const handleLogin = () => {
+    const user = localStorage.getItem("user");
+
+    if (!user || user === "undefined" || user === "null") {
+      navigate("/login");
+    }
+    const type = localStorage.getItem("type");
+    if (!type || type === "undefined" || type === "null") {
+      navigate("/selectbusinesstype");
+    }
+  };
+
+  useEffect(() => {
+    handleLogin();
+  }, []);
   return (
     <div className="">
       <div className="lg:left-64 right-0 top-0 left-0 lg:fixed bg-white">
