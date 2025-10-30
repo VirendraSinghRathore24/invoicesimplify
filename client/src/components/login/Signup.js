@@ -144,7 +144,7 @@ const Signup = () => {
           setLoading(false);
         });
     } catch (err) {
-      console.error(err);
+      alert("Error : " + err);
       setLoading(false);
     }
   };
