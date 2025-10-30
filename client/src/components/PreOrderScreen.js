@@ -97,7 +97,10 @@ const PlanSummaryWithDiscount = () => {
       order_id: order.data.id,
       handler: function (response) {
         // update login db with plan details
-        updateLoginDBForPlanDetail(plan.name);
+        // get updated end date
+        const nextDate = getNextDate(plan.name);
+        updatePaymentHistoryData(plan.name, response, nextDate);
+
         // update cache
         localStorage.setItem("isFreePlan", false);
         localStorage.setItem("subscription", plan.name);
@@ -105,9 +108,6 @@ const PlanSummaryWithDiscount = () => {
           "subStartDate",
           new Date().toISOString().slice(0, 10)
         );
-
-        // update payment history db
-        updatePaymentHistory(response);
 
         // Navigate to success page with order details
         navigate("/success", {
@@ -131,8 +131,16 @@ const PlanSummaryWithDiscount = () => {
     paymentObject.open();
   };
 
+  const updatePaymentHistoryData = async (name, response, nextDate) => {
+    await Promise.all([
+      updateLoginDBForPlanDetail(name, nextDate),
+      // update payment history db
+      updatePaymentHistory(response, nextDate),
+    ]);
+  };
+
   const login_CollectionRef = collection(db, LOGIN_INFO);
-  const updateLoginDBForPlanDetail = async (planName) => {
+  const updateLoginDBForPlanDetail = async (planName, nextDate) => {
     const data = await getDocs(login_CollectionRef);
     const filteredData = data.docs.map((doc) => ({
       ...doc.data(),
@@ -143,13 +151,11 @@ const PlanSummaryWithDiscount = () => {
     const loginInfo = filteredData.filter((x) => x.code === loggedInUser)[0];
 
     const codeDoc = doc(db, LOGIN_INFO, loginInfo.id);
-    // get updated end date
-    getNextDate(planName);
 
     await updateDoc(codeDoc, {
       subscription: planName,
       subStarts: new Date().toISOString().slice(0, 10),
-      subEnds: localStorage.getItem("subEndDate"),
+      subEnds: new Date(nextDate).toISOString().slice(0, 10),
     });
   };
 
@@ -179,7 +185,7 @@ const PlanSummaryWithDiscount = () => {
     }
   };
 
-  const updatePaymentHistory = async (response) => {
+  const updatePaymentHistory = async (response, nextDate) => {
     const paymentHistory_CollectionRef = collection(
       doc(db, CREATORS, localStorage.getItem("uid")),
       "Payment_History"
@@ -190,7 +196,7 @@ const PlanSummaryWithDiscount = () => {
       amountPaid: finalTotal,
       paymentDate: new Date().toISOString().slice(0, 10),
       planStartsDate: new Date().toISOString().slice(0, 10),
-      planEndsDate: localStorage.getItem("subEndDate"),
+      planEndsDate: new Date(nextDate).toISOString().slice(0, 10),
       razorpayPaymentId: response.razorpay_payment_id,
       loggedInUser: localStorage.getItem("user"),
     });
