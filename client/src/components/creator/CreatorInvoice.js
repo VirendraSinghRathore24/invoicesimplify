@@ -1129,6 +1129,7 @@ function CreatorInvoice() {
           />
         )}
       </div>
+      {loading && <Loader />}
     </div>
   );
 }
