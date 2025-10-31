@@ -232,7 +232,21 @@ const Home = () => {
         </p>
 
         <div
-          className="max-w-4xl mx-auto relative"
+          className="max-w-4xl mx-auto relative block lg:hidden"
+          style={{ paddingTop: "70.25%" /* 16:9 ratio */ }}
+        >
+          <iframe
+            src="https://www.youtube.com/embed/2jycYA6NAKQ" // replace with your video link
+            title="InvoiceSimplify Demo"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            className="absolute top-0 left-0 w-full h-full rounded-xl shadow-lg"
+          ></iframe>
+        </div>
+
+        <div
+          className="max-w-4xl mx-auto relative block max-lg:hidden"
           style={{ paddingTop: "40.25%" /* 16:9 ratio */ }}
         >
           <iframe
