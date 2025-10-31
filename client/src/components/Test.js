@@ -140,9 +140,9 @@ const Home = () => {
             </button>
           </div>
         </div>
-        <div className="border-2 rounded-md border-gray-400 p-4 bg-white shadow-lg">
+        <div className="border-2 rounded-md border-gray-400 p-2 bg-white shadow-lg">
           <img
-            src={"../../images/invp2.webp"}
+            src={"../../images/invp3.webp"}
             alt="Hero"
             className="w-full drop-shadow-2xl"
           />
