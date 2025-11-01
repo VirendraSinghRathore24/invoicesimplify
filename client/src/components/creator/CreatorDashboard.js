@@ -485,12 +485,12 @@ const CreatorDashboard = () => {
     return totalProfit;
   };
 
-  const invoiceInfo_CollectionRef = collection(
-    doc(db, CREATORS, uid),
-    INVOICE_INFO
-  );
-
   const getAllInvoiceInfo = async () => {
+    const invoiceInfo_CollectionRef = collection(
+      doc(db, CREATORS, uid),
+      INVOICE_INFO
+    );
+
     const data = await getDocs(invoiceInfo_CollectionRef);
     const invoiceInfo = data.docs.map((doc) => ({
       ...doc.data(),
@@ -591,12 +591,12 @@ const CreatorDashboard = () => {
       navigate("/selectbusinesstype");
       return;
     }
+    getInvoiceInfo();
+    window.scroll(0, 0);
   };
 
   useEffect(() => {
     handleLogin();
-    getInvoiceInfo();
-    window.scroll(0, 0);
   }, []);
 
   return (
