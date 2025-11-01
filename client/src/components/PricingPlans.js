@@ -23,7 +23,7 @@ const plans = [
   },
   {
     name: "Monthly",
-    price: "1",
+    price: "299",
     days: "month",
     description: "Perfect for content creators.",
     features: [
@@ -40,7 +40,7 @@ const plans = [
   },
   {
     name: "Yearly",
-    price: "2",
+    price: "2999",
     days: "year",
     description: "Perfect for content creators.",
     features: [
