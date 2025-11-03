@@ -835,11 +835,7 @@ const buildHtml = (invoiceData) => {
   html += `
           <div style="padding: 2rem; font-family: 'Inter', sans-serif; font-size: 14px; text-align: left;">
             <div>
-              <img
-                src="${logoBase64}"
-                alt="Company Logo"
-                style="width: 100px; margin-bottom: 1rem;"
-              />
+             
               <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                 <div style="display: flex; flex-direction: column;">`;
   if (personalInfo?.name) {
@@ -1067,6 +1063,17 @@ const buildHtml = (invoiceData) => {
                 </div>
               </div>
             </div>
+            <footer style="
+  position: fixed;
+  bottom: 15px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 10px;
+  color: #666;
+">
+  Powered by <a href="https://invoicesimplify.com" target="_blank" style="color: #007bff;">InvoiceSimplify</a> — Smart, Secure & Professional Invoicing.
+</footer>
           </div>`;
 
   return html;
@@ -1080,7 +1087,10 @@ const getPdfBuffer = async (html1) => {
 
   const page = await browser.newPage();
   await page.setContent(html1, { waitUntil: "networkidle0" });
-  const pdfBuffer = await page.pdf({ format: "A4", printBackground: true });
+  const pdfBuffer = await page.pdf({
+    format: "A4",
+    printBackground: true,
+  });
   await browser.close();
   return pdfBuffer;
 };
