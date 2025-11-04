@@ -245,7 +245,11 @@ function CreatorInvoice() {
       parseInt(invoiceInfo?.invoiceNumber) + 1
     );
     await updateDoc(codeDoc, {
-      invoiceNumber: parseInt(invoiceInfo?.invoiceNumber + 1),
+      invoiceNumber:
+        invoiceInfo?.invoiceNumberMode === "automatic"
+          ? parseInt(invoiceInfo?.invoiceNumber + 1)
+          : invoiceInfo?.invoiceNumber,
+      invoiceNumberMode: invoiceInfo?.invoiceNumberMode,
       usedInvoiceNumbers: usedInvoiceNumbers,
     });
   };
@@ -367,32 +371,32 @@ function CreatorInvoice() {
         <div className="hidden max-lg:block mb-16">
           <CreatorMobileMenu />
         </div>
-        <div className="top-14 lg:top-0 mx-auto w-full h-[56px] lg:h-[64px] text-white fixed lg:sticky border-b-2">
-          <div className="flex justify-between mx-auto font-bold text-md p-2 rounded-md  w-full ">
-            <div className="text-xl text-black hidden lg:block mt-1">
-              Invoice
-            </div>
+        <div className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b shadow-sm">
+          <div className="max-w-6xl mx-auto flex justify-between items-center h-[56px] lg:h-[62.5px]">
+            <h1 className="text-xl font-semibold tracking-wide text-gray-800 hidden md:block">
+              Invoice Preview
+            </h1>
             <div className="hidden lg:block">
               <div className="flex justify-between gap-x-4 text-sm text-black font-bold mt-1">
                 <div
                   onClick={handleEditInvoice}
-                  className="flex gap-x-2 justify-center items-center cursor-pointer px-4 py-2 bg-[#E5E7EB] rounded-md font-bold rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
+                  className="flex items-center cursor-pointer gap-2 px-4 py-2 rounded-lg border border-gray-300 bg-white hover:bg-gray-100 transition font-medium text-gray-700"
                 >
-                  <FaRegEdit size={22} />
+                  <FaRegEdit size={18} />
                   <button>Edit</button>
                 </div>
                 <div
                   onClick={handleEmail}
-                  className="flex gap-x-2 justify-center items-center cursor-pointer px-4 py-2 bg-[#E5E7EB] rounded-md font-bold rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
+                  className="flex items-center cursor-pointer gap-2 px-4 py-2 rounded-lg border border-blue-600 text-blue-600 bg-blue-50 hover:bg-blue-600 hover:text-white transition font-medium"
                 >
-                  <Mail />
+                  <Mail size={18} />
                   <button>Email</button>
                 </div>
                 <div
                   onClick={handleDownloadPdf}
-                  className="flex gap-x-2 justify-center bg-[#444] cursor-pointer text-white items-center px-4 py-2 rounded-md font-bold rounded-md hover:bg-blue-700 hover:text-white transition duration-300"
+                  className="flex items-center cursor-pointer gap-2 px-4 py-2 rounded-lg bg-gray-900 text-white hover:bg-gray-700 transition font-medium shadow-sm"
                 >
-                  <Download />
+                  <Download size={18} />
                   <button>PDF</button>
                 </div>
               </div>

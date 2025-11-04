@@ -111,6 +111,7 @@ const Signup = () => {
           localStorage.setItem("userName", userName);
           localStorage.setItem("name1", name);
           localStorage.setItem("invoiceNumber", 1);
+          localStorage.setItem("invoiceNumberMode", "automatic");
           localStorage.setItem("usedInvoiceNumbers", []);
           localStorage.setItem("type", type);
           localStorage.setItem("subscription", "Free");
@@ -174,6 +175,7 @@ const Signup = () => {
       localStorage.setItem("user", code);
       localStorage.setItem("userName", userName);
       localStorage.setItem("invoiceNumber", 1);
+      localStorage.setItem("invoiceNumberMode", "automatic");
       localStorage.setItem("isFreePlan", true);
       localStorage.setItem("subscription", "Free");
       navigate("/businessinfo");
@@ -197,6 +199,7 @@ const Signup = () => {
       userName: userName,
       name: name,
       invoiceNumber: 1,
+      invoiceNumberMode: "automatic",
       usedInvoiceNumbers: [],
       type: type,
       subscription: "Free",

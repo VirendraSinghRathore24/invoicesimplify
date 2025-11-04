@@ -100,6 +100,10 @@ const Login = () => {
     localStorage.setItem("name1", loginInfo.name);
     localStorage.setItem("subscription", loginInfo.subscription);
     localStorage.setItem("invoiceNumber", loginInfo.invoiceNumber);
+    localStorage.setItem(
+      "invoiceNumberMode",
+      loginInfo.invoiceNumberMode || "automatic"
+    );
     localStorage.setItem("usedInvoiceNumbers", loginInfo.usedInvoiceNumbers);
     localStorage.setItem("subStartDate", loginInfo.subStarts);
     localStorage.setItem("subEndDate", loginInfo.subEnds);
@@ -193,6 +197,7 @@ const Login = () => {
     localStorage.setItem("userName", userName);
     localStorage.setItem("name1", name);
     localStorage.setItem("invoiceNumber", 1);
+    localStorage.setItem("invoiceNumberMode", "automatic");
     localStorage.setItem("usedInvoiceNumbers", []);
     localStorage.setItem("subscription", "Free");
     localStorage.setItem("uid", uid);
@@ -216,6 +221,7 @@ const Login = () => {
       userName: userName,
       name: userName,
       invoiceNumber: 1,
+      invoiceNumberMode: "automatic",
       usedInvoiceNumbers: [],
       type: "",
       subscription: "Free",

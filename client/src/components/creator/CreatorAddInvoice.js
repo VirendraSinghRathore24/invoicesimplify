@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Sidebar, Trash2, X, Search } from "lucide-react";
+import { Sidebar, Trash2, X, Search, Cog } from "lucide-react";
 import InventoryModal from "../inventory/InventoryModal";
 import { collection, doc, getDocs } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import AlertModal from "../confirmModal/AlertModal";
+import { CiSettings } from "react-icons/ci";
 import MobileMenu from "../MobileMenu";
 import { INVOICE_INFO, LOGIN_INFO, SERVICE_CENTER, USERS } from "../Constant";
 import Loader from "../Loader";
 import SignModal from "./SignModal";
 import BrandModal from "./BrandModal";
 import CreatorMobileMenu from "./CreatorMobileMenu";
+import ChangeInvoiceNumberModal from "./ChangeInvoiceNumberModal";
 
 const CreatorAddInvoice = () => {
   const [signature, setSignature] = useState(null);
@@ -19,6 +21,9 @@ const CreatorAddInvoice = () => {
 
   const [isAccountInfo, setIsAccountInfo] = useState(false);
   const [isBusinessInfo, setIsBusinessInfo] = useState(false);
+
+  const [open1, setOpen1] = useState(false);
+  const [mode, setMode] = useState("automatic");
 
   const countryCode = localStorage.getItem("countryCode");
   const currencySymbol = localStorage.getItem("invoiceCurrency") || "₹";
@@ -275,6 +280,7 @@ const CreatorAddInvoice = () => {
 
     const invoiceInfo = {
       invoiceNumber: invoiceNumber,
+      invoiceNumberMode: localStorage.getItem("invoiceNumberMode"),
       date: date,
     };
 
@@ -481,6 +487,25 @@ const CreatorAddInvoice = () => {
     }
   };
 
+  const handleSave = () => {
+    try {
+      setLoading(true);
+      localStorage.setItem("invoiceNumberMode", mode);
+      if (mode === "automatic") {
+        // get invoice number
+        getInvoiceNumber();
+      } else {
+        setInvoiceNumber("");
+      }
+      setOpen1(false);
+    } catch (err) {
+      console.log(err);
+      setOpen1(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const getLocalStorageSignInfo = () => {
     const sig = localStorage.getItem("sign");
     if (sig) {
@@ -585,7 +610,12 @@ const CreatorAddInvoice = () => {
     const businessType = localStorage.getItem("type");
     setBusinessType(businessType);
     getUserSettingsData(loggedInUser);
-    getInvoiceNumber();
+    const invoiceNumberMode = localStorage.getItem("invoiceNumberMode");
+    if (invoiceNumberMode === "automatic") {
+      getInvoiceNumber();
+    } else {
+      setInvoiceNumber("");
+    }
 
     let info2 = localStorage.getItem("taxInfo");
     let taxData = info2 === "undefined" ? null : JSON.parse(info2);
@@ -953,23 +983,49 @@ const CreatorAddInvoice = () => {
                         <div className="text-xs font-medium leading-5 mt-2">
                           Invoice #
                         </div>
-                        <div>
-                          <input
-                            className="w-6/12 block text-xs rounded border border-gray-400 py-2 px-4 leading-5"
-                            required
-                            name="invoiceNumber"
-                            placeholder="10"
-                            value={invoiceNumber}
-                            onChange={(e) => {
-                              setInvoiceNumber(e.target.value);
-                              localStorage.setItem(
-                                "customer_invoiceNumber",
-                                e.target.value
-                              );
-                            }}
-                          />
+                        <div className="flex">
+                          {localStorage.getItem("invoiceNumberMode") ===
+                          "automatic" ? (
+                            <input
+                              className="block w-6/12 text-xs rounded-l  border-r-0 border border-gray-400  px-4 leading-5"
+                              required
+                              readOnly
+                              name="invoiceNumber"
+                              placeholder="10"
+                              value={invoiceNumber}
+                              onChange={(e) => {
+                                setInvoiceNumber(e.target.value);
+                                localStorage.setItem(
+                                  "customer_invoiceNumber",
+                                  e.target.value
+                                );
+                              }}
+                            />
+                          ) : (
+                            <input
+                              className="block w-6/12 text-xs rounded-l  border-r-0 border border-gray-400  px-4 leading-5"
+                              required
+                              name="invoiceNumber"
+                              placeholder="10"
+                              value={invoiceNumber}
+                              onChange={(e) => {
+                                setInvoiceNumber(e.target.value);
+                                localStorage.setItem(
+                                  "customer_invoiceNumber",
+                                  e.target.value
+                                );
+                              }}
+                            />
+                          )}
+                          <div
+                            onClick={() => setOpen1(true)}
+                            className="p-[6px] bg-[#eee] border border-[#ccc] border-l-0 rounded-r  cursor-pointer"
+                          >
+                            <CiSettings />
+                          </div>
                         </div>
                       </div>
+
                       <div className="flex flex-col">
                         <div className="text-xs font-medium leading-5 mt-2">
                           Date
@@ -1275,6 +1331,16 @@ const CreatorAddInvoice = () => {
             }}
             title="Required"
             message="Customer Name is required."
+          />
+          <ChangeInvoiceNumberModal
+            isOpen={open1}
+            onClose={() => {
+              setMode(localStorage.getItem("invoiceNumberMode"));
+              setOpen1(false);
+            }}
+            onSave={handleSave}
+            mode={mode}
+            setMode={setMode}
           />
         </main>
       </div>
