@@ -100,10 +100,13 @@ const Login = () => {
     localStorage.setItem("name1", loginInfo.name);
     localStorage.setItem("subscription", loginInfo.subscription);
     localStorage.setItem("invoiceNumber", loginInfo.invoiceNumber);
-    localStorage.setItem(
-      "invoiceNumberMode",
-      loginInfo.invoiceNumberMode || "automatic"
-    );
+
+    if (loginInfo.invoiceNumberMode) {
+      localStorage.setItem("invoiceNumberMode", loginInfo.invoiceNumberMode);
+    } else {
+      localStorage.setItem("invoiceNumberMode", "automatic");
+    }
+
     localStorage.setItem("usedInvoiceNumbers", loginInfo.usedInvoiceNumbers);
     localStorage.setItem("subStartDate", loginInfo.subStarts);
     localStorage.setItem("subEndDate", loginInfo.subEnds);
