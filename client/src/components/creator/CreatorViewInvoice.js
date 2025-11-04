@@ -250,11 +250,11 @@ function CreatorViewInvoice() {
               }}
             >
               <div>
-                <img
+                {/* <img
                   src={logoBase64}
                   alt="Company Logo"
                   style={{ width: "100px", marginBottom: "1rem" }}
-                />
+                /> */}
                 <div
                   style={{
                     display: "flex",
