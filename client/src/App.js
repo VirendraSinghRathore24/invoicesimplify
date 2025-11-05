@@ -60,6 +60,7 @@ import PreOrderScreen from "./components/PreOrderScreen";
 import Config from "./components/creator/Config";
 import Test from "./components/Test";
 import BusinessTypeComponent from "./components/BusinessTypeComponent";
+import SellerInvoice from "./components/shop/purchase/SellerInvoice";
 
 function App() {
   const type = localStorage.getItem("type");
@@ -191,6 +192,8 @@ function App() {
             path="/selectbusinesstype"
             element={<BusinessTypeComponent />}
           />
+
+          <Route path="/shop/sellerinvoice" element={<SellerInvoice />} />
         </Routes>
 
         <ToastContainer />

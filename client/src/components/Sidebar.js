@@ -137,6 +137,16 @@ const Sidebar = () => {
         </SidebarItem>
 
         <SidebarItem
+          icon={<MdOutlineInventory size={24} />}
+          text="Purchase"
+          link="/shop/sellerinvoice"
+          active={location.pathname === "/shop/sellerinvoice"}
+        >
+          {/* <SubMenuItem text="Add Inventory" to="/addinventory" active={location.pathname === '/addinventory'}/>
+          <SubMenuItem text="Edit Inventory" to="/editinventory" active={location.pathname === '/editinventory'}/> */}
+        </SidebarItem>
+
+        <SidebarItem
           icon={<GrNotes size={20} />}
           text="Invoice"
           link="/createinvoice"
