@@ -5,7 +5,7 @@ import InventoryModal from "../inventory/InventoryModal";
 import { collection, doc, getDocs } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import AlertModal from "../confirmModal/AlertModal";
-import { CiSettings } from "react-icons/ci";
+import { IoMdSettings } from "react-icons/io";
 import MobileMenu from "../MobileMenu";
 import { INVOICE_INFO, LOGIN_INFO, SERVICE_CENTER, USERS } from "../Constant";
 import Loader from "../Loader";
@@ -489,7 +489,7 @@ const CreatorAddInvoice = () => {
 
   const handleSave = () => {
     try {
-      setLoading(true);
+      setLoading1(true);
       localStorage.setItem("invoiceNumberMode", mode);
       if (mode === "automatic") {
         // get invoice number
@@ -502,7 +502,7 @@ const CreatorAddInvoice = () => {
       console.log(err);
       setOpen1(false);
     } finally {
-      setLoading(false);
+      setLoading1(false);
     }
   };
 
@@ -1006,7 +1006,7 @@ const CreatorAddInvoice = () => {
                               className="block w-6/12 text-xs rounded-l  border-r-0 border border-gray-400  px-4 leading-5"
                               required
                               name="invoiceNumber"
-                              placeholder="10"
+                              placeholder="INV-10"
                               value={invoiceNumber}
                               onChange={(e) => {
                                 setInvoiceNumber(e.target.value);
@@ -1019,9 +1019,9 @@ const CreatorAddInvoice = () => {
                           )}
                           <div
                             onClick={() => setOpen1(true)}
-                            className="p-[6px] bg-[#eee] border border-[#ccc] border-l-0 rounded-r  cursor-pointer"
+                            className="p-[6px] bg-[#eee] border border-[#ccc] border-l-0 rounded-r cursor-pointer"
                           >
-                            <CiSettings />
+                            <IoMdSettings />
                           </div>
                         </div>
                       </div>
