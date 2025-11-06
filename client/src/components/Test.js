@@ -5,8 +5,11 @@ import { toast } from "react-toastify";
 import { addDoc, collection, doc } from "firebase/firestore";
 import { CREATORS } from "./Constant";
 import { db } from "../config/firebase";
+import { create } from "canvas-confetti";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+  const navigate = useNavigate();
   const testimonials = [
     {
       name: "Sanju Shekhawat",
@@ -61,6 +64,19 @@ const Home = () => {
     });
   };
 
+  const createInvoice = () => {
+    const user = localStorage.getItem("user");
+    const type = localStorage.getItem("type");
+
+    if (!user || user === "undefined" || user === "null") {
+      navigate("/login");
+    } else if (!type || type === "undefined" || type === "null") {
+      navigate("/selectbusinesstype");
+    } else {
+      navigate("/creator/createinvoice");
+    }
+  };
+
   return (
     <div className="bg-gray-50 text-gray-800">
       {/* HEADER */}
@@ -74,7 +90,7 @@ const Home = () => {
         </div>
         <div className="flex gap-4">
           <button
-            onClick={() => (window.location.href = "/creator/createinvoice")}
+            onClick={() => createInvoice()}
             className="px-6 py-2 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition"
           >
             Start Free
@@ -96,7 +112,7 @@ const Home = () => {
           <div className="mt-8 flex gap-4">
             <button
               className="px-8 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition flex items-center gap-2"
-              onClick={() => (window.location.href = "/creator/createinvoice")}
+              onClick={() => createInvoice()}
             >
               Create Invoice <ArrowRight />
             </button>
