@@ -711,7 +711,7 @@ const CreatorCreateInvoice = () => {
   const getBrands = async () => {
     setLoading(true);
     const existingBrands = await getBrandsData();
-    const filteredData1 = existingBrands.sort((a, b) =>
+    const filteredData1 = existingBrands?.sort((a, b) =>
       a.customerInfo.customerName < b.customerInfo.customerName ? -1 : 1
     );
 
@@ -720,12 +720,12 @@ const CreatorCreateInvoice = () => {
     setLoading(false);
   };
 
-  const brandInfo_CollectionRef = collection(
-    doc(db, CREATORS, uid),
-    "Brand_Info"
-  );
   const getBrandsData = async () => {
     try {
+      const brandInfo_CollectionRef = collection(
+        doc(db, CREATORS, uid),
+        "Brand_Info"
+      );
       const data = await getDocs(brandInfo_CollectionRef);
       const filteredData = data.docs.map((doc) => ({
         ...doc.data(),
