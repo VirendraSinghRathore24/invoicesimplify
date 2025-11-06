@@ -1,7 +1,7 @@
 // Modal.js
 
 import React, { useEffect, useState } from "react";
-import { X } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Loader from "../Loader";
 import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
@@ -16,6 +16,7 @@ const Brands = () => {
   const [loading, setLoading] = useState(false);
   const uid = localStorage.getItem("uid");
   const loggedInUser = localStorage.getItem("user");
+  const [search, setSearch] = useState("");
 
   const navigate = useNavigate();
 
@@ -116,167 +117,88 @@ const Brands = () => {
           <div className="hidden max-lg:block mb-16">
             <CreatorMobileMenu />
           </div>
+          <div className="flex flex-col w-full  mt-10 p-4">
+            <div className="flex items-center justify-between mt-4 mb-3 ">
+              <input
+                type="text"
+                placeholder="Search brand by name or address..."
+                value={searchTerm}
+                onChange={(e) => handleSearch(e.target.value)}
+                className="w-10/12 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              />
+              <button
+                // onClick={() => setOpen(true)}
+                className="px-4 py-2 flex items-center cursor-pointer gap-2 px-2 py-1 rounded-lg border border-blue-600 text-blue-600 bg-blue-50 hover:bg-blue-600 hover:text-white transition text-sm"
+              >
+                + Add New
+              </button>
+            </div>
 
-          <div className=" lg:mt-0 bg-white p-2 text-black rounded-xl w-full">
-            <div className="overflow-x-auto rounded-lg mt-16">
-              <div className="p-4">
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  value={searchTerm}
-                  onChange={(e) => handleSearch(e)}
-                  className="p-2 border border-gray-300 rounded-md w-full text-sm"
-                />
-              </div>
-              {/* Desktop view with sticky header */}
-              <div className="h-[550px] overflow-auto hidden lg:block border border-gray-300 rounded-md m-2">
-                <table className="min-w-full text-sm text-left text-gray-700">
-                  <thead className="sticky top-0 z-10 bg-gray-100 text-xs uppercase text-gray-600 border-b">
-                    <tr>
-                      {["S.No.", "Name", "Address", "Edit", "Delete"].map(
-                        (header) => (
-                          <th
-                            key={header}
-                            className="px-4 py-3 border-r min-w-[120px] bg-gray-100"
-                          >
-                            {header}
-                          </th>
-                        )
+            {/* Seller List */}
+            <div className=" w-full overflow-y-auto max-h-screen scrollbar-thin scrollbar-thumb-gray-300">
+              {posts.length === 0 ? (
+                <p className="text-gray-500 text-center py-6">
+                  No brand found.
+                </p>
+              ) : (
+                posts.map((seller, i) => (
+                  <div
+                    key={i}
+                    className="bg-white border rounded-lg p-4 mb-3 hover:bg-gray-50 cursor-pointer transition flex justify-between"
+                    onClick={() => {
+                      //onSelect(seller);
+                      //onClose();
+                    }}
+                  >
+                    <div>
+                      <h3 className="font-semibold text-gray-800 text-sm">
+                        {seller.customerInfo.customerName}
+                      </h3>
+                      {seller.customerInfo.address && (
+                        <p className="text-gray-600 text-xs mt-1">
+                          {seller.customerInfo.address}
+                        </p>
                       )}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredData &&
-                      filteredData.map((post, index) => (
-                        <tr
-                          //onClick={() => handleSelect(post)}
-                          key={post.id}
-                          className={`border hover:bg-amber-300 cursor-pointer ${
-                            index % 2 === 0 ? "bg-white" : "bg-gray-50"
-                          } 
-                      `}
-                        >
-                          <td className="px-4 py-3 border-r">{index + 1}.</td>
-                          <td className="px-4 py-3 border-r">
-                            {post.customerInfo.customerName}
-                          </td>
-                          {post.customerInfo.address ? (
-                            <td className="px-4 py-3 border-r">
-                              {post.customerInfo.address},{" "}
-                              {post.customerInfo.address1},{" "}
-                              {post.customerInfo.address2} -{" "}
-                              {post.customerInfo.address3}
-                            </td>
-                          ) : (
-                            <td className="px-4 py-3 border-r"></td>
-                          )}
-                          <td className="px-4 py-3 border-r whitespace-nowrap">
-                            <button
-                              onClick={() =>
-                                navigate("/creator/editbrandinfo", {
-                                  state: {
-                                    post: post,
-                                  },
-                                })
-                              }
-                              className="text-blue-600 hover:text-blue-800 font-semibold text-xs"
-                            >
-                              Edit
-                            </button>
-                          </td>
-                          {/* <td className="px-4 py-3 border-r whitespace-nowrap">
-                            <button
-                              onClick={() => handleEdit(user.id)}
-                              className="text-blue-600 hover:text-blue-800 font-semibold text-xs"
-                            >
-                              Edit
-                            </button>
-                          </td> */}
-                          <td className="px-4 py-3 whitespace-nowrap">
-                            <button
-                              onClick={() => handleDelete(post)}
-                              className="text-red-600 hover:text-red-800 font-semibold text-xs"
-                            >
-                              Delete
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    {filteredData && filteredData.length === 0 && (
-                      <tr>
-                        <td
-                          colSpan="5"
-                          className="text-center px-4 py-6 text-gray-500"
-                        >
-                          No data available.
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
+                      {seller.customerInfo.address1 && (
+                        <p className="text-gray-600 text-xs">
+                          {seller.customerInfo.address1}
+                        </p>
+                      )}
+                      {seller.customerInfo.address2 && (
+                        <p className="text-gray-500 text-xs">
+                          {seller.customerInfo.address2} -{" "}
+                          {seller.customerInfo.address3}
+                        </p>
+                      )}
+                      {seller.customerInfo.gst && (
+                        <p className="text-gray-500 text-xs mt-1">
+                          GSTIN: {seller.customerInfo.gst}
+                        </p>
+                      )}
+                      {seller.customerInfo.pan && (
+                        <p className="text-gray-500 text-xs">
+                          PAN: {seller.customerInfo.pan}
+                        </p>
+                      )}
+                      {seller.customerInfo.tin && (
+                        <p className="text-gray-500 text-xs">
+                          TIN: {seller.customerInfo.tin}
+                        </p>
+                      )}
+                      {seller.customerInfo.cin && (
+                        <p className="text-gray-500 text-xs">
+                          CIN: {seller.customerInfo.cin}
+                        </p>
+                      )}
+                    </div>
+                    <div className="flex gap-x-4">
+                      <Pencil size={16} />
 
-              {/* Mobile view with sticky header */}
-              <div className="h-[400px] overflow-auto lg:hidden border border-gray-300 rounded-md m-2">
-                <table className="min-w-full text-xs text-left text-gray-700">
-                  <thead className="sticky top-0 z-10 bg-gray-100 text-xs uppercase text-gray-600 border-b">
-                    <tr>
-                      {["Name", "Address", "Edit"].map((header) => (
-                        <th
-                          key={header}
-                          className="px-4 py-3 border-r min-w-[120px] bg-gray-100"
-                        >
-                          {header}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredData &&
-                      filteredData.map((post, index) => (
-                        <tr
-                          //onClick={() => handleSelect(post)}
-                          key={post.id}
-                          className={`border ${
-                            index % 2 === 0 ? "bg-white" : "bg-gray-50"
-                          } ${
-                            post.itemQty === 0
-                              ? "bg-red-500 text-black cursor-not-allowed"
-                              : "hover:bg-amber-300 cursor-pointer"
-                          }`}
-                        >
-                          <td className="px-4 py-3 border-r">
-                            {post.customerInfo.customerName}
-                          </td>
-                          <td className="px-4 py-3 border-r">
-                            {post.customerInfo.address},{" "}
-                            {post.customerInfo.address1},{" "}
-                            {post.customerInfo.address2} -{" "}
-                            {post.customerInfo.address3}
-                          </td>
-                          <td className="px-4 py-3 border-r whitespace-nowrap">
-                            <button
-                              //onClick={() => handleView(user.id)}
-                              className="text-blue-600 hover:text-blue-800 font-semibold text-xs"
-                            >
-                              Edit
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    {filteredData && filteredData.length === 0 && (
-                      <tr>
-                        <td
-                          colSpan="4"
-                          className="text-center px-4 py-6 text-gray-500"
-                        >
-                          No data available.
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
+                      <Trash2 size={16} color="red" />
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
           {loading && <Loader />}

@@ -61,6 +61,7 @@ import Config from "./components/creator/Config";
 import Test from "./components/Test";
 import BusinessTypeComponent from "./components/BusinessTypeComponent";
 import SellerInvoice from "./components/shop/purchase/SellerInvoice";
+import CreatorCreateInvoice from "./components/creator/CreatorCreateInvoice";
 
 function App() {
   const type = localStorage.getItem("type");
@@ -179,8 +180,9 @@ function App() {
           />
           <Route
             path="/creator/createinvoice"
-            element={<CreatorAddInvoice />}
+            element={<CreatorCreateInvoice />}
           />
+
           <Route path="/creator/invoice" element={<CreatorInvoice />} />
           <Route path="/creator/viewinvoice" element={<CreatorViewInvoice />} />
           <Route path="/creator/dashboard" element={<CreatorDashboard />} />

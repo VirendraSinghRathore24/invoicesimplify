@@ -585,7 +585,18 @@ function CreatorInvoice() {
                           marginTop: "0.2rem",
                         }}
                       >
-                        {customerInfo.address}, {customerInfo.address1}
+                        {customerInfo.address},
+                      </div>
+                    )}
+                    {customerInfo?.address1 && (
+                      <div
+                        style={{
+                          color: "#6B7280",
+                          fontSize: "0.875rem",
+                          marginTop: "0.2rem",
+                        }}
+                      >
+                        {customerInfo.address1},
                       </div>
                     )}
 
