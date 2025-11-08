@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Sidebar, Trash2, X, Search, Cog } from "lucide-react";
 import InventoryModal from "../inventory/InventoryModal";
-import { collection, doc, getDocs } from "firebase/firestore";
+import { addDoc, collection, doc, getDocs } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import AlertModal from "../confirmModal/AlertModal";
 import { IoMdSettings } from "react-icons/io";
@@ -60,6 +60,9 @@ const CreatorCreateInvoice = () => {
   useEffect(() => {
     //console.log(signature);
   }, [signature]);
+
+  const [isModalAOpen, setIsModalAOpen] = useState(true);
+  const [isModalBOpen, setIsModalBOpen] = useState(false);
 
   const loggedInUser = localStorage.getItem("user");
 
@@ -644,7 +647,7 @@ const CreatorCreateInvoice = () => {
     const businessType = localStorage.getItem("type");
     setBusinessType(businessType);
     getUserSettingsData(loggedInUser);
-    getBrands();
+
     const invoiceNumberMode = localStorage.getItem("invoiceNumberMode");
     if (invoiceNumberMode === "automatic") {
       getInvoiceNumber();
@@ -707,38 +710,40 @@ const CreatorCreateInvoice = () => {
     }
   };
 
-  const [brands, setBrands] = useState([]);
-  const getBrands = async () => {
-    setLoading(true);
-    const existingBrands = await getBrandsData();
-    const filteredData1 = existingBrands?.sort((a, b) =>
-      a.customerInfo.customerName < b.customerInfo.customerName ? -1 : 1
+  const [openBrandListModal, setOpenBrandListModal] = useState(false);
+  const [openAddBrandModal, setOpenAddBrandModal] = useState(false);
+  const handleAddItem = (newItem) => {
+    addBrand(newItem);
+    //setBrands((prev) => [...prev, newItem]); // Add item to list
+    setOpenAddBrandModal(false); // Close Modal B
+    setOpenBrandListModal(true);
+  };
+
+  const brandInfo_CollectionRef = collection(
+    doc(db, CREATORS, uid),
+    "Brand_Info"
+  );
+
+  const addBrand = async (newItem) => {
+    // check if brand info already exist, yes-ignore
+    const data = await getDocs(brandInfo_CollectionRef);
+    const filteredData = data.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+    const val = filteredData.find(
+      (x) => x.customerInfo.customerName.trim() === newItem.customerName.trim()
     );
 
-    setBrands(filteredData1);
+    if (val) return;
 
-    setLoading(false);
+    // brand info
+    await addDoc(brandInfo_CollectionRef, {
+      customerInfo: newItem,
+      loggedInUser: loggedInUser,
+    });
   };
 
-  const getBrandsData = async () => {
-    try {
-      const brandInfo_CollectionRef = collection(
-        doc(db, CREATORS, uid),
-        "Brand_Info"
-      );
-      const data = await getDocs(brandInfo_CollectionRef);
-      const filteredData = data.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
-
-      return filteredData;
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const [open2, setOpen2] = useState(false);
   const handleSelect = (data) => {
     setSelectedBrand(data?.customerInfo);
     setBrandSelected(true);
@@ -800,7 +805,7 @@ const CreatorCreateInvoice = () => {
                       </div>
                       {brandSelected && (
                         <button
-                          onClick={() => setOpen2(true)}
+                          onClick={() => setOpenBrandListModal(true)}
                           className="flex items-center cursor-pointer gap-2 px-2 py-1 mb-2 lg:mb-0 rounded-lg border border-blue-600 text-blue-600 bg-blue-50 hover:bg-blue-600 hover:text-white transition text-sm"
                         >
                           Change Information
@@ -810,7 +815,7 @@ const CreatorCreateInvoice = () => {
                     {!brandSelected && (
                       <div>
                         <button
-                          onClick={() => setOpen2(true)}
+                          onClick={() => setOpenBrandListModal(true)}
                           className="flex items-center cursor-pointer my-2 lg:my-0 gap-2 px-4 py-2 rounded-lg border border-blue-600 text-blue-600 bg-blue-50 hover:bg-blue-600 hover:text-white transition text-sm"
                         >
                           + Add Brand/Agency Information
@@ -820,13 +825,15 @@ const CreatorCreateInvoice = () => {
                     {brandSelected && (
                       <div className="w-full bg-white shadow-lg rounded-xl p-4 border border-gray-200  hover:shadow-xl transition-all duration-300">
                         <h2 className="text-md font-semibold text-gray-800 mb-1">
-                          {selectedBrand.customerName}
+                          {selectedBrand?.customerName}
                         </h2>
 
                         <p className="text-sm text-gray-600 leading-5 mt-2">
-                          {selectedBrand.address}
+                          {selectedBrand?.address}
                           <br />
-                          {selectedBrand.address2 && (
+                          {selectedBrand?.address1}
+                          <br />
+                          {selectedBrand?.address2 && (
                             <p>
                               {selectedBrand.address2} -{" "}
                               {selectedBrand.address3}
@@ -835,22 +842,22 @@ const CreatorCreateInvoice = () => {
                         </p>
 
                         {selectedBrand.gst && (
-                          <div className="mt-3 flex justify-between items-center text-sm text-gray-600 text-left">
+                          <div className="mt-3 flex justify-between leading-5 items-center text-sm text-gray-600 text-left">
                             GST: {selectedBrand.gst}
                           </div>
                         )}
                         {selectedBrand.pan && (
-                          <div className="flex justify-between items-center text-sm text-gray-600 text-left">
+                          <div className="flex justify-between leading-5 items-center text-sm text-gray-600 text-left">
                             PAN: {selectedBrand.pan}
                           </div>
                         )}
                         {selectedBrand.tin && (
-                          <div className=" flex justify-between items-center text-sm text-gray-600 text-left">
+                          <div className=" flex justify-between leading-5 items-center text-sm text-gray-600 text-left">
                             TIN: {selectedBrand.tin}
                           </div>
                         )}
                         {selectedBrand.cin && (
-                          <div className=" flex justify-between items-center text-sm text-gray-600 text-left">
+                          <div className=" flex justify-between leading-5 items-center text-sm text-gray-600 text-left">
                             CIN: {selectedBrand.cin}
                           </div>
                         )}
@@ -1244,10 +1251,21 @@ const CreatorCreateInvoice = () => {
             message="Customer Name is required."
           />
           <BrandListModal
-            isOpen={open2}
-            onClose={() => setOpen2(false)}
-            brands={brands}
+            isOpen={openBrandListModal}
+            onClose={() => setOpenBrandListModal(false)}
             onSelect={handleSelect}
+            onAddNew={() => {
+              setOpenBrandListModal(false);
+              setOpenAddBrandModal(true);
+            }}
+          />
+          <AddBrandModal
+            isOpen={openAddBrandModal}
+            onClose={() => {
+              setOpenAddBrandModal(false);
+              setOpenBrandListModal(true);
+            }}
+            onSave={handleAddItem}
           />
           <ChangeInvoiceNumberModal
             isOpen={open1}

@@ -203,24 +203,24 @@ function CreatorInvoice() {
 
     localStorage.setItem("downloadedInvoiceNumber", invoiceInfo?.invoiceNumber);
 
-    // check if brand info already exist, yes-ignore
-    const data = await getDocs(brandInfo_CollectionRef);
-    const filteredData = data.docs.map((doc) => ({
-      ...doc.data(),
-      id: doc.id,
-    }));
-    const val = filteredData.find(
-      (x) =>
-        x.customerInfo.customerName.trim() === customerInfo.customerName.trim()
-    );
+    // // check if brand info already exist, yes-ignore
+    // const data = await getDocs(brandInfo_CollectionRef);
+    // const filteredData = data.docs.map((doc) => ({
+    //   ...doc.data(),
+    //   id: doc.id,
+    // }));
+    // const val = filteredData.find(
+    //   (x) =>
+    //     x.customerInfo.customerName.trim() === customerInfo.customerName.trim()
+    // );
 
-    if (val) return;
+    // if (val) return;
 
-    // brand info
-    await addDoc(brandInfo_CollectionRef, {
-      customerInfo: customerInfo,
-      loggedInUser: loggedInUser,
-    });
+    // // brand info
+    // await addDoc(brandInfo_CollectionRef, {
+    //   customerInfo: customerInfo,
+    //   loggedInUser: loggedInUser,
+    // });
 
     await getBrands();
   };

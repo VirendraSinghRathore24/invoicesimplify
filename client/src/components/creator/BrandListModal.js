@@ -1,17 +1,55 @@
 import React, { useState, useEffect } from "react";
 import AddBrandModal from "./AddBrandModal";
 import { Pencil } from "lucide-react";
+import { collection, doc, getDocs } from "firebase/firestore";
+import { db } from "../../config/firebase";
+import { CREATORS } from "../Constant";
 
-const BrandListModal = ({ isOpen, onClose, brands = [], onSelect }) => {
+const BrandListModal = ({ isOpen, onClose, onSelect, onAddNew }) => {
   const [search, setSearch] = useState("");
   const [filtered, setFiltered] = useState([]);
   const [open, setOpen] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   const handleSave = (data) => {
     console.log("Seller saved:", data);
   };
 
+  const [brands, setBrands] = useState([]);
+  const getBrands = async () => {
+    setLoading(true);
+    const existingBrands = await getBrandsData();
+    const filteredData1 = existingBrands?.sort((a, b) =>
+      a.customerInfo.customerName < b.customerInfo.customerName ? -1 : 1
+    );
+
+    setBrands(filteredData1);
+
+    setLoading(false);
+  };
+
+  const getBrandsData = async () => {
+    try {
+      const uid = localStorage.getItem("uid");
+      const brandInfo_CollectionRef = collection(
+        doc(db, CREATORS, uid),
+        "Brand_Info"
+      );
+      const data = await getDocs(brandInfo_CollectionRef);
+      const filteredData = data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+
+      return filteredData;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
+    getBrands();
     setFiltered(
       brands.filter((s) =>
         s.customerInfo?.customerName
@@ -49,7 +87,7 @@ const BrandListModal = ({ isOpen, onClose, brands = [], onSelect }) => {
             className="w-2/4 lg:w-3/4 px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
           />
           <button
-            onClick={() => setOpen(true)}
+            onClick={onAddNew}
             className="px-4 py-2 flex items-center cursor-pointer gap-2 px-2 py-1 rounded-lg border border-blue-600 text-blue-600 bg-blue-50 hover:bg-blue-600 hover:text-white transition text-sm"
           >
             + Add New
@@ -129,11 +167,6 @@ const BrandListModal = ({ isOpen, onClose, brands = [], onSelect }) => {
           </button>
         </div>
       </div>
-      <AddBrandModal
-        isOpen={open}
-        onClose={() => setOpen(false)}
-        onSave={handleSave}
-      />
     </div>
   );
 };

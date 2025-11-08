@@ -140,7 +140,7 @@ const Home = () => {
           <div className="mt-8 flex gap-4">
             <button
               className="px-8 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition flex items-center gap-2"
-              onClick={() => (window.location.href = "/creator/createinvoice")}
+              onClick={() => createInvoice()}
             >
               Create Invoice <ArrowRight />
             </button>
@@ -496,7 +496,7 @@ const Home = () => {
           Create your first branded invoice and impress your clients today.
         </p>
         <button
-          onClick={() => (window.location.href = "/creator/createinvoice")}
+          onClick={() => createInvoice()}
           className="px-10 py-4 bg-white text-blue-600 rounded-xl font-semibold hover:bg-gray-100 transition"
         >
           Start Free Now
@@ -511,7 +511,7 @@ const Home = () => {
           Create your first branded invoice and impress your clients today.
         </p>
         <button
-          onClick={() => (window.location.href = "/creator/createinvoice")}
+          onClick={() => createInvoice()}
           className="px-10 py-4 bg-white text-blue-600 rounded-xl font-semibold hover:bg-gray-100 transition"
         >
           Start Free Now
