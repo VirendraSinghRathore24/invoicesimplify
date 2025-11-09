@@ -80,7 +80,7 @@ const Brands = () => {
   const handleDelete = async (user) => {
     if (window.confirm("Are you sure you want to delete this entry?")) {
       const items = filteredData.filter((item) => item.id !== user.id);
-      setFilteredData(items);
+      getBrands();
 
       //localStorage.setItem("creator_dashboardInfo", JSON.stringify(items));
 
@@ -170,6 +170,16 @@ const Brands = () => {
                           {seller.customerInfo.address3}
                         </p>
                       )}
+                      {seller.customerInfo.customerPhone && (
+                        <p className="text-gray-500 text-xs mt-2">
+                          Mobile: {seller.customerInfo.customerPhone}
+                        </p>
+                      )}
+                      {seller.customerInfo.customerEmail && (
+                        <p className="text-gray-500 text-xs">
+                          Email: {seller.customerInfo.customerEmail}
+                        </p>
+                      )}
                       {seller.customerInfo.gst && (
                         <p className="text-gray-500 text-xs mt-1">
                           GSTIN: {seller.customerInfo.gst}
@@ -194,7 +204,11 @@ const Brands = () => {
                     <div className="flex gap-x-4">
                       <Pencil size={16} />
 
-                      <Trash2 size={16} color="red" />
+                      <Trash2
+                        onClick={() => handleDelete(seller)}
+                        size={16}
+                        color="red"
+                      />
                     </div>
                   </div>
                 ))

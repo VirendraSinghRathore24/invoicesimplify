@@ -2,7 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Sidebar, Trash2, X, Search, Cog } from "lucide-react";
 import InventoryModal from "../inventory/InventoryModal";
-import { addDoc, collection, doc, getDocs } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDocs,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "../../config/firebase";
 import AlertModal from "../confirmModal/AlertModal";
 import { IoMdSettings } from "react-icons/io";
@@ -21,6 +27,7 @@ import CreatorMobileMenu from "./CreatorMobileMenu";
 import ChangeInvoiceNumberModal from "./ChangeInvoiceNumberModal";
 import AddBrandModal from "./AddBrandModal";
 import BrandListModal from "./BrandListModal";
+import EditBrandModal from "./EditBrandModal";
 
 const CreatorCreateInvoice = () => {
   const [signature, setSignature] = useState(null);
@@ -710,6 +717,11 @@ const CreatorCreateInvoice = () => {
     }
   };
 
+  const brandInfo_CollectionRef = collection(
+    doc(db, CREATORS, uid),
+    "Brand_Info"
+  );
+
   const [openBrandListModal, setOpenBrandListModal] = useState(false);
   const [openAddBrandModal, setOpenAddBrandModal] = useState(false);
   const handleAddItem = (newItem) => {
@@ -719,10 +731,30 @@ const CreatorCreateInvoice = () => {
     setOpenBrandListModal(true);
   };
 
-  const brandInfo_CollectionRef = collection(
-    doc(db, CREATORS, uid),
-    "Brand_Info"
-  );
+  const [openEditBrandModal, setOpenEditBrandModal] = useState(false);
+  const [editData, setEditData] = useState({});
+  const [editId, setEditId] = useState("");
+  const handleEditItem = (newItem) => {
+    handleUpdate(newItem);
+    //addBrand(newItem);
+    //setBrands((prev) => [...prev, newItem]); // Add item to list
+    setOpenEditBrandModal(false); // Close Modal B
+    setOpenBrandListModal(true);
+  };
+
+  const handleUpdate = async (inputs) => {
+    try {
+      setLoading(true);
+      const codeDoc = doc(db, CREATORS, uid, "Brand_Info", editId);
+      await updateDoc(codeDoc, {
+        customerInfo: inputs,
+      });
+      setLoading(false);
+    } catch (er) {
+      console.log(er);
+      setLoading(false);
+    }
+  };
 
   const addBrand = async (newItem) => {
     // check if brand info already exist, yes-ignore
@@ -840,6 +872,16 @@ const CreatorCreateInvoice = () => {
                             </p>
                           )}
                         </p>
+                        {selectedBrand.customerPhone && (
+                          <p className="text-sm text-gray-600 leading-5 mt-2">
+                            Mobile: {selectedBrand.customerPhone}
+                          </p>
+                        )}
+                        {selectedBrand.customerEmail && (
+                          <p className="text-sm text-gray-600 leading-5">
+                            Email: {selectedBrand.customerEmail}
+                          </p>
+                        )}
 
                         {selectedBrand.gst && (
                           <div className="mt-3 flex justify-between leading-5 items-center text-sm text-gray-600 text-left">
@@ -1258,6 +1300,12 @@ const CreatorCreateInvoice = () => {
               setOpenBrandListModal(false);
               setOpenAddBrandModal(true);
             }}
+            onEdit={() => {
+              setOpenBrandListModal(false);
+              setOpenEditBrandModal(true);
+            }}
+            setEditData={setEditData}
+            setEditId={setEditId}
           />
           <AddBrandModal
             isOpen={openAddBrandModal}
@@ -1266,6 +1314,15 @@ const CreatorCreateInvoice = () => {
               setOpenBrandListModal(true);
             }}
             onSave={handleAddItem}
+          />
+          <EditBrandModal
+            isOpen={openEditBrandModal}
+            editData={editData}
+            onClose={() => {
+              setOpenEditBrandModal(false);
+              setOpenBrandListModal(true);
+            }}
+            onSave={handleEditItem}
           />
           <ChangeInvoiceNumberModal
             isOpen={open1}

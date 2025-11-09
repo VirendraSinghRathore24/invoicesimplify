@@ -5,7 +5,15 @@ import { collection, doc, getDocs } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import { CREATORS } from "../Constant";
 
-const BrandListModal = ({ isOpen, onClose, onSelect, onAddNew }) => {
+const BrandListModal = ({
+  isOpen,
+  onClose,
+  onSelect,
+  onAddNew,
+  onEdit,
+  setEditData,
+  setEditId,
+}) => {
   const [search, setSearch] = useState("");
   const [filtered, setFiltered] = useState([]);
   const [open, setOpen] = useState(false);
@@ -46,6 +54,12 @@ const BrandListModal = ({ isOpen, onClose, onSelect, onAddNew }) => {
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const handleEdit = (data) => {
+    setEditId(data.id);
+    setEditData(data);
+    onEdit();
   };
 
   useEffect(() => {
@@ -128,6 +142,16 @@ const BrandListModal = ({ isOpen, onClose, onSelect, onAddNew }) => {
                       {seller.customerInfo.address3}
                     </p>
                   )}
+                  {seller.customerInfo.customerPhone && (
+                    <p className="text-gray-600 text-xs">
+                      Mobile: {seller.customerInfo.customerPhone}
+                    </p>
+                  )}
+                  {seller.customerInfo.customerEmail && (
+                    <p className="text-gray-600 text-xs">
+                      Email: {seller.customerInfo.customerEmail}
+                    </p>
+                  )}
                   {seller.customerInfo.gst && (
                     <p className="text-gray-500 text-xs mt-1">
                       GSTIN: {seller.customerInfo.gst}
@@ -149,7 +173,7 @@ const BrandListModal = ({ isOpen, onClose, onSelect, onAddNew }) => {
                     </p>
                   )}
                 </div>
-                <div>
+                <div onClick={() => handleEdit(seller)}>
                   <Pencil size={16} />
                 </div>
               </div>

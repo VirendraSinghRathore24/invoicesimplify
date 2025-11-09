@@ -1,10 +1,10 @@
 import { addDoc, collection, doc, getDocs } from "firebase/firestore";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { db } from "../../config/firebase";
 import { CREATORS } from "../Constant";
 
-const AddBrandModal = ({ isOpen, onClose, onSave }) => {
-  const [inputs, setInputs] = useState({
+const EditBrandModal = ({ isOpen, onClose, onSave, editData }) => {
+  const [formData, setFormData] = useState({
     customerName: "",
     address: "",
     address1: "",
@@ -18,29 +18,37 @@ const AddBrandModal = ({ isOpen, onClose, onSave }) => {
     cin: "",
   });
 
-  const handleChange = (event) => {
-    const name = event.target.name;
-    const value = event.target.value;
-    setInputs((values) => ({ ...values, [name]: value }));
+  useEffect(() => {
+    if (editData) setFormData(editData?.customerInfo);
+    return () => {
+      setFormData("");
+    };
+  }, [editData]);
+
+  const handleChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
   };
 
-  const handlePhoneChange = (event) => {
-    const { name, value } = event.target;
-    if (/^\d{0,10}$/.test(value)) {
-      // Allow only numeric values up to 10 digits
-      setInputs((values) => ({ ...values, [name]: value }));
-      localStorage.setItem(name, value);
-    }
-  };
+  const customerInfo = editData?.customerInfo;
 
-  if (!isOpen) return null;
+  // const [inputs, setInputs] = useState({});
+
+  // const handlePhoneChange = (event) => {
+  //   const { name, value } = event.target;
+  //   if (/^\d{0,10}$/.test(value)) {
+  //     // Allow only numeric values up to 10 digits
+  //     setInputs((values) => ({ ...values, [name]: value }));
+  //   }
+  // };
 
   const handleSave = () => {
-    if (!inputs) return;
-    onSave(inputs);
-
-    setInputs("");
+    if (!formData) return;
+    onSave(formData);
   };
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-2">
@@ -48,7 +56,7 @@ const AddBrandModal = ({ isOpen, onClose, onSave }) => {
         {/* Header */}
         <div className="flex justify-between items-center pb-3 border-b">
           <h2 className="text-xl font-semibold text-gray-800">
-            Add Brand\Agency
+            Update Brand\Agency
           </h2>
           <button
             className="text-gray-500 hover:text-gray-700 text-xl"
@@ -70,7 +78,7 @@ const AddBrandModal = ({ isOpen, onClose, onSave }) => {
             className="inputBox"
             required
             name="customerName"
-            value={inputs?.customerName}
+            value={formData?.customerName}
             onChange={(e) => {
               handleChange(e);
             }}
@@ -82,7 +90,7 @@ const AddBrandModal = ({ isOpen, onClose, onSave }) => {
             placeholder="Address Line 1"
             className="inputBox col-span-2"
             name="address"
-            value={inputs?.address}
+            value={formData?.address}
             onChange={(e) => {
               handleChange(e);
             }}
@@ -93,7 +101,7 @@ const AddBrandModal = ({ isOpen, onClose, onSave }) => {
             placeholder="Address Line 2"
             className="inputBox col-span-2"
             name="address1"
-            value={inputs?.address1}
+            value={formData?.address1}
             onChange={(e) => {
               handleChange(e);
             }}
@@ -104,7 +112,7 @@ const AddBrandModal = ({ isOpen, onClose, onSave }) => {
             placeholder="City, State"
             className="inputBox"
             name="address2"
-            value={inputs?.address2}
+            value={formData?.address2}
             onChange={(e) => {
               handleChange(e);
             }}
@@ -115,7 +123,7 @@ const AddBrandModal = ({ isOpen, onClose, onSave }) => {
             placeholder="ZIP / Pincode"
             className="inputBox"
             name="address3"
-            value={inputs?.address3}
+            value={formData?.address3}
             onChange={(e) => {
               handleChange(e);
             }}
@@ -125,7 +133,7 @@ const AddBrandModal = ({ isOpen, onClose, onSave }) => {
             placeholder="Email Address"
             className="inputBox"
             name="customerEmail"
-            value={inputs?.customerEmail}
+            value={formData?.customerEmail}
             onChange={(e) => {
               handleChange(e);
             }}
@@ -135,9 +143,9 @@ const AddBrandModal = ({ isOpen, onClose, onSave }) => {
             placeholder="Mobile Number"
             className="inputBox"
             name="customerPhone"
-            value={inputs?.customerPhone}
+            value={formData?.customerPhone}
             onChange={(e) => {
-              handlePhoneChange(e);
+              handleChange(e);
             }}
           />
 
@@ -147,7 +155,7 @@ const AddBrandModal = ({ isOpen, onClose, onSave }) => {
             placeholder="GST Number"
             className="inputBox"
             name="gst"
-            value={inputs?.gst}
+            value={formData?.gst}
             onChange={(e) => {
               handleChange(e);
             }}
@@ -157,7 +165,7 @@ const AddBrandModal = ({ isOpen, onClose, onSave }) => {
             placeholder="PAN Number"
             className="inputBox"
             name="pan"
-            value={inputs?.pan}
+            value={formData?.pan}
             onChange={(e) => {
               handleChange(e);
             }}
@@ -167,7 +175,7 @@ const AddBrandModal = ({ isOpen, onClose, onSave }) => {
             placeholder="TIN Number"
             className="inputBox"
             name="tin"
-            value={inputs?.tin}
+            value={formData?.tin}
             onChange={(e) => {
               handleChange(e);
             }}
@@ -177,7 +185,7 @@ const AddBrandModal = ({ isOpen, onClose, onSave }) => {
             placeholder="CIN Number"
             className="inputBox"
             name="cin"
-            value={inputs?.cin}
+            value={formData?.cin}
             onChange={(e) => {
               handleChange(e);
             }}
@@ -195,7 +203,7 @@ const AddBrandModal = ({ isOpen, onClose, onSave }) => {
               type="submit"
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md"
             >
-              Save
+              Update
             </button>
           </div>
         </form>
@@ -204,4 +212,4 @@ const AddBrandModal = ({ isOpen, onClose, onSave }) => {
   );
 };
 
-export default AddBrandModal;
+export default EditBrandModal;
