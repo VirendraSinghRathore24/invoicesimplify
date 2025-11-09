@@ -583,7 +583,7 @@ const CreatorCreateInvoice = () => {
     // localStorage.removeItem("customer_pan");
     // localStorage.removeItem("customer_tin");
     // localStorage.removeItem("customer_cin");
-    // localStorage.removeItem("sign");
+    localStorage.removeItem("sign");
   };
 
   const deleteLocalStorageInvoiceInfo = () => {

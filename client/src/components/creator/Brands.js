@@ -77,12 +77,12 @@ const Brands = () => {
   const handleSearch = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
-    const filtered = posts.filter((post) =>
+    const filtered = filteredData.filter((post) =>
       post.customerInfo.customerName.toLowerCase().includes(value.toLowerCase())
     );
-    setFilteredData(filtered);
-    if (value === "") {
-      setFilteredData(posts);
+    setPosts(filtered);
+    if (!value) {
+      setPosts(filteredData);
     }
   };
 
@@ -190,9 +190,9 @@ const Brands = () => {
             <div className="flex items-center justify-between mt-4 mb-3 ">
               <input
                 type="text"
-                placeholder="Search brand by name or address..."
+                placeholder="Search brand by name ..."
                 value={searchTerm}
-                onChange={(e) => handleSearch(e.target.value)}
+                onChange={(e) => handleSearch(e)}
                 className="w-10/12 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
               />
               <button
@@ -204,7 +204,7 @@ const Brands = () => {
             </div>
 
             {/* Seller List */}
-            <div className=" w-full overflow-y-auto max-h-screen scrollbar-thin scrollbar-thumb-gray-300">
+            <div className=" w-full overflow-y-auto max-h-screen scrollbar-thin scrollbar-thumb-gray-300 max-h-[calc(100vh-10rem)] overflow-y-auto overflow-x-auto">
               {posts.length === 0 ? (
                 <p className="text-gray-500 text-center py-6">
                   No brand found.
@@ -271,9 +271,14 @@ const Brands = () => {
                       )}
                     </div>
                     <div className="flex gap-x-4">
-                      <Pencil onClick={() => handleEdit(seller)} size={16} />
+                      <Pencil
+                        className="cursor-pointer"
+                        onClick={() => handleEdit(seller)}
+                        size={16}
+                      />
 
                       <Trash2
+                        className="cursor-pointer"
                         onClick={() => handleDelete(seller)}
                         size={16}
                         color="red"

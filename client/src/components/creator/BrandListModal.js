@@ -95,7 +95,7 @@ const BrandListModal = ({
         <div className="flex items-center justify-between mt-4 mb-3">
           <input
             type="text"
-            placeholder="Search brand by name or address..."
+            placeholder="Search brand by name ..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-2/4 lg:w-3/4 px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
@@ -116,7 +116,7 @@ const BrandListModal = ({
             filtered.map((seller, i) => (
               <div
                 key={i}
-                className="border rounded-lg p-4 mb-3 hover:bg-gray-50 cursor-pointer transition flex justify-between"
+                className="border rounded-lg p-4 mb-3 hover:bg-gray-50 cursor-pointer transition flex justify-between max-h-[96%]"
                 onClick={() => {
                   onSelect(seller);
                   onClose();
@@ -173,7 +173,10 @@ const BrandListModal = ({
                     </p>
                   )}
                 </div>
-                <div onClick={() => handleEdit(seller)}>
+                <div
+                  className="cursor-pointer"
+                  onClick={() => handleEdit(seller)}
+                >
                   <Pencil size={16} />
                 </div>
               </div>
