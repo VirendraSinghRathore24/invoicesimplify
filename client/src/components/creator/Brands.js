@@ -4,10 +4,19 @@ import React, { useEffect, useState } from "react";
 import { Pencil, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Loader from "../Loader";
-import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "../../config/firebase";
 import { CREATORS } from "../Constant";
 import CreatorMobileMenu from "./CreatorMobileMenu";
+import AddBrandModal from "./AddBrandModal";
+import EditBrandModal from "./EditBrandModal";
 
 const Brands = () => {
   const [posts, setPosts] = useState([]);
@@ -77,9 +86,69 @@ const Brands = () => {
     }
   };
 
+  const [openEditBrandModal, setOpenEditBrandModal] = useState(false);
+  const [editData, setEditData] = useState({});
+  const [editId, setEditId] = useState("");
+  const handleEditItem = async (newItem) => {
+    setOpenEditBrandModal(false);
+    await handleUpdate(newItem);
+    await getBrands();
+  };
+
+  const handleUpdate = async (inputs) => {
+    try {
+      setLoading(true);
+      const codeDoc = doc(db, CREATORS, uid, "Brand_Info", editId);
+      await updateDoc(codeDoc, {
+        customerInfo: inputs,
+      });
+      setLoading(false);
+    } catch (er) {
+      console.log(er);
+      setLoading(false);
+    }
+  };
+
+  const [openAddBrandModal, setOpenAddBrandModal] = useState(false);
+  const handleAddItem = async (newItem) => {
+    setOpenAddBrandModal(false);
+    await addBrand(newItem);
+
+    await getBrands();
+    //refreshPage();
+  };
+
+  const addBrand = async (newItem) => {
+    // check if brand info already exist, yes-ignore
+    const data = await getDocs(brandInfo_CollectionRef);
+    const filteredData = data.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+    const val = filteredData.find(
+      (x) => x.customerInfo.customerName.trim() === newItem.customerName.trim()
+    );
+
+    if (val) return;
+
+    // brand info
+    await addDoc(brandInfo_CollectionRef, {
+      customerInfo: newItem,
+      loggedInUser: loggedInUser,
+    });
+  };
+
+  const handleEdit = async (item) => {
+    setEditData(item);
+    setOpenEditBrandModal(true);
+    setEditId(item.id);
+
+    await getBrands();
+  };
+
   const handleDelete = async (user) => {
     if (window.confirm("Are you sure you want to delete this entry?")) {
-      const items = filteredData.filter((item) => item.id !== user.id);
+      //const items = filteredData.filter((item) => item.id !== user.id);
       getBrands();
 
       //localStorage.setItem("creator_dashboardInfo", JSON.stringify(items));
@@ -127,7 +196,7 @@ const Brands = () => {
                 className="w-10/12 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
               />
               <button
-                // onClick={() => setOpen(true)}
+                onClick={() => setOpenAddBrandModal(true)}
                 className="px-4 py-2 flex items-center cursor-pointer gap-2 px-2 py-1 rounded-lg border border-blue-600 text-blue-600 bg-blue-50 hover:bg-blue-600 hover:text-white transition text-sm"
               >
                 + Add New
@@ -202,7 +271,7 @@ const Brands = () => {
                       )}
                     </div>
                     <div className="flex gap-x-4">
-                      <Pencil size={16} />
+                      <Pencil onClick={() => handleEdit(seller)} size={16} />
 
                       <Trash2
                         onClick={() => handleDelete(seller)}
@@ -218,6 +287,21 @@ const Brands = () => {
           {loading && <Loader />}
         </div>
       </div>
+      <AddBrandModal
+        isOpen={openAddBrandModal}
+        onClose={() => {
+          setOpenAddBrandModal(false);
+        }}
+        onSave={handleAddItem}
+      />
+      <EditBrandModal
+        isOpen={openEditBrandModal}
+        editData={editData}
+        onClose={() => {
+          setOpenEditBrandModal(false);
+        }}
+        onSave={handleEditItem}
+      />
     </div>
   );
 };
