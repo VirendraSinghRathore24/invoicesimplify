@@ -171,7 +171,7 @@ const Brands = () => {
   return (
     <div className="">
       <div className="lg:left-64 right-0 top-0 left-0 lg:fixed bg-gray-100">
-        <div className="hidden lg:block top-0 mx-auto w-full h-[64px] text-white fixed border-b-2">
+        <div className="hidden lg:block top-0 mx-auto w-full h-[64px] bg-white fixed border-b-2">
           <div className="flex justify-between mx-auto font-bold text-md py-4 px-2 rounded-lg ">
             <div className="text-xl text-black">Brands/Agencies</div>
           </div>
@@ -187,24 +187,24 @@ const Brands = () => {
             <CreatorMobileMenu />
           </div>
           <div className="flex flex-col w-full  mt-10 p-4">
-            <div className="flex items-center justify-between mt-4 mb-3 ">
+            <div className="flex items-center justify-between mt-4 mb-3 gap-x-2">
               <input
                 type="text"
                 placeholder="Search brand by name ..."
                 value={searchTerm}
                 onChange={(e) => handleSearch(e)}
-                className="w-10/12 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                className="w-8/12 lg:w-10/12 px-3 text-sm lg:text-md py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
               />
               <button
                 onClick={() => setOpenAddBrandModal(true)}
-                className="px-4 py-2 flex items-center cursor-pointer gap-2 px-2 py-1 rounded-lg border border-blue-600 text-blue-600 bg-blue-50 hover:bg-blue-600 hover:text-white transition text-sm"
+                className="px-4 py-2 flex items-center cursor-pointer gap-2 px-2 py-1 rounded-lg border border-blue-600 text-blue-600 bg-blue-50 hover:bg-blue-600 hover:text-white transition text-xs lg:text-sm "
               >
                 + Add New
               </button>
             </div>
 
             {/* Seller List */}
-            <div className=" w-full overflow-y-auto max-h-screen scrollbar-thin scrollbar-thumb-gray-300 max-h-[calc(100vh-10rem)] overflow-y-auto overflow-x-auto">
+            <div className=" w-full scrollbar-thin scrollbar-thumb-gray-300 max-h-[calc(100vh-12rem)] overflow-y-auto overflow-x-auto">
               {posts.length === 0 ? (
                 <p className="text-gray-500 text-center py-6">
                   No brand found.
