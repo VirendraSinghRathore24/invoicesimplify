@@ -284,6 +284,7 @@ function CreatorInvoice() {
   };
 
   const deleteLocalStorageAccountInfo = () => {
+    localStorage.removeItem("creator_customerInfo");
     localStorage.removeItem("creator_customername");
     localStorage.removeItem("creator_customeremail");
     localStorage.removeItem("creator_productName");
@@ -345,7 +346,9 @@ function CreatorInvoice() {
     setPersonalInfo(JSON.parse(pi));
 
     let ci = localStorage.getItem("creator_customerInfo");
-    setCustomerInfo(JSON.parse(ci));
+    const custData = JSON.parse(ci);
+    custData.productName = localStorage.getItem("creator_productName");
+    setCustomerInfo(custData);
 
     let ai = localStorage.getItem("creator_accountInfo");
     setAccountInfo(JSON.parse(ai));
