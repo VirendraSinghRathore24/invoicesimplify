@@ -29,7 +29,7 @@ const BrandListModal = ({
     setLoading(true);
     const existingBrands = await getBrandsData();
     const filteredData1 = existingBrands?.sort((a, b) =>
-      a.customerInfo.customerName < b.customerInfo.customerName ? -1 : 1
+      a?.createdAt < b?.createdAt ? 1 : -1
     );
 
     setBrands(filteredData1);

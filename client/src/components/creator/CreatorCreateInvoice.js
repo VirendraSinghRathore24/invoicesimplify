@@ -7,6 +7,7 @@ import {
   collection,
   doc,
   getDocs,
+  serverTimestamp,
   updateDoc,
 } from "firebase/firestore";
 import { db } from "../../config/firebase";
@@ -773,6 +774,7 @@ const CreatorCreateInvoice = () => {
     await addDoc(brandInfo_CollectionRef, {
       customerInfo: newItem,
       loggedInUser: loggedInUser,
+      createdAt: serverTimestamp(),
     });
   };
 
