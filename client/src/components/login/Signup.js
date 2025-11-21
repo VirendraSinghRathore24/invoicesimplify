@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { auth, db, googleProvider } from "../../config/firebase";
+import { db } from "../../config/firebase";
 
 import { NavLink, useNavigate } from "react-router-dom";
 
-import { FcGoogle } from "react-icons/fc";
 import {
   createUserWithEmailAndPassword,
-  signInWithPopup,
   getAuth,
   updateProfile,
   sendEmailVerification,
@@ -32,14 +30,6 @@ const Signup = () => {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [loading, setLoading] = useState(false);
-  const [type, setType] = useState("notselected");
-
-  const handleLogin = () => {
-    navigate("/login");
-  };
-  const handleOnClick = () => {
-    navigate("/");
-  };
 
   const updateUserProfile = (auth) => {
     updateProfile(auth.currentUser, {
@@ -55,13 +45,13 @@ const Signup = () => {
         // ...
       });
   };
-  const sendEmailForVerify = (auth) => {
-    sendEmailVerification(auth.currentUser).then(() => {
-      console.log("Email verification sent!");
-      // Email verification sent!
-      // ...
-    });
-  };
+  // const sendEmailForVerify = (auth) => {
+  //   sendEmailVerification(auth.currentUser).then(() => {
+  //     console.log("Email verification sent!");
+  //     // Email verification sent!
+  //     // ...
+  //   });
+  // };
   const checkIfUserExists = async (email) => {
     const loginCollectionRef = collection(db, "Login_Info");
     const data = await getDocs(loginCollectionRef);
@@ -78,11 +68,6 @@ const Signup = () => {
     try {
       e.preventDefault();
 
-      if (type === "notselected") {
-        alert("Please select type of business !!!");
-        return;
-      }
-
       setLoading(true);
       const userExists = await checkIfUserExists(email);
 
@@ -96,7 +81,7 @@ const Signup = () => {
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           // Signed up
-          const user = userCredential.user;
+          //const user = userCredential.user;
           const code = auth?.currentUser?.email;
           const userName = auth?.currentUser?.displayName;
           const uid = auth?.currentUser?.uid;
@@ -113,7 +98,7 @@ const Signup = () => {
           localStorage.setItem("invoiceNumber", 1);
           localStorage.setItem("invoiceNumberMode", "automatic");
           localStorage.setItem("usedInvoiceNumbers", []);
-          localStorage.setItem("type", type);
+          localStorage.setItem("type", CONTENT_CREATOR);
           localStorage.setItem("subscription", "Free");
           localStorage.setItem("uid", uid);
           localStorage.setItem("isFreePlan", true);
@@ -125,13 +110,7 @@ const Signup = () => {
 
           setLoading(false);
 
-          if (type === CONTENT_CREATOR) {
-            navigate("/creator/personalinfo");
-          } else {
-            navigate("/businessinfo");
-          }
-
-          // ...
+          navigate("/creator/personalinfo");
         })
         .catch((error) => {
           if (error.code === "auth/email-already-in-use") {
@@ -150,42 +129,6 @@ const Signup = () => {
     }
   };
 
-  const login_CollectionRef = collection(db, LOGIN_INFO);
-
-  const signInWithGoogle = async () => {
-    try {
-      await signInWithPopup(auth, googleProvider);
-      setLoading(true);
-      const code = auth?.currentUser?.email;
-      const userName = auth?.currentUser?.displayName;
-      const uid = auth?.currentUser?.uid;
-
-      // 1. check if it is existing user
-
-      const result = await getExistingUser(code);
-
-      if (result === undefined) {
-        // 2. it is new user
-
-        await initializeDB(code, userName, uid);
-      }
-      // check orgCode with DB
-      localStorage.setItem("uid", uid);
-      localStorage.setItem("auth", "Logged In");
-      localStorage.setItem("user", code);
-      localStorage.setItem("userName", userName);
-      localStorage.setItem("invoiceNumber", 1);
-      localStorage.setItem("invoiceNumberMode", "automatic");
-      localStorage.setItem("isFreePlan", true);
-      localStorage.setItem("subscription", "Free");
-      navigate("/businessinfo");
-      setLoading(false);
-    } catch (err) {
-      console.log(err);
-      setLoading(false);
-    }
-  };
-
   const initializeDB = async (code, userName, uid) => {
     const orgCode = Math.random().toString(36).slice(2);
     const date = new Date();
@@ -193,6 +136,7 @@ const Signup = () => {
     const nextMonthDate = date.toISOString().slice(0, 10);
     localStorage.setItem("subEndDate", nextMonthDate);
 
+    const login_CollectionRef = collection(db, LOGIN_INFO);
     await addDoc(login_CollectionRef, {
       orgCode: orgCode,
       code: code,
@@ -201,7 +145,7 @@ const Signup = () => {
       invoiceNumber: 1,
       invoiceNumberMode: "automatic",
       usedInvoiceNumbers: [],
-      type: type,
+      type: CONTENT_CREATOR,
       subscription: "Free",
       invoiceCurrency: "₹",
       subStarts: new Date().toISOString().slice(0, 10),
@@ -209,57 +153,16 @@ const Signup = () => {
       loginDate: new Date().toISOString().slice(0, 10),
     });
 
-    if (type === CONTENT_CREATOR) {
-      const basicInfo_CollectionRef = collection(
-        doc(db, CREATORS, uid),
-        BASIC_INFO
-      );
-      await addDoc(basicInfo_CollectionRef, {
-        personalInfo: null,
-        accountInfo: null,
-        additionalInfo: null,
-        loggedInUser: code,
-      });
-      return;
-    }
-
-    const basicInfo_CollectionRef = collection(doc(db, USERS, uid), BASIC_INFO);
-    // also create db for business, tax and additional info
+    const basicInfo_CollectionRef = collection(
+      doc(db, CREATORS, uid),
+      BASIC_INFO
+    );
     await addDoc(basicInfo_CollectionRef, {
-      businessInfo: null,
-      imageUrl: null,
-      taxInfo: null,
+      personalInfo: null,
+      accountInfo: null,
       additionalInfo: null,
       loggedInUser: code,
     });
-
-    const inventoryInfo_CollectionRef = collection(
-      doc(db, USERS, uid),
-      INVENTORY_INFO
-    );
-    // initialize inventory info
-    await addDoc(inventoryInfo_CollectionRef, {
-      orgCode: orgCode,
-      loggedInUser: code,
-      inventory: [],
-    });
-  };
-
-  const getExistingUser = async (loggedInUser) => {
-    const loginCollectionRef = collection(db, LOGIN_INFO);
-
-    const data = await getDocs(loginCollectionRef);
-    const filteredData = data.docs.map((doc) => ({
-      ...doc.data(),
-      id: doc.id,
-    }));
-
-    const userCode = filteredData.filter((x) => x.code === loggedInUser)[0];
-    return userCode;
-  };
-  const handlePageChange = (e) => {
-    const selectedType = e.target.value;
-    setType(selectedType);
   };
 
   useEffect(() => {
@@ -350,20 +253,7 @@ const Signup = () => {
                   className="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"
                 />
               </div>
-              <div className="w-full max-w-md mb-6">
-                <select
-                  onChange={handlePageChange}
-                  defaultValue=""
-                  className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                >
-                  <option value="notselected">Select your business type</option>
-                  <option value="Content Creator">Content Creator</option>
-                  <option value="Rajputi Poshak">Rajputi Poshak</option>
-                  <option value="Service Center">Service Center</option>
-                  {/* <option value="digitalstudio">Digital Studio</option> */}
-                  <option value="Others">Others</option>
-                </select>
-              </div>
+
               <button
                 type="submit"
                 className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-semibold text-sm"

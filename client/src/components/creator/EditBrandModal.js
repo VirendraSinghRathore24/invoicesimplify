@@ -51,7 +51,7 @@ const EditBrandModal = ({ isOpen, onClose, onSave, editData }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-2">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-2 lg:left-64">
       <div className="bg-white w-full max-w-xl rounded-xl shadow-xl border p-6 animate-fadeIn">
         {/* Header */}
         <div className="flex justify-between items-center pb-3 border-b">

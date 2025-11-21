@@ -27,11 +27,6 @@ const PaymentHistory = () => {
       navigate("/login");
       return;
     }
-    const type = localStorage.getItem("type");
-    if (!type || type === "undefined" || type === "null") {
-      navigate("/selectbusinesstype");
-      return;
-    }
   };
 
   const getDate = (utcDate) => {

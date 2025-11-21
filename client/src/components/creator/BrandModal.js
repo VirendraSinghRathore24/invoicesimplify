@@ -123,7 +123,7 @@ const BrandModal = ({ handleCloseBrandModal }) => {
   }, [handleCloseModal]);
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center ">
+    <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center lg:left-64">
       <div className="overflow-auto mt-6 bg-white p-4 text-black rounded-xl w-full lg:w-7/12">
         <div className="flex justify-between py-2">
           <div className=" text-lg font-bold">Select Brand/Agency </div>

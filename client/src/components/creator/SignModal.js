@@ -23,7 +23,7 @@ const SignModal = ({ setSignature, handleSignOpen, handleCloseSign }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center">
+    <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center lg:left-64">
       <div className="mt-6 bg-white p-5 text-black rounded-xl w-full lg:w-5/12 m-2">
         <div className="flex justify-end">
           <button onClick={handleCloseSign} className="text-xl font-bold">

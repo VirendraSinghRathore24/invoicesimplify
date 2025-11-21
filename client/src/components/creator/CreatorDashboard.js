@@ -30,7 +30,7 @@ const CreatorDashboard = () => {
   const [paid, setPaid] = useState(0);
   const [settled, setSettled] = useState(0);
   const [paidInvoices, setPaidInvoices] = useState(0);
-  const type = localStorage.getItem("type");
+
   const currencySymbol = localStorage.getItem("invoiceCurrency") || "₹";
 
   const [totalProfit, setTotalProft] = useState(0);
@@ -586,11 +586,7 @@ const CreatorDashboard = () => {
       navigate("/login");
       return;
     }
-    const type = localStorage.getItem("type");
-    if (!type || type === "undefined" || type === "null") {
-      navigate("/selectbusinesstype");
-      return;
-    }
+
     getInvoiceInfo();
     window.scroll(0, 0);
   };

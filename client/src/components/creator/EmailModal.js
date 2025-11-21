@@ -253,7 +253,7 @@ const EmailModal = ({
   }, []);
 
   return (
-    <div className="fixed inset-0 z-50 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center">
+    <div className="fixed inset-0 z-50 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center lg:left-64">
       <div className="w-full max-w-lg mx-4 bg-white dark:bg-gray-900 text-black dark:text-white rounded-xl shadow-xl p-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-4">

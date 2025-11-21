@@ -76,7 +76,7 @@ const BrandListModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-2">
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-2 lg:left-64">
       <div className="bg-white w-full max-w-3xl rounded-xl shadow-lg p-6 animate-fadeIn">
         {/* Header */}
         <div className="flex justify-between items-center border-b pb-3">

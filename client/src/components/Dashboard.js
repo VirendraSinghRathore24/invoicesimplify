@@ -20,7 +20,6 @@ const Dashboard = () => {
   const [paid, setPaid] = useState(0);
   const [settled, setSettled] = useState(0);
   const [paidInvoices, setPaidInvoices] = useState(0);
-  const type = localStorage.getItem("type");
 
   const [totalProfit, setTotalProft] = useState(0);
 

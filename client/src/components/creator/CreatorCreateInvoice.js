@@ -111,8 +111,6 @@ const CreatorCreateInvoice = () => {
   const [upiEnabled, setUpiEnabled] = useState(true);
   const uid = localStorage.getItem("uid");
 
-  const type = localStorage.getItem("type");
-
   var today = new Date();
   const months = [
     "Jan",
@@ -785,12 +783,9 @@ const CreatorCreateInvoice = () => {
 
   const handleLogin = () => {
     const user = localStorage.getItem("user");
-    const type = localStorage.getItem("type");
 
     if (!user || user === "undefined" || user === "null") {
       navigate("/login");
-    } else if (!type || type === "undefined" || type === "null") {
-      navigate("/selectbusinesstype");
     }
   };
   useEffect(() => {

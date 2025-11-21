@@ -64,7 +64,6 @@ import SellerInvoice from "./components/shop/purchase/SellerInvoice";
 import CreatorCreateInvoice from "./components/creator/CreatorCreateInvoice";
 
 function App() {
-  const type = localStorage.getItem("type");
   const location = useLocation();
   const showSidebar = ![
     "/",
@@ -90,7 +89,7 @@ function App() {
       {showSidebar && showSidebar1 && (
         <div>
           <div className="hidden lg:block">
-            {type === CONTENT_CREATOR ? <CreatorSidebar /> : <Sidebar />}
+            <CreatorSidebar />
           </div>
         </div>
       )}

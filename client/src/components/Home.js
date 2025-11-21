@@ -39,13 +39,10 @@ const Home = () => {
 
   const handleCreateInvoice = () => {
     const user = localStorage.getItem("user");
-    const type = localStorage.getItem("type");
 
     if (user && user !== "undefined" && user !== "null") {
-      const newWindow =
-        type === CONTENT_CREATOR
-          ? window.open("/creator/createinvoice", "_blank")
-          : window.open("/createinvoice", "_blank");
+      const newWindow = window.open("/creator/createinvoice", "_blank");
+
       if (newWindow) newWindow.opener = null;
     } else {
       const newWindow = window.open("/login", "_blank");

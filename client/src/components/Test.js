@@ -66,12 +66,9 @@ const Home = () => {
 
   const createInvoice = () => {
     const user = localStorage.getItem("user");
-    const type = localStorage.getItem("type");
 
     if (!user || user === "undefined" || user === "null") {
       navigate("/login");
-    } else if (!type || type === "undefined" || type === "null") {
-      navigate("/selectbusinesstype");
     } else {
       navigate("/creator/createinvoice");
     }

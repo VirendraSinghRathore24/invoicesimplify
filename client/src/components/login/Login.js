@@ -19,7 +19,6 @@ import {
   CREATORS,
   INVENTORY_INFO,
   INVOICE_INFO,
-  PERSONAL_INFO,
   USERS,
 } from "../Constant";
 
@@ -226,7 +225,7 @@ const Login = () => {
       invoiceNumber: 1,
       invoiceNumberMode: "automatic",
       usedInvoiceNumbers: [],
-      type: "",
+      type: CONTENT_CREATOR,
       subscription: "Free",
       invoiceCurrency: "₹",
       subStarts: new Date().toISOString().slice(0, 10),
@@ -243,17 +242,6 @@ const Login = () => {
       additionalInfo: null,
       loggedInUser: code,
     });
-
-    const inventoryInfo_CollectionRef = collection(
-      doc(db, USERS, uid),
-      INVENTORY_INFO
-    );
-    // initialize inventory info
-    await addDoc(inventoryInfo_CollectionRef, {
-      orgCode: orgCode,
-      loggedInUser: code,
-      inventory: [],
-    });
   };
   const initializeData = async (code, uid, userName) => {
     localStorage.setItem("uid", auth?.currentUser?.uid);
@@ -263,36 +251,15 @@ const Login = () => {
 
     await getBusinessType(code);
 
-    const type = localStorage.getItem("type");
+    // for content cretor
+    await getPersonalInfo(code, uid);
 
-    if (type === CONTENT_CREATOR) {
-      // for content cretor
-      await getPersonalInfo(code, uid);
-
-      const info = localStorage.getItem("creator_personalInfo");
-
-      if (info === "undefined") {
-        navigate("/creator/personalinfo");
-      } else {
-        navigate("/creator/createinvoice");
-      }
-      return;
-    }
-
-    // get all data and add to local storage
-    await getAllData(code, uid);
-
-    await getInventoryList(code, uid);
-
-    // this is dashboard data
-    await getInvoiceInfo(code, uid);
-
-    const info = localStorage.getItem("businessInfo");
+    const info = localStorage.getItem("creator_personalInfo");
 
     if (info === "undefined") {
-      navigate("/businessinfo");
+      navigate("/creator/personalinfo");
     } else {
-      navigate("/createinvoice");
+      navigate("/creator/createinvoice");
     }
   };
 
@@ -322,12 +289,10 @@ const Login = () => {
 
       if (userExists) {
         await initializeData(code, uid, userName);
-        navigate("/creator/createinvoice");
       } else {
         await initializeDBForNewUser(code, userName, uid);
-        navigate("/selectbusinesstype");
       }
-
+      navigate("/creator/createinvoice");
       setLoading(false);
     } catch (err) {
       console.log(err);
