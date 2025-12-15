@@ -826,7 +826,7 @@ const CreatorCreateInvoice1 = () => {
       desc: match[3].trim(),
       rate:
         match[2] === "ग्राम"
-          ? ((Number(match[4]) * 1000) / qty).toFixed(0)
+          ? (Number(match[4]) * 1000) / qty
           : Number(match[4]) / qty,
       qty: match[1],
       type: match[2] || "",
@@ -836,7 +836,7 @@ const CreatorCreateInvoice1 = () => {
     setRows((prevRows) => {
       const updatedRows = [...prevRows, item];
       localStorage.setItem("customer_rows", JSON.stringify(updatedRows));
-      setAmount((prevAmount) => prevAmount + item.amount);
+      setAmount((prevAmount) => Number(prevAmount) + item.amount);
       return updatedRows;
     });
   };
