@@ -23,7 +23,7 @@ const plans = [
   },
   {
     name: "Monthly",
-    price: "299",
+    price: "99",
     days: "month",
     description: "Perfect for content creators.",
     features: [
@@ -40,7 +40,7 @@ const plans = [
   },
   {
     name: "Yearly",
-    price: "2999",
+    price: "999",
     days: "year",
     description: "Perfect for content creators.",
     features: [
@@ -148,8 +148,8 @@ const PricingPlans = () => {
                   </button>
                 ) : planName === plan.name ? (
                   <button
-                    disabled
-                    className="w-full py-2 rounded-xl font-semibold bg-green-600 text-white cursor-not-allowed tracking-wide"
+                    onClick={() => handlePayment1(plan)}
+                    className="w-full py-2 rounded-xl font-semibold bg-green-600 text-white cursor-pointer tracking-wide"
                   >
                     Current Plan
                   </button>
