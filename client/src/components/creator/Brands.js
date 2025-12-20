@@ -121,10 +121,15 @@ const Brands = () => {
       id: doc.id,
     }));
     const val = filteredData.find(
-      (x) => x.customerInfo.customerName.trim() === newItem.customerName.trim()
+      (x) =>
+        x.customerInfo.customerName.toLowerCase().trim() ===
+        newItem.customerName.toLowerCase().trim()
     );
 
-    if (val) return;
+    if (val) {
+      alert("Brand/Agency already exist !!!");
+      return;
+    }
 
     // brand info
     await addDoc(brandInfo_CollectionRef, {
@@ -142,7 +147,11 @@ const Brands = () => {
   };
 
   const handleDelete = async (user) => {
-    if (window.confirm("Are you sure you want to delete this entry?")) {
+    if (
+      window.confirm(
+        `Are you sure you want to delete this entry for ${user.customerInfo?.customerName}?`
+      )
+    ) {
       //const items = filteredData.filter((item) => item.id !== user.id);
       getBrands();
 

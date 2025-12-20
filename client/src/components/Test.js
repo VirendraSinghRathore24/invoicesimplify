@@ -54,10 +54,7 @@ const Home = () => {
 
   const addContactUsDataToDB = async () => {
     const uid = localStorage.getItem("uid");
-    const contactInfo_CollectionRef = collection(
-      doc(db, "Contact_US", uid),
-      "Contact_Info"
-    );
+    const contactInfo_CollectionRef = collection(db, "Contact_US");
     await addDoc(contactInfo_CollectionRef, {
       contactData: formData,
       messageDate: new Date().toISOString().slice(0, 10),

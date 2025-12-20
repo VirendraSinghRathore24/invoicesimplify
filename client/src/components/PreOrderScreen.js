@@ -12,11 +12,13 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import Footer1 from "./Footer1";
+import Loader from "./Loader";
 
 const PlanSummaryWithDiscount = () => {
   const [coupon, setCoupon] = useState("");
   const [discount, setDiscount] = useState(0);
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -73,10 +75,11 @@ const PlanSummaryWithDiscount = () => {
   };
 
   const handleProceed = async () => {
+    setLoading(true);
     const res = await loadRazorpay(
       "https://checkout.razorpay.com/v1/checkout.js"
     );
-
+    setLoading(false);
     if (!res) {
       alert("Razorpay SDK failed to load. Are you online?");
       return;
@@ -296,6 +299,7 @@ const PlanSummaryWithDiscount = () => {
         </div>
       </div>
       <Footer1 />
+      {loading && <Loader />}
     </div>
   );
 };

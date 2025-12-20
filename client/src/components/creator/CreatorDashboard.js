@@ -147,7 +147,7 @@ const CreatorDashboard = () => {
       localStorage.setItem("dashboardInfo", JSON.stringify(items));
 
       // archive before deleting
-      //await archiveInvoice(user);
+      await archiveInvoice(user);
 
       const invDoc = doc(db, CREATORS, uid, INVOICE_INFO, user.id);
       await deleteDoc(invDoc);
@@ -180,7 +180,7 @@ const CreatorDashboard = () => {
   // first get the invoice data and then add it to the archive collection
   const archiveInvoice = async (user) => {
     const archiveCollectionRef = collection(
-      doc(db, USERS, uid),
+      doc(db, CREATORS, uid),
       ARCHIVED_INVOICES
     );
     const archivedInvoice = {

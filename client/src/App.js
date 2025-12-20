@@ -42,7 +42,6 @@ import EditInvoice from "./components/invoice/EditInvoice";
 import AccountInfo from "./components/creator/AccountInfo";
 import CreatorAddInvoice from "./components/creator/CreatorAddInvoice";
 import CreatorInvoice from "./components/creator/CreatorInvoice";
-import CreatorInvoice1 from "./components/creator/CreatorInvoice1";
 import { CONTENT_CREATOR } from "./components/Constant";
 import CreatorSidebar from "./components/creator/CreatorSidebar";
 import CreatorDashboard from "./components/creator/CreatorDashboard";
@@ -63,8 +62,7 @@ import Test from "./components/Test";
 import BusinessTypeComponent from "./components/BusinessTypeComponent";
 import SellerInvoice from "./components/shop/purchase/SellerInvoice";
 import CreatorCreateInvoice from "./components/creator/CreatorCreateInvoice";
-
-import CreatorCreateInvoice1 from "./components/creator/CreatorCreateInvoice1";
+import ContactUsMessages from "./components/admin/ContactUsMessages";
 
 function App() {
   const location = useLocation();
@@ -81,6 +79,7 @@ function App() {
     "/preorder",
     "/success",
     "/admin/allusers",
+    "/admin/contacts",
     "/test",
     "/selectbusinesstype",
   ].includes(location.pathname);
@@ -144,6 +143,7 @@ function App() {
           <Route path="/refresh" element={<Refresh />} />
 
           <Route path="/admin/allusers" element={<AllUsers />} />
+          <Route path="/admin/contacts" element={<ContactUsMessages />} />
           <Route path="/preorder" element={<PreOrderScreen />} />
 
           <Route path="/emailscheduler" element={<EmailScheduler />} />
@@ -184,11 +184,6 @@ function App() {
             path="/creator/createinvoice"
             element={<CreatorCreateInvoice />}
           />
-          <Route
-            path="/creator/createinvoice1"
-            element={<CreatorCreateInvoice1 />}
-          />
-          <Route path="/creator/invoice1" element={<CreatorInvoice1 />} />
 
           <Route path="/creator/invoice" element={<CreatorInvoice />} />
           <Route path="/creator/viewinvoice" element={<CreatorViewInvoice />} />

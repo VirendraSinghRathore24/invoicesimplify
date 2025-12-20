@@ -135,6 +135,7 @@ const EmailModal = ({
       loggedInUser: loggedInUser,
       logoBase64: logoBase64,
       paymentStatus: "Pending",
+      invoiceCurrency: currencySymbol ? currencySymbol : "₹",
     });
 
     localStorage.setItem("downloadedInvoiceNumber", invoiceInfo?.invoiceNumber);
