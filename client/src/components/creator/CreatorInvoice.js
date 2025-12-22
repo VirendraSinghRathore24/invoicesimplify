@@ -191,6 +191,7 @@ function CreatorInvoice() {
   );
   const InsertToDB = async () => {
     // invoice info
+    personalInfo.logoUrl = logo;
     await addDoc(invoiceInfo_CollectionRef, {
       personalInfo: personalInfo,
       taxInfo: taxInfo,

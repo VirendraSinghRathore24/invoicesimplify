@@ -77,7 +77,9 @@ export default function LogoUpload({ onUpload, logoUrl = "" }) {
       }));
 
       // update business info
-      basicInfo[0].personalInfo.logoUrl = logoUrl;
+      if (basicInfo[0].personalInfo) {
+        basicInfo[0].personalInfo.logoUrl = logoUrl;
+      }
       await updateLogo(basicInfo[0].id, basicInfo[0].personalInfo);
     } catch (err) {
       console.log(err);
