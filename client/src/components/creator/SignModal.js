@@ -1,10 +1,11 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 import SignatureCanvas from "react-signature-canvas";
 
 const SignModal = ({ setSignature, handleSignOpen, handleCloseSign }) => {
   const sigRef = useRef();
   const [enableSave, setEnableSave] = useState(false);
+  const containerRef = useRef(null);
 
   const handleSignatureEnd = () => {
     setSignature(sigRef.current.toDataURL());
@@ -22,6 +23,26 @@ const SignModal = ({ setSignature, handleSignOpen, handleCloseSign }) => {
     setEnableSave(false);
   };
 
+  const resizeCanvas = () => {
+    const canvas = sigRef.current?.getCanvas();
+    const container = containerRef.current;
+    if (!canvas || !container) return;
+
+    const ratio = Math.max(window.devicePixelRatio || 1, 1);
+    const width = container.offsetWidth;
+    const height = 200;
+
+    canvas.width = width * ratio;
+    canvas.height = height * ratio;
+    canvas.getContext("2d").scale(ratio, ratio);
+  };
+
+  useEffect(() => {
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
+    return () => window.removeEventListener("resize", resizeCanvas);
+  }, []);
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center lg:left-64">
       <div className="mt-6 bg-white p-5 text-black rounded-xl w-full lg:w-5/12 m-2">
@@ -31,18 +52,16 @@ const SignModal = ({ setSignature, handleSignOpen, handleCloseSign }) => {
           </button>
         </div>
 
-        <SignatureCanvas
-          penColor="black"
-          canvasProps={{
-            width: 520,
-            height: 300,
-            className: "sigCanvas",
-            style: { border: "1px solid #000" },
-          }}
-          ref={sigRef}
-          onBegin={handleSignStart}
-          //onEnd={handleSignatureEnd}
-        />
+        <div ref={containerRef} className="w-full max-w-xl">
+          <SignatureCanvas
+            ref={sigRef}
+            penColor="black"
+            canvasProps={{
+              className: "w-full h-[200px] border border-black",
+            }}
+            onBegin={handleSignStart}
+          />
+        </div>
 
         <div className="flex justify-between my-2">
           <button
