@@ -21,6 +21,14 @@ export default function LogoUpload({ onUpload, logoUrl = "" }) {
     setPreview(URL.createObjectURL(selected));
   };
 
+  const removeLogo = async () => {
+    setFile(null);
+    setPreview("");
+
+    localStorage.setItem("creator_logoUrl", "");
+    await addLogo(null);
+  };
+
   const uploadLogo = async () => {
     if (!file) {
       alert("Please select a logo");
@@ -101,7 +109,16 @@ export default function LogoUpload({ onUpload, logoUrl = "" }) {
 
   return (
     <div className="max-w-sm rounded-xl border border-dashed border-gray-300 p-4">
-      <h3 className="mb-3 text-lg font-semibold">🏪 Upload Logo</h3>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="mb-3 text-lg font-semibold">🏪 Upload Logo</h3>
+        <button
+          onClick={removeLogo}
+          disabled={uploading}
+          className="w-2/12 rounded-lg px-4 py-2 text-black transition fond-extrabold"
+        >
+          X
+        </button>
+      </div>
 
       {preview && (
         <img

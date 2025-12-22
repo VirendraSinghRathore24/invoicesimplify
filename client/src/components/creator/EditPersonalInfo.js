@@ -132,12 +132,14 @@ function EditPersonalInfo() {
               <div className="text-xl font-semibold mb-6 text-center">
                 Edit Personal Information
               </div>
+              <div className="flex flex-col gap-y-4 w-full md:w-7/12 mx-auto">
+                <LogoUpload
+                  onUpload={handleLogoUpload}
+                  logoUrl={inputs.logoUrl}
+                />
+              </div>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="flex flex-col gap-y-4 w-full md:w-7/12 mx-auto">
-                  <LogoUpload
-                    onUpload={handleLogoUpload}
-                    logoUrl={inputs.logoUrl}
-                  />
                   <div className="flex flex-col">
                     <div className="text-sm font-medium leading-5 mb-1">
                       Name
