@@ -350,8 +350,11 @@ function CreatorInvoice() {
     setPersonalInfo(JSON.parse(pi));
 
     let tii = localStorage.getItem("creator_taxInfo");
-    const ti = JSON.parse(tii);
-    setTaxInfo(ti);
+    let ti = null;
+    if (!(tii === "undefined" || tii === "null" || !tii)) {
+      ti = JSON.parse(tii);
+      setTaxInfo(ti);
+    }
 
     let ci = localStorage.getItem("creator_customerInfo");
     const custData = JSON.parse(ci);
