@@ -30,10 +30,12 @@ function CreatorInvoice() {
   const uid = localStorage.getItem("uid");
 
   const [personalInfo, setPersonalInfo] = useState([]);
+  const [taxInfo, setTaxInfo] = useState([]);
   const [accountInfo, setAccountInfo] = useState([]);
   const [customerInfo, setCustomerInfo] = useState([]);
   const [rows, setRows] = useState([]);
   const [amount, setAmount] = useState();
+  const [totalAmount, setTotalAmount] = useState();
   const [invoiceInfo, setInvoiceInfo] = useState([]);
   const [additionalInfo, setAdditionalInfo] = useState([]);
   const [signedInfo, setSignedInfo] = useState([]);
@@ -105,6 +107,7 @@ function CreatorInvoice() {
 
       const invoiceData = {
         invoiceInfo: invoiceInfo,
+        taxInfo: taxInfo,
         personalInfo: personalInfo,
         customerInfo: customerInfo,
         rows: rows,
@@ -130,7 +133,7 @@ function CreatorInvoice() {
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.download = customerInfo.productName + ".pdf";
+        link.download = customerInfo?.productName + ".pdf";
         link.click();
         URL.revokeObjectURL(url);
 
@@ -189,6 +192,7 @@ function CreatorInvoice() {
     // invoice info
     await addDoc(invoiceInfo_CollectionRef, {
       personalInfo: personalInfo,
+      taxInfo: taxInfo,
       accountInfo: accountInfo,
       customerInfo: customerInfo,
       rows: rows,
@@ -340,8 +344,13 @@ function CreatorInvoice() {
     let pi = localStorage.getItem("creator_personalInfo");
     setPersonalInfo(JSON.parse(pi));
 
+    let tii = localStorage.getItem("creator_taxInfo");
+    const ti = JSON.parse(tii);
+    setTaxInfo(ti);
+
     let ci = localStorage.getItem("creator_customerInfo");
     const custData = JSON.parse(ci);
+    if (!custData) return;
     custData.productName = localStorage.getItem("creator_productName");
     setCustomerInfo(custData);
 
@@ -362,6 +371,15 @@ function CreatorInvoice() {
 
     let ad = localStorage.getItem("creator_additionalInfo");
     setAdditionalInfo(JSON.parse(ad));
+
+    if (ti) {
+      let taxAmount = (Number(ca) * (Number(ti.gstpercentage) / 100)).toFixed(
+        2
+      );
+      setTotalAmount(parseFloat(Number(ca)) + parseFloat(taxAmount));
+    } else {
+      setTotalAmount(ca);
+    }
   }, []);
   return (
     <div className="">
@@ -520,6 +538,17 @@ function CreatorInvoice() {
                         }}
                       >
                         {personalInfo?.socialMedia}
+                      </div>
+                    )}
+                    {taxInfo?.gstin && (
+                      <div
+                        style={{
+                          color: "#6B7280",
+                          fontSize: "0.875rem",
+                          marginTop: "0.2rem",
+                        }}
+                      >
+                        GST: {taxInfo?.gstin}
                       </div>
                     )}
                   </div>
@@ -863,6 +892,111 @@ function CreatorInvoice() {
                 }}
               ></div>
 
+              {taxInfo?.gstpercentage && (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    width: "100%",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <div
+                      style={{
+                        marginTop: "0.5rem", // mt-1
+                        marginBottom: "0.5rem", // mt-1
+                        paddingLeft: "0.5rem", // px-2
+                        paddingRight: "0.5rem", // px-2
+                        fontSize: "0.95rem", // text-md ≈ 1rem
+                        borderRadius: "0.375rem", // rounded-md = 6px or 0.375rem
+                      }}
+                    >
+                      Sub Total{" "}
+                    </div>
+                    <div
+                      style={{
+                        marginTop: "0.5rem", // mt-1
+                        marginBottom: "0.5rem", // mt-1
+                        paddingLeft: "0.5rem", // px-2
+                        paddingRight: "0.5rem", // px-2
+                        fontSize: "0.95rem", // text-md ≈ 1rem
+                        borderRadius: "0.375rem", // rounded-md = 6px or 0.375rem
+                      }}
+                    >
+                      {currencySymbol} {amount}
+                    </div>
+                  </div>
+                </div>
+              )}
+              {taxInfo?.gstpercentage && (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    borderBottom: "1.2px dotted black",
+                    marginTop: "0.2rem", // Tailwind's mt-2 = 0.5rem
+                  }}
+                ></div>
+              )}
+              {taxInfo?.gstpercentage && (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    width: "100%",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <div
+                      style={{
+                        marginTop: "0.5rem", // mt-1
+                        marginBottom: "0.5rem", // mt-1
+                        paddingLeft: "0.5rem", // px-2
+                        paddingRight: "0.5rem", // px-2
+                        fontSize: "0.95rem", // text-md ≈ 1rem
+                        borderRadius: "0.375rem", // rounded-md = 6px or 0.375rem
+                      }}
+                    >
+                      Tax ({taxInfo.gstpercentage}%){" "}
+                    </div>
+                    <div
+                      style={{
+                        marginTop: "0.5rem", // mt-1
+                        marginBottom: "0.5rem", // mt-1
+                        paddingLeft: "0.5rem", // px-2
+                        paddingRight: "0.5rem", // px-2
+                        fontSize: "0.95rem", // text-md ≈ 1rem
+                        borderRadius: "0.375rem", // rounded-md = 6px or 0.375rem
+                      }}
+                    >
+                      {currencySymbol}{" "}
+                      {(amount * (taxInfo.gstpercentage / 100)).toFixed(2)}
+                    </div>
+                  </div>
+                </div>
+              )}
+              {taxInfo?.gstpercentage && (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    borderBottom: "1.2px dotted black",
+                    marginTop: "0.2rem", // Tailwind's mt-2 = 0.5rem
+                  }}
+                ></div>
+              )}
               {
                 <div
                   style={{
@@ -903,7 +1037,7 @@ function CreatorInvoice() {
                         borderRadius: "0.375rem", // rounded-md = 6px or 0.375rem
                       }}
                     >
-                      {currencySymbol} {amount}
+                      {currencySymbol} {totalAmount}
                     </div>
                   </div>
                 </div>
@@ -1131,6 +1265,7 @@ function CreatorInvoice() {
             email={personalInfo?.email}
             invoiceInfo={invoiceInfo}
             personalInfo={personalInfo}
+            taxInfo={taxInfo}
             customerInfo={customerInfo}
             rows={rows}
             amountInfo={amount}

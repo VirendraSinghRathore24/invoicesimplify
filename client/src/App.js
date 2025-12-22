@@ -6,7 +6,7 @@ import AddInvoice from "./components/invoice/AddInvoice";
 import Invoice from "./components/invoice/Invoice";
 import Sidebar from "./components/Sidebar";
 import BusinessInfo from "./components/businessInfo/BusinessInfo";
-import TaxInfo from "./components/tax/TaxInfo";
+
 import AdditionalInformation from "./components/additionalInfo/AdditionalInformation";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -17,8 +17,7 @@ import Signup from "./components/login/Signup";
 import ViewInvoice from "./components/invoice/ViewInvoice";
 import Logout from "./components/login/Logout";
 import AddBusinessInfo from "./components/businessInfo/AddBusinessInfo";
-import AddTaxInfo from "./components/tax/AddTaxInfo";
-import EditTaxInfo from "./components/tax/EditTaxInfo";
+
 import AddAddtionalInfo from "./components/additionalInfo/AddAddtionalInfo";
 import Inventory from "./components/inventory/Inventory";
 import ArchivedDashboard from "./components/archived/ArchivedDashboard";
@@ -63,6 +62,9 @@ import BusinessTypeComponent from "./components/BusinessTypeComponent";
 import SellerInvoice from "./components/shop/purchase/SellerInvoice";
 import CreatorCreateInvoice from "./components/creator/CreatorCreateInvoice";
 import ContactUsMessages from "./components/admin/ContactUsMessages";
+import AddTaxInfo from "./components/creator/AddTaxInfo";
+import CreatorTaxInfo from "./components/creator/CreatorTaxInfo";
+import EditTaxInfo from "./components/creator/EditTaxInfo";
 
 function App() {
   const location = useLocation();
@@ -110,9 +112,9 @@ function App() {
           <Route path="/editbusinessinfo" element={<EditBusinessInfo />} />
           <Route path="/addbusinessinfo" element={<AddBusinessInfo />} />
           {/* Tax Info */}
-          <Route path="/edittaxinfo" element={<EditTaxInfo />} />
-          <Route path="/taxinfo" element={<TaxInfo />} />
-          <Route path="/addtaxinfo" element={<AddTaxInfo />} />
+          {/* <Route path="/edittaxinfo" element={<EditTaxInfo />} />
+
+          <Route path="/addtaxinfo" element={<AddTaxInfo />} /> */}
           {/* Additional Info */}
           <Route path="/editadditionalinfo" element={<AddtionalInfo />} />
           <Route path="/addadditionalinfo" element={<AddAddtionalInfo />} />
@@ -180,6 +182,9 @@ function App() {
             path="/creator/editcreatoradditionalinfo"
             element={<EditCreatorAddtionalInfo />}
           />
+          <Route path="/creator/taxinfo" element={<CreatorTaxInfo />} />
+          <Route path="/creator/addtaxinfo" element={<AddTaxInfo />} />
+          <Route path="/creator/edittaxinfo" element={<EditTaxInfo />} />
           <Route
             path="/creator/createinvoice"
             element={<CreatorCreateInvoice />}

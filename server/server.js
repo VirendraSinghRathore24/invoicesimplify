@@ -821,6 +821,7 @@ app.post("/send-email-pdf1", async (req, res) => {
 
 const buildHtml = (invoiceData) => {
   const personalInfo = invoiceData.personalInfo;
+  const taxInfo = invoiceData.taxInfo;
   const customerInfo = invoiceData.customerInfo;
   const invoiceInfo = invoiceData.invoiceInfo;
   const rows = invoiceData.rows;
@@ -829,6 +830,8 @@ const buildHtml = (invoiceData) => {
   const signedInfo = invoiceData.signedInfo;
   const additionalInfo = invoiceData.additionalInfo;
   const currencySymbol = invoiceData.currencySymbol || "₹";
+
+  let totalAmt = 0;
 
   let html = "";
   const logoBase64 = invoiceData.logoBase64; // Assuming logo is sent as base64 string
@@ -877,6 +880,12 @@ const buildHtml = (invoiceData) => {
     html += `
                     <div style="color: #6B7280; font-size: 0.875rem; margin-top: 0.2rem;">
                       ${personalInfo?.socialMedia}
+                    </div>`;
+  }
+  if (taxInfo?.gstin) {
+    html += `
+                    <div style="color: #6B7280; font-size: 0.875rem; margin-top: 0.2rem;">
+                      GST: ${taxInfo?.gstin}
                     </div>`;
   }
   html += `
@@ -989,24 +998,66 @@ const buildHtml = (invoiceData) => {
                           <tr style="display: flex; justify-content: space-between; font-size: 1rem;  margin-top: 0.5rem;  border-bottom: 1px dashed black;"></tr>`;
       }
     });
+    if (taxInfo) {
+      totalAmt = amount + amount * (taxInfo.gstpercentage / 100);
+    } else {
+      totalAmt = amount;
+    }
   }
   html += `
                   </tbody>
                 </table>
               </div>
-              <div style="display: flex; justify-content: space-between; border-bottom: 1.2px solid black; margin-top: 0.5rem;"></div>
+              <div style="display: flex; justify-content: space-between; border-bottom: 1.2px solid black; margin-top: 0.5rem;"></div>`;
+
+  if (taxInfo) {
+    html += `
+                <div style="display: flex; justify-content: flex-end; width: 100%;">
+                <div style="width: 100%; display: flex; justify-content: space-between;">
+                  <div style="margin-top: 0.5rem; margin-bottom: 0.5rem; padding: 0.5rem; font-size: 0.95rem; border-radius: 0.375rem;">
+                    Sub Total
+                  </div>
+                  <div style="margin-top: 0.5rem; margin-bottom: 0.5rem; padding: 0.5rem; font-size: 0.95rem; border-radius: 0.375rem;">
+                    ${currencySymbol} ${amount}
+                  </div>
+                </div>
+              </div>
+              <div style="display: flex; justify-content: space-between; border-bottom: 1.2px dotted black;"></div>`;
+  }
+
+  if (taxInfo) {
+    html += `
+                              <div style="display: flex; justify-content: flex-end; width: 100%;">
+                              <div style="width: 100%; display: flex; justify-content: space-between;">
+                                <div style="margin-top: 0.5rem; margin-bottom: 0.5rem; padding: 0.5rem; font-size: 0.95rem; border-radius: 0.375rem;">
+                                  Tax (${taxInfo.gstpercentage}%)
+                                </div>
+                                <div style="margin-top: 0.5rem; margin-bottom: 0.5rem; padding: 0.5rem; font-size: 0.95rem; border-radius: 0.375rem;">
+                                  ${currencySymbol} ${(
+      amount *
+      (taxInfo.gstpercentage / 100)
+    ).toFixed(2)}
+                                </div>
+                              </div>
+                            </div>
+                             <div style="display: flex; justify-content: space-between; border-bottom: 1.2px dotted black;"></div>`;
+  }
+
+  html += `
               <div style="display: flex; justify-content: flex-end; width: 100%;">
                 <div style="width: 100%; display: flex; justify-content: space-between;">
                   <div style="margin-top: 0.5rem; margin-bottom: 0.5rem; padding: 0.5rem; font-size: 0.95rem; font-weight: bold; border-radius: 0.375rem; text-transform: uppercase;">
                     Total
                   </div>
                   <div style="margin-top: 0.5rem; margin-bottom: 0.5rem; padding: 0.5rem; font-size: 0.95rem; font-weight: bold; border-radius: 0.375rem;">
-                    ${currencySymbol} ${amount}
+                    ${currencySymbol} ${totalAmt}
+  
                   </div>
                 </div>
               </div>
-              <div style="display: flex; justify-content: space-between; border-bottom: 1.2px solid black; margin-top: 0.2rem;"></div>
+              <div style="display: flex; justify-content: space-between; border-bottom: 1.2px solid black;"></div>
               <div style="display: flex; justify-content: space-between;">`;
+
   if (accountInfo) {
     html += `
                 <div>

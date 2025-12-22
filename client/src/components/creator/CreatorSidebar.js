@@ -139,6 +139,12 @@ const CreatorSidebar = () => {
             to="/creator/creatoradditionalinfo"
             active={location.pathname === "/creator/creatoradditionalinfo"}
           />
+          <SubMenuItem
+            icon={<TbFileInvoice size={24} />}
+            text="Tax Info"
+            to="/creator/taxinfo"
+            active={location.pathname === "/creator/taxinfo"}
+          />
         </SidebarItem>
 
         <SidebarItem

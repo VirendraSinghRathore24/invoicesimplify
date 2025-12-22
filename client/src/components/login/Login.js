@@ -157,6 +157,7 @@ const Login = () => {
       "creator_additionalInfo",
       JSON.stringify(pInfo.additionalInfo)
     );
+    localStorage.setItem("creator_taxInfo", JSON.stringify(pInfo.taxInfo));
   };
 
   const signInWithUsernameAndPassword = async (e) => {

@@ -10,6 +10,7 @@ import EmailViewModal from "./EmailViewModal";
 
 function CreatorViewInvoice() {
   const [invoiceInfo, setInvoiceInfo] = useState({});
+  const [totalAmount, setTotalAmount] = useState(0);
   const [loading, setLoading] = useState(true);
   const printRef = useRef(null);
   const [logoBase64, setLogoBase64] = useState("");
@@ -59,6 +60,7 @@ function CreatorViewInvoice() {
       const invoiceData = {
         invoiceInfo: invoiceInfo.invoiceInfo,
         personalInfo: invoiceInfo.personalInfo,
+        taxInfo: invoiceInfo.taxInfo,
         customerInfo: invoiceInfo.customerInfo,
         rows: invoiceInfo.rows,
         amountInfo: invoiceInfo.amount,
@@ -129,6 +131,19 @@ function CreatorViewInvoice() {
       );
 
       const invoiceData = allBrandsInfo.filter((x) => x.id === id)[0];
+
+      if (invoiceData?.taxInfo) {
+        const taxPercentage = invoiceData?.taxInfo.gstpercentage;
+        const taxAmount = (
+          Number(invoiceData.amount) *
+          (Number(taxPercentage) / 100)
+        ).toFixed(2);
+        setTotalAmount(
+          parseFloat(Number(invoiceData.amount)) + parseFloat(taxAmount)
+        );
+      } else {
+        setTotalAmount(invoiceData.amount);
+      }
 
       setInvoiceInfo(invoiceData);
     } catch (error) {
@@ -331,6 +346,17 @@ function CreatorViewInvoice() {
                         }}
                       >
                         {invoiceInfo?.personalInfo?.socialMedia}
+                      </div>
+                    )}
+                    {invoiceInfo?.taxInfo?.gstin && (
+                      <div
+                        style={{
+                          color: "#6B7280",
+                          fontSize: "0.875rem",
+                          marginTop: "0.2rem",
+                        }}
+                      >
+                        GST: {invoiceInfo?.taxInfo?.gstin}
                       </div>
                     )}
                   </div>
@@ -671,7 +697,118 @@ function CreatorViewInvoice() {
                   marginTop: "0.5rem", // Tailwind's mt-2 = 0.5rem
                 }}
               ></div>
+              {invoiceInfo?.taxInfo?.gstpercentage && (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    width: "100%",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <div
+                      style={{
+                        marginTop: "0.5rem", // mt-1
+                        marginBottom: "0.5rem", // mt-1
+                        paddingLeft: "0.5rem", // px-2
+                        paddingRight: "0.5rem", // px-2
+                        fontSize: "0.95rem", // text-md ≈ 1rem
+                        borderRadius: "0.375rem", // rounded-md = 6px or 0.375rem
+                      }}
+                    >
+                      Sub Total{" "}
+                    </div>
+                    <div
+                      style={{
+                        marginTop: "0.5rem", // mt-1
+                        marginBottom: "0.5rem", // mt-1
+                        paddingLeft: "0.5rem", // px-2
+                        paddingRight: "0.5rem", // px-2
+                        fontSize: "0.95rem", // text-md ≈ 1rem
 
+                        borderRadius: "0.375rem", // rounded-md = 6px or 0.375rem
+                      }}
+                    >
+                      {invoiceInfo?.invoiceCurrency
+                        ? invoiceInfo?.invoiceCurrency
+                        : "₹"}{" "}
+                      {invoiceInfo?.amount}
+                    </div>
+                  </div>
+                </div>
+              )}
+              {invoiceInfo?.taxInfo?.gstpercentage && (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    borderBottom: "1.2px dotted black",
+                  }}
+                ></div>
+              )}
+              {invoiceInfo?.taxInfo?.gstpercentage && (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    width: "100%",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <div
+                      style={{
+                        marginTop: "0.5rem", // mt-1
+                        marginBottom: "0.5rem", // mt-1
+                        paddingLeft: "0.5rem", // px-2
+                        paddingRight: "0.5rem", // px-2
+                        fontSize: "0.95rem", // text-md ≈ 1rem
+                        borderRadius: "0.375rem", // rounded-md = 6px or 0.375rem
+                      }}
+                    >
+                      Tax {invoiceInfo?.taxInfo?.gstpercentage}%{" "}
+                    </div>
+                    <div
+                      style={{
+                        marginTop: "0.5rem", // mt-1
+                        marginBottom: "0.5rem", // mt-1
+                        paddingLeft: "0.5rem", // px-2
+                        paddingRight: "0.5rem", // px-2
+                        fontSize: "0.95rem", // text-md ≈ 1rem
+                        borderRadius: "0.375rem", // rounded-md = 6px or 0.375rem
+                      }}
+                    >
+                      {invoiceInfo?.invoiceCurrency
+                        ? invoiceInfo?.invoiceCurrency
+                        : "₹"}{" "}
+                      {(
+                        invoiceInfo?.amount *
+                        (Number(invoiceInfo?.taxInfo?.gstpercentage) / 100)
+                      ).toFixed(2)}
+                    </div>
+                  </div>
+                </div>
+              )}
+              {invoiceInfo?.taxInfo?.gstpercentage && (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    borderBottom: "1.2px dotted black",
+                  }}
+                ></div>
+              )}
               {
                 <div
                   style={{
@@ -715,7 +852,7 @@ function CreatorViewInvoice() {
                       {invoiceInfo?.invoiceCurrency
                         ? invoiceInfo?.invoiceCurrency
                         : "₹"}{" "}
-                      {invoiceInfo?.amount}
+                      {totalAmount}
                     </div>
                   </div>
                 </div>
