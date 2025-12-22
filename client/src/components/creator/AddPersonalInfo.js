@@ -9,6 +9,7 @@ import Loader from "../Loader";
 import MobileMenu from "../MobileMenu";
 import { BASIC_INFO, CREATORS, PERSONAL_INFO, USERS } from "../Constant";
 import CreatorMobileMenu from "./CreatorMobileMenu";
+import LogoUpload from "./LogoUpload";
 
 function AddPersonalInfo() {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ function AddPersonalInfo() {
   const [saving, setSaving] = useState(false);
   const [avatarURL, setAvatarURL] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
-  const [imageUrl, setImageUrl] = useState("");
+  const [logoUrl, setLogoUrl] = useState("");
   const [loading, setLoading] = useState(false);
 
   const uid = localStorage.getItem("uid");
@@ -44,6 +45,7 @@ function AddPersonalInfo() {
 
       // Add to local storage
       localStorage.setItem("creator_personalInfo", JSON.stringify(inputs));
+
       await addPersonalData(inputs);
       setLoading(false);
 
@@ -109,6 +111,10 @@ function AddPersonalInfo() {
     return basicInfo;
   };
 
+  const handleLogoUpload = (url) => {
+    setLogoUrl(url);
+  };
+
   const handleLogin = () => {
     const user = localStorage.getItem("user");
 
@@ -138,13 +144,14 @@ function AddPersonalInfo() {
         </div>
 
         <div className="flex flex-col bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 ">
-          <main className="flex-grow container mx-auto px-1 py-2 scroll-y-auto h-[96.7%]">
+          <main className="flex-grow container mx-auto px-1 py-2 overflow-y-auto h-[calc(100vh-80px)]">
             <div className="max-w-10xl mx-auto bg-white dark:bg-gray-800 rounded-xl p-2">
               <div className="text-xl font-semibold mb-6 text-center">
                 Add Personal Information
               </div>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="flex flex-col gap-y-4 w-full md:w-7/12 mx-auto">
+                  <LogoUpload onUpload={handleLogoUpload} />
                   <div className="flex flex-col">
                     <div className="text-sm font-medium leading-5 mb-1">
                       Name
@@ -163,7 +170,6 @@ function AddPersonalInfo() {
                       />
                     </div>
                   </div>
-
                   <div className="flex flex-col text-sm">
                     <div className="font-medium leading-5 text-gray-700 mb-1">
                       Address

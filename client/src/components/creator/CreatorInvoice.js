@@ -22,6 +22,7 @@ function CreatorInvoice() {
   const navigate = useNavigate();
   const printRef = useRef(null);
   const location = useLocation();
+  const [logo, setLogo] = useState("");
 
   const [loading, setLoading] = useState(false);
   const [enablePrint, setEnablePrint] = useState(false);
@@ -341,6 +342,9 @@ function CreatorInvoice() {
       return;
     }
 
+    let logo1 = localStorage.getItem("creator_logoUrl");
+    setLogo(logo1);
+
     let pi = localStorage.getItem("creator_personalInfo");
     setPersonalInfo(JSON.parse(pi));
 
@@ -376,7 +380,9 @@ function CreatorInvoice() {
       let taxAmount = (Number(ca) * (Number(ti.gstpercentage) / 100)).toFixed(
         2
       );
-      setTotalAmount(parseFloat(Number(ca)) + parseFloat(taxAmount));
+      setTotalAmount(
+        Math.round(parseFloat(Number(ca)) + parseFloat(taxAmount))
+      );
     } else {
       setTotalAmount(ca);
     }
@@ -454,10 +460,11 @@ function CreatorInvoice() {
             >
               <div>
                 <img
-                  src={logoBase64}
-                  alt="Company Logo"
+                  src={logo ? logo : logoBase64}
+                  alt="Company Logo1"
                   style={{ width: "100px", marginBottom: "1rem" }}
                 />
+
                 <div
                   style={{ display: "flex", justifyContent: "space-between" }}
                 >

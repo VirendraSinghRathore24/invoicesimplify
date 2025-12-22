@@ -153,7 +153,7 @@ const CreatorTaxInfo = () => {
                   <tr className="border-t bg-white">
                     <td className="px-4 py-3 border-r">{posts?.gstin}</td>
                     <td className="px-4 py-3 border-r flex">
-                      {posts?.address && posts?.gstpercentage}
+                      {posts?.gstpercentage}
                     </td>
 
                     <td className="px-4 py-3 border-r">

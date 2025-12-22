@@ -25,6 +25,7 @@ const CreatorMobileMenu = () => {
     "Personal Info",
     "Account Info",
     "Additional Info",
+    "Tax Info",
     "Payment History",
     "Configuration",
   ];
@@ -47,6 +48,9 @@ const CreatorMobileMenu = () => {
     }
     if (input === "Additional Info") {
       return "creator/creatoradditionalinfo";
+    }
+    if (input === "Tax Info") {
+      return "creator/taxinfo";
     }
     if (input === "Payment History") {
       return "paymenthistory";

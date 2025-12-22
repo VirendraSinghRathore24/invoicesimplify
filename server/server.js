@@ -837,10 +837,22 @@ const buildHtml = (invoiceData) => {
   const logoBase64 = invoiceData.logoBase64; // Assuming logo is sent as base64 string
   html += `
           <div style="padding: 2rem; font-family: 'Inter', sans-serif; font-size: 14px; text-align: left;">
-            <div>
-             
+            <div>`;
+  if (personalInfo?.logoUrl) {
+    html += `
+    <div style="text-align: left; margin-bottom: 1rem; width: "40px" height: "40px";">
+             <img
+                  src=${personalInfo?.logoUrl}
+                  alt="Company Logo"
+                  style="width: 100px; marginBottom: 1rem;"
+                />
+                </div>`;
+  }
+  html += `
+            
               <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                 <div style="display: flex; flex-direction: column;">`;
+
   if (personalInfo?.name) {
     html += ` <div style="font-weight: bold; font-size: 1rem;">
                     ${personalInfo?.name}
@@ -999,7 +1011,7 @@ const buildHtml = (invoiceData) => {
       }
     });
     if (taxInfo) {
-      totalAmt = amount + amount * (taxInfo.gstpercentage / 100);
+      totalAmt = Math.round(amount + amount * (taxInfo.gstpercentage / 100));
     } else {
       totalAmt = amount;
     }

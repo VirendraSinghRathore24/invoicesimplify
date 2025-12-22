@@ -14,6 +14,7 @@ function CreatorViewInvoice() {
   const [loading, setLoading] = useState(true);
   const printRef = useRef(null);
   const [logoBase64, setLogoBase64] = useState("");
+  const [logoUrl, setLogoUrl] = useState("");
 
   const location = useLocation();
   const id = location.state.id;
@@ -132,6 +133,8 @@ function CreatorViewInvoice() {
 
       const invoiceData = allBrandsInfo.filter((x) => x.id === id)[0];
 
+      setLogoUrl(invoiceData?.personalInfo?.logoUrl || "");
+
       if (invoiceData?.taxInfo) {
         const taxPercentage = invoiceData?.taxInfo.gstpercentage;
         const taxAmount = (
@@ -139,7 +142,9 @@ function CreatorViewInvoice() {
           (Number(taxPercentage) / 100)
         ).toFixed(2);
         setTotalAmount(
-          parseFloat(Number(invoiceData.amount)) + parseFloat(taxAmount)
+          Math.round(
+            parseFloat(Number(invoiceData.amount)) + parseFloat(taxAmount)
+          )
         );
       } else {
         setTotalAmount(invoiceData.amount);
@@ -258,11 +263,11 @@ function CreatorViewInvoice() {
               }}
             >
               <div>
-                {/* <img
-                  src={logoBase64}
+                <img
+                  src={logoUrl ? logoUrl : logoBase64}
                   alt="Company Logo"
                   style={{ width: "100px", marginBottom: "1rem" }}
-                /> */}
+                />
                 <div
                   style={{
                     display: "flex",

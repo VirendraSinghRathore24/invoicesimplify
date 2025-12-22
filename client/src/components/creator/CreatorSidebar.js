@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { FaChevronDown, FaChevronRight, FaCog } from "react-icons/fa";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { TbReceiptTax } from "react-icons/tb";
-import { TbFileInvoice } from "react-icons/tb";
+import { TbFileInvoice, TbTax } from "react-icons/tb";
 import { GrNotes } from "react-icons/gr";
 import { LuLayoutDashboard } from "react-icons/lu";
 import * as IoIcons from "react-icons/io";
@@ -140,7 +140,7 @@ const CreatorSidebar = () => {
             active={location.pathname === "/creator/creatoradditionalinfo"}
           />
           <SubMenuItem
-            icon={<TbFileInvoice size={24} />}
+            icon={<TbTax size={24} />}
             text="Tax Info"
             to="/creator/taxinfo"
             active={location.pathname === "/creator/taxinfo"}

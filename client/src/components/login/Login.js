@@ -158,6 +158,7 @@ const Login = () => {
       JSON.stringify(pInfo.additionalInfo)
     );
     localStorage.setItem("creator_taxInfo", JSON.stringify(pInfo.taxInfo));
+    localStorage.setItem("creator_logoUrl", pInfo.personalInfo.logoUrl);
   };
 
   const signInWithUsernameAndPassword = async (e) => {
