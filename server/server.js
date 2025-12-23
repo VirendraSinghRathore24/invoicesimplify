@@ -102,7 +102,8 @@ transporter.verify((error, success) => {
 });
 
 const dns = require("dns");
-const { console } = require("inspector");
+
+const { log } = require("console");
 dns.lookup("smtpout.secureserver.net", (err, address) => {
   if (err) console.error("DNS Error:", err);
   else console.log("SMTP IP:", address);
@@ -1011,7 +1012,7 @@ const buildHtml = (invoiceData) => {
                           <tr style="display: flex; justify-content: space-between; font-size: 1rem;  margin-top: 0.5rem;  border-bottom: 1px dashed black;"></tr>`;
       }
     });
-    if (taxInfo) {
+    if (taxInfo?.gstpercentage) {
       totalAmt = Math.round(amount + amount * (taxInfo.gstpercentage / 100));
     } else {
       totalAmt = amount;

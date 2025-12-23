@@ -33,6 +33,8 @@ const EmailViewModal = ({
         invoiceInfo: invoiceInfo.invoiceInfo,
         personalInfo: invoiceInfo.personalInfo,
         customerInfo: invoiceInfo.customerInfo,
+        logoUrl: invoiceInfo.logoUrl,
+        taxInfo: invoiceInfo.taxInfo,
         rows: invoiceInfo.rows,
         amountInfo: invoiceInfo.amountInfo,
         accountInfo: invoiceInfo.accountInfo,

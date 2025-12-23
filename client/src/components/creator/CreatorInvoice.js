@@ -111,6 +111,7 @@ function CreatorInvoice() {
         taxInfo: taxInfo,
         personalInfo: personalInfo,
         customerInfo: customerInfo,
+        logoUrl: logo,
         rows: rows,
         amountInfo: amount,
         accountInfo: accountInfo,
@@ -1276,6 +1277,7 @@ function CreatorInvoice() {
             email={personalInfo?.email}
             invoiceInfo={invoiceInfo}
             personalInfo={personalInfo}
+            logoUrl={logo}
             taxInfo={taxInfo}
             customerInfo={customerInfo}
             rows={rows}

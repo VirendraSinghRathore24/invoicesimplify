@@ -62,6 +62,7 @@ function CreatorViewInvoice() {
         invoiceInfo: invoiceInfo.invoiceInfo,
         personalInfo: invoiceInfo.personalInfo,
         taxInfo: invoiceInfo.taxInfo,
+        logoUrl: invoiceInfo.logoUrl,
         customerInfo: invoiceInfo.customerInfo,
         rows: invoiceInfo.rows,
         amountInfo: invoiceInfo.amount,
