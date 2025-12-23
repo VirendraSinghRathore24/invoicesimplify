@@ -823,6 +823,7 @@ const buildHtml = (invoiceData) => {
   const personalInfo = invoiceData.personalInfo;
   const taxInfo = invoiceData.taxInfo;
   const customerInfo = invoiceData.customerInfo;
+  const logoUrl = invoiceData.logoUrl;
   const invoiceInfo = invoiceData.invoiceInfo;
   const rows = invoiceData.rows;
   const amountInfo = invoiceData.amountInfo;
@@ -838,11 +839,11 @@ const buildHtml = (invoiceData) => {
   html += `
           <div style="padding: 2rem; font-family: 'Inter', sans-serif; font-size: 14px; text-align: left;">
             <div>`;
-  if (personalInfo?.logoUrl) {
+  if (logoUrl) {
     html += `
     <div style="text-align: left; margin-bottom: 1rem; width: "40px" height: "40px";">
              <img
-                  src=${personalInfo?.logoUrl}
+                  src=${logoUrl}
                   alt="Company Logo"
                   style="width: 100px; marginBottom: 1rem;"
                 />

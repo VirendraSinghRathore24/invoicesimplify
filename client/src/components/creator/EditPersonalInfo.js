@@ -15,6 +15,7 @@ function EditPersonalInfo() {
   const navigate = useNavigate();
   const [inputs, setInputs] = useState({});
   const [saving, setSaving] = useState(false);
+  const [logo, setLogo] = useState("");
   const [avatarURL, setAvatarURL] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
 
@@ -45,6 +46,7 @@ function EditPersonalInfo() {
 
       // Add to local storage
       localStorage.setItem("creator_personalInfo", JSON.stringify(inputs));
+
       await addPersonalData(inputs);
       setLoading(false);
 
@@ -83,6 +85,7 @@ function EditPersonalInfo() {
 
       await updateDoc(codeDoc, {
         personalInfo: personalInfo,
+        logoUrl: logo,
       });
       setSaving(true);
       await delay(2000);
@@ -107,8 +110,8 @@ function EditPersonalInfo() {
     handleLogin();
     let info1 = localStorage.getItem("creator_personalInfo");
     setInputs(JSON.parse(info1));
-    let logUrl = localStorage.getItem("creator_logoUrl");
-    setInputs((prev) => ({ ...prev, logoUrl: logUrl }));
+    let logoUrl = localStorage.getItem("creator_logoUrl");
+    setLogo(logoUrl);
   }, []);
 
   return (
@@ -133,10 +136,7 @@ function EditPersonalInfo() {
                 Edit Personal Information
               </div>
               <div className="flex flex-col gap-y-4 w-full md:w-7/12 mx-auto">
-                <LogoUpload
-                  onUpload={handleLogoUpload}
-                  logoUrl={inputs.logoUrl}
-                />
+                <LogoUpload onUpload={handleLogoUpload} logoUrl={logo} />
               </div>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="flex flex-col gap-y-4 w-full md:w-7/12 mx-auto">

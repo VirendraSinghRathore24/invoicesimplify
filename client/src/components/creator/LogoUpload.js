@@ -77,10 +77,8 @@ export default function LogoUpload({ onUpload, logoUrl = "" }) {
       }));
 
       // update business info
-      if (basicInfo[0].personalInfo) {
-        basicInfo[0].personalInfo.logoUrl = logoUrl;
-      }
-      await updateLogo(basicInfo[0].id, basicInfo[0].personalInfo);
+
+      await updateLogo(basicInfo[0].id, logoUrl);
     } catch (err) {
       console.log(err);
     }
@@ -90,12 +88,12 @@ export default function LogoUpload({ onUpload, logoUrl = "" }) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   };
 
-  const updateLogo = async (id, personalInfo) => {
+  const updateLogo = async (id, logoUrl) => {
     try {
       const codeDoc = doc(db, CREATORS, uid, BASIC_INFO, id);
 
       await updateDoc(codeDoc, {
-        personalInfo: personalInfo,
+        logoUrl: logoUrl,
       });
       setSaving(true);
       await delay(2000);

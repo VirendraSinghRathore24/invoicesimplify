@@ -162,6 +162,7 @@ const Signup = () => {
       accountInfo: null,
       additionalInfo: null,
       taxInfo: null,
+      logoUrl: null,
       loggedInUser: code,
     });
   };

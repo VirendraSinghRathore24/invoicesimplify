@@ -133,7 +133,7 @@ function CreatorViewInvoice() {
 
       const invoiceData = allBrandsInfo.filter((x) => x.id === id)[0];
 
-      setLogoUrl(invoiceData?.personalInfo?.logoUrl || "");
+      setLogoUrl(invoiceData?.logoUrl || "");
 
       if (invoiceData?.taxInfo) {
         const taxPercentage = invoiceData?.taxInfo.gstpercentage;
