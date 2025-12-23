@@ -1023,7 +1023,7 @@ const buildHtml = (invoiceData) => {
               </div>
               <div style="display: flex; justify-content: space-between; border-bottom: 1.2px solid black; margin-top: 0.5rem;"></div>`;
 
-  if (taxInfo) {
+  if (taxInfo?.gstpercentage) {
     html += `
                 <div style="display: flex; justify-content: flex-end; width: 100%;">
                 <div style="width: 100%; display: flex; justify-content: space-between;">
@@ -1038,7 +1038,7 @@ const buildHtml = (invoiceData) => {
               <div style="display: flex; justify-content: space-between; border-bottom: 1.2px dotted black;"></div>`;
   }
 
-  if (taxInfo) {
+  if (taxInfo?.gstpercentage) {
     html += `
                               <div style="display: flex; justify-content: flex-end; width: 100%;">
                               <div style="width: 100%; display: flex; justify-content: space-between;">
