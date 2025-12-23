@@ -158,7 +158,7 @@ const Login = () => {
       JSON.stringify(pInfo.additionalInfo)
     );
     localStorage.setItem("creator_taxInfo", JSON.stringify(pInfo.taxInfo));
-    localStorage.setItem("creator_logoUrl", pInfo.personalInfo.logoUrl);
+    localStorage.setItem("creator_logoUrl", pInfo?.personalInfo?.logoUrl);
   };
 
   const signInWithUsernameAndPassword = async (e) => {
@@ -185,7 +185,7 @@ const Login = () => {
           const errorMessage = error.message;
 
           if (errorCode === "auth/invalid-credential") {
-            alert("username or password is invalid !!!");
+            alert("username or password is invalid !!!, Singup First");
           }
           setLoading(false);
           return;
