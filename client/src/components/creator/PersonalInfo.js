@@ -10,6 +10,7 @@ import CreatorMobileMenu from "./CreatorMobileMenu";
 
 const PersonalInfo = () => {
   const [posts, setPosts] = useState([]);
+  const [logoUrl, setLogoUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const uid = localStorage.getItem("uid");
 
@@ -63,12 +64,17 @@ const PersonalInfo = () => {
   useEffect(() => {
     handleLogin();
     const info = localStorage.getItem("creator_personalInfo");
+    const logoUrl = localStorage.getItem("creator_logoUrl");
 
     if (info === "undefined" || info === "null") {
       setPosts(null);
     } else {
       const data = JSON.parse(info);
       setPosts(data);
+    }
+
+    if (logoUrl && logoUrl !== "undefined" && logoUrl !== "null") {
+      setLogoUrl(logoUrl);
     }
     window.scroll(0, 0);
   }, []);
@@ -89,7 +95,7 @@ const PersonalInfo = () => {
         </div>
         <div className="p-2">
           <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4 hidden lg:block">
-            {posts && (
+            {(posts || logoUrl) && (
               <table className="min-w-full text-sm text-left text-gray-700">
                 <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
                   <tr>
@@ -97,6 +103,7 @@ const PersonalInfo = () => {
                     <th className="px-4 py-3 border-r">Address</th>
                     <th className="px-4 py-3 border-r">Phone</th>
                     <th className="px-4 py-3 border-r">Email</th>
+                    <th className="px-4 py-3 border-r">Logo</th>
                     <th className="px-4 py-3 border-r">Edit</th>
                     <th className="px-4 py-3">Delete</th>
                   </tr>
@@ -114,6 +121,13 @@ const PersonalInfo = () => {
                       {posts?.phonePrimary}
                     </td>
                     <td className="px-4 py-3 border-r">{posts?.email}</td>
+                    <td className="px-4 py-3 border-r">
+                      <img
+                        src={logoUrl}
+                        alt="Company Logo1"
+                        style={{ width: "40px", marginBottom: "1rem" }}
+                      />
+                    </td>
                     <td className="px-4 py-3 border-r">
                       <button
                         onClick={() => navigate("/creator/editpersonalinfo")}
@@ -135,7 +149,7 @@ const PersonalInfo = () => {
               </table>
             )}
 
-            {!posts && (
+            {!posts && !logoUrl && (
               <div className=" flex h-screen items-center justify-center">
                 <div onClick={() => navigate("/creator/addpersonalinfo")}>
                   <button className="border-2 bg-[#444] text-white fond-bold text-md py-4 px-8 rounded-md cursor-pointer">
@@ -147,7 +161,7 @@ const PersonalInfo = () => {
             )}
           </div>
           <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4 hidden max-lg:block">
-            {posts && (
+            {(posts || logoUrl) && (
               <table className="min-w-full text-sm text-left text-gray-700">
                 <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
                   <tr>
@@ -155,6 +169,7 @@ const PersonalInfo = () => {
                     <th className="px-4 py-3 border-r">Address</th>
                     <th className="px-4 py-3 border-r">Phone</th>
                     <th className="px-4 py-3 border-r">Email</th>
+                    <th className="px-4 py-3 border-r">Logo</th>
                     <th className="px-4 py-3 border-r">Edit</th>
                   </tr>
                 </thead>
@@ -172,6 +187,13 @@ const PersonalInfo = () => {
                     </td>
                     <td className="px-4 py-3 border-r">{posts?.email}</td>
                     <td className="px-4 py-3 border-r">
+                      <img
+                        src={logoUrl}
+                        alt="Company Logo1"
+                        style={{ width: "40px", marginBottom: "1rem" }}
+                      />
+                    </td>
+                    <td className="px-4 py-3 border-r">
                       <button
                         onClick={() => navigate("/creator/editpersonalinfo")}
                         className="text-blue-600 hover:text-red-800 font-semibold text-sm"
@@ -184,7 +206,7 @@ const PersonalInfo = () => {
               </table>
             )}
 
-            {!posts && (
+            {!posts && !logoUrl && (
               <div className="flex items-center justify-center">
                 <div onClick={() => navigate("/creator/addpersonalinfo")}>
                   <button className="border-2 bg-[#444] text-white fond-bold text-lg py-4 px-8 rounded-md cursor-pointer">

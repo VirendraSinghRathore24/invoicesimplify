@@ -398,7 +398,7 @@ function CreatorInvoice() {
         <div className="hidden max-lg:block mb-16">
           <CreatorMobileMenu />
         </div>
-        <div className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b shadow-sm">
+        <div className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b ">
           <div className="max-w-6xl mx-auto flex justify-between items-center h-[56px] lg:h-[62.5px]">
             <h1 className="text-xl font-semibold tracking-wide text-gray-800 hidden md:block">
               Invoice Preview
@@ -430,11 +430,11 @@ function CreatorInvoice() {
             </div>
           </div>
         </div>
-        <div className="hidden max-lg:block fixed lg:sticky top-[61px] w-full bg-white z-10 border-2 py-2">
+        <div className="hidden max-lg:block fixed w-full bg-white z-10 border-2 py-2">
           <div className="flex justify-between w-full lg:w-8/12 mx-auto px-2">
             <div>
               <button onClick={handleEditInvoice}>
-                <Edit />
+                <Edit color="black" />
               </button>
             </div>
             <div>
