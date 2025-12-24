@@ -39,7 +39,7 @@ const CreatorTaxInfo = () => {
 
         const codeDoc = doc(db, CREATORS, uid, BASIC_INFO, basicInfo[0].id);
         await updateDoc(codeDoc, {
-          personalInfo: null,
+          taxInfo: null,
         });
         setLoading(false);
         return true;
