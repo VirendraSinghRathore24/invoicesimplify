@@ -88,6 +88,16 @@ function EditTaxInfo() {
       return;
     }
   };
+
+  const isValidGST = (value) => {
+    // Allow empty (for backspace)
+    if (value === "") return true;
+
+    // Regex: 0–100 with max 2 decimals
+    const regex = /^(100(\.00?)?|(\d{1,2})(\.\d{0,2})?)$/;
+
+    return regex.test(value);
+  };
   useEffect(() => {
     handleLogin();
     let info1 = localStorage.getItem("creator_taxInfo");
@@ -144,13 +154,18 @@ function EditTaxInfo() {
                       <input
                         className="w-full dark:bg-gray-700 border border-gray-400 border-[1.4px] dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         name="gstpercentage"
-                        placeholder="Enter gst %"
+                        placeholder="Enter GST %"
+                        inputMode="decimal"
+                        min={0}
+                        max={100}
                         value={inputs?.gstpercentage || ""}
                         onChange={(e) => {
-                          localStorage.setItem(
-                            "creator_gstpercentage",
-                            e.target.value
-                          );
+                          const value = e.target.value;
+
+                          // Allow only valid GST %
+                          if (!isValidGST(value)) return;
+
+                          localStorage.setItem("creator_gstpercentage", value);
                           handleChange(e);
                         }}
                       />
