@@ -136,7 +136,7 @@ function CreatorViewInvoice() {
 
       setLogoUrl(invoiceData?.logoUrl || "");
 
-      if (invoiceData?.taxInfo) {
+      if (invoiceData?.taxInfo?.gstpercentage) {
         const taxPercentage = invoiceData?.taxInfo.gstpercentage;
         const taxAmount = (
           Number(invoiceData.amount) *
