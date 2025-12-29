@@ -7,6 +7,7 @@ import { CREATORS } from "./Constant";
 import { db } from "../config/firebase";
 import { create } from "canvas-confetti";
 import { useNavigate } from "react-router-dom";
+import PricingPlans from "./PricingPlans";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -399,14 +400,14 @@ const Home = () => {
       </section>
 
       {/* FAQ */}
-      <section className="px-8 py-20 bg-gray-50">
+      <section className="px-8 pt-20 bg-gray-50">
         <h3 className="text-3xl font-bold text-center mb-12">
           Frequently Asked Questions
         </h3>
         <div className="max-w-4xl mx-auto space-y-6">
           {[
             {
-              q: "What are the way to get invoices?",
+              q: "What are the ways to get invoices?",
               a: "Download PDF or email directly to brands.",
             },
             {
@@ -429,6 +430,7 @@ const Home = () => {
           ))}
         </div>
       </section>
+      <PricingPlans />
 
       <section id="contact-section" className="py-20 bg-gray-100 mt-16">
         <div className="max-w-4xl mx-auto text-center px-6">
