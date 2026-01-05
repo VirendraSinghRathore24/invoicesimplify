@@ -914,14 +914,14 @@ const CreatorCreateInvoice = () => {
                     </div>
                     <div className="flex flex-col w-full">
                       <div className="text-[13px] font-bold leading-5">
-                        Invoice Name
+                        Product Name
                       </div>
                       <div>
                         <input
                           className="form-input w-full lg:w-6/12 block font-semibold text-[13px] rounded border border-gray-400 p-2 leading-5 "
                           required
                           name="productName"
-                          placeholder="Enter Invoice Name"
+                          placeholder="Enter Product Name"
                           value={inputs?.productName}
                           onChange={(e) => {
                             localStorage.setItem(

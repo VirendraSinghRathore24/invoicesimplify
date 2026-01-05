@@ -50,7 +50,11 @@ const BrandListModal = ({
         id: doc.id,
       }));
 
-      return filteredData;
+      const brands = filteredData.sort((a, b) =>
+        b.customerInfo.customerName.localeCompare(a.customerInfo.customerName)
+      );
+
+      return brands;
     } catch (err) {
       console.log(err);
     }
