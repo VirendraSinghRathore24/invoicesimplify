@@ -840,7 +840,7 @@ const buildHtml = (invoiceData) => {
   html += `
           <div style="padding: 2rem; font-family: 'Inter', sans-serif; font-size: 14px; text-align: left;">
             <div>`;
-  if (logoUrl) {
+  if (logoUrl && logoUrl !== "null" && logoUrl !== "") {
     html += `
     <div style="text-align: left; margin-bottom: 1rem; width: "40px" height: "40px";">
              <img
