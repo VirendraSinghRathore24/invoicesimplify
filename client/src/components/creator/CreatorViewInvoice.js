@@ -265,7 +265,7 @@ function CreatorViewInvoice() {
             >
               <div>
                 <img
-                  src={logoUrl ? logoUrl : logoBase64}
+                  src={logoUrl && logoUrl !== "null" ? logoUrl : logoBase64}
                   alt="Company Logo"
                   style={{ width: "100px", marginBottom: "1rem" }}
                 />

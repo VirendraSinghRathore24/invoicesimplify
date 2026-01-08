@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Mail, Edit, Download } from "lucide-react";
+import { Mail, Edit, Download, SaveOff } from "lucide-react";
 import { FaRegEdit } from "react-icons/fa";
 import { useReactToPrint } from "react-to-print";
 
@@ -93,6 +93,63 @@ function CreatorInvoice() {
     }
   };
 
+  const handleDownloadPdfWithoutSave = async (e) => {
+    e.preventDefault();
+
+    try {
+      setLoading(true);
+
+      const url = BASE_URL;
+      const isActivePlan = getCurrentPlanStatus();
+
+      if (!isActivePlan) {
+        return;
+      }
+
+      const invoiceData = {
+        invoiceInfo: invoiceInfo,
+        taxInfo: taxInfo,
+        personalInfo: personalInfo,
+        customerInfo: customerInfo,
+        logoUrl: logo,
+        rows: rows,
+        amountInfo: amount,
+        accountInfo: accountInfo,
+        signedInfo: signedInfo,
+        logoBase64: logoBase64,
+        additionalInfo: additionalInfo,
+        currencySymbol: currencySymbol,
+        // taxCalculatedInfo: taxCalculatedInfo,
+      };
+
+      const response = await fetch(url + "/generate-pdf1", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ invoiceData: invoiceData }),
+      });
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = customerInfo?.productName + ".pdf";
+        link.click();
+        URL.revokeObjectURL(url);
+
+        await updateInvoiceNumber();
+        clearLocalStorageForPdf();
+      } else {
+        console.error("PDF generation failed");
+      }
+    } catch (error) {
+      console.error("Error sending data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
   const handleDownloadPdf = async (e) => {
     e.preventDefault();
 
@@ -426,6 +483,13 @@ function CreatorInvoice() {
                   <Download size={18} />
                   <button>PDF</button>
                 </div>
+                <div
+                  onClick={handleDownloadPdfWithoutSave}
+                  className="flex items-center cursor-pointer gap-2 px-4 py-2 rounded-lg bg-orange-900 text-white hover:bg-gray-700 transition font-medium shadow-sm"
+                >
+                  <Download size={18} />
+                  <button>PDF Without Save</button>
+                </div>
               </div>
             </div>
           </div>
@@ -448,6 +512,11 @@ function CreatorInvoice() {
                 <Download size={22} />
               </button>
             </div>
+            <div>
+              <button onClick={handleDownloadPdfWithoutSave}>
+                <SaveOff size={22} />
+              </button>
+            </div>
           </div>
         </div>
 
@@ -465,7 +534,7 @@ function CreatorInvoice() {
             >
               <div>
                 <img
-                  src={logo ? logo : logoBase64}
+                  src={logo && logo !== "null" ? logo : logoBase64}
                   alt="Company Logo1"
                   style={{ width: "100px", marginBottom: "1rem" }}
                 />
