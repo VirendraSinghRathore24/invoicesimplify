@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { Check, ArrowRight, Sparkles, Shield, Star, Wand2 } from "lucide-react";
+import {
+  Check,
+  ArrowRight,
+  Sparkles,
+  Shield,
+  Star,
+  Wand2,
+  MoveUpRight,
+} from "lucide-react";
 import Footer1 from "./Footer1";
 import { toast } from "react-toastify";
 import { addDoc, collection, doc } from "firebase/firestore";
@@ -72,6 +80,11 @@ const Home = () => {
     }
   };
 
+  const tryWithoutLogin = () => {
+    localStorage.setItem("user", "demo_user");
+    navigate("/creator/createinvoice");
+  };
+
   return (
     <div className="bg-gray-50 text-gray-800">
       {/* HEADER */}
@@ -122,6 +135,16 @@ const Home = () => {
               View Demo
             </button>
           </div>
+          <button
+            className="px-8 py-3 border border-gray-400 rounded-xl font-semibold hover:bg-gray-200 transition"
+            onClick={() =>
+              document
+                .getElementById("demo-video")
+                .scrollIntoView({ behavior: "smooth" })
+            }
+          >
+            Try Without Login
+          </button>
         </div>
         <div className="block max-lg:hidden mb-8">
           <h1 className="text-5xl font-extrabold leading-tight text-gray-900">
@@ -148,6 +171,12 @@ const Home = () => {
               }
             >
               View Demo
+            </button>
+            <button
+              className="px-8 py-3 border border-gray-400 bg-orange-600 text-white rounded-xl font-semibold hover:bg-gray-400 hover:border-orange-600 hover:text-black transition flex items-center gap-2"
+              onClick={() => tryWithoutLogin()}
+            >
+              Try Without Login <MoveUpRight />
             </button>
           </div>
         </div>
