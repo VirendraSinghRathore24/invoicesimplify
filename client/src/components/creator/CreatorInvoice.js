@@ -395,12 +395,6 @@ function CreatorInvoice() {
   }, []);
 
   useEffect(() => {
-    const auth = localStorage.getItem("auth");
-    if (auth !== "Logged In") {
-      navigate("/login");
-      return;
-    }
-
     let logo1 = localStorage.getItem("creator_logoUrl");
     setLogo(logo1);
 

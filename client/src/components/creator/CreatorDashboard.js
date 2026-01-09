@@ -579,20 +579,10 @@ const CreatorDashboard = () => {
     updateBalanceAfterSearch(result);
     updatePaidAfterSearch(result);
   };
-  const handleLogin = () => {
-    const user = localStorage.getItem("user");
-
-    if (!user || user === "undefined" || user === "null") {
-      navigate("/login");
-      return;
-    }
-
-    getInvoiceInfo();
-    window.scroll(0, 0);
-  };
 
   useEffect(() => {
-    handleLogin();
+    getInvoiceInfo();
+    window.scroll(0, 0);
   }, []);
 
   return (

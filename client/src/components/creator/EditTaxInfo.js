@@ -80,15 +80,6 @@ function EditTaxInfo() {
     }
   };
 
-  const handleLogin = () => {
-    const user = localStorage.getItem("user");
-
-    if (!user || user === "undefined" || user === "null") {
-      navigate("/login");
-      return;
-    }
-  };
-
   const isValidGST = (value) => {
     // Allow empty (for backspace)
     if (value === "") return true;
@@ -99,7 +90,6 @@ function EditTaxInfo() {
     return regex.test(value);
   };
   useEffect(() => {
-    handleLogin();
     let info1 = localStorage.getItem("creator_taxInfo");
     setInputs(JSON.parse(info1));
   }, []);

@@ -98,14 +98,6 @@ function AddTaxInfo() {
     return basicInfo;
   };
 
-  const handleLogin = () => {
-    const user = localStorage.getItem("user");
-
-    if (!user || user === "undefined" || user === "null") {
-      navigate("/login");
-      return;
-    }
-  };
   const isValidGST = (value) => {
     // Allow empty (for backspace)
     if (value === "") return true;
@@ -116,7 +108,6 @@ function AddTaxInfo() {
     return regex.test(value);
   };
   useEffect(() => {
-    handleLogin();
     getInvoiceInfo();
   }, []);
 

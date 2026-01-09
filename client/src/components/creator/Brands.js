@@ -60,15 +60,6 @@ const Brands = () => {
     }
   };
 
-  const handleLogin = () => {
-    const user = localStorage.getItem("user");
-
-    if (!user || user === "undefined" || user === "null") {
-      navigate("/login");
-      return;
-    }
-  };
-
   const handleSearch = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
@@ -168,7 +159,6 @@ const Brands = () => {
   };
 
   useEffect(() => {
-    handleLogin();
     getBrands();
   }, []);
 

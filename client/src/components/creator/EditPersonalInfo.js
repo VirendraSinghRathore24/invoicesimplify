@@ -95,19 +95,10 @@ function EditPersonalInfo() {
     }
   };
 
-  const handleLogin = () => {
-    const user = localStorage.getItem("user");
-
-    if (!user || user === "undefined" || user === "null") {
-      navigate("/login");
-      return;
-    }
-  };
   const handleLogoUpload = (url) => {
     //setLogoUrl(url);
   };
   useEffect(() => {
-    handleLogin();
     let info1 = localStorage.getItem("creator_personalInfo");
     setInputs(JSON.parse(info1));
     let logoUrl = localStorage.getItem("creator_logoUrl");

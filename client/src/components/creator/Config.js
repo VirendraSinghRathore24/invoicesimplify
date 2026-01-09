@@ -62,18 +62,6 @@ const Config = ({ onCurrencyChange }) => {
     });
   };
 
-  const handleLogin = () => {
-    const user = localStorage.getItem("user");
-
-    if (!user || user === "undefined" || user === "null") {
-      navigate("/login");
-      return;
-    }
-  };
-
-  useEffect(() => {
-    handleLogin();
-  }, []);
   return (
     <div className="">
       <div className="lg:left-64 right-0 top-0 left-0 lg:fixed bg-white">

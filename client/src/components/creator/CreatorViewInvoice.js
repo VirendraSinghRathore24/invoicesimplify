@@ -164,15 +164,6 @@ function CreatorViewInvoice() {
     setOpenEmailModal(false);
   };
 
-  const handleLogin = () => {
-    const user = localStorage.getItem("user");
-
-    if (!user || user === "undefined" || user === "null") {
-      navigate("/login");
-      return;
-    }
-  };
-
   useEffect(() => {
     fetch("/invlogo2.png")
       .then((res) => res.blob())
@@ -186,7 +177,6 @@ function CreatorViewInvoice() {
   }, []);
 
   useEffect(() => {
-    handleLogin();
     getInvoiceData();
     window.scroll(0, 0);
   }, []);

@@ -51,17 +51,7 @@ const CreatorTaxInfo = () => {
     }
   };
 
-  const handleLogin = () => {
-    const user = localStorage.getItem("user");
-
-    if (!user || user === "undefined" || user === "null") {
-      navigate("/login");
-      return;
-    }
-  };
-
   useEffect(() => {
-    handleLogin();
     const info = localStorage.getItem("creator_taxInfo");
 
     if (info === "undefined" || info === "null") {

@@ -65,6 +65,7 @@ import ContactUsMessages from "./components/admin/ContactUsMessages";
 import AddTaxInfo from "./components/creator/AddTaxInfo";
 import CreatorTaxInfo from "./components/creator/CreatorTaxInfo";
 import EditTaxInfo from "./components/creator/EditTaxInfo";
+import ProtectedRoute from "./ProtectedRoute";
 
 function App() {
   const location = useLocation();
@@ -155,48 +156,160 @@ function App() {
           <Route path="/plans" element={<PricingPlans />} />
 
           {/* Creator Routes */}
-          <Route path="/creator/personalinfo" element={<PersonalInfo />} />
+          <Route
+            path="/creator/personalinfo"
+            element={
+              <ProtectedRoute>
+                <PersonalInfo />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/creator/addpersonalinfo"
-            element={<AddPersonalInfo />}
+            element={
+              <ProtectedRoute>
+                <AddPersonalInfo />
+              </ProtectedRoute>
+            }
           />
           <Route
             path="/creator/editpersonalinfo"
-            element={<EditPersonalInfo />}
+            element={
+              <ProtectedRoute>
+                <EditPersonalInfo />
+              </ProtectedRoute>
+            }
           />
-          <Route path="/creator/accountinfo" element={<AccountInfo />} />
-          <Route path="/creator/addaccountinfo" element={<AddAccountInfo />} />
+          <Route
+            path="/creator/accountinfo"
+            element={
+              <ProtectedRoute>
+                <AccountInfo />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/creator/addaccountinfo"
+            element={
+              <ProtectedRoute>
+                <AddAccountInfo />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/creator/editaccountinfo"
-            element={<EditAccountInfo />}
+            element={
+              <ProtectedRoute>
+                <EditAccountInfo />
+              </ProtectedRoute>
+            }
           />
           <Route
             path="/creator/creatoradditionalinfo"
-            element={<CreatorAdditionalInformation />}
+            element={
+              <ProtectedRoute>
+                <CreatorAdditionalInformation />
+              </ProtectedRoute>
+            }
           />
           <Route
             path="/creator/addcreatoradditionalinfo"
-            element={<AddCreatorAddtionalInfo />}
+            element={
+              <ProtectedRoute>
+                <AddCreatorAddtionalInfo />
+              </ProtectedRoute>
+            }
           />
           <Route
             path="/creator/editcreatoradditionalinfo"
-            element={<EditCreatorAddtionalInfo />}
+            element={
+              <ProtectedRoute>
+                <EditCreatorAddtionalInfo />
+              </ProtectedRoute>
+            }
           />
-          <Route path="/creator/taxinfo" element={<CreatorTaxInfo />} />
-          <Route path="/creator/addtaxinfo" element={<AddTaxInfo />} />
-          <Route path="/creator/edittaxinfo" element={<EditTaxInfo />} />
+          <Route
+            path="/creator/taxinfo"
+            element={
+              <ProtectedRoute>
+                <CreatorTaxInfo />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/creator/addtaxinfo"
+            element={
+              <ProtectedRoute>
+                <AddTaxInfo />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/creator/edittaxinfo"
+            element={
+              <ProtectedRoute>
+                <EditTaxInfo />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/creator/createinvoice"
-            element={<CreatorCreateInvoice />}
+            element={
+              <ProtectedRoute>
+                <CreatorCreateInvoice />
+              </ProtectedRoute>
+            }
           />
 
-          <Route path="/creator/invoice" element={<CreatorInvoice />} />
-          <Route path="/creator/viewinvoice" element={<CreatorViewInvoice />} />
-          <Route path="/creator/dashboard" element={<CreatorDashboard />} />
-          <Route path="/creator/brands" element={<Brands />} />
-          <Route path="/creator/editbrandinfo" element={<EditBrandInfo />} />
+          <Route
+            path="/creator/invoice"
+            element={
+              <ProtectedRoute>
+                <CreatorInvoice />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/creator/viewinvoice"
+            element={
+              <ProtectedRoute>
+                <CreatorViewInvoice />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/creator/dashboard"
+            element={
+              <ProtectedRoute>
+                <CreatorDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/creator/brands"
+            element={
+              <ProtectedRoute>
+                <Brands />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/creator/editbrandinfo"
+            element={
+              <ProtectedRoute>
+                <EditBrandInfo />
+              </ProtectedRoute>
+            }
+          />
 
-          <Route path="/configuration" element={<Config />} />
+          <Route
+            path="/configuration"
+            element={
+              <ProtectedRoute>
+                <Config />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/selectbusinesstype"
             element={<BusinessTypeComponent />}

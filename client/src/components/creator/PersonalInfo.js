@@ -23,15 +23,16 @@ const PersonalInfo = () => {
       setPosts(null);
     }
   };
-  const basicInfo_CollectionRef = collection(
-    doc(db, CREATORS, uid),
-    BASIC_INFO
-  );
+
   const deleteBusinessInfo = async () => {
     try {
       var res = window.confirm("Are you sure to delete Personal Info?");
       if (res) {
         setLoading(true);
+        const basicInfo_CollectionRef = collection(
+          doc(db, CREATORS, uid),
+          BASIC_INFO
+        );
         const data = await getDocs(basicInfo_CollectionRef);
         const basicInfo = data.docs.map((doc) => ({
           ...doc.data(),
@@ -52,17 +53,7 @@ const PersonalInfo = () => {
     }
   };
 
-  const handleLogin = () => {
-    const user = localStorage.getItem("user");
-
-    if (!user || user === "undefined" || user === "null") {
-      navigate("/login");
-      return;
-    }
-  };
-
   useEffect(() => {
-    handleLogin();
     const info = localStorage.getItem("creator_personalInfo");
     const logoUrl = localStorage.getItem("creator_logoUrl");
 

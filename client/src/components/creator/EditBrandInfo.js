@@ -27,15 +27,6 @@ const EditBrandInfo = () => {
     setInputs((values) => ({ ...values, [name]: value }));
   };
 
-  const handleLogin = () => {
-    const user = localStorage.getItem("user");
-
-    if (!user || user === "undefined" || user === "null") {
-      navigate("/login");
-      return;
-    }
-  };
-
   const handleUpdate = async () => {
     try {
       if (!inputs.customerName) {
@@ -64,8 +55,6 @@ const EditBrandInfo = () => {
   };
 
   useEffect(() => {
-    handleLogin();
-
     const post = location.state.post;
     setInputs(post.customerInfo);
   }, []);

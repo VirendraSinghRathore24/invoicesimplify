@@ -781,15 +781,7 @@ const CreatorCreateInvoice = () => {
     setBrandSelected(true);
   };
 
-  const handleLogin = () => {
-    const user = localStorage.getItem("user");
-
-    if (!user || user === "undefined" || user === "null") {
-      navigate("/login");
-    }
-  };
   useEffect(() => {
-    handleLogin();
     window.scroll(0, 0);
   }, []);
 
