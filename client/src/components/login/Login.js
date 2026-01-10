@@ -175,8 +175,6 @@ const Login = () => {
           const userName = auth?.currentUser?.displayName;
           const uid = auth?.currentUser?.uid;
 
-          console.log("Logged in user:", code, userName, uid);
-
           await initializeData(code, uid, userName);
 
           setLoading(false);

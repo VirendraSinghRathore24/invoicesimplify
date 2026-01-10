@@ -14,11 +14,15 @@ const ProtectedRoute = ({ children }) => {
   const user = localStorage.getItem("user");
 
   if (user && user === "demo_user") {
-    const code = "rudu4@gmail.com";
-    const uid = "6qSlaVEstWgNbV4lDJNidDwOvrA3";
+    const code = "demo@gmail.com";
+    const uid = "Tk7l6oODrDMiLFK6GHGngPGgnyd2";
     const userName = "Demo User";
 
     localStorage.setItem("name1", "Demo User");
+    localStorage.setItem("user", "Demo User");
+    localStorage.setItem("isFreePlan", true);
+    localStorage.setItem("invoiceCurrency", "₹");
+    localStorage.setItem("subStartDate", new Date().toISOString().slice(0, 10));
     initializeData(code, uid, userName);
 
     return children;
