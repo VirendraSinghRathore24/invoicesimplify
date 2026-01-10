@@ -136,14 +136,10 @@ const Home = () => {
             </button>
           </div>
           <button
-            className="px-8 py-3 border border-gray-400 rounded-xl font-semibold hover:bg-gray-200 transition"
-            onClick={() =>
-              document
-                .getElementById("demo-video")
-                .scrollIntoView({ behavior: "smooth" })
-            }
+            className="px-8 py-3 border border-gray-400 bg-orange-600 text-white rounded-xl font-semibold hover:bg-gray-400 hover:border-orange-600 hover:text-black transition flex items-center gap-2 mt-2"
+            onClick={() => tryWithoutLogin()}
           >
-            Try Without Login
+            Try Without Login <MoveUpRight />
           </button>
         </div>
         <div className="block max-lg:hidden mb-8">
