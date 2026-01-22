@@ -417,8 +417,18 @@ function CreatorViewInvoice() {
                           marginTop: "0.2rem",
                         }}
                       >
-                        {invoiceInfo?.customerInfo?.address},{" "}
-                        {invoiceInfo?.customerInfo?.address1}
+                        {invoiceInfo?.customerInfo?.address},
+                      </div>
+                    )}
+                    {invoiceInfo?.customerInfo?.address1 && (
+                      <div
+                        style={{
+                          color: "#6B7280",
+                          fontSize: "0.875rem",
+                          marginTop: "0.2rem",
+                        }}
+                      >
+                        {invoiceInfo?.customerInfo?.address1},
                       </div>
                     )}
 

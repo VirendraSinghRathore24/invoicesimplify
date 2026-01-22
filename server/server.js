@@ -924,9 +924,13 @@ const buildHtml = (invoiceData) => {
   if (customerInfo.address) {
     html += `
                     <div style="color: #6B7280; font-size: 0.875rem; margin-top: 0.2rem;">
-                      ${customerInfo.address} ${
-      customerInfo.address1 ? ", " + customerInfo.address1 : ""
-    }
+                      ${customerInfo.address} ", " 
+                    </div>`;
+  }
+  if (customerInfo.address1) {
+    html += `
+                    <div style="color: #6B7280; font-size: 0.875rem; margin-top: 0.2rem;">
+                      ${customerInfo.address1} ", "
                     </div>`;
   }
   if (customerInfo.address2) {
