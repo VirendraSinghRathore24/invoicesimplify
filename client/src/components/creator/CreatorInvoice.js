@@ -332,7 +332,7 @@ function CreatorInvoice() {
 
       // get items list
       const brands = brandInfo.sort((a, b) =>
-        a.customerName.localeCompare(b.customerName)
+        a.customerName?.localeCompare(b.customerName)
       );
       localStorage.setItem("creator_brands", JSON.stringify(brands));
     } catch (err) {
