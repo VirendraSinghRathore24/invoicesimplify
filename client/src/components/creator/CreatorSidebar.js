@@ -224,7 +224,7 @@ const CreatorSidebar = ({ updateCredit }) => {
         </div>
       )}
       <div className="bg-white rounded-xl p-4 m-2 text-gray-800 shadow-inner">
-        <h3 className="text-sm font-medium text-gray-600 mb-1">
+        {/* <h3 className="text-sm font-medium text-gray-600 mb-1">
           Plan Type :
           <span
             className="inline-block bg-green-100 font-bold 
@@ -232,7 +232,7 @@ const CreatorSidebar = ({ updateCredit }) => {
           >
             {planType}
           </span>
-        </h3>
+        </h3> */}
         <h3 className="text-sm font-medium text-gray-600 mb-1">
           Credit :
           <span

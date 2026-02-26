@@ -161,7 +161,7 @@ const CreatorMobileMenu = ({ updateCredit }) => {
           <button onClick={handleLogout}>Logout</button>
         </div>
         <div className="bg-white rounded-xl p-4 m-2 text-gray-800 shadow-inner">
-          <h3 className="text-sm font-medium text-gray-600 mb-1">
+          {/* <h3 className="text-sm font-medium text-gray-600 mb-1">
             Plan Type :
             <span
               className="inline-block bg-green-100 font-bold 
@@ -169,7 +169,7 @@ const CreatorMobileMenu = ({ updateCredit }) => {
             >
               {planType}
             </span>
-          </h3>
+          </h3> */}
           <h3 className="text-sm font-medium text-gray-600 mb-1">
             Credit :
             <span className="inline-block bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full">
