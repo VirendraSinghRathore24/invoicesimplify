@@ -23,6 +23,8 @@ const ProtectedRoute = ({ children }) => {
     localStorage.setItem("isFreePlan", true);
     localStorage.setItem("invoiceCurrency", "₹");
     localStorage.setItem("subStartDate", new Date().toISOString().slice(0, 10));
+    localStorage.setItem("credit", 10);
+    localStorage.setItem("planType", "Free");
     initializeData(code, uid, userName);
 
     return children;

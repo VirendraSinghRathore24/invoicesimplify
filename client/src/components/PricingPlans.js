@@ -7,51 +7,50 @@ const plans = [
   {
     name: "Free",
     price: "0",
-    days: "month",
+    days: "",
     description: "Perfect for content creators.",
     features: [
-      "Create Unlimited invoices",
+      "Create 10 invoices",
       "Dashboard to Manage Invoices",
       "Download PDF Invoices",
       "Send Invoices via Email",
       "Mobile Web Support",
-      "Free for 30 days only",
     ],
     button: "Start for Free",
     isFreePlan: true,
     highlight: false,
   },
   {
-    name: "Monthly",
+    name: "Standard",
     price: "99",
-    days: "month",
+    days: "",
     description: "Perfect for content creators.",
     features: [
-      "Create Unlimited invoices",
+      "Create 25 invoices",
       "Dashboard to Manage Invoices",
       "Download PDF Invoices",
       "Send Invoices via Email",
       "Payment Reminders",
       "Mobile Web Support",
     ],
-    button: "Choose Monthly",
+    button: "Choose Standard",
     isFreePlan: false,
     highlight: true,
   },
   {
-    name: "Yearly",
-    price: "999",
-    days: "year",
+    name: "Premium",
+    price: "349",
+    days: "",
     description: "Perfect for content creators.",
     features: [
-      "Create Unlimited invoices",
+      "Create 100 invoices",
       "Dashboard to Manage Invoices",
       "Download PDF Invoices",
       "Send Invoices via Email",
       "Payment Reminders",
       "Mobile Web Support",
     ],
-    button: "Choose Yearly",
+    button: "Choose Premium",
     isFreePlan: false,
     highlight: false,
   },
@@ -119,7 +118,7 @@ const PricingPlans = () => {
                 </h3>
 
                 <p className="text-2xl lg:text-3xl font-extrabold text-blue-600 mt-4 mb-2">
-                  ₹{plan.price}/{plan.days}
+                  ₹{plan.price}
                 </p>
 
                 <p className="text-gray-600 text-[13px] tracking-wide mb-6">

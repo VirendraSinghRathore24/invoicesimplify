@@ -110,6 +110,8 @@ const Login = () => {
     localStorage.setItem("subStartDate", loginInfo.subStarts);
     localStorage.setItem("subEndDate", loginInfo.subEnds);
     localStorage.setItem("invoiceCurrency", loginInfo.invoiceCurrency);
+    localStorage.setItem("credit", loginInfo.credit);
+    localStorage.setItem("planType", loginInfo.planType);
   };
 
   const getInvoiceInfo = async (loggedInUser, uid) => {
@@ -208,6 +210,8 @@ const Login = () => {
     localStorage.setItem("isFreePlan", true);
     localStorage.setItem("invoiceCurrency", "₹");
     localStorage.setItem("subStartDate", new Date().toISOString().slice(0, 10));
+    localStorage.setItem("credit", 10);
+    localStorage.setItem("planType", "Free");
   };
 
   const initializeDBForNewUser = async (code, userName, uid) => {
@@ -233,6 +237,7 @@ const Login = () => {
       subStarts: new Date().toISOString().slice(0, 10),
       subEnds: nextMonthDate,
       loginDate: new Date().toISOString().slice(0, 10),
+      credit: 10,
     });
 
     const basicInfo_CollectionRef = collection(doc(db, USERS, uid), BASIC_INFO);

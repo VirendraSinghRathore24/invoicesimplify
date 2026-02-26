@@ -19,6 +19,7 @@ const PlanSummaryWithDiscount = () => {
   const [discount, setDiscount] = useState(0);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const credit = localStorage.getItem("credit");
 
   const navigate = useNavigate();
 
@@ -159,6 +160,8 @@ const PlanSummaryWithDiscount = () => {
       subscription: planName,
       subStarts: new Date().toISOString().slice(0, 10),
       subEnds: new Date(nextDate).toISOString().slice(0, 10),
+      credit: planName === "Standard" ? credit + 25 : credit + 100,
+      planType: planName,
     });
   };
 

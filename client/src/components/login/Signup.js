@@ -107,7 +107,8 @@ const Signup = () => {
             "subStartDate",
             new Date().toISOString().slice(0, 10)
           );
-
+          localStorage.setItem("credit", 10);
+          localStorage.setItem("planType", "Free");
           setLoading(false);
 
           navigate("/creator/personalinfo");
@@ -151,6 +152,8 @@ const Signup = () => {
       subStarts: new Date().toISOString().slice(0, 10),
       subEnds: nextMonthDate,
       loginDate: new Date().toISOString().slice(0, 10),
+      credit: 10,
+      planType: "Free",
     });
 
     const basicInfo_CollectionRef = collection(

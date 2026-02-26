@@ -7,6 +7,8 @@ const CreatorMobileMenu = () => {
   const loggedInUser = localStorage.getItem("user");
   const [subscription, setSubscription] = useState("");
   const name = localStorage.getItem("name1");
+  const credit = localStorage.getItem("credit");
+  const planType = localStorage.getItem("planType");
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -161,16 +163,25 @@ const CreatorMobileMenu = () => {
         <div className="bg-white rounded-xl p-4 m-2 text-gray-800 shadow-inner">
           <h3 className="text-sm font-medium text-gray-600 mb-1">
             Plan Type :
-            <span className="inline-block bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full">
-              {subscription}
+            <span
+              className="inline-block bg-green-100 font-bold 
+               text-green-700 text-xs font-semibold px-3 py-1 rounded-full"
+            >
+              {planType}
             </span>
           </h3>
-          <div className="text-sm font-medium text-gray-600">
+          <h3 className="text-sm font-medium text-gray-600 mb-1">
+            Credit :
+            <span className="inline-block bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full">
+              {credit}
+            </span>
+          </h3>
+          {/* <div className="text-sm font-medium text-gray-600">
             Expires in :{" "}
             <span className="inline-block bg-yellow-100 text-green-700 text-xs font-semibold px-1 py-1 rounded-full">
               {remainingDays} days{" "}
             </span>
-          </div>
+          </div> */}
           <button
             onClick={() => navigate("/plans")}
             className="mt-4 w-full bg-indigo-600 hover:bg-indigo-700 text-white text-xs py-2 rounded-lg transition-all duration-200 font-semibold"

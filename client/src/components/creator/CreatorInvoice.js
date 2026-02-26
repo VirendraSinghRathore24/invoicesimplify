@@ -215,10 +215,12 @@ function CreatorInvoice() {
   };
 
   const getCurrentPlanStatus = () => {
-    const isPlanExpired = localStorage.getItem("subscriptionPlan");
+    const credit = localStorage.getItem("credit");
 
-    if (isPlanExpired === "Expired") {
-      alert("There is no Active Plan, Please upgrade your plan to continue.");
+    if (credit === 0) {
+      alert(
+        "You have reached your invoice limit, Please upgrade your plan to continue."
+      );
 
       navigate("/plans");
       return false;
@@ -304,6 +306,8 @@ function CreatorInvoice() {
       parseInt(invoiceInfo?.invoiceNumber),
     ];
     localStorage.setItem("usedInvoiceNumbers", usedInvoiceNumbers);
+    const credit = localStorage.getItem("credit") - 1;
+    localStorage.setItem("credit", credit);
     localStorage.setItem(
       "invoiceNumber",
       parseInt(invoiceInfo?.invoiceNumber) + 1
@@ -315,6 +319,7 @@ function CreatorInvoice() {
           : invoiceInfo?.invoiceNumber,
       invoiceNumberMode: invoiceInfo?.invoiceNumberMode,
       usedInvoiceNumbers: usedInvoiceNumbers,
+      credit: credit,
     });
   };
 

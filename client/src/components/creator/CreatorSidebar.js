@@ -24,6 +24,8 @@ const CreatorSidebar = () => {
   const [subscription, setSubscription] = useState("");
   const sidebarRef = useRef(null);
   const [isScrollable, setIsScrollable] = useState(false);
+  const credit = localStorage.getItem("credit");
+  const planType = localStorage.getItem("planType");
 
   const toggleSubMenu = (menuName) => {
     setOpenSubMenu(openSubMenu === menuName ? null : menuName);
@@ -225,19 +227,28 @@ const CreatorSidebar = () => {
         <h3 className="text-sm font-medium text-gray-600 mb-1">
           Plan Type :
           <span
-            className={`inline-block bg-green-100 ${
-              subscription === "Expired" ? "text-red-700" : "text-green-700"
-            }  text-xs font-semibold px-3 py-1 rounded-full`}
+            className="inline-block bg-green-100 font-bold 
+               text-green-700 text-xs font-semibold px-3 py-1 rounded-full"
           >
-            {subscription}
+            {planType}
           </span>
         </h3>
-        <div className="text-sm font-medium text-gray-600">
+        <h3 className="text-sm font-medium text-gray-600 mb-1">
+          Credit :
+          <span
+            className={`inline-block bg-green-100 font-bold ${
+              credit === 0 ? "text-red-700" : "text-green-700"
+            }  text-xs font-semibold px-3 py-1 rounded-full`}
+          >
+            {credit}
+          </span>
+        </h3>
+        {/* <div className="text-sm font-medium text-gray-600">
           Expires in :{" "}
           <span className="inline-block bg-yellow-100 text-green-700 text-xs font-semibold px-1 py-1 rounded-full">
             {remainingDays} days{" "}
           </span>
-        </div>
+        </div> */}
         <button
           onClick={() => navigate("/plans")}
           className="mt-4 w-full bg-indigo-600 hover:bg-indigo-700 text-white text-sm py-2 rounded-lg transition-all duration-200 font-semibold"
