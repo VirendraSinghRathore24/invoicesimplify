@@ -22,7 +22,7 @@ import {
   USERS,
 } from "../Constant";
 
-const Login = () => {
+const Login = ({ setUpdateCredit }) => {
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
@@ -112,6 +112,7 @@ const Login = () => {
     localStorage.setItem("invoiceCurrency", loginInfo.invoiceCurrency);
     localStorage.setItem("credit", loginInfo.credit);
     localStorage.setItem("planType", loginInfo.planType);
+    setUpdateCredit(loginInfo.credit);
   };
 
   const getInvoiceInfo = async (loggedInUser, uid) => {
@@ -212,6 +213,7 @@ const Login = () => {
     localStorage.setItem("subStartDate", new Date().toISOString().slice(0, 10));
     localStorage.setItem("credit", 10);
     localStorage.setItem("planType", "Free");
+    setUpdateCredit(10);
   };
 
   const initializeDBForNewUser = async (code, userName, uid) => {

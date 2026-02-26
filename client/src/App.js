@@ -1,4 +1,5 @@
 import "./App.css";
+import { useState } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import EditBusinessInfo from "./components/businessInfo/EditBusinessInfo";
 import AddtionalInfo from "./components/additionalInfo/EditAddtionalInfo";
@@ -88,13 +89,14 @@ function App() {
   ].includes(location.pathname);
 
   const showSidebar1 = !location.pathname.includes("/ci");
+  const [updateCredit, setUpdateCredit] = useState(10);
 
   return (
     <div className="flex h-screen">
       {showSidebar && showSidebar1 && (
         <div>
           <div className="hidden lg:block">
-            <CreatorSidebar />
+            <CreatorSidebar updateCredit={updateCredit} />
           </div>
         </div>
       )}
@@ -104,9 +106,15 @@ function App() {
           <Route path="/" element={<Test />} />
           <Route path="/home" element={<Test />} />
           {/* Login and Signup routes */}
-          <Route path="/login" element={<Login />} />
+          <Route
+            path="/login"
+            element={<Login setUpdateCredit={setUpdateCredit} />}
+          />
           <Route path="/logout" element={<Logout />} />
-          <Route path="/signup" element={<Signup />} />
+          <Route
+            path="/signup"
+            element={<Signup setUpdateCredit={setUpdateCredit} />}
+          />
           <Route path="/forgotpassword" element={<ForgotPassword />} />
           {/* Business Info */}
           <Route path="/businessinfo" element={<BusinessInfo />} />
@@ -147,7 +155,10 @@ function App() {
 
           <Route path="/admin/allusers" element={<AllUsers />} />
           <Route path="/admin/contacts" element={<ContactUsMessages />} />
-          <Route path="/preorder" element={<PreOrderScreen />} />
+          <Route
+            path="/preorder"
+            element={<PreOrderScreen setUpdateCredit={setUpdateCredit} />}
+          />
 
           <Route path="/emailscheduler" element={<EmailScheduler />} />
           <Route path="/addemailscheduler" element={<AddEmailScheduler />} />
@@ -265,7 +276,7 @@ function App() {
             path="/creator/invoice"
             element={
               <ProtectedRoute>
-                <CreatorInvoice />
+                <CreatorInvoice setUpdateCredit={setUpdateCredit} />
               </ProtectedRoute>
             }
           />

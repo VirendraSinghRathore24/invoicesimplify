@@ -17,7 +17,7 @@ import Loader from "../Loader";
 import EmailModal from "./EmailModal";
 import CreatorMobileMenu from "./CreatorMobileMenu";
 
-function CreatorInvoice() {
+function CreatorInvoice({ setUpdateCredit }) {
   const pdfExportComponent = React.useRef(null);
   const navigate = useNavigate();
   const printRef = useRef(null);
@@ -321,6 +321,7 @@ function CreatorInvoice() {
       usedInvoiceNumbers: usedInvoiceNumbers,
       credit: credit,
     });
+    setUpdateCredit(credit);
   };
 
   const getBrands = async () => {

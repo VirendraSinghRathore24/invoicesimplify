@@ -14,7 +14,7 @@ import {
 import Footer1 from "./Footer1";
 import Loader from "./Loader";
 
-const PlanSummaryWithDiscount = () => {
+const PlanSummaryWithDiscount = ({ setUpdateCredit }) => {
   const [coupon, setCoupon] = useState("");
   const [discount, setDiscount] = useState(0);
   const [message, setMessage] = useState("");
@@ -156,11 +156,14 @@ const PlanSummaryWithDiscount = () => {
 
     const codeDoc = doc(db, LOGIN_INFO, loginInfo.id);
 
+    const credit = planName === "Standard" ? credit + 25 : credit + 100;
+    setUpdateCredit(credit);
+
     await updateDoc(codeDoc, {
       subscription: planName,
       subStarts: new Date().toISOString().slice(0, 10),
       subEnds: new Date(nextDate).toISOString().slice(0, 10),
-      credit: planName === "Standard" ? credit + 25 : credit + 100,
+      credit: credit,
       planType: planName,
     });
   };

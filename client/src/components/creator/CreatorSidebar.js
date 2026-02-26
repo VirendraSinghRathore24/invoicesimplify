@@ -16,7 +16,7 @@ import {
   Cog,
 } from "lucide-react";
 
-const CreatorSidebar = () => {
+const CreatorSidebar = ({ updateCredit }) => {
   const [openSubMenu, setOpenSubMenu] = useState(null);
   const location = useLocation();
   const name = localStorage.getItem("name1");
@@ -240,7 +240,7 @@ const CreatorSidebar = () => {
               credit === 0 ? "text-red-700" : "text-green-700"
             }  text-xs font-semibold px-3 py-1 rounded-full`}
           >
-            {credit}
+            {updateCredit}
           </span>
         </h3>
         {/* <div className="text-sm font-medium text-gray-600">

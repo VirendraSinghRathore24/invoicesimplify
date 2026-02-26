@@ -22,7 +22,7 @@ import {
   USERS,
 } from "../Constant";
 
-const Signup = () => {
+const Signup = ({ setUpdateCredit }) => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -109,6 +109,7 @@ const Signup = () => {
           );
           localStorage.setItem("credit", 10);
           localStorage.setItem("planType", "Free");
+          setUpdateCredit(10);
           setLoading(false);
 
           navigate("/creator/personalinfo");
