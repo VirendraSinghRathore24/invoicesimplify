@@ -100,10 +100,12 @@ function CreatorViewInvoice() {
   };
 
   const getCurrentPlanStatus = () => {
-    const isPlanExpired = localStorage.getItem("subscriptionPlan");
+    const credit = parseInt(localStorage.getItem("credit"));
 
-    if (isPlanExpired === "Expired") {
-      alert("There is no Active Plan, Please upgrade your plan to continue.");
+    if (credit === 0) {
+      alert(
+        "You have reached your invoice limit, Please upgrade your plan to continue."
+      );
 
       navigate("/plans");
       return false;

@@ -215,7 +215,7 @@ function CreatorInvoice({ updateCredit, setUpdateCredit }) {
   };
 
   const getCurrentPlanStatus = () => {
-    const credit = localStorage.getItem("credit");
+    const credit = parseInt(localStorage.getItem("credit"));
 
     if (credit === 0) {
       alert(
