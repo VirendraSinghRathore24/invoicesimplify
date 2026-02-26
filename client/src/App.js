@@ -276,7 +276,10 @@ function App() {
             path="/creator/invoice"
             element={
               <ProtectedRoute>
-                <CreatorInvoice setUpdateCredit={setUpdateCredit} />
+                <CreatorInvoice
+                  updateCredit={updateCredit}
+                  setUpdateCredit={setUpdateCredit}
+                />
               </ProtectedRoute>
             }
           />

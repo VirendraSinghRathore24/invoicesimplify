@@ -156,14 +156,15 @@ const PlanSummaryWithDiscount = ({ setUpdateCredit }) => {
 
     const codeDoc = doc(db, LOGIN_INFO, loginInfo.id);
 
-    const credit = planName === "Standard" ? credit + 25 : credit + 100;
-    setUpdateCredit(credit);
+    const credit1 =
+      planName === "Standard" ? parseInt(credit) + 25 : parseInt(credit) + 100;
+    setUpdateCredit(credit1);
 
     await updateDoc(codeDoc, {
       subscription: planName,
       subStarts: new Date().toISOString().slice(0, 10),
       subEnds: new Date(nextDate).toISOString().slice(0, 10),
-      credit: credit,
+      credit: credit1,
       planType: planName,
     });
   };

@@ -17,7 +17,7 @@ import Loader from "../Loader";
 import EmailModal from "./EmailModal";
 import CreatorMobileMenu from "./CreatorMobileMenu";
 
-function CreatorInvoice({ setUpdateCredit }) {
+function CreatorInvoice({ updateCredit, setUpdateCredit }) {
   const pdfExportComponent = React.useRef(null);
   const navigate = useNavigate();
   const printRef = useRef(null);
@@ -306,7 +306,7 @@ function CreatorInvoice({ setUpdateCredit }) {
       parseInt(invoiceInfo?.invoiceNumber),
     ];
     localStorage.setItem("usedInvoiceNumbers", usedInvoiceNumbers);
-    const credit = localStorage.getItem("credit") - 1;
+    const credit = parseInt(localStorage.getItem("credit")) - 1;
     localStorage.setItem("credit", credit);
     localStorage.setItem(
       "invoiceNumber",
@@ -453,7 +453,7 @@ function CreatorInvoice({ setUpdateCredit }) {
     <div className="">
       <div className="lg:left-64 right-0 top-0 left-0 lg:fixed bg-white">
         <div className="hidden max-lg:block mb-16">
-          <CreatorMobileMenu />
+          <CreatorMobileMenu updateCredit={updateCredit} />
         </div>
         <div className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b ">
           <div className="max-w-6xl mx-auto flex justify-between items-center h-[56px] lg:h-[62.5px]">

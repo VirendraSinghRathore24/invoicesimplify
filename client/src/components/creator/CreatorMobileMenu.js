@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Menu, X, CircleCheckBig, ShieldCheck } from "lucide-react"; // optional: or use your own icons
 import { NavLink, useNavigate } from "react-router-dom";
 
-const CreatorMobileMenu = () => {
+const CreatorMobileMenu = ({ updateCredit }) => {
   const [isOpen, setIsOpen] = useState(false);
   const loggedInUser = localStorage.getItem("user");
   const [subscription, setSubscription] = useState("");
@@ -173,7 +173,7 @@ const CreatorMobileMenu = () => {
           <h3 className="text-sm font-medium text-gray-600 mb-1">
             Credit :
             <span className="inline-block bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full">
-              {credit}
+              {updateCredit ? updateCredit : credit}{" "}
             </span>
           </h3>
           {/* <div className="text-sm font-medium text-gray-600">
