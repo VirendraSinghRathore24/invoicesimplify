@@ -185,7 +185,7 @@ function CreatorViewInvoice() {
   return (
     <div className="">
       <div className="lg:left-64 right-0 top-0 left-0 lg:fixed bg-white">
-        <div className="hidden max-lg:block mb-16">
+        <div className="hidden max-lg:block">
           <CreatorMobileMenu />
         </div>
 
@@ -209,7 +209,7 @@ function CreatorViewInvoice() {
             </div>
           </div>
         </div>
-        <div className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b shadow-sm">
+        <div className="hidden lg:block sticky top-0 z-50 border-b shadow-sm">
           <div className="max-w-6xl mx-auto flex justify-between items-center h-[56px] lg:h-[62.5px]">
             <h1 className="text-xl font-semibold tracking-wide text-gray-800 hidden md:block">
               Invoice
