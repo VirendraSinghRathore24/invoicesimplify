@@ -203,8 +203,8 @@ const Home = () => {
           </div>
         </div>
         <div className=" p-2 ">
-          <div className="lg:w-3/3 relative">
-            <div className="absolute -top-6 -right-6 bg-yellow-400 p-4 rounded-2xl shadow-lg z-10 hidden md:block">
+          <div className=" relative">
+            <div className="absolute -top-6 -right-6 bg-yellow-400 p-4 rounded-2xl shadow-lg z-10">
               <MousePointer2 className="text-white fill-current" />
               <p className="text-[10px] font-bold text-slate-900">
                 LIVE PREVIEW
@@ -216,8 +216,13 @@ const Home = () => {
               className="bg-white shadow-2xl rounded-sm p-12 border border-slate-100 min-h-[800px] origin-top"
               style={{ transform: "scale(0.95)" }}
             >
+              <img
+                src={"../../images/invlogo2.png"}
+                alt="InvoiceSimplify"
+                className="h-10"
+              />
               {/* Header */}
-              <div className="flex justify-between items-start mb-12">
+              <div className="flex justify-between items-start mb-8 mt-2 ">
                 <div>
                   <h2 className="text-xl font-bold text-slate-800 leading-tight">
                     {invoiceData.name}
@@ -239,12 +244,12 @@ const Home = () => {
                   <h1 className="text-2xl font-bold text-slate-400 uppercase tracking-tighter">
                     INVOICE
                   </h1>
-                  <p className="text-xs font-bold">119</p>
+                  <p className="text-xs font-bold">121</p>
                 </div>
               </div>
 
               {/* Client Info */}
-              <div className="flex justify-between items-end mb-8 border-b pb-4">
+              <div className="flex justify-between items-end mb-2 pb-4">
                 <div>
                   <h4 className="text-[10px] font-bold text-slate-400 uppercase">
                     INVOICE TO
@@ -271,9 +276,9 @@ const Home = () => {
               </div>
 
               {/* Items Table */}
-              <table className="w-full text-left mb-8">
+              <table className="w-full text-left mb-2">
                 <thead>
-                  <tr className="border-b-2 border-slate-900 text-[10px] uppercase font-black">
+                  <tr className="border-b-2 border-t-2 border-slate-900 text-[10px] uppercase font-black">
                     <th className="py-2">Description</th>
                     <th className="py-2">Rate</th>
                     <th className="py-2">Quantity</th>
@@ -288,7 +293,7 @@ const Home = () => {
                     >
                       <td className="py-3 font-medium">{item.desc}</td>
                       <td className="py-3">₹{item.rate}</td>
-                      <td className="py-3">{item.qty}</td>
+                      <td className="py-3 px-5">{item.qty}</td>
                       <td className="py-3 text-right font-bold">
                         ₹{item.rate * item.qty}
                       </td>
@@ -298,7 +303,7 @@ const Home = () => {
               </table>
 
               {/* Total Row */}
-              <div className="flex justify-between items-center bg-slate-50 p-4 border-y-2 border-slate-900 mb-12">
+              <div className="flex justify-between items-center bg-slate-50 p-4 border-y-2 border-slate-900 mb-10">
                 <span className="font-black text-xs uppercase">TOTAL</span>
                 <span className="font-black text-xl">₹{calculateTotal()}</span>
               </div>
@@ -306,7 +311,7 @@ const Home = () => {
               {/* Footer / Bank Info */}
               <div className="flex justify-between">
                 <div className="text-[10px] space-y-1">
-                  <h4 className="font-black uppercase mb-2">
+                  <h4 className="text-slate-400 uppercase mb-2">
                     Account Information
                   </h4>
                   <p>
@@ -321,22 +326,25 @@ const Home = () => {
                     IFSC Code:{" "}
                     <span className="font-bold">{invoiceData.ifsc}</span>
                   </p>
+                  <p>
+                    Account Type: <span className="font-bold">Saving</span>
+                  </p>
+                  <p>
+                    GPay: <span className="font-bold">abcd@okhdfcbank</span>
+                  </p>
                 </div>
                 <div className="text-center">
                   <div
                     className="font-cursive text-3xl text-slate-700 italic opacity-80"
                     style={{ fontFamily: "Dancing Script, cursive" }}
                   >
-                    {invoiceData.name.split(" ")[0]}
+                    Viren
                   </div>
                   <div className="h-[1px] w-24 bg-slate-900 mx-auto mt-1"></div>
                   <p className="text-[10px] font-bold mt-2">Date Signed</p>
                   <p className="text-[10px]">Feb 26, 2026</p>
                 </div>
               </div>
-              <p className="text-[10px] text-slate-400 text-center mt-20">
-                Thank you for your business!
-              </p>
             </motion.div>
           </div>
         </div>
