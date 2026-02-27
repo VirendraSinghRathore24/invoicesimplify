@@ -89,7 +89,8 @@ function App() {
   ].includes(location.pathname);
 
   const showSidebar1 = !location.pathname.includes("/ci");
-  const [updateCredit, setUpdateCredit] = useState(10);
+  const credit = localStorage.getItem("credit");
+  const [updateCredit, setUpdateCredit] = useState(credit);
 
   return (
     <div className="flex h-screen">
