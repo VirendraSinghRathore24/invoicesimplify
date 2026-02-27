@@ -486,13 +486,13 @@ function CreatorInvoice({ updateCredit, setUpdateCredit }) {
                   <Download size={18} />
                   <button>PDF</button>
                 </div>
-                <div
+                {/* <div
                   onClick={handleDownloadPdfWithoutSave}
                   className="flex items-center cursor-pointer gap-2 px-4 py-2 rounded-lg bg-orange-900 text-white hover:bg-gray-700 transition font-medium shadow-sm"
                 >
                   <Download size={18} />
                   <button>PDF Without Save</button>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
