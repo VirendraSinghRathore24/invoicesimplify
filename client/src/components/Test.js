@@ -7,7 +7,10 @@ import {
   Star,
   Wand2,
   MoveUpRight,
+  MousePointer2,
 } from "lucide-react";
+import { motion } from "framer-motion";
+
 import Footer1 from "./Footer1";
 import { toast } from "react-toastify";
 import { addDoc, collection, doc } from "firebase/firestore";
@@ -84,6 +87,29 @@ const Home = () => {
     localStorage.setItem("user", "demo_user");
     navigate("/creator/createinvoice");
   };
+
+  const [invoiceData, setInvoiceData] = useState({
+    name: "Virendra Singh",
+    address: "14, Bhartiya City, Thanisnadra Main Road,",
+    address1: "Bengaluru, Karnataka - 560087",
+    email: "abcd1234@gmail.com",
+    mobile: "9876543210",
+    social: "@virendra_singh",
+    clientName: "ABC Company Pvt Ltd",
+    clientAddress: "44, Saradaroad, MI Palaza",
+    clientAddress1: "Jaipur, Rajasthan - 302001",
+    clientGST: "22ACDFG88776654",
+    items: [
+      { desc: "Reel", rate: 5000, qty: 3 },
+      { desc: "Story", rate: 3000, qty: 1 },
+    ],
+    bankName: "HDFC Bank",
+    accNo: "123456678976",
+    ifsc: "HDFC00000238",
+  });
+
+  const calculateTotal = () =>
+    invoiceData.items.reduce((sum, item) => sum + item.rate * item.qty, 0);
 
   return (
     <div className="bg-gray-50 text-gray-800">
@@ -176,12 +202,143 @@ const Home = () => {
             </button>
           </div>
         </div>
-        <div className="border-2 rounded-md border-gray-400 p-2 bg-white shadow-lg">
-          <img
-            src={"../../images/invp3.webp"}
-            alt="Hero"
-            className="w-full drop-shadow-2xl"
-          />
+        <div className=" p-2 ">
+          <div className="lg:w-3/3 relative">
+            <div className="absolute -top-6 -right-6 bg-yellow-400 p-4 rounded-2xl shadow-lg z-10 hidden md:block">
+              <MousePointer2 className="text-white fill-current" />
+              <p className="text-[10px] font-bold text-slate-900">
+                LIVE PREVIEW
+              </p>
+            </div>
+
+            <motion.div
+              layout
+              className="bg-white shadow-2xl rounded-sm p-12 border border-slate-100 min-h-[800px] origin-top"
+              style={{ transform: "scale(0.95)" }}
+            >
+              {/* Header */}
+              <div className="flex justify-between items-start mb-12">
+                <div>
+                  <h2 className="text-xl font-bold text-slate-800 leading-tight">
+                    {invoiceData.name}
+                  </h2>
+                  <p className="text-[11px] text-slate-500 w-64 mt-1 leading-relaxed">
+                    {invoiceData.address}
+                  </p>
+                  <p className="text-[11px] text-slate-500 w-64 mt-1 leading-relaxed">
+                    {invoiceData.address1}
+                  </p>
+                  <p className="text-[11px] text-slate-500 mt-1">
+                    Mobile: {invoiceData.mobile}
+                  </p>
+                  <p className="text-[11px] text-slate-500 mt-1">
+                    Email: {invoiceData.email}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <h1 className="text-2xl font-bold text-slate-400 uppercase tracking-tighter">
+                    INVOICE
+                  </h1>
+                  <p className="text-xs font-bold">119</p>
+                </div>
+              </div>
+
+              {/* Client Info */}
+              <div className="flex justify-between items-end mb-8 border-b pb-4">
+                <div>
+                  <h4 className="text-[10px] font-bold text-slate-400 uppercase">
+                    INVOICE TO
+                  </h4>
+                  <p className="text-sm font-bold mt-1">
+                    {invoiceData.clientName}
+                  </p>
+                  <p className="text-[11px] text-slate-500 mt-1">
+                    {invoiceData.clientAddress}
+                  </p>
+                  <p className="text-[11px] text-slate-500 mt-1">
+                    {invoiceData.clientAddress1}
+                  </p>
+                  <p className="text-[11px] text-slate-500 mt-1">
+                    GSTIN: {invoiceData.clientGST}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <h4 className="text-[10px] font-bold text-slate-400 uppercase">
+                    DATE
+                  </h4>
+                  <p className="text-sm font-bold mt-1">Feb 26, 2026</p>
+                </div>
+              </div>
+
+              {/* Items Table */}
+              <table className="w-full text-left mb-8">
+                <thead>
+                  <tr className="border-b-2 border-slate-900 text-[10px] uppercase font-black">
+                    <th className="py-2">Description</th>
+                    <th className="py-2">Rate</th>
+                    <th className="py-2">Quantity</th>
+                    <th className="py-2 text-right">Amount</th>
+                  </tr>
+                </thead>
+                <tbody className="text-xs">
+                  {invoiceData.items.map((item, i) => (
+                    <tr
+                      key={i}
+                      className="border-b border-dashed border-slate-200"
+                    >
+                      <td className="py-3 font-medium">{item.desc}</td>
+                      <td className="py-3">₹{item.rate}</td>
+                      <td className="py-3">{item.qty}</td>
+                      <td className="py-3 text-right font-bold">
+                        ₹{item.rate * item.qty}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              {/* Total Row */}
+              <div className="flex justify-between items-center bg-slate-50 p-4 border-y-2 border-slate-900 mb-12">
+                <span className="font-black text-xs uppercase">TOTAL</span>
+                <span className="font-black text-xl">₹{calculateTotal()}</span>
+              </div>
+
+              {/* Footer / Bank Info */}
+              <div className="flex justify-between">
+                <div className="text-[10px] space-y-1">
+                  <h4 className="font-black uppercase mb-2">
+                    Account Information
+                  </h4>
+                  <p>
+                    Bank Name:{" "}
+                    <span className="font-bold">{invoiceData.bankName}</span>
+                  </p>
+                  <p>
+                    Account Number:{" "}
+                    <span className="font-bold">{invoiceData.accNo}</span>
+                  </p>
+                  <p>
+                    IFSC Code:{" "}
+                    <span className="font-bold">{invoiceData.ifsc}</span>
+                  </p>
+                </div>
+                <div className="text-center">
+                  <div
+                    className="font-cursive text-3xl text-slate-700 italic opacity-80"
+                    style={{ fontFamily: "Dancing Script, cursive" }}
+                  >
+                    {invoiceData.name.split(" ")[0]}
+                  </div>
+                  <div className="h-[1px] w-24 bg-slate-900 mx-auto mt-1"></div>
+                  <p className="text-[10px] font-bold mt-2">Date Signed</p>
+                  <p className="text-[10px]">Feb 26, 2026</p>
+                </div>
+              </div>
+              <p className="text-[10px] text-slate-400 text-center mt-20">
+                Thank you for your business!
+              </p>
+            </motion.div>
+          </div>
         </div>
       </section>
 
