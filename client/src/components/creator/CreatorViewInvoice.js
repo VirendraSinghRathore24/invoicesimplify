@@ -59,18 +59,18 @@ function CreatorViewInvoice() {
       setLoading(true);
 
       const invoiceData = {
-        invoiceInfo: invoiceInfo.invoiceInfo,
-        personalInfo: invoiceInfo.personalInfo,
-        taxInfo: invoiceInfo.taxInfo,
-        logoUrl: invoiceInfo.logoUrl,
-        customerInfo: invoiceInfo.customerInfo,
-        rows: invoiceInfo.rows,
-        amountInfo: invoiceInfo.amount,
-        accountInfo: invoiceInfo.accountInfo,
-        signedInfo: invoiceInfo.signedInfo,
-        logoBase64: invoiceInfo.logoBase64,
-        additionalInfo: invoiceInfo.additionalInfo,
-        currencySymbol: invoiceInfo.currencySymbol,
+        invoiceInfo: invoiceInfo?.invoiceInfo,
+        personalInfo: invoiceInfo?.personalInfo,
+        taxInfo: invoiceInfo?.taxInfo,
+        logoUrl: invoiceInfo?.personalInfo?.logoUrl,
+        customerInfo: invoiceInfo?.customerInfo,
+        rows: invoiceInfo?.rows,
+        amountInfo: invoiceInfo?.amount,
+        accountInfo: invoiceInfo?.accountInfo,
+        signedInfo: invoiceInfo?.signedInfo,
+        logoBase64: invoiceInfo?.logoBase64,
+        additionalInfo: invoiceInfo?.additionalInfo,
+        currencySymbol: invoiceInfo?.currencySymbol,
       };
 
       const response = await fetch(url + "/generate-pdf1", {
