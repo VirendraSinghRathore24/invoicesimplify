@@ -1355,6 +1355,7 @@ function CreatorInvoice({ updateCredit, setUpdateCredit }) {
             signedInfo={signedInfo}
             logoBase64={logoBase64}
             additionalInfo={additionalInfo}
+            setUpdateCredit={setUpdateCredit}
             //taxCalculatedInfo={taxCalculatedInfo}
           />
         )}

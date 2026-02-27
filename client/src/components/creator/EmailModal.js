@@ -26,6 +26,7 @@ const EmailModal = ({
   signedInfo,
   logoBase64,
   additionalInfo,
+  setUpdateCredit,
   // taxCalculatedInfo,
 }) => {
   const [loading, setLoading] = useState(false);
@@ -180,14 +181,18 @@ const EmailModal = ({
       ...loginInfo.usedInvoiceNumbers,
       parseInt(invoiceInfo?.invoiceNumber),
     ];
+    const credit = parseInt(localStorage.getItem("credit")) - 1;
+    localStorage.setItem("credit", credit);
     localStorage.setItem("usedInvoiceNumbers", usedInvoiceNumbers);
     localStorage.setItem(
       "invoiceNumber",
       parseInt(invoiceInfo?.invoiceNumber) + 1
     );
+    setUpdateCredit(credit);
     await updateDoc(codeDoc, {
       invoiceNumber: parseInt(invoiceInfo?.invoiceNumber + 1),
       usedInvoiceNumbers: usedInvoiceNumbers,
+      credit: credit,
     });
   };
 
