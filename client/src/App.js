@@ -158,7 +158,11 @@ function App() {
           <Route path="/admin/contacts" element={<ContactUsMessages />} />
           <Route
             path="/preorder"
-            element={<PreOrderScreen setUpdateCredit={setUpdateCredit} />}
+            element={
+              <ProtectedRoute>
+                <PreOrderScreen setUpdateCredit={setUpdateCredit} />
+              </ProtectedRoute>
+            }
           />
 
           <Route path="/emailscheduler" element={<EmailScheduler />} />
