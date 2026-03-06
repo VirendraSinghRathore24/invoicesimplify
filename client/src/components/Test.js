@@ -90,7 +90,7 @@ const Home = () => {
 
   const [invoiceData, setInvoiceData] = useState({
     name: "Virendra Singh",
-    address: "14, Bhartiya City, Thanisnadra Main Road,",
+    address: "14, Bhartiya City,",
     address1: "Bengaluru, Karnataka - 560087",
     email: "abcd1234@gmail.com",
     mobile: "9876543210",
@@ -133,59 +133,25 @@ const Home = () => {
       </header>
 
       {/* HERO */}
-      <section className="px-8 md:px-20 grid md:grid-cols-2 items-center gap-x-14 py-24">
-        <div className="block lg:hidden mb-8">
-          <h1 className="text-2xl font-extrabold leading-tight text-gray-900">
+      <section className="px-4 md:px-20 grid md:grid-cols-2 items-center gap-x-4 md:gap-x-14 py-16 md:py-24 mt-20">
+        <div className="mb-8">
+          <h1 className="text-2xl md:text-5xl font-extrabold leading-tight text-gray-900">
             Create & Send Invoices in
             <p className="text-blue-600">30 Seconds</p>
           </h1>
-          <p className="mt-5 text-gray-600 text-lg">
+          <p className="mt-5 text-gray-600 text-base md:text-lg">
             Create & share branded invoices for your brand deals — trusted by
             influencers and creators across world.
           </p>
-          <div className="mt-8 flex gap-4">
+          <div className="mt-8 flex flex-wrap gap-2 md:gap-4">
             <button
-              className="px-8 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition flex items-center gap-2"
+              className="px-4 md:px-8 py-2 md:py-3 bg-blue-600 text-white text-sm md:text-base rounded-xl font-semibold hover:bg-blue-700 transition flex items-center gap-2"
               onClick={() => createInvoice()}
             >
-              Create Invoice <ArrowRight />
+              Create Invoice <ArrowRight size={18} />
             </button>
             <button
-              className="px-8 py-3 border border-gray-400 rounded-xl font-semibold hover:bg-gray-200 transition"
-              onClick={() =>
-                document
-                  .getElementById("demo-video")
-                  .scrollIntoView({ behavior: "smooth" })
-              }
-            >
-              View Demo
-            </button>
-          </div>
-          <button
-            className="px-8 py-3 border border-gray-400 bg-orange-600 text-white rounded-xl font-semibold hover:bg-gray-400 hover:border-orange-600 hover:text-black transition flex items-center gap-2 mt-2"
-            onClick={() => tryWithoutLogin()}
-          >
-            Try Without Login <MoveUpRight />
-          </button>
-        </div>
-        <div className="block max-lg:hidden mb-8">
-          <h1 className="text-5xl font-extrabold leading-tight text-gray-900">
-            Create & Send Invoices in
-            <p className="text-blue-600">30 Seconds</p>
-          </h1>
-          <p className="mt-5 text-gray-600 text-lg">
-            Create & share branded invoices for your brand deals — trusted by
-            influencers and creators across world.
-          </p>
-          <div className="mt-8 flex gap-4">
-            <button
-              className="px-8 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition flex items-center gap-2"
-              onClick={() => createInvoice()}
-            >
-              Create Invoice <ArrowRight />
-            </button>
-            <button
-              className="px-8 py-3 border border-gray-400 rounded-xl font-semibold hover:bg-gray-200 transition"
+              className="px-4 md:px-8 py-2 md:py-3 border border-gray-400 text-sm md:text-base rounded-xl font-semibold hover:bg-gray-200 transition"
               onClick={() =>
                 document
                   .getElementById("demo-video")
@@ -195,17 +161,17 @@ const Home = () => {
               View Demo
             </button>
             <button
-              className="px-8 py-3 border border-gray-400 bg-orange-600 text-white rounded-xl font-semibold hover:bg-gray-400 hover:border-orange-600 hover:text-black transition flex items-center gap-2"
+              className="px-4 md:px-8 py-2 md:py-3 border border-gray-400 bg-orange-600 text-white text-sm md:text-base rounded-xl font-semibold hover:bg-orange-700 transition flex items-center gap-2"
               onClick={() => tryWithoutLogin()}
             >
-              Try Without Login <MoveUpRight />
+              Try <MoveUpRight size={18} />
             </button>
           </div>
         </div>
-        <div className=" p-2 ">
-          <div className=" relative">
-            <div className="absolute -top-6 -right-6 bg-yellow-400 p-4 rounded-2xl shadow-lg z-10">
-              <MousePointer2 className="text-white fill-current" />
+        <div className="p-2 w-full overflow-hidden">
+          <div className="relative w-full">
+            <div className="absolute -top-6 -right-6 bg-yellow-400 p-3 md:p-4 rounded-2xl shadow-lg z-10">
+              <MousePointer2 className="text-white fill-current w-5 h-5 md:w-6 md:h-6" />
               <p className="text-[10px] font-bold text-slate-900">
                 LIVE PREVIEW
               </p>
@@ -213,7 +179,7 @@ const Home = () => {
 
             <motion.div
               layout
-              className="bg-white shadow-2xl rounded-sm p-12 border border-slate-100 min-h-[800px] origin-top"
+              className="bg-white border mx-auto rounded-md p-6 md:p-12  min-h-[500px] md:min-h-[800px] origin-top w-full"
               style={{ transform: "scale(0.95)" }}
             >
               <img
@@ -241,7 +207,7 @@ const Home = () => {
                   </p>
                 </div>
                 <div className="text-right">
-                  <h1 className="text-2xl font-bold text-slate-400 uppercase tracking-tighter">
+                  <h1 className="text-[11px] lg:text-2xl font-bold text-slate-400 uppercase tracking-tighter">
                     INVOICE
                   </h1>
                   <p className="text-xs font-bold">121</p>
@@ -509,6 +475,40 @@ const Home = () => {
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {[
             "Recurring Invoices",
+            "Update Payment Status",
+            "Payment Reminders",
+            "Access Anywhere",
+            "Currency Support",
+            "Stunning Dashboard",
+          ].map((feature, i) => (
+            <div
+              key={i}
+              className="p-6 bg-gray-50 rounded-xl shadow-md hover:shadow-lg transition flex items-center gap-3"
+            >
+              <Wand2 className="text-blue-600 w-6 h-6" />
+              <span>{feature}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* TESTIMONIALS */}
+      {/* <section className="px-8 py-20 bg-gray-900 text-white">
+        <h3 className="text-3xl font-bold text-center mb-12">
+          Creators ❤️ InvoiceSimplify
+        </h3>
+        <div className="grid md:grid-cols-4 gap-10 max-w-6xl mx-auto">
+          {[
+            { name: "Aditi Sharma", role: "Fashion Influencer" },
+            { name: "Manav Singh", role: "YouTube Creator" },
+            { name: "SocialCrush Agency", role: "Marketing Agency" },
+            { name: "Riya Kapoor", role: "Travel Blogger" },
+          ].map((p, i) => (
+            <div key={i} className="p-6 bg-gray-800 rounded-xl shadow-md">
+              <Star className="text-yellow-400 w-6 h-6 mb-3" />
+              <p className="text-gray-300">
+                “Invoices look premium. Brands pay faster now!”
+              </p>
             "Update Payment Status",
             "Payment Reminders",
             "Access Anywhere",
