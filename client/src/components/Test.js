@@ -164,7 +164,7 @@ const Home = () => {
               className="px-4 md:px-8 py-2 md:py-3 border border-gray-400 bg-orange-600 text-white text-sm md:text-base rounded-xl font-semibold hover:bg-orange-700 transition flex items-center gap-2"
               onClick={() => tryWithoutLogin()}
             >
-              Try <MoveUpRight size={18} />
+              Try Without Login <MoveUpRight size={18} />
             </button>
           </div>
         </div>
