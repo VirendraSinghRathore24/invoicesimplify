@@ -1,5 +1,6 @@
 const express = require("express");
 const twilio = require("twilio");
+const QRCode = require("qrcode");
 const puppeteer = require("puppeteer");
 const fs = require("fs");
 const path = require("path");
@@ -689,7 +690,7 @@ app.post("/generate-pdf1", async (req, res) => {
   try {
     const { invoiceData } = req.body;
 
-    const html = buildHtml(invoiceData);
+    const html = await buildHtml(invoiceData);
 
     if (!html) {
       return res.status(400).json({ error: "HTML content is required" });
@@ -820,7 +821,7 @@ app.post("/send-email-pdf1", async (req, res) => {
 //   }
 // });
 
-const buildHtml = (invoiceData) => {
+const buildHtml = async (invoiceData) => {
   const personalInfo = invoiceData.personalInfo;
   const taxInfo = invoiceData.taxInfo;
   const customerInfo = invoiceData.customerInfo;
@@ -832,6 +833,22 @@ const buildHtml = (invoiceData) => {
   const signedInfo = invoiceData.signedInfo;
   const additionalInfo = invoiceData.additionalInfo;
   const currencySymbol = invoiceData.currencySymbol || "₹";
+
+  let qrImage = null;
+  if (accountInfo?.upi) {
+    const upiLink = `upi://pay?pa=${accountInfo?.upi}&pn=${encodeURIComponent(
+      personalInfo?.name
+    )}&am=${amountInfo}&cu=INR`;
+
+    const qrBuffer = await QRCode.toBuffer(upiLink, {
+      errorCorrectionLevel: "H", // High correction for better printing
+      margin: 1,
+      width: 200,
+    });
+
+    // --- 2. Convert Buffer to Base64 String ---
+    qrImage = `data:image/png;base64,${qrBuffer.toString("base64")}`;
+  }
 
   let totalAmt = 0;
 
@@ -1121,6 +1138,9 @@ const buildHtml = (invoiceData) => {
   html += `
                 </div>
               </div>`;
+  if (qrImage) {
+    html += `<img src="${qrImage}" style="margin-bottom: 1rem; margin-top: 1.5rem;" />`;
+  }
   if (additionalInfo?.additionaldesc) {
     html += `
               <div style="color: #6B7280; font-size: 0.875rem; margin-top: 1.5rem;">
