@@ -144,7 +144,7 @@ const CreatorDashboard = () => {
       const items = data.filter((item) => item.id !== user.id);
       setData(items);
 
-      localStorage.setItem("dashboardInfo", JSON.stringify(items));
+      //localStorage.setItem("dashboardInfo", JSON.stringify(items));
 
       // archive before deleting
       await archiveInvoice(user);
