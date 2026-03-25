@@ -42,6 +42,12 @@ function AddAccountInfo() {
 
       event.preventDefault();
 
+      if (!isUpiValid) {
+        alert("Please enter a valid UPI ID (username@handle) or remove it !!!");
+        setLoading(false);
+        return;
+      }
+
       // Add to local storage
       localStorage.setItem("creator_accountInfo", JSON.stringify(inputs));
       await addAccountData(inputs);
@@ -76,6 +82,22 @@ function AddAccountInfo() {
   };
   const delay = async (ms) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
+  };
+
+  const upiRegex = /^[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}$/;
+  const [isUpiValid, setIsUpiValid] = useState(true);
+
+  const handleUpiChange = (e) => {
+    const value = e.target.value;
+
+    // 2. Validate format (allow empty string so users can backspace)
+    const isValid = value === "" || upiRegex.test(value);
+    setIsUpiValid(isValid);
+
+    // 3. Keep your existing logic
+
+    localStorage.setItem("creator_account_upi", value);
+    handleChange(e);
   };
   const updateAccountInfo = async (id, accountInfo) => {
     try {
@@ -293,22 +315,26 @@ function AddAccountInfo() {
                     </div>
                     <div className="flex flex-col w-full">
                       <div className="text-sm font-medium leading-5 mb-1">
-                        UPI #
+                        UPI ID
                       </div>
                       <div>
                         <input
-                          className="w-full dark:bg-gray-700 border border-gray-400 border-[1.4px] dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                          className={`w-full dark:bg-gray-700 border-[1.4px] rounded-md px-4 py-2 focus:outline-none focus:ring-2 
+        ${
+          !isUpiValid
+            ? "border-red-500 focus:ring-red-500"
+            : "border-gray-400 dark:border-gray-600 focus:ring-indigo-500"
+        }`}
                           name="upi"
-                          placeholder="Enter UPI ID"
+                          placeholder="Enter UPI ID (e.g. name@bank)"
                           value={inputs?.upi || ""}
-                          onChange={(e) => {
-                            localStorage.setItem(
-                              "creator_account_upi",
-                              e.target.value
-                            );
-                            handleChange(e);
-                          }}
+                          onChange={handleUpiChange}
                         />
+                        {!isUpiValid && (
+                          <p className="text-xs text-red-500 mt-1">
+                            Please enter a valid UPI ID (username@handle)
+                          </p>
+                        )}
                       </div>
                     </div>
                   </div>
