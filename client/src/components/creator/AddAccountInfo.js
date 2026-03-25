@@ -45,6 +45,7 @@ function AddAccountInfo() {
       if (!isUpiValid) {
         alert("Please enter a valid UPI ID (username@handle) or remove it !!!");
         setLoading(false);
+        document.querySelector('input[name="upi"]').focus();
         return;
       }
 
