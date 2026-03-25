@@ -1191,7 +1191,7 @@ const getPdfBuffer = async (html1) => {
 
 const sendEmailPdf = async (invoiceData, email, res) => {
   const customerInfo = invoiceData.customerInfo;
-  const html = buildHtml(invoiceData);
+  const html = await buildHtml(invoiceData);
 
   if (!html) {
     console.log("No HTML generated for PDF.");
