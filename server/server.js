@@ -1151,7 +1151,7 @@ const buildHtml = async (invoiceData) => {
               </div>`;
   }
   html += `
-              <div style="color: #4B5563; text-align: right;">
+              <div style="color: #4B5563; text-align: right; margin-top: 1.5rem;">
                 <div style="font-size: 0.75rem;">
                   Thank you for your business!
                 </div>

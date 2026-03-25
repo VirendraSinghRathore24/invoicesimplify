@@ -255,6 +255,7 @@ function CreatorInvoice({ updateCredit, setUpdateCredit }) {
       personalInfo: personalInfo,
       taxInfo: taxInfo,
       accountInfo: accountInfo,
+      additionalInfo: additionalInfo,
       logoUrl: logo,
       customerInfo: customerInfo,
       rows: rows,
@@ -322,6 +323,103 @@ function CreatorInvoice({ updateCredit, setUpdateCredit }) {
       credit: credit,
     });
     setUpdateCredit(credit);
+  };
+
+  const numberToWords = (num) => {
+    if (num === 0) return "Zero";
+
+    const singleDigits = [
+      "",
+      "One",
+      "Two",
+      "Three",
+      "Four",
+      "Five",
+      "Six",
+      "Seven",
+      "Eight",
+      "Nine",
+    ];
+    const doubleDigits = [
+      "Ten",
+      "Eleven",
+      "Twelve",
+      "Thirteen",
+      "Fourteen",
+      "Fifteen",
+      "Sixteen",
+      "Seventeen",
+      "Eighteen",
+      "Nineteen",
+    ];
+    const tensPlace = [
+      "",
+      "",
+      "Twenty",
+      "Thirty",
+      "Forty",
+      "Fifty",
+      "Sixty",
+      "Seventy",
+      "Eighty",
+      "Ninety",
+    ];
+
+    const formatData = (n, suffix) => {
+      let str = "";
+      if (n > 19) {
+        str += tensPlace[Math.floor(n / 10)] + " " + singleDigits[n % 10];
+      } else if (n > 9) {
+        str += doubleDigits[n - 10];
+      } else {
+        str += singleDigits[n];
+      }
+
+      if (n !== 0) str += suffix;
+      return str;
+    };
+
+    let res = "";
+    // Crores
+    res += formatData(Math.floor(num / 10000000), " Crore ");
+    // Lakhs
+    res += formatData(Math.floor((num / 100000) % 100), " Lakh ");
+    // Thousands
+    res += formatData(Math.floor((num / 1000) % 100), " Thousand ");
+    // Hundreds
+    res += formatData(Math.floor((num / 100) % 10), " Hundred ");
+
+    if (num > 100 && num % 100 !== 0) res += "and ";
+
+    // Remaining tens and units
+    res += formatData(num % 100, "");
+
+    return res.trim() + " Rupees Only";
+  };
+
+  const priceInWords = (price) => {
+    if (price === undefined || price === null || isNaN(price)) {
+      return "";
+    }
+
+    const [rupees, paisa] = price.toString().split(".");
+
+    let result = numberToWords(parseInt(rupees));
+
+    if (paisa && parseInt(paisa) > 0) {
+      // Ensuring "05" becomes "Five" and "50" stays "Fifty"
+      const paisaVal =
+        paisa.length === 1
+          ? parseInt(paisa) * 10
+          : parseInt(paisa.substring(0, 2));
+      result =
+        result.replace(" Only", "") +
+        " and " +
+        numberToWords(paisaVal).replace(" Only", "") +
+        " Paisa Only";
+    }
+
+    return result;
   };
 
   const getBrands = async () => {
@@ -1135,7 +1233,17 @@ function CreatorInvoice({ updateCredit, setUpdateCredit }) {
                   marginTop: "0.2rem", // Tailwind's mt-2 = 0.5rem
                 }}
               ></div>
-
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  marginTop: "0.5rem",
+                  width: "100%",
+                  fontWeight: "bold",
+                }}
+              >
+                {priceInWords(totalAmount)}
+              </div>
               <div
                 style={{
                   display: "flex",
