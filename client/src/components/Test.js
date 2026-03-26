@@ -133,7 +133,7 @@ const Home = () => {
       </header>
 
       {/* HERO */}
-      <section className="px-4 md:px-20 grid md:grid-cols-2 items-center gap-x-4 md:gap-x-14 py-16 md:py-24 mt-20">
+      <section className="px-4 md:px-20 grid md:grid-cols-2  gap-x-4 md:gap-x-14 py-16 md:py-24 mt-20">
         <div className="mb-8">
           <h1 className="text-2xl md:text-5xl font-extrabold leading-tight text-gray-900">
             Create & Send Invoices in
@@ -166,6 +166,44 @@ const Home = () => {
             >
               Try Without Login <MoveUpRight size={18} />
             </button>
+          </div>
+          <div className="mt-10 max-w-5xl mx-auto px-4">
+            {/* Header Section */}
+            <div className="text-center md:text-left mb-12">
+              <span className="bg-indigo-100 text-indigo-600 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
+                Command Center
+              </span>
+              <h2 className="mt-4 text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight">
+                Everything in <span className="text-indigo-600">One View.</span>
+              </h2>
+              <p className="mt-4 text-gray-500 text-lg max-w-2xl leading-relaxed">
+                Ditch the messy spreadsheets. Track every invoice, payment, and
+                client interaction through a powerful, real-time dashboard
+                designed for growth.
+              </p>
+            </div>
+
+            {/* Image Container with Modern Styling */}
+            <div className="relative group">
+              {/* Decorative Background Gradient Blobs */}
+              <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl blur opacity-20 group-hover:opacity-30 transition duration-1000"></div>
+
+              <div className="relative bg-white border border-gray-200 rounded-2xl p-2 shadow-2xl overflow-hidden">
+                {/* Top Bar Decoration (Browser Look) */}
+                <div className="flex gap-1.5 mb-2 px-4 py-2 border-b border-gray-100">
+                  <div className="w-2.5 h-2.5 rounded-full bg-red-400"></div>
+                  <div className="w-2.5 h-2.5 rounded-full bg-amber-400"></div>
+                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-400"></div>
+                </div>
+
+                {/* The Actual Image */}
+                <img
+                  src="../../images/dashboard.png"
+                  alt="Invoice Simplify Dashboard Preview"
+                  className="w-full rounded-b-xl object-cover hover:scale-[1.01] transition-transform duration-500"
+                />
+              </div>
+            </div>
           </div>
         </div>
         <div className="p-2 w-full overflow-hidden">
