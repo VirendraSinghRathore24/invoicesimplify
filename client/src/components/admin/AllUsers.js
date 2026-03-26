@@ -83,7 +83,6 @@ const AllUsers = () => {
                   "Subscription",
                   "Org Code",
                   "Login Date",
-                  "Days Left",
                   "Type",
                   "Invoices Count",
                 ].map((header) => (
@@ -146,9 +145,6 @@ const AllUsers = () => {
                       </td>
                       <td className="px-4 py-3 border-r w-[10%]">
                         {user.loginDate}
-                      </td>
-                      <td className="px-4 py-3 border-r w-[10%]">
-                        {calculateRemainingDays(user.loginDate)}
                       </td>
                       <td className="px-4 py-3 border-r w-[10%]">
                         {user.type}
