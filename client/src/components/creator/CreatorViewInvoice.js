@@ -48,6 +48,17 @@ function CreatorViewInvoice() {
   const handleDownloadPdf = async (e) => {
     e.preventDefault();
 
+    const demoUser = localStorage.getItem("user");
+
+    if (demoUser === "demo@gmail.com") {
+      alert(
+        "PDF download is not allowed for Demo User, Please create your account to use this feature."
+      );
+
+      setLoading(false);
+      return;
+    }
+
     const isActivePlan = getCurrentPlanStatus();
 
     if (!isActivePlan) {
@@ -211,6 +222,15 @@ function CreatorViewInvoice() {
   };
 
   const handleEmail = () => {
+    const demoUser = localStorage.getItem("user");
+    if (demoUser === "demo@gmail.com") {
+      alert(
+        "PDF email is not allowed for Demo User, Please create your account to use this feature."
+      );
+
+      setLoading(false);
+      return;
+    }
     const isActivePlan = getCurrentPlanStatus();
 
     if (!isActivePlan) {

@@ -81,6 +81,15 @@ function CreatorInvoice({ updateCredit, setUpdateCredit }) {
 
   const handleEmail = () => {
     try {
+      const demoUser = localStorage.getItem("user");
+      if (demoUser === "demo@gmail.com") {
+        alert(
+          "PDF email is not allowed for Demo User, Please create your account to use this feature."
+        );
+
+        setLoading(false);
+        return;
+      }
       const isActivePlan = getCurrentPlanStatus();
 
       if (!isActivePlan) {
@@ -155,6 +164,16 @@ function CreatorInvoice({ updateCredit, setUpdateCredit }) {
 
     try {
       setLoading(true);
+
+      const demoUser = localStorage.getItem("user");
+      if (demoUser === "demo@gmail.com") {
+        alert(
+          "PDF download is not allowed for Demo User, Please create your account to use this feature."
+        );
+
+        setLoading(false);
+        return;
+      }
 
       const url = BASE_URL;
       const isActivePlan = getCurrentPlanStatus();
