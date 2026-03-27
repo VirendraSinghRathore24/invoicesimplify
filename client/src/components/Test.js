@@ -10,7 +10,29 @@ import {
   MousePointer2,
 } from "lucide-react";
 import { motion } from "framer-motion";
-
+import {
+  CheckCircle2,
+  Mail,
+  Download,
+  PieChart,
+  Globe,
+  PenTool,
+  ShieldCheck,
+  Zap,
+  Smartphone,
+  SendHorizontal,
+  CircleX,
+  Repeat,
+  CreditCard,
+  BellRing,
+  Globe2,
+  LayoutDashboard,
+  Quote,
+  HelpCircle,
+  MessageCircle,
+  Send,
+  MessageSquare,
+} from "lucide-react";
 import Footer1 from "./Footer1";
 import { toast } from "react-toastify";
 import { addDoc, collection, doc } from "firebase/firestore";
@@ -19,6 +41,7 @@ import { db } from "../config/firebase";
 import { create } from "canvas-confetti";
 import { useNavigate } from "react-router-dom";
 import PricingPlans from "./PricingPlans";
+import FAQItem from "./FAQItem";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -32,7 +55,7 @@ const Home = () => {
     },
     {
       name: "Soniya Pachauri",
-      title: "Small Business Owner",
+      title: "Content Creator",
       quote:
         "Super simple and mobile-friendly! I love how intuitive it is. Invoicing is no longer a chore.",
       image: "../images/soniya.png",
@@ -107,6 +130,102 @@ const Home = () => {
     accNo: "123456678976",
     ifsc: "HDFC00000238",
   });
+
+  const features = [
+    {
+      title: "Branded Invoices",
+      icon: <Zap className="text-blue-600" />,
+      desc: "Custom themes that match your brand.",
+    },
+    {
+      title: "Email PDF",
+      icon: <Mail className="text-indigo-600" />,
+      desc: "Direct delivery to your client's inbox.",
+    },
+    {
+      title: "Download PDF",
+      icon: <Download className="text-slate-600" />,
+      desc: "Offline copies for your records.",
+    },
+    {
+      title: "Track Payments",
+      icon: <PieChart className="text-emerald-600" />,
+      desc: "Visual insights into your cash flow.",
+    },
+    {
+      title: "Pro Dashboard",
+      icon: <CheckCircle2 className="text-blue-500" />,
+      desc: "Manage all brand deals in one view.",
+    },
+    {
+      title: "Multi-Currency",
+      icon: <Globe className="text-purple-600" />,
+      desc: "Get paid in USD, INR, or GBP.",
+    },
+    {
+      title: "Digital Signatures",
+      icon: <PenTool className="text-orange-600" />,
+      desc: "Legally binding e-signatures built-in.",
+    },
+    {
+      title: "Data Privacy",
+      icon: <ShieldCheck className="text-emerald-500" />,
+      desc: "Bank-grade encryption for your data.",
+    },
+  ];
+  const advancedFeatures = [
+    {
+      title: "Recurring Invoices",
+      icon: <Repeat className="text-indigo-600" />,
+      desc: "Set it and forget it for monthly retainers.",
+    },
+    {
+      title: "Smart Payment Status",
+      icon: <CreditCard className="text-emerald-600" />,
+      desc: "One-click updates from Pending to Paid.",
+    },
+    {
+      title: "Automated Reminders",
+      icon: <BellRing className="text-amber-500" />,
+      desc: "Gently nudge brands when a payment is due.",
+    },
+    {
+      title: "Global Currency",
+      icon: <Globe2 className="text-blue-600" />,
+      desc: "Bill in USD, INR, or GBP with ease.",
+    },
+    {
+      title: "Stunning Dashboard",
+      icon: <LayoutDashboard className="text-purple-600" />,
+      desc: "Visual analytics for your creator income.",
+    },
+    {
+      title: "Cloud Accessibility",
+      icon: <Smartphone className="text-slate-600" />,
+      desc: "Your data is synced and ready on any device.",
+    },
+  ];
+
+  const [openIndex, setOpenIndex] = useState(0);
+
+  const faqs = [
+    {
+      q: "How do I deliver my invoices?",
+      a: "Generate a professional PDF for local records or use our one-click 'Direct-to-Brand' email feature. Your clients receive a branded, secure link to view and pay.",
+    },
+    {
+      q: "Can I bill while on a creator shoot?",
+      a: "Absolutely. InvoiceSimplify is a cloud-native progressive app. Whether you're on an iPhone, Android, or iPad, the dashboard is fully optimized for mobile creators on the go.",
+    },
+    {
+      q: "How does the payment tracking work?",
+      a: "Your central dashboard acts as a financial command center. It automatically categorizes invoices as 'Paid', 'Pending', or 'Overdue', giving you a real-time pulse on your business.",
+    },
+    {
+      q: "Is international billing supported?",
+      a: "Yes! Scale your creator business globally. We support all major currencies including INR, USD, EUR, and GBP with real-time conversion features.",
+    },
+  ];
 
   const calculateTotal = () =>
     invoiceData.items.reduce((sum, item) => sum + item.rate * item.qty, 0);
@@ -360,68 +479,118 @@ const Home = () => {
       </section>
 
       {/* WHY INVOICESIMPLIFY */}
-      <section className="px-8 py-20 bg-gray-50">
-        <h2 className="text-center text-3xl font-bold text-gray-900">
-          Why InvoiceSimplify?
-        </h2>
-        <p className="text-center text-gray-600 mt-2 max-w-xl mx-auto">
-          Everything you need to streamline your creator payments
-        </p>
-        <div className="grid md:grid-cols-4 gap-8 mt-12 max-w-6xl mx-auto">
-          {[
-            "Branded Invoices",
-            "Email PDF",
-            "Download PDF",
-            "Track Payments",
-            "Dashboard",
-            "Multi-Currency Support",
-            "Signature Support",
-            "Data Privacy",
-          ].map((item, i) => (
-            <div
-              key={i}
-              className="p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition flex items-center gap-3"
-            >
-              <Check className="text-green-600 w-6 h-6" />
-              <span>{item}</span>
-            </div>
-          ))}
+      <section className="px-6 py-24 bg-[#F8FAFC]">
+        <div className="max-w-6xl mx-auto">
+          {/* Elegant Header */}
+          <div className="text-center mb-16">
+            <span className="text-blue-600 font-bold text-xs uppercase tracking-widest bg-blue-50 px-4 py-1.5 rounded-full border border-blue-100">
+              Feature-Rich Powerhouse
+            </span>
+            <h2 className="mt-6 text-4xl md:text-5xl font-black text-slate-900 tracking-tight">
+              Why{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
+                InvoiceSimplify?
+              </span>
+            </h2>
+            <p className="mt-4 text-slate-500 text-lg max-w-2xl mx-auto leading-relaxed">
+              Everything you need to streamline your creator payments, built for
+              the modern digital economy.
+            </p>
+          </div>
+
+          {/* The Bento-Inspired Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {features.map((item, i) => (
+              <div
+                key={i}
+                className="group p-8 bg-white rounded-[2rem] border border-slate-100 hover:border-blue-200 hover:shadow-[0_20px_40px_rgba(0,0,0,0.04)] transition-all duration-300"
+              >
+                <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-blue-50 transition-all duration-300">
+                  {item.icon}
+                </div>
+                <h3 className="text-lg font-bold text-slate-900 mb-2">
+                  {item.title}
+                </h3>
+                <p className="text-sm text-slate-500 leading-relaxed">
+                  {item.desc}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* CREATOR BENEFITS */}
-      <section className="px-8 py-16 bg-blue-50 text-center">
-        <h3 className="text-3xl font-bold text-gray-900 mb-6">
-          Create & Send Invoices Anywhere
-        </h3>
-        <p className="text-gray-700 max-w-xl mx-auto mb-10 text-lg">
-          No need to maintain separate invoice documents or templates. Generate
-          professional invoices directly from your mobile or desktop — anytime,
-          anywhere.
-        </p>
+      <section className="px-6 py-20 bg-blue-50/30 text-center border-y border-blue-100">
+        <div className="max-w-5xl mx-auto">
+          {/* Header */}
+          <h3 className="text-3xl md:text-4xl font-black text-slate-900 mb-4 tracking-tight">
+            Invoicing Without the Headache
+          </h3>
+          <p className="text-slate-600 max-w-2xl mx-auto mb-16 text-lg">
+            We built
+            <span className="text-blue-600 font-bold">Invoice Simplify</span> to
+            replace messy folders and manual docs with one clean workflow.
+          </p>
 
-        <div className="flex flex-col md:flex-row justify-center gap-8 max-w-4xl mx-auto">
-          <div className="bg-white rounded-xl p-6 shadow-md flex flex-col items-center gap-4">
-            <Sparkles className="text-blue-600 w-8 h-8" />
-            <h4 className="font-semibold text-lg">Mobile Friendly</h4>
-            <p className="text-gray-600 text-sm text-center">
-              Generate invoices on your phone or tablet without any hassle.
-            </p>
-          </div>
-          <div className="bg-white rounded-xl p-6 shadow-md flex flex-col items-center gap-4">
-            <Shield className="text-blue-600 w-8 h-8" />
-            <h4 className="font-semibold text-lg">No Templates Needed</h4>
-            <p className="text-gray-600 text-sm text-center">
-              Everything is ready to use. No need to manage multiple invoice
-              templates or docs.
-            </p>
-          </div>
-          <div className="bg-white rounded-xl p-6 shadow-md flex flex-col items-center gap-4">
-            <Check className="text-blue-600 w-8 h-8" />
-            <h4 className="font-semibold text-lg">Send Instantly</h4>
-            <p className="text-gray-600 text-sm text-center">
-              Email your invoice directly to brands and agencies with one click.
-            </p>
+          {/* Triple Card Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* 1. Mobile - The Solution */}
+            <div className="group bg-white rounded-3xl p-8 shadow-[0_15px_40px_rgba(59,130,246,0.06)] border-2 border-transparent hover:border-blue-500 transition-all duration-300 relative overflow-hidden">
+              <div className="flex justify-center mb-6">
+                <div className="relative">
+                  <Smartphone className="text-blue-600 w-12 h-12 stroke-[1.5]" />
+                  <Check className="absolute -bottom-1 -right-1 bg-green-500 text-white rounded-full p-1 w-6 h-6 border-2 border-white" />
+                </div>
+              </div>
+              <h4 className="font-extrabold text-slate-900 text-xl mb-3">
+                Mobile Friendly
+              </h4>
+              <p className="text-slate-500 text-sm leading-relaxed font-medium">
+                Not just a "smaller website." Our interface is fully optimized
+                for thumb-navigation so you can bill while on a shoot.
+              </p>
+            </div>
+
+            {/* 2. No Templates - The Crossing Sign */}
+            <div className="bg-white rounded-3xl p-8 shadow-[0_15px_40px_rgba(59,130,246,0.06)] border-2 border-transparent hover:border-red-100 transition-all duration-300">
+              <div className="flex justify-center mb-6">
+                <div className="relative">
+                  <div className="opacity-20">
+                    <div className="w-12 h-12 border-2 border-slate-300 rounded-lg flex items-center justify-center font-bold text-slate-300 text-xs">
+                      DOCX
+                    </div>
+                  </div>
+                  <CircleX className="absolute inset-0 m-auto text-red-500 w-12 h-12 stroke-[2]" />
+                </div>
+              </div>
+              <h4 className="font-extrabold text-slate-900 text-xl mb-3 tracking-tight">
+                Zero Templates
+              </h4>
+              <p className="text-slate-500 text-sm leading-relaxed font-medium">
+                Stop hunting for{" "}
+                <span className="line-through text-slate-400 font-normal underline decoration-red-400">
+                  old Word docs
+                </span>
+                . Our smart engine generates professional layouts instantly.
+              </p>
+            </div>
+
+            {/* 3. Send Instantly - The Action */}
+            <div className="bg-white rounded-3xl p-8 shadow-[0_15px_40px_rgba(59,130,246,0.06)] border-2 border-transparent hover:border-blue-500 transition-all duration-300">
+              <div className="flex justify-center mb-6">
+                <div className="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-200">
+                  <SendHorizontal className="text-white w-7 h-7" />
+                </div>
+              </div>
+              <h4 className="font-extrabold text-slate-900 text-xl mb-3 tracking-tight">
+                Direct Delivery
+              </h4>
+              <p className="text-slate-500 text-sm leading-relaxed font-medium">
+                No need to download, rename, and attach. Email the brand deal
+                invoice directly to your manager or client with one tap.
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -451,7 +620,7 @@ const Home = () => {
         </div>
 
         <div
-          className="max-w-4xl mx-auto relative block max-lg:hidden"
+          className="max-w-5xl mx-auto relative block max-lg:hidden"
           style={{ paddingTop: "40.25%" /* 16:9 ratio */ }}
         >
           <iframe
@@ -506,27 +675,41 @@ const Home = () => {
       </section> */}
 
       {/* ADVANCED FEATURES */}
-      <section className="px-8 py-20 bg-white">
-        <h2 className="text-3xl font-bold text-center mb-12">
-          Advanced Features
-        </h2>
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {[
-            "Recurring Invoices",
-            "Update Payment Status",
-            "Payment Reminders",
-            "Access Anywhere",
-            "Currency Support",
-            "Stunning Dashboard",
-          ].map((feature, i) => (
-            <div
-              key={i}
-              className="p-6 bg-gray-50 rounded-xl shadow-md hover:shadow-lg transition flex items-center gap-3"
-            >
-              <Wand2 className="text-blue-600 w-6 h-6" />
-              <span>{feature}</span>
+      <section className="px-6 py-24 bg-white">
+        <div className="max-w-6xl mx-auto">
+          {/* Elegant Centered Header */}
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-[10px] font-black uppercase tracking-[0.2em] mb-4 border border-blue-100">
+              <Sparkles size={12} /> Pro Capabilities
             </div>
-          ))}
+            <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight">
+              Advanced <span className="text-blue-600">Workflow</span> Tools
+            </h2>
+            <p className="mt-4 text-slate-500 text-lg max-w-xl mx-auto">
+              Powerful automation designed to let you focus on creating, not
+              chasing paperwork.
+            </p>
+          </div>
+
+          {/* The Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {advancedFeatures.map((feature, i) => (
+              <div
+                key={i}
+                className="group p-8 bg-white rounded-3xl border border-slate-100 hover:border-blue-200 hover:shadow-[0_20px_50px_rgba(59,130,246,0.05)] transition-all duration-500 flex flex-col items-start"
+              >
+                <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center mb-6 group-hover:bg-blue-50 group-hover:scale-110 transition-all duration-500">
+                  {feature.icon}
+                </div>
+                <h3 className="text-lg font-bold text-slate-900 mb-2 tracking-tight">
+                  {feature.title}
+                </h3>
+                <p className="text-sm text-slate-500 leading-relaxed font-medium">
+                  {feature.desc}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -589,37 +772,59 @@ const Home = () => {
       </section> */}
 
       {/* Testimonials */}
-      <section className="bg-gray-100 dark:bg-gray-800 py-16 px-6">
-        <div className="max-w-5xl mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-12">
-            Loved by Business Owners & Creators
+      <section className="px-6 py-24 bg-gray-100/70 text-center">
+        <div className="max-w-6xl mx-auto">
+          {/* Header - Refined Typography */}
+          <h2 className="text-4xl md:text-5xl font-black text-slate-950 mb-16 tracking-tighter">
+            Loved by Business Owners &{" "}
+            <span className="text-blue-600">Creators</span>
           </h2>
-          <div className="grid gap-10 md:grid-cols-3">
+
+          {/* The New Card Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {testimonials.map((user, index) => (
               <div
                 key={index}
-                className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-md hover:shadow-lg transition text-left"
+                className="group relative flex flex-col p-9 bg-white rounded-[2rem] shadow-[0_15px_40px_-10px_rgba(0,0,0,0.03)] border border-slate-100 hover:border-blue-100 hover:shadow-[0_25px_60px_-15px_rgba(59,130,246,0.06)] hover:-translate-y-1.5 transition-all duration-500 text-left"
               >
-                <div className="flex items-center mb-4 space-x-4">
-                  <img
-                    src={user.image}
-                    alt={user.name}
-                    className="w-14 h-14 rounded-full object-cover"
-                  />
+                {/* Floating Quote Icon Accent */}
+                <div className="absolute -top-4 -right-2 w-10 h-10 bg-blue-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:rotate-12 transition-transform duration-500">
+                  <Quote size={18} className="text-white fill-current" />
+                </div>
+
+                {/* User Content - Layout Update */}
+                <div className="flex items-center gap-5 mb-8">
+                  <div className="relative">
+                    <img
+                      src={user.image}
+                      alt={user.name}
+                      className="w-16 h-16 rounded-2xl object-cover ring-4 ring-slate-100"
+                    />
+                    {/* Active Status Dot */}
+                    <div className="absolute -bottom-1.5 -right-1.5 w-6 h-6 bg-green-500 rounded-full border-4 border-white"></div>
+                  </div>
                   <div>
-                    <h4 className="font-semibold">{user.name}</h4>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                    <h4 className="text-lg font-extrabold text-slate-950 tracking-tight leading-tight">
+                      {user.name}
+                    </h4>
+                    <p className="text-sm text-blue-600 font-semibold tracking-wide">
                       {user.title}
                     </p>
                   </div>
                 </div>
-                <p className="text-gray-700 dark:text-gray-300  mb-4">
+
+                {/* The Quote itself */}
+                <p className="text-slate-600 leading-relaxed font-medium mb-10 italic">
                   “{user.quote}”
                 </p>
-                <div className="flex space-x-1 text-yellow-400">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={16} fill="currentColor" />
-                  ))}
+
+                {/* Bottom Bar - Rating & Verified Badge */}
+                <div className="flex items-center justify-between mt-auto pt-6 border-t border-slate-100">
+                  <div className="flex gap-1 text-amber-400">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} size={15} fill="currentColor" />
+                    ))}
+                  </div>
                 </div>
               </div>
             ))}
@@ -628,118 +833,169 @@ const Home = () => {
       </section>
 
       {/* FAQ */}
-      <section className="px-8 pt-20 bg-gray-50">
-        <h3 className="text-3xl font-bold text-center mb-12">
-          Frequently Asked Questions
-        </h3>
-        <div className="max-w-4xl mx-auto space-y-6">
-          {[
-            {
-              q: "What are the ways to get invoices?",
-              a: "Download PDF or email directly to brands.",
-            },
-            {
-              q: "Can I create invoice using mobile?",
-              a: "Yes, InvoiceSimplify is mobile-friendly and works seamlessly on any device.",
-            },
-            {
-              q: "Can I track pending payments from brands or agencies?",
-              a: "Yes, Dashboard helps you track paid and unpaid invoices easily.",
-            },
-            {
-              q: "Do you support multiple currencies?",
-              a: "Yes, you can invoice in INR, USD, EUR, and more.",
-            },
-          ].map((item, i) => (
-            <div key={i} className="bg-white p-6 rounded-xl shadow-md">
-              <h4 className="font-semibold">{item.q}</h4>
-              <p className="mt-2 text-gray-600">{item.a}</p>
+      <section className="px-6 py-24 bg-white relative overflow-hidden">
+        {/* Decorative Accents */}
+        <div className="absolute top-20 right-[-10%] w-96 h-96 bg-blue-50 rounded-full blur-3xl -z-10 opacity-60" />
+
+        <div className="max-w-4xl mx-auto">
+          {/* Header Block */}
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-500 text-[10px] font-black uppercase tracking-[0.2em] mb-4">
+              <HelpCircle size={14} className="text-blue-600" /> Support Center
             </div>
-          ))}
+            <h3 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight">
+              Got <span className="text-blue-600">Questions?</span>
+            </h3>
+            <p className="mt-4 text-slate-500 text-lg">
+              Everything you need to know about scaling your creator finances.
+            </p>
+          </div>
+
+          {/* The Interactive Accordion */}
+          <div className="border-t border-slate-200/60">
+            {faqs.map((item, i) => (
+              <FAQItem
+                key={i}
+                {...item}
+                isOpen={openIndex === i}
+                onClick={() => setOpenIndex(openIndex === i ? -1 : i)}
+              />
+            ))}
+          </div>
+
+          {/* Dynamic CTA Footer */}
+          <div className="mt-16 p-8 rounded-[2rem] bg-slate-900 text-center relative overflow-hidden group">
+            <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="text-left">
+                <h4 className="text-white font-bold text-xl">
+                  Still have a specific question?
+                </h4>
+                <p className="text-slate-400 text-sm">
+                  Our creator success team is online 24/7.
+                </p>
+              </div>
+              <button className="px-8 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold transition-all shadow-lg shadow-blue-600/20 flex items-center gap-2">
+                <MessageCircle size={18} /> Chat with Us
+              </button>
+            </div>
+            {/* Subtle Gradient Glow inside CTA */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 blur-3xl -z-0" />
+          </div>
         </div>
       </section>
       <PricingPlans />
 
-      <section id="contact-section" className="py-20 bg-gray-100 mt-16">
-        <div className="max-w-4xl mx-auto text-center px-6">
-          <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-4">
-            We’re Here to Support Your Growth 🚀
-          </h2>
-          <p className="text-gray-600 tex-sm lg:text-lg mb-8">
-            Whether you're a content creator, freelancer, influencer, or small
-            business — InvoiceSimplify helps you send professional invoices and
-            get paid faster.
-            <br />
-            Have questions, feedback, or want to work with us? Just reach out!
-          </p>
+      <section
+        id="contact-section"
+        className="relative py-24 bg-gray-50/50 overflow-hidden"
+      >
+        {/* Decorative Glows */}
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-100/40 rounded-full blur-[120px] -z-10" />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-indigo-100/30 rounded-full blur-[120px] -z-10" />
 
-          <div className="bg-white shadow-xl rounded-3xl p-8 max-w-xl mx-auto">
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <input
-                type="text"
-                placeholder="Your Name"
-                value={formData.name}
-                required
-                onChange={handleChange}
-                name="name"
-                className="w-full border rounded-xl p-3 focus:ring-2 focus:ring-blue-400"
-              />
-              <input
-                type="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                name="email"
-                placeholder="Your Email"
-                className="w-full border rounded-xl p-3 focus:ring-2 focus:ring-blue-400"
-              />
-              <textarea
-                placeholder="Your Message"
-                rows="4"
-                required
-                value={formData.message}
-                onChange={handleChange}
-                name="message"
-                className="w-full border rounded-xl p-3 focus:ring-2 focus:ring-blue-400"
-              />
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="flex flex-col lg:flex-row items-center gap-16">
+            {/* Left Side: Editorial Content */}
+            <div className="lg:w-1/2 text-left">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-600/10 text-blue-600 text-[10px] font-black uppercase tracking-[0.2em] mb-6 border border-blue-600/10">
+                <Sparkles size={12} /> Get in Touch
+              </div>
+              <h2 className="text-4xl lg:text-5xl font-black text-slate-900 leading-[1.1] mb-6 tracking-tight">
+                Supporting your <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
+                  Exponential Growth.
+                </span>
+              </h2>
+              <p className="text-slate-600 text-lg leading-relaxed mb-8 max-w-lg">
+                Whether you're an influencer scaling your brand or an agency
+                managing 100+ creators — we’re here to ensure you **get paid
+                faster.**
+              </p>
 
-              <button className="w-full py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition">
-                Send Message
-              </button>
-            </form>
+              {/* Value Props */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-3 text-slate-700 font-semibold text-sm">
+                  <div className="w-8 h-8 rounded-lg bg-white shadow-sm flex items-center justify-center text-blue-600 border border-slate-100">
+                    <MessageSquare size={16} />
+                  </div>
+                  Quick Response: Usually under 2 hours
+                </div>
+                <div className="flex items-center gap-3 text-slate-700 font-semibold text-sm">
+                  <div className="w-8 h-8 rounded-lg bg-white shadow-sm flex items-center justify-center text-indigo-600 border border-slate-100">
+                    <Zap size={16} />
+                  </div>
+                  Direct access to our Founders
+                </div>
+              </div>
+            </div>
+
+            {/* Right Side: The Premium Form */}
+            <div className="lg:w-1/2 w-full max-w-xl">
+              <div className="relative p-1 rounded-[2.5rem] bg-gradient-to-b from-white to-slate-100 shadow-[0_30px_100px_rgba(0,0,0,0.08)]">
+                <div className="bg-white rounded-[2.3rem] p-8 md:p-10 border border-white">
+                  <form onSubmit={handleSubmit} className="space-y-5">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">
+                          Full Name
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="John Doe"
+                          value={formData.name}
+                          onChange={handleChange}
+                          required
+                          name="name"
+                          className="w-full bg-slate-50 border-none rounded-2xl p-4 text-slate-900 text-sm focus:ring-2 focus:ring-blue-500/20 transition-all placeholder:text-slate-400"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">
+                          Email Address
+                        </label>
+                        <input
+                          type="email"
+                          placeholder="hello@creator.com"
+                          value={formData.email}
+                          onChange={handleChange}
+                          required
+                          name="email"
+                          className="w-full bg-slate-50 border-none rounded-2xl p-4 text-slate-900 text-sm focus:ring-2 focus:ring-blue-500/20 transition-all placeholder:text-slate-400"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">
+                        Your Message
+                      </label>
+                      <textarea
+                        placeholder="How can we help your business?"
+                        rows="4"
+                        required
+                        value={formData.message}
+                        onChange={handleChange}
+                        name="message"
+                        className="w-full bg-slate-50 border-none rounded-2xl p-4 text-slate-900 text-sm focus:ring-2 focus:ring-blue-500/20 transition-all placeholder:text-slate-400 resize-none"
+                      />
+                    </div>
+
+                    <button className="group relative w-full py-4 bg-slate-900 text-white rounded-2xl font-bold transition-all hover:bg-blue-600 hover:shadow-[0_20px_40px_rgba(37,99,235,0.3)] flex items-center justify-center gap-2 overflow-hidden">
+                      <span className="relative z-10 flex items-center gap-2">
+                        Send Message{" "}
+                        <Send
+                          size={18}
+                          className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"
+                        />
+                      </span>
+                      <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </section>
-
-      {/* CTA */}
-      <section className="text-center px-6 py-20 bg-blue-600 text-white block lg:hidden">
-        <h2 className="text-2xl font-bold">
-          Start invoicing in less than 30 seconds
-        </h2>
-        <p className="mt-2 mb-6">
-          Create your first branded invoice and impress your clients today.
-        </p>
-        <button
-          onClick={() => createInvoice()}
-          className="px-10 py-4 bg-white text-blue-600 rounded-xl font-semibold hover:bg-gray-100 transition"
-        >
-          Start Free Now
-        </button>
-      </section>
-
-      <section className="text-center px-6 py-20 bg-blue-600 text-white block max-lg:hidden">
-        <h2 className="text-4xl font-bold">
-          Start invoicing in less than 30 seconds
-        </h2>
-        <p className="mt-2 mb-6">
-          Create your first branded invoice and impress your clients today.
-        </p>
-        <button
-          onClick={() => createInvoice()}
-          className="px-10 py-4 bg-white text-blue-600 rounded-xl font-semibold hover:bg-gray-100 transition"
-        >
-          Start Free Now
-        </button>
       </section>
 
       {/* FOOTER */}
