@@ -67,6 +67,7 @@ import AddTaxInfo from "./components/creator/AddTaxInfo";
 import CreatorTaxInfo from "./components/creator/CreatorTaxInfo";
 import EditTaxInfo from "./components/creator/EditTaxInfo";
 import ProtectedRoute from "./ProtectedRoute";
+import SellerDashboard from "./components/gst/SellerDashboard";
 
 function App() {
   const location = useLocation();
@@ -86,6 +87,7 @@ function App() {
     "/admin/contacts",
     "/test",
     "/selectbusinesstype",
+    "/gst/sellerdashboard",
   ].includes(location.pathname);
 
   const showSidebar1 = !location.pathname.includes("/ci");
@@ -141,6 +143,8 @@ function App() {
             path="/archivedviewinvoice"
             element={<ArchivedViewInvoice />}
           />
+
+          <Route path="/gst/sellerdashboard" element={<SellerDashboard />} />
 
           <Route path="/success" element={<Success />} />
           <Route path="/paymenthistory" element={<PaymentHistory />} />

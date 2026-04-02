@@ -80,6 +80,71 @@ app.use(
   })
 );
 
+app.get("/api/sellers/check/:id", async (req, res) => {
+  try {
+    const { id } = req.params; // from URL
+    const { year } = req.query;
+
+    const response = await axios.get(
+      "https://api.whitebooks.in/public/rettrack",
+      {
+        params: {
+          email: process.env.WHITEBOOKS_EMAIL,
+          gstin: id,
+          fy: year,
+        },
+        headers: {
+          client_id: process.env.WHITEBOOKS_CLIENT_ID,
+          client_secret_id: process.env.WHITEBOOKS_CLIENT_SECRET,
+          "Content-Type": "application/json",
+        },
+        timeout: 10000,
+      }
+    );
+
+    const mockResponse = {
+      success: true,
+      data: {
+        gstin: id,
+        //sellerName: "Rathore Traders",
+        status: "FILED", // GST Status
+        //returnFiled: true, // 🔥 Your main requirement
+        lastFiledDate: "2025-03-20",
+        businessType: "Regular",
+        state: "Karnataka",
+        returnType: "GSTR3B",
+      },
+    };
+
+    return res.status(200).json(mockResponse);
+
+    // return res.status(200).json({
+    //   success: true,
+    //   data: response.data,
+    // });
+  } catch (error) {
+    console.error("GST API Error:", error?.response?.data || error.message);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch GST details",
+      error: error?.response?.data || error.message,
+    });
+  }
+});
+
+app.get("/api/sellers1/check/:id", async (req, res) => {
+  const { id } = req.params;
+
+  const result = await checkGSTStatus(id);
+
+  res.json({
+    id,
+    ...seller,
+    ...result,
+  });
+});
+
 const transporter = nodemailer.createTransport({
   //service: "SendGrid",
   host: "smtpout.secureserver.net",

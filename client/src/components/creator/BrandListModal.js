@@ -85,7 +85,7 @@ const BrandListModal = ({
         {/* Header */}
         <div className="flex justify-between items-center border-b pb-3">
           <h2 className="text-lg font-semibold text-gray-800">
-            Select Brand\Agency
+            Select Brand\Agency - {filtered.length}
           </h2>
           <button
             onClick={onClose}

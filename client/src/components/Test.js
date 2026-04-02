@@ -96,6 +96,15 @@ const Home = () => {
     });
   };
 
+  const gstDashboard = () => {
+    const user = localStorage.getItem("user");
+
+    if (!user || user === "undefined" || user === "null") {
+      navigate("/login");
+    } else {
+      navigate("/gst/sellerdashboard");
+    }
+  };
   const createInvoice = () => {
     const user = localStorage.getItem("user");
 
@@ -286,6 +295,12 @@ const Home = () => {
               Try Without Login <MoveUpRight size={18} />
             </button>
           </div>
+          <button
+            onClick={() => gstDashboard()}
+            className="px-6 mt-4 py-2 bg-gray-900 text-white rounded-xl font-medium hover:bg-blue-700 transition"
+          >
+            GST Dashboard
+          </button>
           <div className="mt-10 max-w-5xl mx-auto px-4">
             {/* Header Section */}
             <div className="text-center md:text-left mb-12">
