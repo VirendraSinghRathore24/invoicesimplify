@@ -9,6 +9,8 @@ import {
   ExternalLink,
   MoreVertical,
 } from "lucide-react";
+import GSTReturnModal from "./GSTReturnModal";
+import Loader from "../Loader";
 
 const API = BASE_URL + "/api/sellers";
 
@@ -16,92 +18,120 @@ const Dashboard = () => {
   const data = [
     {
       sellerName: "Rathore Traders",
-      gstin: "29ABCDE1234F1Z5",
+      gstin: "27AABCA2020Q2ZR",
       status: "Not Checked",
       returnType: "NA",
+      dof: "",
+      gstinstatus: "",
+      frequency: "",
+      ret_prd: "",
     },
     {
       sellerName: "Sharma Enterprises",
-      gstin: "27PQRSX5678L1Z2",
+      gstin: "33AAGCB1286Q1ZB",
       status: "Not Checked",
       returnType: "NA",
+      dof: "",
+      gstinstatus: "",
+      frequency: "",
+      ret_prd: "",
     },
     {
       sellerName: "Gupta Electronics",
       gstin: "07LMNOP4321K1Z9",
       status: "Not Checked",
       returnType: "NA",
+      dof: "",
+      gstinstatus: "",
+      frequency: "",
+      ret_prd: "",
     },
     {
       sellerName: "Verma Textiles",
       gstin: "24WXYZA9876H1Z3",
       status: "Not Checked",
       returnType: "NA",
+      dof: "",
+      gstinstatus: "",
+      frequency: "",
+      ret_prd: "",
     },
     {
       sellerName: "Kumar Hardware",
       gstin: "33BCDEA2468J1Z7",
       status: "Not Checked",
       returnType: "NA",
+      dof: "",
+      gstinstatus: "",
+      frequency: "",
+      ret_prd: "",
     },
     {
       sellerName: "Singh Wholesale Mart",
       gstin: "09FGHIJ1357M1Z4",
       status: "Not Checked",
       returnType: "NA",
+      dof: "",
+      gstinstatus: "",
+      frequency: "",
+      ret_prd: "",
     },
     {
       sellerName: "Agarwal Foods",
       gstin: "19KLMNO9753N1Z6",
       status: "Not Checked",
       returnType: "NA",
-    },
-    {
-      sellerName: "Mehta Stationers",
-      gstin: "30PQRST8642P1Z1",
-      status: "Not Checked",
-      returnType: "NA",
-    },
-    {
-      sellerName: "Patel Agro Supplies",
-      gstin: "23UVWXY7531Q1Z8",
-      status: "Not Checked",
-      returnType: "NA",
-    },
-    {
-      sellerName: "Joshi Pharma Distributors",
-      gstin: "06ZABCD6420R1Z0",
-      status: "Not Checked",
-      returnType: "NA",
+      dof: "",
+      gstinstatus: "",
+      frequency: "",
+      ret_prd: "",
     },
   ];
   const [sellers, setSellers] = useState(data);
+  const [seller, setSeller] = useState({});
   const [name, setName] = useState("");
   const [gstin, setGstin] = useState("");
   const [year, setYear] = useState("2025-26");
   const yearOptions = ["2023-24", "2024-25", "2025-26"];
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const checkStatus = async (id) => {
+    setLoading(true);
     const res = await axios.get(`${API}/check/${id}`, {
       params: { year: year },
     });
-    console.log("GST Status Check Result:", res.data.data.status);
+    const data = res.data.EFiledlist;
+
+    const sortedData = data.sort((a, b) => new Date(b.dof) - new Date(a.dof));
     setSellers((prevSellers) =>
       prevSellers.map((seller) =>
         seller.gstin === id
           ? {
               ...seller,
-              status: res.data.data.status,
-              returnType: res.data.data.returnType,
+              newData: sortedData,
+              // status: sortedData[0].status,
+              // returnType: sortedData[0].rtntype,
+              // dof: sortedData[0].dof,
+              // ret_prd: sortedData[0].ret_prd,
             }
           : seller
       )
     );
+    setLoading(false);
+  };
+
+  const viewHistory = (s) => {
+    setSeller(s.newData);
+    setGstin(s.gstin);
+    //localStorage.setItem("historyData", JSON.stringify(s.newData));
+    //console.log("History Data Set for Modal:", s.newData);
+    setIsModalOpen(true);
   };
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] p-4 md:p-10 font-sans">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
           <div>
@@ -135,12 +165,12 @@ const Dashboard = () => {
           <StatCard label="Total Sellers" value={sellers.length} color="blue" />
           <StatCard
             label="Filed Returns"
-            value={sellers.filter((s) => s.status === "FILED").length}
+            value={sellers.filter((s) => s.status === "Filed").length}
             color="green"
           />
           <StatCard
             label="Pending Returns"
-            value={sellers.filter((s) => s.status !== "FILED").length}
+            value={sellers.filter((s) => s.status !== "Filed").length}
             color="red"
           />
         </div>
@@ -165,9 +195,9 @@ const Dashboard = () => {
               <thead>
                 <tr className="bg-slate-50/50 border-b border-slate-100">
                   {/* Added text-center here */}
-                  <th className="px-6 py-4 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                  {/* <th className="px-6 py-4 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider">
                     S.No.
-                  </th>
+                  </th> */}
                   <th className="px-6 py-4 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider">
                     Seller Details
                   </th>
@@ -175,10 +205,22 @@ const Dashboard = () => {
                     GSTIN
                   </th>
                   <th className="px-6 py-4 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                    Filing Status
+                    Status
                   </th>
                   <th className="px-6 py-4 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                    Filing Date
+                  </th>
+                  {/* <th className="px-6 py-4 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                    GSTIN Status
+                  </th> */}
+                  <th className="px-6 py-4 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider">
                     Return Type
+                  </th>
+                  <th className="px-6 py-4 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                    Return Period
+                  </th>
+                  <th className="px-6 py-4 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                    History
                   </th>
                   <th className="px-6 py-4 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider">
                     Actions
@@ -191,11 +233,11 @@ const Dashboard = () => {
                     key={s._id}
                     className="hover:bg-blue-50/30 transition-colors group"
                   >
-                    <td className="px-6 py-4 text-center">
+                    {/* <td className="px-6 py-4 text-center">
                       <div className="font-semibold text-slate-800">
                         {index + 1}.
                       </div>
-                    </td>
+                    </td> */}
                     {/* 1. Center Name/Vendor ID */}
                     <td className="px-6 py-4 text-center">
                       <div className="font-semibold text-slate-800">
@@ -211,26 +253,45 @@ const Dashboard = () => {
                     </td>
 
                     {/* 3. Center Status Badge */}
-                    <td className="px-6 py-4 text-center">
+                    <td className="px-6 py-4">
                       <div className="flex justify-center">
-                        {" "}
-                        {/* Use flex-justify-center for components */}
-                        {s.status === "FILED" ? (
-                          <span className="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700 border border-emerald-200">
-                            <ShieldCheck size={14} /> FILED
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-amber-100 text-amber-700 border border-amber-200">
-                            <ShieldAlert size={14} /> PENDING
-                          </span>
-                        )}
+                        {renderStatusBadge(s)}
                       </div>
+                    </td>
+                    <td className="px-6 py-4 text-center">
+                      <span className="font-mono text-sm text-slate-600 bg-slate-100 px-2 py-1 rounded inline-block">
+                        {s.newData ? s.newData[0].dof : s.dof}
+                      </span>
+                    </td>
+                    {/* <td className="px-6 py-4 text-center">
+                      <span className="font-mono text-sm text-slate-600 bg-slate-100 px-2 py-1 rounded inline-block">
+                        {s.gstinstatus}
+                      </span>
+                    </td> */}
+                    <td className="px-6 py-4 text-center">
+                      <span className="font-mono text-sm text-slate-600 bg-slate-100 px-2 py-1 rounded inline-block">
+                        {s.newData ? s.newData[0].rtntype : s.rtntype}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-center">
+                      <span className="font-mono text-sm text-slate-600 bg-slate-100 px-2 py-1 rounded inline-block">
+                        {s.newData ? s.newData[0].ret_prd : s.ret_prd}
+                      </span>
                     </td>
 
                     <td className="px-6 py-4 text-center">
-                      <span className="font-mono text-sm text-slate-600 bg-slate-100 px-2 py-1 rounded inline-block">
-                        {s.returnType}
-                      </span>
+                      {s.newData ? (
+                        <span
+                          onClick={() => viewHistory(s)}
+                          className="font-mono text-sm  cursor-pointer px-2 py-1 rounded underline text-blue-500"
+                        >
+                          View
+                        </span>
+                      ) : (
+                        <span className="font-mono text-sm  px-2 py-1 rounded  text-gray-500">
+                          View
+                        </span>
+                      )}
                     </td>
 
                     {/* 4. Center Actions */}
@@ -268,6 +329,15 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
+      {isModalOpen && (
+        <GSTReturnModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          data={seller}
+          gstin={gstin}
+        />
+      )}
+      {loading && <Loader />}
     </div>
   );
 };
@@ -283,6 +353,29 @@ const StatCard = ({ label, value, color }) => {
       <p className="text-sm font-medium text-slate-500">{label}</p>
       <h3 className="text-2xl font-bold text-slate-900 mt-1">{value}</h3>
     </div>
+  );
+};
+
+const renderStatusBadge = (seller) => {
+  // 1. Determine the status string
+  // Checks newData first, then falls back to the original status
+  const status = seller.newData?.[0]?.status || seller.status;
+
+  // 2. Normalize to uppercase for consistent checking
+  const normalizedStatus = status?.toUpperCase();
+
+  if (normalizedStatus === "FILED") {
+    return (
+      <span className="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700 border border-emerald-200 shadow-sm">
+        <ShieldCheck size={14} /> FILED
+      </span>
+    );
+  }
+
+  return (
+    <span className="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-amber-100 text-amber-700 border border-amber-200 shadow-sm">
+      <ShieldAlert size={14} /> PENDING
+    </span>
   );
 };
 export default Dashboard;

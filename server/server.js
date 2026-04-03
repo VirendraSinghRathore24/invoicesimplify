@@ -86,7 +86,7 @@ app.get("/api/sellers/check/:id", async (req, res) => {
     const { year } = req.query;
 
     const response = await axios.get(
-      "https://api.whitebooks.in/public/rettrack",
+      "https://apisandbox.whitebooks.in/public/rettrack",
       {
         params: {
           email: process.env.WHITEBOOKS_EMAIL,
@@ -101,19 +101,60 @@ app.get("/api/sellers/check/:id", async (req, res) => {
         timeout: 10000,
       }
     );
-
+    console.log(response.data);
     const mockResponse = {
       success: true,
-      data: {
-        gstin: id,
-        //sellerName: "Rathore Traders",
-        status: "FILED", // GST Status
-        //returnFiled: true, // 🔥 Your main requirement
-        lastFiledDate: "2025-03-20",
-        businessType: "Regular",
-        state: "Karnataka",
-        returnType: "GSTR3B",
-      },
+      EFiledlist: [
+        {
+          gstin: id,
+          valid: "Y",
+          mof: "ONLINE",
+          dof: "16-01-2018",
+          ret_prd: "062017",
+          rtntype: "GSTR3B",
+          arn: "AA080617000247D",
+          status: "Filed",
+        },
+        {
+          gstin: id,
+          valid: "Y",
+          mof: "ONLINE",
+          dof: "16-01-2018",
+          ret_prd: "072017",
+          rtntype: "GSTR3B",
+          arn: "AA080717000401N",
+          status: "Filed",
+        },
+        {
+          gstin: id,
+          valid: "Y",
+          mof: "ONLINE",
+          dof: "12-01-2018",
+          ret_prd: "052017",
+          rtntype: "GSTR3B",
+          arn: "AA080517000372K",
+          status: "Filed",
+        },
+        {
+          gstin: id,
+          valid: "Y",
+          mof: "ONLINE",
+          dof: "03-07-2017",
+          ret_prd: "102017",
+          rtntype: "GSTR1",
+          arn: "AA051016000296T",
+          status: "Filed",
+        },
+        {
+          gstin: id,
+          mof: "ONLINE",
+          dof: "03-07-2017",
+          ret_prd: "112017",
+          rtntype: "GSTR3B",
+          arn: "AA051016000297R",
+          status: "Filed",
+        },
+      ],
     };
 
     return res.status(200).json(mockResponse);
