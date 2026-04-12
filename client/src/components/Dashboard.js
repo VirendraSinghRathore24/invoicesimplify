@@ -1,14 +1,21 @@
-import { addDoc, collection, deleteDoc, doc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { db } from "../config/firebase";
 import { useNavigate } from "react-router-dom";
 import Loader from "./Loader";
-import { BanknoteArrowUp, ArrowUp, FileDigit, BanknoteX } from "lucide-react";
+import { BanknoteArrowUp, ArrowUp, FileDigit } from "lucide-react";
+import Header from "./Header";
 import SettlePopup from "./SettlePopup";
 import MobileMenu from "./MobileMenu";
 import dayjs from "dayjs";
-import { ARCHIVED_INVOICES, INVOICE_INFO, USERS } from "./Constant";
-import Sidebar from "./Sidebar";
 
 const Dashboard = () => {
   const [data, setData] = useState([]);
@@ -20,6 +27,7 @@ const Dashboard = () => {
   const [paid, setPaid] = useState(0);
   const [settled, setSettled] = useState(0);
   const [paidInvoices, setPaidInvoices] = useState(0);
+  const type = localStorage.getItem("type");
 
   const [totalProfit, setTotalProft] = useState(0);
 
@@ -27,8 +35,6 @@ const Dashboard = () => {
   const [endDate, setEndDate] = useState("");
   const [quickOption, setQuickOption] = useState("any");
   const [statusFilter, setStatusFilter] = useState("All");
-
-  const uid = localStorage.getItem("uid");
 
   const navigate = useNavigate();
 
@@ -131,7 +137,7 @@ const Dashboard = () => {
       // archive before deleting
       await archiveInvoice(user);
 
-      const invDoc = doc(db, USERS, uid, INVOICE_INFO, user.id);
+      const invDoc = doc(db, "Invoice_Info", user.id);
       await deleteDoc(invDoc);
 
       const totalAmount = amount - user?.amountInfo?.amount;
@@ -144,10 +150,7 @@ const Dashboard = () => {
   // archive deleted invoice to another collection
   // first get the invoice data and then add it to the archive collection
   const archiveInvoice = async (user) => {
-    const archiveCollectionRef = collection(
-      doc(db, USERS, uid),
-      ARCHIVED_INVOICES
-    );
+    const archiveCollectionRef = collection(db, "Archived_Invoices");
     const archivedInvoice = {
       ...user,
       archivedAt: new Date().toISOString(),
@@ -156,29 +159,16 @@ const Dashboard = () => {
   };
 
   const handleSettle = (post) => {
-    let settleInfo = {};
-    if (post.taxCalculatedInfo === "alltax") {
-      settleInfo = {
-        amount:
-          post.amountInfo.amount +
-          post.taxCalculatedInfo.cgst +
-          post.taxCalculatedInfo.sgst +
-          post.taxCalculatedInfo.igst +
-          post.taxCalculatedInfo.ugst,
-        advance: post.amountInfo.advance,
-        balance: post.taxCalculatedInfo.balance,
-        docid: post.id,
-        invoicenumber: post.invoiceInfo.invoiceNumber,
-      };
-    } else {
-      settleInfo = {
-        amount: post.amountInfo.amount + post.taxCalculatedInfo.tax,
-        advance: post.amountInfo.advance,
-        balance: post.taxCalculatedInfo.balance,
-        docid: post.id,
-        invoicenumber: post.invoiceInfo.invoiceNumber,
-      };
-    }
+    const settleInfo = {
+      amount:
+        post.amountInfo.amount +
+        post.taxCalculatedInfo.cgst +
+        post.taxCalculatedInfo.sgst,
+      advance: post.amountInfo.advance,
+      balance: post.taxCalculatedInfo.balance,
+      docid: post.id,
+      invoicenumber: post.invoiceInfo.invoiceNumber,
+    };
 
     localStorage.setItem("settleInfo", JSON.stringify(settleInfo));
     setOpenSettlePopup(true);
@@ -192,18 +182,10 @@ const Dashboard = () => {
     });
   };
 
-  const handleEdit = (id) => {
-    navigate("/editinvoice", {
-      state: {
-        id: id,
-      },
-    });
-  };
-
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
 
-    const result = data?.filter(
+    const result = data.filter(
       (item) =>
         item.customerInfo.customerName
           .toLowerCase()
@@ -223,53 +205,48 @@ const Dashboard = () => {
     updatePaidAfterSearch(result);
     updateTotalProfitAfterSearch(result);
 
-    const totalPaidInvoices = result?.filter(
+    const totalPaidInvoices = result.filter(
       (item) =>
         item.amountInfo.paymentType === "fullyPaid" ||
         item.taxCalculatedInfo.balance === 0
     ).length;
-    setPaidInvoices(result ? totalPaidInvoices : 0);
+    setPaidInvoices(totalPaidInvoices);
 
     // const totalSettled = result.filter(
     //   (item) => item.taxCalculatedInfo.balance === 0
     // ).length;
-    setSettled(result ? result.length - totalPaidInvoices : 0);
+    setSettled(result.length - totalPaidInvoices);
   };
 
   const updateAmountAfterSearch = (result) => {
-    const totalAmount = result?.reduce((acc, item) => {
-      const amount =
-        item.taxCalculatedInfo.taxType === "alltax"
-          ? Math.round(
-              item.amountInfo.amount +
-                item.taxCalculatedInfo.cgst +
-                item.taxCalculatedInfo.sgst +
-                item.taxCalculatedInfo.igst +
-                item.taxCalculatedInfo.ugst
-            )
-          : Math.round(item.amountInfo.amount + item.taxCalculatedInfo.tax);
+    const totalAmount = result.reduce((acc, item) => {
+      const amount = Math.round(
+        item.amountInfo.amount +
+          item.taxCalculatedInfo.cgst +
+          item.taxCalculatedInfo.sgst
+      );
       return acc + amount;
     }, 0);
 
-    setAmount(result ? totalAmount : 0);
+    setAmount(totalAmount);
   };
 
   const updateBalanceAfterSearch = (result) => {
-    const totalBalance = result?.reduce((acc, item) => {
+    const totalBalance = result.reduce((acc, item) => {
       const balance = Math.round(item.taxCalculatedInfo.balance);
       return acc + balance;
     }, 0);
 
-    setBalance(result ? totalBalance : 0);
+    setBalance(totalBalance);
   };
 
   const updatePaidAfterSearch = (result) => {
-    const totalPaid = result?.reduce((acc, item) => {
+    const totalPaid = result.reduce((acc, item) => {
       const paid = Math.round(item.amountInfo.advance);
       return acc + paid;
     }, 0);
 
-    setPaid(result ? totalPaid : 0);
+    setPaid(totalPaid);
   };
 
   const updateTotalProfitAfterSearch = (result) => {
@@ -348,26 +325,12 @@ const Dashboard = () => {
   };
 
   const sortAmount = (a, b) => {
-    const amountA =
-      a.taxCalculatedInfo.taxType === "alltax"
-        ? Math.round(
-            a.amountInfo.amount +
-              a.taxCalculatedInfo.cgst +
-              a.taxCalculatedInfo.sgst +
-              a.taxCalculatedInfo.igst +
-              a.taxCalculatedInfo.ugst
-          )
-        : Math.round(a.amountInfo.amount + a.taxCalculatedInfo.tax);
-    const amountB =
-      b.taxCalculatedInfo.taxType === "alltax"
-        ? Math.round(
-            b.amountInfo.amount +
-              b.taxCalculatedInfo.cgst +
-              b.taxCalculatedInfo.sgst +
-              b.taxCalculatedInfo.igst +
-              b.taxCalculatedInfo.ugst
-          )
-        : Math.round(b.amountInfo.amount + b.taxCalculatedInfo.tax);
+    const amountA = Math.round(
+      a.amountInfo.amount + a.taxCalculatedInfo.cgst + a.taxCalculatedInfo.sgst
+    );
+    const amountB = Math.round(
+      b.amountInfo.amount + b.taxCalculatedInfo.cgst + b.taxCalculatedInfo.sgst
+    );
     if (amountA < amountB) {
       return sortConfig.direction === "asc" ? -1 : 1;
     }
@@ -414,37 +377,34 @@ const Dashboard = () => {
   };
 
   const sortedData = React.useMemo(() => {
-    let sortableData =
-      filteredData && filteredData.length > 0
-        ? [...filteredData]
-        : filteredData;
+    let sortableData = [...filteredData];
 
     if (sortConfig.key === "invoice") {
-      sortableData?.sort(sortInvoiceNumber);
+      sortableData.sort(sortInvoiceNumber);
       setFilteredData(sortableData);
     } else if (sortConfig.key === "name") {
-      sortableData?.sort(sortCustomerName);
+      sortableData.sort(sortCustomerName);
       setFilteredData(sortableData);
     } else if (sortConfig.key === "phone") {
-      sortableData?.sort(sortCustomerPhone);
+      sortableData.sort(sortCustomerPhone);
       setFilteredData(sortableData);
     } else if (sortConfig.key === "date") {
-      sortableData?.sort(sortDate);
+      sortableData.sort(sortDate);
       setFilteredData(sortableData);
     } else if (sortConfig.key === "delivery") {
-      sortableData?.sort(sortDelivery);
+      sortableData.sort(sortDelivery);
       setFilteredData(sortableData);
     } else if (sortConfig.key === "amount") {
-      sortableData?.sort(sortAmount);
+      sortableData.sort(sortAmount);
       setFilteredData(sortableData);
     } else if (sortConfig.key === "paid") {
-      sortableData?.sort(sortPaid);
+      sortableData.sort(sortPaid);
       setFilteredData(sortableData);
     } else if (sortConfig.key === "balance") {
-      sortableData?.sort(sortBalance);
+      sortableData.sort(sortBalance);
       setFilteredData(sortableData);
     } else if (sortConfig.key === "settle") {
-      sortableData?.sort(sortSettle);
+      sortableData.sort(sortSettle);
       setFilteredData(sortableData);
     }
     return filteredData;
@@ -452,7 +412,7 @@ const Dashboard = () => {
 
   const calculateProfit = (invoiceInfo) => {
     let totalProfit = 0;
-    invoiceInfo?.forEach((item) => {
+    invoiceInfo.forEach((item) => {
       item.rows.forEach((row) => {
         if (row.rate && row.buyPrice) {
           totalProfit += (row.rate - row.buyPrice) * row.qty;
@@ -465,54 +425,65 @@ const Dashboard = () => {
   //const invoiceInfo_CollectionRef = collection(db, "Invoice_Info");
   const getInvoiceInfo = async () => {
     setLoading(true);
+    // const data = await getDocs(invoiceInfo_CollectionRef);
+    // const filteredData = data.docs.map((doc) => ({
+    //   ...doc.data(),
+    //   id: doc.id,
+    // }));
+
+    // const loggedInUser = localStorage.getItem("user");
+    // const invoiceInfo = filteredData.filter(
+    //   (x) => x.loggedInUser === loggedInUser
+    // );
 
     const invoiceInfo = JSON.parse(localStorage.getItem("dashboardInfo"));
-    const totalAmount = invoiceInfo?.reduce((acc, item) => {
-      const amount =
-        item.taxCalculatedInfo.taxType === "alltax"
-          ? Math.round(
-              item.amountInfo.amount +
-                item.taxCalculatedInfo.cgst +
-                item.taxCalculatedInfo.sgst +
-                item.taxCalculatedInfo.igst +
-                item.taxCalculatedInfo.ugst
-            )
-          : Math.round(item.amountInfo.amount + item.taxCalculatedInfo.tax);
+    const totalAmount = invoiceInfo.reduce((acc, item) => {
+      const amount = Math.round(
+        item.amountInfo.amount +
+          item.taxCalculatedInfo.cgst +
+          item.taxCalculatedInfo.sgst
+      );
       return acc + amount;
     }, 0);
 
     setAmount(totalAmount);
 
-    const totalBalance = invoiceInfo?.reduce((acc, item) => {
+    const totalBalance = invoiceInfo.reduce((acc, item) => {
       const balance = Math.round(item.taxCalculatedInfo.balance);
       return acc + balance;
     }, 0);
 
     setBalance(totalBalance);
 
-    const totalPaid = invoiceInfo?.reduce((acc, item) => {
+    const totalPaid = invoiceInfo.reduce((acc, item) => {
       const paid = Math.round(item.amountInfo.advance);
       return acc + paid;
     }, 0);
 
-    setPaid(invoiceInfo === null ? 0 : totalPaid);
+    setPaid(totalPaid);
 
     setTotalProft(calculateProfit(invoiceInfo));
 
-    const paidInvoices = invoiceInfo?.filter(
+    // Calculate the settled count
+    // const totalSettled = invoiceInfo.filter(
+    //   (item) => item.taxCalculatedInfo.balance === 0
+    // ).length;
+    // setSettled(invoiceInfo.length - totalSettled);
+
+    const paidInvoices = invoiceInfo.filter(
       (item) =>
         item.amountInfo.paymentType === "fullyPaid" ||
         item.taxCalculatedInfo.balance === 0
     ).length;
-    setPaidInvoices(invoiceInfo === null ? 0 : paidInvoices);
+    setPaidInvoices(paidInvoices);
 
-    setSettled(invoiceInfo === null ? 0 : invoiceInfo?.length - paidInvoices);
+    setSettled(invoiceInfo.length - paidInvoices);
 
-    const invoiceInfo1 = invoiceInfo?.sort(
+    const invoiceInfo1 = invoiceInfo.sort(
       (a, b) => b.invoiceInfo.invoiceNumber - a.invoiceInfo.invoiceNumber
     );
-    setData(invoiceInfo1 ?? []);
-    setFilteredData(invoiceInfo1 ?? []);
+    setData(invoiceInfo1);
+    setFilteredData(invoiceInfo1);
     setLoading(false);
   };
 
@@ -544,36 +515,30 @@ const Dashboard = () => {
 
     let result = origionalData;
     if (status === "Paid") {
-      result = origionalData?.filter(
-        (x) =>
-          x.amountInfo.paymentType === "fullyPaid" ||
-          x.taxCalculatedInfo.balance === 0 ||
-          x.taxCalculatedInfo.balance === null
+      result = origionalData.filter(
+        (x) => x.amountInfo.paymentType === "fullyPaid"
       );
     } else if (status === "Unpaid") {
-      result = origionalData?.filter((x) => x.taxCalculatedInfo.balance > 0);
+      result = origionalData.filter((x) => x.taxCalculatedInfo.balance > 0);
     }
 
-    const invoiceInfo1 = result?.sort(
-      (a, b) => b.invoiceInfo.invoiceNumber - a.invoiceInfo.invoiceNumber
-    );
-    setFilteredData(invoiceInfo1);
+    setFilteredData(result);
     updateAmountAfterSearch(result);
     updateBalanceAfterSearch(result);
     updatePaidAfterSearch(result);
     updateTotalProfitAfterSearch(result);
 
-    const totalPaidInvoices = result?.filter(
+    const totalPaidInvoices = result.filter(
       (item) =>
         item.amountInfo.paymentType === "fullyPaid" ||
         item.taxCalculatedInfo.balance === 0
     ).length;
-    setPaidInvoices(result ? totalPaidInvoices : 0);
+    setPaidInvoices(totalPaidInvoices);
 
     // const totalSettled = result.filter(
     //   (item) => item.taxCalculatedInfo.balance === 0
     // ).length;
-    setSettled(result ? result.length - totalPaidInvoices : 0);
+    setSettled(result.length - totalPaidInvoices);
   };
   const handleLogin = () => {
     const user = localStorage.getItem("user");
@@ -590,281 +555,310 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className="flex justify-evenly w-full h-full ">
-      <div className="w-full lg:w-[82%] ml-0 lg:ml-[17%] border-2 my-3 rounded-lg border-gray-300 bg-white shadow-lg top-0 fixed">
-        <div className="hidden lg:block top-0 mx-auto w-[82%] h-[68px] text-white fixed border-b-2 my-3">
-          <div className="flex justify-between mx-auto font-bold text-md py-4 px-2 rounded-lg ">
-            <div className="text-xl text-black">Dashboard</div>
+    <div>
+      <div className="hidden lg:block top-0 mx-auto w-full h-[72px] text-white sticky bg-white shadow-lg">
+        <div className="flex justify-between mx-auto font-bold text-md  py-4 px-2 rounded-md fixed w-[81.5%]">
+          <div className="text-2xl text-black">Dashboard</div>
+        </div>
+      </div>
+
+      <div className="hidden max-lg:block mb-16">
+        <MobileMenu />
+      </div>
+
+      <div className="p-6">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-8  p-3 rounded-md">
+          <div className={`p-5 rounded-lg shadow bg-indigo-500 text-white`}>
+            <div className="flex items-center justify-between">
+              <p className="text-md">Total Invoices</p>
+              <FileDigit />
+            </div>
+            <h3 className="mt-2 text-2xl font-semibold">
+              {filteredData ? filteredData.length : 0}
+            </h3>
+          </div>
+
+          <div className={`p-5 rounded-lg shadow bg-purple-500 text-white`}>
+            <div className="flex items-center justify-between">
+              <p className="text-md">Paid</p>
+              <BanknoteArrowUp />
+            </div>
+            <h3 className="mt-2 text-2xl font-semibold"> {paidInvoices}</h3>
+          </div>
+
+          <div className={`p-5 rounded-lg shadow bg-yellow-500 text-white`}>
+            <p className="text-md">Outstanding</p>
+            <h3 className="mt-2 text-2xl font-semibold">{settled}</h3>
+          </div>
+
+          <div className={`p-5 rounded-lg shadow bg-emerald-500 text-white`}>
+            <div className="flex items-center justify-between">
+              <p className="text-md">Profit</p>
+              <ArrowUp />
+            </div>
+            <h3 className="mt-2 text-2xl font-semibold">₹ {totalProfit}</h3>
           </div>
         </div>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+          <input
+            type="text"
+            placeholder="Search..."
+            autoFocus
+            value={searchTerm}
+            onChange={handleSearch}
+            className="px-4 py-2 border rounded-lg w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
 
-        <div className="hidden max-lg:block mb-16">
-          <MobileMenu />
-        </div>
+          <select
+            className="px-4 py-2 border rounded-lg w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+            value={quickOption}
+            onChange={(e) => handleQuickFilterChange(e.target.value)}
+          >
+            <option value="any">Any Date</option>
+            <option value="today">Today</option>
+            <option value="month">This Month</option>
+            <option value="sixmonths">Last 6 Months</option>
+            <option value="range">Custom Range</option>
+          </select>
 
-        <div className="p-2 lg:py-6 mt-10 ">
-          <div className="hidden lg:block">
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-2 py-3 rounded-md">
-              <div className={`p-5 rounded-lg shadow bg-indigo-500 text-white`}>
-                <div className="flex items-center justify-between">
-                  <p className="text-md">Total Invoices</p>
-                  <FileDigit />
-                </div>
-                <h3 className="mt-2 text-2xl font-semibold">
-                  {filteredData ? filteredData.length : 0}
-                </h3>
-              </div>
+          {/* Show range inputs only if 'range' is selected */}
+          {quickOption === "range" && (
+            <>
+              <input
+                type="date"
+                name="startdate"
+                className="border px-3 py-1 rounded w-full"
+                value={startDate}
+                onChange={(e) => handleCustomRangeFilter(e)}
+              />
 
-              <div className={`p-5 rounded-lg shadow bg-purple-500 text-white`}>
-                <div className="flex items-center justify-between">
-                  <p className="text-md">Paid</p>
-                  <BanknoteArrowUp />
-                </div>
-                <h3 className="mt-2 text-2xl font-semibold"> {paidInvoices}</h3>
-              </div>
-
-              <div className={`p-5 rounded-lg shadow bg-yellow-500 text-white`}>
-                <div className="flex items-center justify-between">
-                  <p className="text-md">Outstanding</p>
-                  <BanknoteX />
-                </div>
-                <h3 className="mt-2 text-2xl font-semibold">{settled}</h3>
-              </div>
-
-              <div
-                className={`p-5 rounded-lg shadow bg-emerald-500 text-white`}
-              >
-                <div className="flex items-center justify-between">
-                  <p className="text-md">Profit</p>
-                  <ArrowUp />
-                </div>
-                <h3 className="mt-2 text-2xl font-semibold">₹ {totalProfit}</h3>
-              </div>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 text-xs">
-            <input
-              type="text"
-              placeholder="Search..."
-              value={searchTerm}
-              onChange={handleSearch}
-              className="px-4 py-2 border rounded-lg w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
-
-            <select
-              className="px-4 py-2 border rounded-lg text-xs w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-              value={quickOption}
-              onChange={(e) => handleQuickFilterChange(e.target.value)}
-            >
-              <option value="any">Any Date</option>
-              <option value="today">Today</option>
-              <option value="month">This Month</option>
-              <option value="sixmonths">Last 6 Months</option>
-              <option value="range">Custom Range</option>
-            </select>
-
-            {/* Show range inputs only if 'range' is selected */}
-            {quickOption === "range" && (
-              <>
-                <input
-                  type="date"
-                  name="startdate"
-                  className="border px-3 py-1 rounded w-full"
-                  value={startDate}
-                  onChange={(e) => handleCustomRangeFilter(e)}
-                />
-
-                <input
-                  type="date"
-                  name="enddate"
-                  className="border px-3 py-1 rounded w-full"
-                  value={endDate}
-                  onChange={(e) => handleCustomRangeFilter(e)}
-                />
-              </>
-            )}
-          </div>
-          <div className="flex gap-2">
-            {["All", "Paid", "Unpaid"].map((status) => (
-              <button
-                key={status}
-                onClick={() => handleStatusFilter(status)}
-                className={`px-4 py-2 rounded-md text-xs font-medium ${
-                  statusFilter === status
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-200 text-gray-700"
-                }`}
-              >
-                {status}
-              </button>
-            ))}
-          </div>
-          <div className="overflow-hidden border border-gray-300 shadow-md mt-4 rounded-md">
-            <div className="max-h-[65vh] lg:max-h-[51vh] overflow-y-auto overflow-x-auto">
-              <table className="min-w-full text-xs text-left text-gray-700">
-                <thead className="bg-gray-100 text-gray-600 border-b sticky top-0 z-10">
-                  <tr>
-                    {[
-                      "Invoice",
-                      "Name",
-                      "Phone",
-                      "Date",
-                      "Delivery",
-                      "Amount",
-                      "Paid",
-                      "Balance",
-                      "Settle",
-                      "View",
-                      "Edit",
-                      "Delete",
-                    ].map((header, i) => (
-                      <th
-                        key={i}
-                        className="px-4 py-3 border-r bg-gray-100 min-w-[100px] whitespace-nowrap"
-                        onClick={() =>
-                          !["S.No.", "View", "Delete"].includes(header) &&
-                          handleSort(header)
-                        }
-                      >
-                        {header}
-                        {!["S.No.", "View", "Delete"].includes(header) && (
-                          <span>
-                            {sortConfig.key === header.toLowerCase()
-                              ? sortConfig.direction === "asc"
-                                ? " 🔼"
-                                : " 🔽"
-                              : " ⬍"}
-                          </span>
-                        )}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {filteredData?.length > 0 ? (
-                    filteredData.map((user, index) => {
-                      const formatDate = (dateString) => {
-                        const date = new Date(dateString);
-                        return `${String(date.getDate()).padStart(
-                          2,
-                          "0"
-                        )}-${String(date.getMonth() + 1).padStart(
-                          2,
-                          "0"
-                        )}-${date.getFullYear()}`;
-                      };
-
-                      return (
-                        <tr
-                          key={user.id}
-                          className={`border-t ${
-                            index % 2 === 0 ? "bg-white" : "bg-gray-50"
-                          } hover:bg-gray-200`}
-                        >
-                          {/* <td className="px-4 py-3 border-r w-[10%]">
-                            {index + 1}.
-                          </td> */}
-
-                          <td className="px-4 py-3 border-r whitespace-nowrap">
-                            {user.invoiceInfo.invoiceNumber}
-                          </td>
-                          <td className="px-4 py-3 border-r whitespace-nowrap">
-                            {user.customerInfo.customerName}
-                          </td>
-                          <td className="px-4 py-3 border-r whitespace-nowrap">
-                            {user.customerInfo.customerPhone}
-                          </td>
-                          <td className="px-4 py-3 border-r whitespace-nowrap">
-                            {formatDate(user.invoiceInfo.date)}
-                          </td>
-                          <td className="px-4 py-3 border-r whitespace-nowrap">
-                            {user.invoiceInfo.expectedDate
-                              ? formatDate(user.invoiceInfo.expectedDate)
-                              : ""}
-                          </td>
-                          <td className="px-4 py-3 border-r text-right whitespace-nowrap">
-                            {user.taxCalculatedInfo.total}
-                          </td>
-
-                          <td className="px-4 py-3 border-r text-right whitespace-nowrap">
-                            {user.amountInfo.paymentType === "fullyPaid"
-                              ? Math.round(user.taxCalculatedInfo.total)
-                              : user.amountInfo?.advance !== null
-                              ? parseInt(user.amountInfo.advance)
-                              : ""}
-                          </td>
-                          <td className="px-4 py-3 border-r text-right whitespace-nowrap">
-                            {user.amountInfo.paymentType === "fullyPaid" ||
-                            user.taxCalculatedInfo.balance === 0 ? (
-                              <span className="text-green-600">Fully Paid</span>
-                            ) : (
-                              user.taxCalculatedInfo.balance
-                            )}
-                          </td>
-                          <td className="px-4 py-3 border-r text-center whitespace-nowrap">
-                            {user.taxCalculatedInfo.balance > 0 ? (
-                              <button
-                                onClick={() => handleSettle(user)}
-                                className="text-blue-600 hover:text-blue-800 font-semibold text-xs"
-                              >
-                                Settle
-                              </button>
-                            ) : user.invoiceInfo.settledDate ? (
-                              formatDate(user.invoiceInfo.settledDate)
-                            ) : (
-                              ""
-                            )}
-                          </td>
-                          <td className="px-4 py-3 border-r whitespace-nowrap">
-                            <button
-                              onClick={() => handleView(user.id)}
-                              className="text-blue-600 hover:text-blue-800 font-semibold text-xs"
-                            >
-                              View
-                            </button>
-                          </td>
-                          <td className="px-4 py-3 border-r whitespace-nowrap">
-                            <button
-                              onClick={() => handleEdit(user.id)}
-                              className="text-blue-600 hover:text-blue-800 font-semibold text-xs"
-                            >
-                              Edit
-                            </button>
-                          </td>
-                          <td className="px-4 py-3 whitespace-nowrap">
-                            <button
-                              onClick={() => handleDelete(user)}
-                              className="text-red-600 hover:text-red-800 font-semibold text-xs"
-                            >
-                              Delete
-                            </button>
-                          </td>
-                        </tr>
-                      );
-                    })
-                  ) : (
-                    <tr>
-                      <td
-                        colSpan="12"
-                        className="text-center px-4 py-6 text-gray-500"
-                      >
-                        No data available.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {openSettlePopup && (
-            <SettlePopup
-              handleCloseSettlePopup={handleCloseSettlePopup}
-            ></SettlePopup>
+              <input
+                type="date"
+                name="enddate"
+                className="border px-3 py-1 rounded w-full"
+                value={endDate}
+                onChange={(e) => handleCustomRangeFilter(e)}
+              />
+            </>
           )}
-          {loading && <Loader />}
         </div>
+        <div className="flex gap-2">
+          {["All", "Paid", "Unpaid"].map((status) => (
+            <button
+              key={status}
+              onClick={() => handleStatusFilter(status)}
+              className={`px-4 py-2 rounded-md text-sm font-medium ${
+                statusFilter === status
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-200 text-gray-700"
+              }`}
+            >
+              {status}
+            </button>
+          ))}
+        </div>
+        <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-md mt-4 shadow-lg border-2 bg-white gap-y-4 rounded-md">
+          <table className="min-w-full text-sm text-left text-gray-700">
+            <thead className="bg-gray-100 text-xs uppercase text-gray-600 border-b">
+              {type === "Rajputi Poshak" ? (
+                <tr>
+                  {[
+                    "S.No.",
+                    "Invoice",
+                    "Name",
+                    "Phone",
+                    "Date",
+                    "Delivery",
+                    "Amount",
+                    "Paid",
+                    "Balance",
+                    "Settle",
+                    "View",
+                    "Delete",
+                  ].map((header) => (
+                    <th
+                      key={header}
+                      className="px-4 py-3 border-r cursor-pointer"
+                      onClick={() =>
+                        !["S.No.", "View", "Delete"].includes(header) &&
+                        handleSort(header)
+                      }
+                    >
+                      {header}
+                      {!["S.No.", "View", "Delete"].includes(header) && (
+                        <span>
+                          {sortConfig.key === header.toLowerCase()
+                            ? sortConfig.direction === "asc"
+                              ? " 🔼"
+                              : " 🔽"
+                            : " ⬍"}
+                        </span>
+                      )}
+                    </th>
+                  ))}
+                </tr>
+              ) : (
+                <tr>
+                  {[
+                    "S.No.",
+                    "Invoice",
+                    "Name",
+                    "Phone",
+                    "Date",
+                    "Amount",
+                    "Paid",
+                    "Balance",
+                    "Settle",
+                    "View",
+                    "Delete",
+                  ].map((header) => (
+                    <th
+                      key={header}
+                      className="px-4 py-3 border-r cursor-pointer"
+                      onClick={() =>
+                        !["S.No.", "View", "Delete"].includes(header) &&
+                        handleSort(header)
+                      }
+                    >
+                      {header}
+                      {!["S.No.", "View", "Delete"].includes(header) && (
+                        <span>
+                          {sortConfig.key === header.toLowerCase()
+                            ? sortConfig.direction === "asc"
+                              ? " 🔼"
+                              : " 🔽"
+                            : " ⬍"}
+                        </span>
+                      )}
+                    </th>
+                  ))}
+                </tr>
+              )}
+            </thead>
+            <tbody>
+              {filteredData.map((user, index) => {
+                const formatDate = (dateString) => {
+                  const date = new Date(dateString);
+                  const day = String(date.getDate()).padStart(2, "0");
+                  const month = String(date.getMonth() + 1).padStart(2, "0");
+                  const year = date.getFullYear();
+                  return `${day}-${month}-${year}`;
+                };
+
+                return (
+                  <tr
+                    key={user.id}
+                    className={`border-t ${
+                      index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                    } hover:bg-gray-200`}
+                  >
+                    <td className="px-4 py-3 border-r w-[4%]">{index + 1}.</td>
+                    <td className="px-4 py-3 border-r w-[10%]">
+                      {user.invoiceInfo.invoiceNumber}
+                    </td>
+                    <td className="px-4 py-3 border-r w-[18%]">
+                      {user.customerInfo.customerName}
+                    </td>
+                    <td className="px-4 py-3 border-r w-[10%]">
+                      {user.customerInfo.customerPhone}
+                    </td>
+                    <td className="px-4 py-3 border-r w-[10%]">
+                      {formatDate(user.invoiceInfo.date)}
+                    </td>
+                    {type === "Rajputi Poshak" && (
+                      <td className="px-4 py-3 border-r w-[10%]">
+                        {user.invoiceInfo.expectedDate
+                          ? formatDate(user.invoiceInfo.expectedDate)
+                          : ""}
+                      </td>
+                    )}
+                    <td className="px-4 py-3 border-r text-right w-[10%]">
+                      {Math.round(
+                        user.amountInfo.amount +
+                          user.taxCalculatedInfo.cgst +
+                          user.taxCalculatedInfo.sgst
+                      )}
+                    </td>
+                    {user.amountInfo.paymentType === "fullyPaid" ? (
+                      <td className="px-4 py-3 border-r text-right w-[8%]">
+                        {Math.round(
+                          user.amountInfo.amount +
+                            user.taxCalculatedInfo.cgst +
+                            user.taxCalculatedInfo.sgst
+                        )}
+                      </td>
+                    ) : (
+                      <td className="px-4 py-3 border-r text-right w-[8%]">
+                        {user.amountInfo.advance}
+                      </td>
+                    )}
+
+                    {user.amountInfo.paymentType === "fullyPaid" ||
+                    user.taxCalculatedInfo.balance === 0 ? (
+                      <td className="px-4 py-3 text-green-600 border-r text-right w-[10%]">
+                        Fully Paid
+                      </td>
+                    ) : (
+                      <td className="px-4 py-3 border-r text-right w-[10%]">
+                        {user.taxCalculatedInfo.balance}
+                      </td>
+                    )}
+
+                    {user.taxCalculatedInfo.balance > 0 ? (
+                      <td className="px-4 py-3 border-r w-[10%] text-center">
+                        <button
+                          onClick={() => handleSettle(user)}
+                          className="text-blue-600 hover:text-blue-800 font-semibold text-sm"
+                        >
+                          Settle
+                        </button>
+                      </td>
+                    ) : (
+                      <td className="px-4 py-3 border-r w-[10%] text-center">
+                        {user.invoiceInfo.settledDate
+                          ? formatDate(user.invoiceInfo.settledDate)
+                          : ""}
+                      </td>
+                    )}
+
+                    <td className="px-4 py-3 border-r w-[8%]">
+                      <button
+                        onClick={() => handleView(user.id)}
+                        className="text-blue-600 hover:text-blue-800 font-semibold text-sm"
+                      >
+                        View
+                      </button>
+                    </td>
+                    <td className="px-4 py-3 w-[8%]">
+                      <button
+                        onClick={() => handleDelete(user)}
+                        className="text-red-600 hover:text-red-800 font-semibold text-sm"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+              {filteredData.length === 0 && (
+                <tr>
+                  <td
+                    colSpan="12"
+                    className="text-center px-4 py-6 text-gray-500"
+                  >
+                    No data available.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+        {openSettlePopup && (
+          <SettlePopup
+            handleCloseSettlePopup={handleCloseSettlePopup}
+          ></SettlePopup>
+        )}
+        {loading && <Loader />}
       </div>
     </div>
   );

@@ -68,6 +68,12 @@ import CreatorTaxInfo from "./components/creator/CreatorTaxInfo";
 import EditTaxInfo from "./components/creator/EditTaxInfo";
 import ProtectedRoute from "./ProtectedRoute";
 import SellerDashboard from "./components/gst/SellerDashboard";
+import ITCReconciliation from "./components/gst/ITCReconciliation";
+import PurchaseEntryForm from "./components/gst/PurchaseEntryForm";
+import LandingPage from "./components/gst/LandingPage";
+import ShopkeeperGSTRDashboard from "./components/gst/ShopkeeperGSTRDashboard";
+import LoginPage from "./components/gst/LoginPage";
+import GSTINOnboarding from "./components/gst/GSTINOnboarding";
 
 function App() {
   const location = useLocation();
@@ -88,6 +94,13 @@ function App() {
     "/test",
     "/selectbusinesstype",
     "/gst/sellerdashboard",
+    "/gst/itc",
+    "/gst/pef",
+    "/gst/",
+    "/gst",
+    "/gst/owndashboard",
+    "/gst/login",
+    "/gst/onboarding",
   ].includes(location.pathname);
 
   const showSidebar1 = !location.pathname.includes("/ci");
@@ -144,8 +157,16 @@ function App() {
             element={<ArchivedViewInvoice />}
           />
 
+          <Route path="/gst/onboarding" element={<GSTINOnboarding />} />
+          <Route path="/gst/login" element={<LoginPage />} />
+          <Route path="/gst" element={<LandingPage />} />
           <Route path="/gst/sellerdashboard" element={<SellerDashboard />} />
-
+          <Route
+            path="/gst/owndashboard"
+            element={<ShopkeeperGSTRDashboard />}
+          />
+          <Route path="/gst/itc" element={<ITCReconciliation />} />
+          <Route path="/gst/pef" element={<PurchaseEntryForm />} />
           <Route path="/success" element={<Success />} />
           <Route path="/paymenthistory" element={<PaymentHistory />} />
           <Route path="/ci/:id" element={<ViewInvoiceByCustomer />} />

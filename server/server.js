@@ -80,18 +80,298 @@ app.use(
   })
 );
 
+app.get("/api/gst/searchgst/:id", async (req, res) => {
+  try {
+    const { id } = req.params; // from URL
+
+    const response1 = await axios.post(
+      "https://api.sandbox.co.in/authenticate",
+      {}, // Empty body (Sandbox expects keys in headers)
+      {
+        headers: {
+          "x-api-key": process.env.X_API_KEY,
+          "x-api-secret": process.env.X_API_SECRET,
+          "x-api-version": "1.0.0", // Recommended
+        },
+      }
+    );
+
+    const accessToken = response1.data.access_token;
+
+    const response2 = await axios.post(
+      "https://api.sandbox.co.in/gst/compliance/public/gstin/search",
+      {
+        // 1. Request Body (JSON)
+        gstin: id,
+      },
+      {
+        // 3. Headers
+        headers: {
+          Authorization: accessToken, // Sandbox usually expects token without "Bearer"
+          "x-api-key": process.env.X_API_KEY,
+          "x-api-version": "1.0.0",
+        },
+      }
+    );
+
+    const result = JSON.stringify(response2.data.data?.data);
+
+    return res.status(200).json(result);
+  } catch (error) {
+    console.error("GST API Error:", error?.response?.data || error.message);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch GST details",
+      error: error?.response?.data || error.message,
+    });
+  }
+});
+
 app.get("/api/sellers/check/:id", async (req, res) => {
   try {
     const { id } = req.params; // from URL
     const { year } = req.query;
 
+    const response1 = await axios.post(
+      "https://api.sandbox.co.in/authenticate",
+      {}, // Empty body (Sandbox expects keys in headers)
+      {
+        headers: {
+          "x-api-key": process.env.X_API_KEY,
+          "x-api-secret": process.env.X_API_SECRET,
+          "x-api-version": "1.0.0", // Recommended
+        },
+      }
+    );
+
+    const accessToken = response1.data.access_token;
+
+    const response2 = await axios.post(
+      "https://api.sandbox.co.in/gst/compliance/public/gstrs/track",
+      {
+        // 1. Request Body (JSON)
+        gstin: id,
+      },
+      {
+        // 2. Query Parameters (?financial_year=2024-25)
+        params: {
+          financial_year: "FY " + year.toString(), // Format e.g., "2024-25"
+        },
+        // 3. Headers
+        headers: {
+          Authorization: accessToken, // Sandbox usually expects token without "Bearer"
+          "x-api-key": process.env.X_API_KEY,
+          "x-api-version": "1.0.0",
+        },
+      }
+    );
+
+    const eFilingList = JSON.stringify(response2.data.data?.data);
+
+    // const response = await axios.get(
+    //   "https://apisandbox.whitebooks.in/public/rettrack",
+    //   {
+    //     params: {
+    //       email: process.env.WHITEBOOKS_EMAIL,
+    //       gstin: id,
+    //       fy: year,
+    //     },
+    //     headers: {
+    //       client_id: process.env.WHITEBOOKS_CLIENT_ID,
+    //       client_secret_id: process.env.WHITEBOOKS_CLIENT_SECRET,
+    //       "Content-Type": "application/json",
+    //     },
+    //     timeout: 10000,
+    //   }
+    // );
+
+    return res.status(200).json(eFilingList);
+  } catch (error) {
+    console.error("GST API Error:", error?.response?.data || error.message);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch GST details",
+      error: error?.response?.data || error.message,
+    });
+  }
+});
+
+app.get("/api/gst/gstr2b1", async (req, res) => {
+  try {
+    // How to get gstr2b data from gst portal - step by step:
+
+    // Prerequisites:
+    // You must have an active GST account and access to the GST Portal.
+    // Before requesting OTP, enable API access for the GST user from
+    // View Profile > Manage API Access on the GST Portal. For the full portal walkthrough, see Enable API Access.
+    // https://developer.sandbox.co.in/recipes/gst/authentication/generate_tax_payer_session
+
+    // 1. Get Access Token (Sandbox) => https://api.sandbox.co.in/authenticate
+    // 2. Request OTP => https://api.sandbox.co.in/gst/compliance/tax-payer/otp , pass username and gst
+    // 3. Verify OTP => https://api.sandbox.co.in/gst/compliance/tax-payer/otp/verify?otp=575757 => it will provide taxpayer access token
+    // 4. Refresh Taxpayer Session => https://api.sandbox.co.in/gst/compliance/tax-payer/session/refresh, using taxpayer access token => for 6 hours access
+    // 5. Call GSTR2B => https://api.sandbox.co.in/gst/compliance/tax-payer/gstrs/gstr-2b/{year}/{month} , header auth is taxpayer access token
+
+    const { gstin, fp } = req.query;
+
+    // 1. Get Access Token (Sandbox) => https://api.sandbox.co.in/authenticate
+    const response1 = await axios.post(
+      "https://api.sandbox.co.in/authenticate",
+      {}, // Empty body (Sandbox expects keys in headers)
+      {
+        headers: {
+          "x-api-key": process.env.X_API_KEY,
+          "x-api-secret": process.env.X_API_SECRET,
+          "x-api-version": "1.0.0", // Recommended
+        },
+      }
+    );
+
+    const sandboxAccessToken = response1.data.access_token;
+
+    // 2. Request OTP => https://api.sandbox.co.in/gst/compliance/tax-payer/otp , pass username and gst
+    const response2 = await axios.post(
+      "https://api.sandbox.co.in/gst/compliance/tax-payer/otp",
+      { username: "acme.com", gstin: gstin },
+      {
+        headers: {
+          "x-api-key": process.env.X_API_KEY,
+          "x-api-secret": process.env.X_API_SECRET,
+          "x-api-version": "1.0.0", // Recommended
+          accept: "application/json",
+          authorization: sandboxAccessToken,
+          "x-source": "primary",
+        },
+      }
+    );
+
+    // 3. Verify OTP => https://api.sandbox.co.in/gst/compliance/tax-payer/otp/verify?otp=575757 => it will provide taxpayer access token
+    const response3 = await axios.post(
+      "https://api.sandbox.co.in/gst/compliance/tax-payer/otp/verify?otp={575757}",
+      { username: "acme.com", gstin: gstin },
+      {
+        headers: {
+          "x-api-key": process.env.X_API_KEY,
+          "x-api-secret": process.env.X_API_SECRET,
+          "x-api-version": "1.0.0", // Recommended
+          accept: "application/json",
+          authorization: sandboxAccessToken,
+          "x-source": "primary",
+        },
+      }
+    );
+
+    // 4. Refresh Taxpayer Session => https://api.sandbox.co.in/gst/compliance/tax-payer/session/refresh, using taxpayer access token => for 6 hours access
+    const taxpayerAccessToken = response3.data.access_token;
+    await axios.post(
+      "https://api.sandbox.co.in/gst/compliance/tax-payer/session/refresh",
+      {},
+      {
+        headers: {
+          "x-api-key": process.env.X_API_KEY,
+          "x-api-secret": process.env.X_API_SECRET,
+          "x-api-version": "1.0.0", // Recommended
+          accept: "application  json",
+          authorization: taxpayerAccessToken,
+        },
+      }
+    );
+
+    // 5. Call GSTR2B => https://api.sandbox.co.in/gst/compliance/tax-payer/gstrs/gstr-2b/{year}/{month} , header auth is taxpayer access token
+    await axios.post(
+      "https://api.sandbox.co.in/gst/compliance/tax-payer/gstrs/gstr-2b/{year}/{month}",
+      {},
+      {
+        headers: {
+          "x-api-key": process.env.X_API_KEY,
+          "x-api-secret": process.env.X_API_SECRET,
+          "x-api-version": "1.0.0", // Recommended
+          accept: "application  json",
+          authorization: taxpayerAccessToken,
+        },
+      }
+    );
+
+    const mockResponse = {
+      success: true,
+      gstr2bData: [
+        {
+          gstin: "27AAAAA0000A1Z5",
+          fp: "112024",
+          dt: "14-12-2024",
+          data: {
+            b2b: [
+              {
+                ctin: "24ACRPP7935N1ZO",
+                trdnm: "HITESHKUMAR DWARKADAS PATEL",
+                supfildt: "07-12-2024",
+                supprd: "112024",
+                ttldocs: 1,
+                txval: 26250.0,
+                igst: 0.0,
+                cgst: 2362.5,
+                sgst: 2362.5,
+                cess: 0.0,
+              },
+              {
+                ctin: "06AACCG0527D1Z8",
+                trdnm: "GOOGLE INDIA PVT LTD",
+                supfildt: "11-11-2024",
+                supprd: "102024",
+                ttldocs: 1,
+                txval: 2208.0,
+                igst: 397.44,
+                cgst: 0.0,
+                sgst: 0.0,
+                cess: 0.0,
+              },
+              {
+                ctin: "24AAAAA0000A1Z5",
+                trdnm: "HARDWARE SUPPLIER LTD",
+                supfildt: "10-12-2024",
+                supprd: "112024",
+                ttldocs: 1,
+                txval: 8000.0, // Mismatch: Registered as 8000 instead of 10000
+                igst: 1440.0,
+                cgst: 0.0,
+                sgst: 0.0,
+                cess: 0.0,
+              },
+            ],
+            cdnr: [],
+          },
+        },
+      ],
+    };
+
+    return res.status(200).json(mockResponse);
+
+    // return res.status(200).json({
+    //   success: true,
+    //   data: response.data,
+    // });
+  } catch (error) {
+    console.error("GST API Error:", error?.response?.data || error.message);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch GST details",
+      error: error?.response?.data || error.message,
+    });
+  }
+});
+app.get("/api/gst/gstr2b", async (req, res) => {
+  try {
+    const { gstin, fp } = req.query;
     const response = await axios.get(
       "https://apisandbox.whitebooks.in/public/rettrack",
       {
         params: {
           email: process.env.WHITEBOOKS_EMAIL,
-          gstin: id,
-          fy: year,
+          gstin: gstin,
+          fy: fp,
         },
         headers: {
           client_id: process.env.WHITEBOOKS_CLIENT_ID,
@@ -104,55 +384,52 @@ app.get("/api/sellers/check/:id", async (req, res) => {
     console.log(response.data);
     const mockResponse = {
       success: true,
-      EFiledlist: [
+      gstr2bData: [
         {
-          gstin: id,
-          valid: "Y",
-          mof: "ONLINE",
-          dof: "16-01-2018",
-          ret_prd: "062017",
-          rtntype: "GSTR3B",
-          arn: "AA080617000247D",
-          status: "Filed",
-        },
-        {
-          gstin: id,
-          valid: "Y",
-          mof: "ONLINE",
-          dof: "16-01-2018",
-          ret_prd: "072017",
-          rtntype: "GSTR3B",
-          arn: "AA080717000401N",
-          status: "Filed",
-        },
-        {
-          gstin: id,
-          valid: "Y",
-          mof: "ONLINE",
-          dof: "12-01-2018",
-          ret_prd: "052017",
-          rtntype: "GSTR3B",
-          arn: "AA080517000372K",
-          status: "Filed",
-        },
-        {
-          gstin: id,
-          valid: "Y",
-          mof: "ONLINE",
-          dof: "03-07-2017",
-          ret_prd: "102017",
-          rtntype: "GSTR1",
-          arn: "AA051016000296T",
-          status: "Filed",
-        },
-        {
-          gstin: id,
-          mof: "ONLINE",
-          dof: "03-07-2017",
-          ret_prd: "112017",
-          rtntype: "GSTR3B",
-          arn: "AA051016000297R",
-          status: "Filed",
+          gstin: "27AAAAA0000A1Z5",
+          fp: "112024",
+          dt: "14-12-2024",
+          data: {
+            b2b: [
+              {
+                ctin: "24ACRPP7935N1ZO",
+                trdnm: "HITESHKUMAR DWARKADAS PATEL",
+                supfildt: "07-12-2024",
+                supprd: "112024",
+                ttldocs: 1,
+                txval: 26250.0,
+                igst: 0.0,
+                cgst: 2362.5,
+                sgst: 2362.5,
+                cess: 0.0,
+              },
+              {
+                ctin: "06AACCG0527D1Z8",
+                trdnm: "GOOGLE INDIA PVT LTD",
+                supfildt: "11-11-2024",
+                supprd: "102024",
+                ttldocs: 1,
+                txval: 2208.0,
+                igst: 397.44,
+                cgst: 0.0,
+                sgst: 0.0,
+                cess: 0.0,
+              },
+              {
+                ctin: "24AAAAA0000A1Z5",
+                trdnm: "HARDWARE SUPPLIER LTD",
+                supfildt: "10-12-2024",
+                supprd: "112024",
+                ttldocs: 1,
+                txval: 8000.0, // Mismatch: Registered as 8000 instead of 10000
+                igst: 1440.0,
+                cgst: 0.0,
+                sgst: 0.0,
+                cess: 0.0,
+              },
+            ],
+            cdnr: [],
+          },
         },
       ],
     };
@@ -1815,9 +2092,8 @@ app.post("/order", async (req, res) => {
     });
 
     const options = req.body;
-    console.log("Options:", options);
+
     const order = await razorpay.orders.create(options);
-    console.log(order);
 
     if (!order) {
       return res.status(500).send("Error");

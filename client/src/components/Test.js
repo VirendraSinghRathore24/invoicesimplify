@@ -296,7 +296,7 @@ const Home = () => {
             </button>
           </div>
           <button
-            onClick={() => gstDashboard()}
+            //onClick={() => gstDashboard()}
             className="px-6 mt-4 py-2 bg-gray-900 text-white rounded-xl font-medium hover:bg-blue-700 transition"
           >
             GST Dashboard
