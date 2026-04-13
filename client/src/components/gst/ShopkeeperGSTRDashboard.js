@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "../Constant";
 import {
@@ -11,7 +11,8 @@ import {
 } from "lucide-react";
 import GSTReturnModal from "./GSTReturnModal";
 import Loader from "../Loader";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import Header from "./Header";
 
 const API = BASE_URL + "/api/sellers";
 
@@ -19,13 +20,18 @@ const ShopkeeperGSTRDashboard = () => {
   const [sellers, setSellers] = useState([]);
   const [seller, setSeller] = useState({});
   const [name, setName] = useState("");
-  const [gstin, setGstin] = useState("");
+  //const [gstin, setGstin] = useState(localStorage.getItem("verified_gstin"));
+  const [gstin, setGstin] = useState(localStorage.getItem("verified_gstin"));
   const [year, setYear] = useState("2025-26");
   const [selectedYear, setSelectedYear] = useState("");
   const yearOptions = ["2023-24", "2024-25", "2025-26", "2026-27"];
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [totalLateDays, setTotalLateDays] = useState(0);
+  const [isUserExists, setIsUserExists] = useState(
+    localStorage.getItem("gstUser") ? true : false
+  );
+  const navigate = useNavigate();
   const processGstData = (data) => {
     // Helper to convert "DD-MM-YYYY" string to a Date object for comparison
     const parseDof = (dStr) => {
@@ -104,7 +110,7 @@ const ShopkeeperGSTRDashboard = () => {
         return;
       }
 
-      const result = sortGstDataByPeriod(res.data);
+      const result = sortGstDataByPeriod(res.data.eFilingList);
 
       setSellers(result.EFiledlist);
 
@@ -193,57 +199,28 @@ const ShopkeeperGSTRDashboard = () => {
   useEffect(() => {
     setTotalLateDays(totalLateDaysCount / 2);
   }, [sellers]);
+
+  useEffect(() => {
+    const loggedInUser = localStorage.getItem("gstUser");
+    if (!loggedInUser) {
+      setIsUserExists(false);
+      navigate("/gst/login");
+    }
+  }, []);
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans">
       {/* --- TOP BANNER (Sticky) --- */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 px-6 py-4">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <div className="bg-blue-600 p-1.5 rounded-lg shadow-blue-200 shadow-lg">
-              <ShieldCheck className="text-white" size={22} />
-            </div>
-            <span className="text-xl font-black text-slate-800 tracking-tight">
-              Invoice<span className="text-blue-600">Simplify</span>
-            </span>
-          </div>
-          <div className="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
-            <NavLink
-              to="/gst/owndashboard"
-              className="hover:text-blue-600 transition-colors"
-            >
-              Dashboard
-            </NavLink>
-            <NavLink
-              to="/gst/sellerdashboard"
-              className="hover:text-blue-600 transition-colors"
-            >
-              Trust Dashboard
-            </NavLink>
-            <NavLink
-              to="/gst/itc"
-              className="hover:text-blue-600 transition-colors"
-            >
-              ITC Reconciliation
-            </NavLink>
-            <a href="#" className="hover:text-blue-600 transition-colors">
-              Vendor Tracking
-            </a>
-            <button className="bg-slate-900 text-white px-5 py-2.5 rounded-xl hover:bg-blue-600 transition-all shadow-md">
-              Login to Portal
-            </button>
-          </div>
-        </div>
-      </nav>
+      <Header />
       <div className="min-h-screen bg-[#F8FAFC] p-4 md:p-10 font-sans">
         <div className="max-w-7xl mx-auto">
           {/* Header Section */}
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
             <div>
               <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
-                Dashboard - 08AFLPR4165H1Z1
+                Dashboard - {gstin}
               </h1>
               <p className="text-slate-500 text-sm mt-1">
-                Rathore General Store
+                {localStorage.getItem("tradeName")}
               </p>
             </div>
           </div>
@@ -251,7 +228,7 @@ const ShopkeeperGSTRDashboard = () => {
           {/* Stats Summary (Optional but adds 'Stunning' factor) */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <StatCard
-              label="Total Sellers"
+              label="Total Filings"
               value={sellers.length}
               color="blue"
             />
@@ -286,7 +263,7 @@ const ShopkeeperGSTRDashboard = () => {
                 </select>
               </div>
               <button
-                onClick={() => checkStatus("08AFLPR4165H1Z1")}
+                onClick={() => checkStatus(gstin)}
                 className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm flex items-center gap-2"
               >
                 Get Status

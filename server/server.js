@@ -147,6 +147,24 @@ app.get("/api/sellers/check/:id", async (req, res) => {
 
     const accessToken = response1.data.access_token;
 
+    const responseSearch = await axios.post(
+      "https://api.sandbox.co.in/gst/compliance/public/gstin/search",
+      {
+        // 1. Request Body (JSON)
+        gstin: id,
+      },
+      {
+        // 3. Headers
+        headers: {
+          Authorization: accessToken, // Sandbox usually expects token without "Bearer"
+          "x-api-key": process.env.X_API_KEY,
+          "x-api-version": "1.0.0",
+        },
+      }
+    );
+
+    const result = JSON.stringify(responseSearch.data.data?.data);
+
     const response2 = await axios.post(
       "https://api.sandbox.co.in/gst/compliance/public/gstrs/track",
       {
@@ -186,7 +204,9 @@ app.get("/api/sellers/check/:id", async (req, res) => {
     //   }
     // );
 
-    return res.status(200).json(eFilingList);
+    return res
+      .status(200)
+      .json({ eFilingList: eFilingList, searchResult: result });
   } catch (error) {
     console.error("GST API Error:", error?.response?.data || error.message);
 

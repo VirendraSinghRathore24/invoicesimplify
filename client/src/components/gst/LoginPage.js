@@ -4,6 +4,8 @@ import { Smartphone, ShieldCheck, ArrowRight, RefreshCcw } from "lucide-react";
 import { signInWithPhoneNumber, RecaptchaVerifier } from "firebase/auth";
 import { auth } from "../../config/firebase";
 import { NavLink, useNavigate } from "react-router-dom";
+import { m } from "framer-motion";
+import Header from "./Header";
 
 const LoginPage = () => {
   const [phone, setPhone] = useState("+91");
@@ -11,6 +13,10 @@ const LoginPage = () => {
   const [confirmationResult, setConfirmationResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const [isUserExists, setIsUserExists] = useState(
+    localStorage.getItem("gstUser") ? true : false
+  );
 
   const navigate = useNavigate();
 
@@ -51,7 +57,18 @@ const LoginPage = () => {
     setError("");
     try {
       await confirmationResult.confirm(otp);
+      localStorage.setItem("gstUser", phone);
+
+      if (!localStorage.getItem("gstin_data")) {
+        alert(
+          "No GSTIN data found. Please complete GSTIN onboarding to proceed."
+        );
+
+        navigate("/gst/onboarding");
+        return;
+      }
       navigate("/gst/owndashboard");
+      // 08AFLPR4165H1Z1
 
       // Redirect to Dashboard here
     } catch (err) {
@@ -63,44 +80,7 @@ const LoginPage = () => {
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans">
       {/* --- TOP BANNER (Sticky) --- */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 px-6 py-4">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <div className="bg-blue-600 p-1.5 rounded-lg shadow-blue-200 shadow-lg">
-              <ShieldCheck className="text-white" size={22} />
-            </div>
-            <span className="text-xl font-black text-slate-800 tracking-tight">
-              Invoice<span className="text-blue-600">Simplify</span>
-            </span>
-          </div>
-          <div className="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
-            <NavLink
-              to="/gst/owndashboard"
-              className="hover:text-blue-600 transition-colors"
-            >
-              Dashboard
-            </NavLink>
-            <NavLink
-              to="/gst/sellerdashboard"
-              className="hover:text-blue-600 transition-colors"
-            >
-              Trust Dashboard
-            </NavLink>
-            <NavLink
-              to="/gst/itc"
-              className="hover:text-blue-600 transition-colors"
-            >
-              ITC Reconciliation
-            </NavLink>
-            <a href="#" className="hover:text-blue-600 transition-colors">
-              Vendor Tracking
-            </a>
-            <button className="bg-slate-900 text-white px-5 py-2.5 rounded-xl hover:bg-blue-600 transition-all shadow-md">
-              Login to Portal
-            </button>
-          </div>
-        </div>
-      </nav>
+      <Header />
       <div className="min-h-screen bg-slate-50 flex flex-col justify-center items-center p-4">
         <div id="recaptcha-container"></div>
 
@@ -158,6 +138,7 @@ const LoginPage = () => {
                 <input
                   type="text"
                   value={otp}
+                  autoFocus
                   onChange={(e) => setOtp(e.target.value)}
                   placeholder="000000"
                   className="w-full mt-1 px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 text-center tracking-[1em] font-black text-xl outline-none"

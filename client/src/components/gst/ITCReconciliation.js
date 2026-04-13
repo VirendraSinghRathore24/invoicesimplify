@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { BASE_URL } from "../Constant";
 import axios from "axios";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   AlertCircle,
   Download,
@@ -10,6 +10,7 @@ import {
   ShieldCheck,
   TrendingDown,
 } from "lucide-react";
+import Header from "./Header";
 
 const ITCReconciliation = () => {
   const gstin = "27AAAAA0000A1Z5"; // Your GSTIN
@@ -17,6 +18,10 @@ const ITCReconciliation = () => {
   const [gstr2bData, setGstr2bData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isUserExists, setIsUserExists] = useState(
+    localStorage.getItem("gstUser") ? true : false
+  );
+  const navigate = useNavigate();
 
   // Dropdown selection states
   const [selectedMonth, setSelectedMonth] = useState("11");
@@ -171,47 +176,18 @@ const ITCReconciliation = () => {
     fetchGSTR2B();
   }, []);
 
+  useEffect(() => {
+    const loggedInUser = localStorage.getItem("gstUser");
+    if (!loggedInUser) {
+      setIsUserExists(false);
+      navigate("/gst/login");
+    }
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans">
       {/* --- TOP BANNER (Sticky) --- */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 px-6 py-4">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <div className="bg-blue-600 p-1.5 rounded-lg shadow-blue-200 shadow-lg">
-              <ShieldCheck className="text-white" size={22} />
-            </div>
-            <span className="text-xl font-black text-slate-800 tracking-tight">
-              Invoice<span className="text-blue-600">Simplify</span>
-            </span>
-          </div>
-          <div className="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
-            <NavLink
-              to="/gst/owndashboard"
-              className="hover:text-blue-600 transition-colors"
-            >
-              Dashboard
-            </NavLink>
-            <NavLink
-              to="/gst/sellerdashboard"
-              className="hover:text-blue-600 transition-colors"
-            >
-              Trust Dashboard
-            </NavLink>
-            <NavLink
-              to="/gst/itc"
-              className="hover:text-blue-600 transition-colors"
-            >
-              ITC Reconciliation
-            </NavLink>
-            <a href="#" className="hover:text-blue-600 transition-colors">
-              Vendor Tracking
-            </a>
-            <button className="bg-slate-900 text-white px-5 py-2.5 rounded-xl hover:bg-blue-600 transition-all shadow-md">
-              Login to Portal
-            </button>
-          </div>
-        </div>
-      </nav>
+      <Header />
       <section className="mt-10">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Trust Score Card */}

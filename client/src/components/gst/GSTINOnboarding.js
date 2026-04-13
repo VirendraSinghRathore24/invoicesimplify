@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Search,
   Building2,
@@ -7,7 +7,7 @@ import {
   ShieldCheck,
   RefreshCcw,
 } from "lucide-react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../Constant";
 import axios from "axios";
 
@@ -16,6 +16,11 @@ const GSTINOnboarding = ({ onComplete }) => {
   const [shopDetails, setShopDetails] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [isUserExists, setIsUserExists] = useState(
+    localStorage.getItem("gstUser") ? true : false
+  );
+
+  const navigate = useNavigate();
 
   const API = BASE_URL + "/api/gst";
   // 1. Logic to fetch details from your API
@@ -38,8 +43,9 @@ const GSTINOnboarding = ({ onComplete }) => {
       }
 
       const data = JSON.parse(res.data);
+      console.log("GSTIN API Response:", data);
 
-      localStorage.setItem("gstin_data", JSON.stringify(data));
+      //localStorage.setItem("gstin_data", JSON.stringify(data));
 
       // MOCK DATA for demonstration
       setTimeout(() => {
@@ -75,11 +81,23 @@ const GSTINOnboarding = ({ onComplete }) => {
   const handleConfirmAndSave = () => {
     // Save to your DB/LocalStorage
     const finalData = { gstin, ...shopDetails };
-    localStorage.setItem("verified_gstin", gstin);
+    localStorage.setItem("gstin_data", finalData);
+    localStorage.setItem("tradeName", shopDetails.tradeName);
+
+    navigate("/gst/owndashboard");
 
     // Callback to parent component (e.g., App.js) to trigger dashboard redirect
-    onComplete(finalData);
+    //onComplete(finalData);
   };
+
+  useEffect(() => {
+    const loggedInUser = localStorage.getItem("gstUser");
+    if (!loggedInUser) {
+      alert("Please login to continue with GSTIN onboarding.");
+      navigate("/gst/login");
+      return;
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans">
@@ -116,9 +134,15 @@ const GSTINOnboarding = ({ onComplete }) => {
             <a href="#" className="hover:text-blue-600 transition-colors">
               Vendor Tracking
             </a>
-            <button className="bg-slate-900 text-white px-5 py-2.5 rounded-xl hover:bg-blue-600 transition-all shadow-md">
-              Login to Portal
-            </button>
+            {!isUserExists ? (
+              <button className="bg-slate-900 text-white px-5 py-2.5 rounded-xl hover:bg-blue-600 transition-all shadow-md">
+                Login to Portal
+              </button>
+            ) : (
+              <button className="bg-slate-900 text-white px-5 py-2.5 rounded-xl hover:bg-blue-600 transition-all shadow-md">
+                Logout
+              </button>
+            )}
           </div>
         </div>
       </nav>

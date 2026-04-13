@@ -14,10 +14,14 @@ import { NavLink } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../Constant";
 import { useNavigate } from "react-router-dom";
+import Header from "./Header";
 
 const LandingPage = () => {
   const [gstin, setGstin] = useState("");
   const [trustScore, setTrustScore] = useState(85);
+  const [isUserExists, setIsUserExists] = useState(
+    localStorage.getItem("gstUser") ? true : false
+  );
   const API = BASE_URL + "/api/sellers";
   const year = "2024-25";
   const navigate = useNavigate();
@@ -114,50 +118,17 @@ const LandingPage = () => {
     navigate("/gst/login");
   };
 
+  const handleLogout = () => {
+    var res = window.confirm("are you sure you want to logout?");
+    if (!res) return;
+    localStorage.removeItem("gstUser");
+    setIsUserExists(false);
+  };
+
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans">
       {/* --- TOP BANNER (Sticky) --- */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 px-6 py-4">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <div className="bg-blue-600 p-1.5 rounded-lg shadow-blue-200 shadow-lg">
-              <ShieldCheck className="text-white" size={22} />
-            </div>
-            <span className="text-xl font-black text-slate-800 tracking-tight">
-              Invoice<span className="text-blue-600">Simplify</span>
-            </span>
-          </div>
-          <div className="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
-            <NavLink
-              to="/gst/owndashboard"
-              className="hover:text-blue-600 transition-colors"
-            >
-              Dashboard
-            </NavLink>
-            <NavLink
-              to="/gst/sellerdashboard"
-              className="hover:text-blue-600 transition-colors"
-            >
-              Trust Dashboard
-            </NavLink>
-            <NavLink
-              to="/gst/itc"
-              className="hover:text-blue-600 transition-colors"
-            >
-              ITC Reconciliation
-            </NavLink>
-            <a href="#" className="hover:text-blue-600 transition-colors">
-              Vendor Tracking
-            </a>
-            <button
-              onClick={() => handleLogin()}
-              className="bg-slate-900 text-white px-5 py-2.5 rounded-xl hover:bg-blue-600 transition-all shadow-md"
-            >
-              Login to Portal
-            </button>
-          </div>
-        </div>
-      </nav>
+      <Header />
 
       {/* --- HERO SECTION --- */}
       <section className="pt-16 pb-20 px-6 bg-gradient-to-b from-white to-[#f8fafc]">
