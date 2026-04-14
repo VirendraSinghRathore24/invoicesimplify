@@ -20,8 +20,8 @@ const ShopkeeperGSTRDashboard = () => {
   const [sellers, setSellers] = useState([]);
   const [seller, setSeller] = useState({});
   const [name, setName] = useState("");
-  //const [gstin, setGstin] = useState(localStorage.getItem("verified_gstin"));
   const [gstin, setGstin] = useState(localStorage.getItem("verified_gstin"));
+
   const [year, setYear] = useState("2025-26");
   const [selectedYear, setSelectedYear] = useState("");
   const yearOptions = ["2023-24", "2024-25", "2025-26", "2026-27"];
@@ -31,6 +31,8 @@ const ShopkeeperGSTRDashboard = () => {
   const [isUserExists, setIsUserExists] = useState(
     localStorage.getItem("gstUser") ? true : false
   );
+  const gstr1DueDate = localStorage.getItem("gstr1DueDate"); // Default to 13 if not set
+  const gstr3bDueDate = localStorage.getItem("gstr3bDueDate"); // Default to 24 if not set
   const navigate = useNavigate();
   const processGstData = (data) => {
     // Helper to convert "DD-MM-YYYY" string to a Date object for comparison
@@ -169,9 +171,9 @@ const ShopkeeperGSTRDashboard = () => {
 
     // 3. Construct the specific cutoff string
     if (rtntype === "GSTR3B") {
-      cutoffDate = `24-${filingMonth}-${filingYear}`;
+      cutoffDate = `${gstr3bDueDate}-${filingMonth}-${filingYear}`;
     } else if (rtntype === "GSTR1") {
-      cutoffDate = `13-${filingMonth}-${filingYear}`;
+      cutoffDate = `${gstr1DueDate}-${filingMonth}-${filingYear}`;
     }
 
     // Function to convert "DD-MM-YYYY" to a Date Object

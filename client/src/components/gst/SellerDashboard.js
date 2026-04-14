@@ -3,6 +3,8 @@ import axios from "axios";
 import { BASE_URL } from "../Constant";
 import {
   ShieldCheck,
+  ShieldX,
+  Clock,
   ShieldAlert,
   RefreshCw,
   Search,
@@ -40,7 +42,7 @@ const Dashboard = () => {
     },
     {
       sellerName: "Gupta Electronics",
-      gstin: "07LMNOP4321K1Z9",
+      gstin: "36AAGCE2128N1ZH",
       status: "Not Checked",
       returnType: "NA",
       dof: "",
@@ -50,37 +52,7 @@ const Dashboard = () => {
     },
     {
       sellerName: "Verma Textiles",
-      gstin: "24WXYZA9876H1Z3",
-      status: "Not Checked",
-      returnType: "NA",
-      dof: "",
-      gstinstatus: "",
-      frequency: "",
-      ret_prd: "",
-    },
-    {
-      sellerName: "Kumar Hardware",
-      gstin: "33BCDEA2468J1Z7",
-      status: "Not Checked",
-      returnType: "NA",
-      dof: "",
-      gstinstatus: "",
-      frequency: "",
-      ret_prd: "",
-    },
-    {
-      sellerName: "Singh Wholesale Mart",
-      gstin: "09FGHIJ1357M1Z4",
-      status: "Not Checked",
-      returnType: "NA",
-      dof: "",
-      gstinstatus: "",
-      frequency: "",
-      ret_prd: "",
-    },
-    {
-      sellerName: "Agarwal Foods",
-      gstin: "19KLMNO9753N1Z6",
+      gstin: "29AADCF7875L1ZU",
       status: "Not Checked",
       returnType: "NA",
       dof: "",
@@ -94,6 +66,7 @@ const Dashboard = () => {
   const [name, setName] = useState("");
   const [gstin, setGstin] = useState(localStorage.getItem("verified_gstin"));
   const [year, setYear] = useState("2025-26");
+  const [month, setMonth] = useState("01");
   const [selectedYear, setSelectedYear] = useState("");
   const yearOptions = ["2023-24", "2024-25", "2025-26", "2026-27"];
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -152,34 +125,31 @@ const Dashboard = () => {
 
       const data = JSON.parse(res.data.eFilingList).EFiledlist;
       const searchResult = JSON.parse(res.data.searchResult);
-      console.log("GST Status API Response for GSTIN", id, ":", searchResult);
 
       setName(searchResult.tradeNam || searchResult.lgnm);
 
       const result = processGstData(data);
 
-      // Sort by date (using the DD/MM/YYYY logic we discussed)
-      const sortedData = data
-        .sort((a, b) => {
-          const parse = (d) => new Date(d.split("-").reverse().join("-"));
-          return parse(b.dof) - parse(a.dof); // Sort by Newest Date
-        })
-        .map((item, index, self) => {
-          // Logic: Check if there's another entry with the same Date of Filing (dof)
-          const isDateMatch = self.some(
-            (other, idx) => idx !== index && other.dof === item.dof
-          );
+      const resultByMonth =
+        result?.filter((r) => r.ret_prd?.substring(0, 2) === month) || [];
 
-          // Logic: Check if the current item is GSTR3B
-          const is3B = item.rtntype === "GSTR3B";
+      const hasGSTR1Filed = resultByMonth.some((item) =>
+        item?.data?.some((d) => d.rtntype === "GSTR1" && d.status === "Filed")
+      );
+      const hasGSTR3Filed = resultByMonth.some((item) =>
+        item?.data?.some((d) => d.rtntype === "GSTR3B" && d.status === "Filed")
+      );
 
-          return {
-            ...item,
-            displayHighlight: isDateMatch && is3B, // True if date matches and it's 3B
-            complianceNote: isDateMatch && is3B ? "Bundled Filing" : "",
-          };
-        });
+      let status = "Not Filed";
+      if (hasGSTR1Filed && hasGSTR3Filed) {
+        status = "Filed";
+      } else if (hasGSTR1Filed && !hasGSTR3Filed) {
+        status = "Partially Filed";
+      } else {
+        status = "Not Filed";
+      }
 
+      console.log("Processed GST Data for GSTIN", id, ":", resultByMonth);
       setSellers((prevSellers) =>
         prevSellers.map((seller) =>
           seller.gstin === id
@@ -187,11 +157,7 @@ const Dashboard = () => {
                 ...seller,
                 newData: result,
                 name: searchResult.tradeNam || searchResult.lgnm,
-
-                // status: sortedData[0].status,
-                // returnType: sortedData[0].rtntype,
-                // dof: sortedData[0].dof,
-                // ret_prd: sortedData[0].ret_prd,
+                status: status,
               }
             : seller
         )
@@ -317,19 +283,62 @@ const Dashboard = () => {
             <p className="text-blue-600 font-medium mb-2">
               Showing results for: {selectedYear}
             </p>
-            <div className="mb-4 text-right">
-              <label className="mr-2 font-medium">Select Year:</label>
-              <select
-                value={year}
-                onChange={(e) => setYear(e.target.value)}
-                className="border p-1 rounded"
+
+            <div className="mb-4 flex justify-end items-center gap-4">
+              {/* Month Dropdown */}
+              <div className="flex items-center">
+                <label className="mr-2 font-medium text-slate-700">
+                  Select Month:
+                </label>
+                <select
+                  value={month}
+                  onChange={(e) => setMonth(e.target.value)}
+                  className="border p-1 rounded bg-white shadow-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                >
+                  {[
+                    { val: "01", name: "January" },
+                    { val: "02", name: "February" },
+                    { val: "03", name: "March" },
+                    { val: "04", name: "April" },
+                    { val: "05", name: "May" },
+                    { val: "06", name: "June" },
+                    { val: "07", name: "July" },
+                    { val: "08", name: "August" },
+                    { val: "09", name: "September" },
+                    { val: "10", name: "October" },
+                    { val: "11", name: "November" },
+                    { val: "12", name: "December" },
+                  ].map((m) => (
+                    <option key={m.val} value={m.val}>
+                      {m.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Year Dropdown */}
+              <div className="flex items-center">
+                <label className="mr-2 font-medium text-slate-700">
+                  Select Year:
+                </label>
+                <select
+                  value={year}
+                  onChange={(e) => setYear(e.target.value)}
+                  className="border p-1 rounded bg-white shadow-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                >
+                  {yearOptions.map((y) => (
+                    <option key={y} value={y}>
+                      {y}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <button
+                //onClick={() => checkStatus(gstin)}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm flex items-center gap-2"
               >
-                {yearOptions.map((y) => (
-                  <option key={y} value={y}>
-                    {y}
-                  </option>
-                ))}
-              </select>
+                Get Status
+              </button>
             </div>
           </div>
           {/* Table Container */}
@@ -513,24 +522,30 @@ const StatCard = ({ label, value, color }) => {
 };
 
 const renderStatusBadge = (seller) => {
-  // 1. Determine the status string
-  // Checks newData first, then falls back to the original status
-  const status = seller.newData?.[0]?.data[0]?.status || seller.status;
+  const status = seller.status?.toUpperCase();
 
-  // 2. Normalize to uppercase for consistent checking
-  const normalizedStatus = status?.toUpperCase();
-
-  if (normalizedStatus === "FILED") {
+  // 1. Success State: Fully Filed
+  if (status === "FILED") {
     return (
-      <span className="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700 border border-emerald-200 shadow-sm">
-        <ShieldCheck size={14} /> FILED
+      <span className="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-black bg-emerald-100 text-emerald-700 border border-emerald-200 shadow-sm">
+        <ShieldCheck size={14} strokeWidth={3} /> FILED
       </span>
     );
   }
 
+  // 2. Warning State: Partially Filed (GSTR-1 done, 3B pending)
+  if (status === "PARTIALLY FILED") {
+    return (
+      <span className="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-black bg-amber-100 text-amber-700 border border-amber-200 shadow-sm">
+        <Clock size={14} strokeWidth={3} /> PARTIALLY FILED
+      </span>
+    );
+  }
+
+  // 3. Danger State: Not Filed / Pending
   return (
-    <span className="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-amber-100 text-amber-700 border border-amber-200 shadow-sm">
-      <ShieldAlert size={14} /> PENDING
+    <span className="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-black bg-rose-100 text-rose-700 border border-rose-200 shadow-sm">
+      <ShieldX size={14} strokeWidth={3} /> NOT FILED
     </span>
   );
 };

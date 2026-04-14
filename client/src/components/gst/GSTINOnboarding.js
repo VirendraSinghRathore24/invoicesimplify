@@ -6,6 +6,7 @@ import {
   CheckCircle2,
   ShieldCheck,
   RefreshCcw,
+  ChevronDown,
 } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../Constant";
@@ -19,7 +20,8 @@ const GSTINOnboarding = ({ onComplete }) => {
   const [isUserExists, setIsUserExists] = useState(
     localStorage.getItem("gstUser") ? true : false
   );
-
+  const [filingFrequency, setFilingFrequency] = useState("monthly");
+  const [turnoverRange, setTurnoverRange] = useState("below_5cr");
   const navigate = useNavigate();
 
   const API = BASE_URL + "/api/gst";
@@ -30,9 +32,14 @@ const GSTINOnboarding = ({ onComplete }) => {
       return;
     }
 
-    //const data = JSON.parse(res.data).EFiledlist;
-
     try {
+      if (turnoverRange === "above_5cr" && filingFrequency === "quarterly") {
+        alert(
+          "Quarterly filing is only available for businesses with turnover up to ₹5 Cr. Please select monthly filing or update turnover range."
+        );
+        return;
+      }
+
       setLoading(true);
       setError("");
       const res = await axios.get(`${API}/searchgst/${gstin}`);
@@ -43,9 +50,6 @@ const GSTINOnboarding = ({ onComplete }) => {
       }
 
       const data = JSON.parse(res.data);
-      console.log("GSTIN API Response:", data);
-
-      //localStorage.setItem("gstin_data", JSON.stringify(data));
 
       // MOCK DATA for demonstration
       setTimeout(() => {
@@ -77,12 +81,58 @@ const GSTINOnboarding = ({ onComplete }) => {
     }
   };
 
+  const getFilingGstr1DueDate = (filingFrequency) => {
+    if (filingFrequency === "monthly") {
+      return { dueDate: 11 };
+    } else {
+      return { dueDate: 13 };
+    }
+  };
+
+  const getFilingGstr3BDueDate = (gstin, filingFrequency) => {
+    const code = gstin.substring(0, 2);
+    const groupA = [
+      "22",
+      "23",
+      "24",
+      "27",
+      "29",
+      "30",
+      "31",
+      "32",
+      "33",
+      "34",
+      "35",
+      "36",
+      "37",
+      "26",
+    ];
+
+    if (groupA.includes(code)) {
+      return { group: "A", dueDate: filingFrequency === "monthly" ? 20 : 22 };
+    } else {
+      return { group: "B", dueDate: filingFrequency === "monthly" ? 20 : 24 };
+    }
+  };
+
+  // Usage
+
   // 2. Logic to save and move to dashboard
   const handleConfirmAndSave = () => {
     // Save to your DB/LocalStorage
     const finalData = { gstin, ...shopDetails };
     localStorage.setItem("gstin_data", finalData);
     localStorage.setItem("tradeName", shopDetails.tradeName);
+    localStorage.setItem("gstfilingfreq", filingFrequency);
+    localStorage.setItem("turnoverRange", turnoverRange);
+    localStorage.setItem("verified_gstin", gstin);
+
+    // calculate gstr1 and gstr3b based on state code using first two digits of GSTIN
+    const gstr1DueDate = getFilingGstr1DueDate(filingFrequency).dueDate;
+    const gstr3bDueDate = getFilingGstr3BDueDate(gstin, filingFrequency);
+
+    localStorage.setItem("gstr1DueDate", gstr1DueDate);
+    localStorage.setItem("gstr3bDueDate", gstr3bDueDate.dueDate);
 
     navigate("/gst/owndashboard");
 
@@ -156,28 +206,71 @@ const GSTINOnboarding = ({ onComplete }) => {
             <p className="text-slate-400 text-sm mt-1">
               Verify your GSTIN to enable automated tracking.
             </p>
-            <p className="text-slate-400 text-xs mt-1">
-              {gstin && `GSTIN Entered: ${gstin}`}
-            </p>
           </div>
 
           <div className="p-8">
             {!shopDetails ? (
               <div className="space-y-6">
-                <div className="relative">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
-                    GST Number (GSTIN)
-                  </label>
-                  <input
-                    type="text"
-                    value={gstin}
-                    onChange={(e) => setGstin(e.target.value.toUpperCase())}
-                    placeholder="08AAAAA0000A1Z5"
-                    className="w-full mt-2 px-5 py-4 rounded-2xl border-2 border-slate-100 bg-slate-50 focus:border-blue-500 focus:bg-white outline-none transition-all font-mono font-bold text-lg tracking-wider"
-                    maxLength={15}
-                  />
-                  <div className="absolute right-4 bottom-4">
-                    <Search size={20} className="text-slate-300" />
+                <div className="space-y-6">
+                  {/* GSTIN Input Field */}
+                  <div className="relative">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
+                      GST Number (GSTIN)
+                    </label>
+                    <input
+                      type="text"
+                      value={gstin}
+                      onChange={(e) => setGstin(e.target.value.toUpperCase())}
+                      placeholder="08AAAAA0000A1Z5"
+                      className="w-full mt-2 px-5 py-4 rounded-2xl border-2 border-slate-100 bg-slate-50 focus:border-blue-500 focus:bg-white outline-none transition-all font-mono font-bold text-lg tracking-wider"
+                      maxLength={15}
+                    />
+                    <div className="absolute right-4 bottom-4">
+                      <Search size={20} className="text-slate-300" />
+                    </div>
+                  </div>
+
+                  {/* New Fields: Filing Frequency & Turnover */}
+                  <div className="grid grid-cols-2 gap-4">
+                    {/* Filing Frequency */}
+                    <div className="relative">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
+                        Filing Frequency
+                      </label>
+                      <div className="relative">
+                        <select
+                          value={filingFrequency}
+                          onChange={(e) => setFilingFrequency(e.target.value)}
+                          className="w-full mt-2 px-4 py-3 rounded-xl border-2 border-slate-100 bg-slate-50 focus:border-blue-500 outline-none font-bold text-slate-700 appearance-none cursor-pointer pr-10"
+                        >
+                          <option value="monthly">Monthly</option>
+                          <option value="quarterly">Quarterly (QRMP)</option>
+                        </select>
+                        <div className="absolute right-3 top-1/2 mt-1 -translate-y-1/2 pointer-events-none">
+                          <ChevronDown size={18} className="text-slate-400" />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Annual Turnover */}
+                    <div className="relative">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
+                        Annual Turnover
+                      </label>
+                      <div className="relative">
+                        <select
+                          value={turnoverRange}
+                          onChange={(e) => setTurnoverRange(e.target.value)}
+                          className="w-full mt-2 px-4 py-3 rounded-xl border-2 border-slate-100 bg-slate-50 focus:border-blue-500 outline-none font-bold text-slate-700 appearance-none cursor-pointer pr-10"
+                        >
+                          <option value="below_5cr">Up to ₹5 Cr</option>
+                          <option value="above_5cr">Above ₹5 Cr</option>
+                        </select>
+                        <div className="absolute right-3 top-1/2 mt-1 -translate-y-1/2 pointer-events-none">
+                          <ChevronDown size={18} className="text-slate-400" />
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
 

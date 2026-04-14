@@ -60,10 +60,6 @@ const LoginPage = () => {
       localStorage.setItem("gstUser", phone);
 
       if (!localStorage.getItem("gstin_data")) {
-        alert(
-          "No GSTIN data found. Please complete GSTIN onboarding to proceed."
-        );
-
         navigate("/gst/onboarding");
         return;
       }
