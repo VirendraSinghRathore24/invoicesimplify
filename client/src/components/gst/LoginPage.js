@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 
 import { Smartphone, ShieldCheck, ArrowRight, RefreshCcw } from "lucide-react";
 import { signInWithPhoneNumber, RecaptchaVerifier } from "firebase/auth";
-import { auth } from "../../config/firebase";
+import { auth, db } from "../../config/firebase";
 import { NavLink, useNavigate } from "react-router-dom";
 import { m } from "framer-motion";
 import Header from "./Header";
+import { collection, getDocs } from "firebase/firestore";
 
 const LoginPage = () => {
   const [phone, setPhone] = useState("+91");
@@ -52,17 +53,35 @@ const LoginPage = () => {
     setLoading(false);
   };
 
+  const login_CollectionRef = collection(db, "GST_Shopkeepers");
   const onVerifyOTP = async () => {
     setLoading(true);
     setError("");
     try {
       await confirmationResult.confirm(otp);
-      localStorage.setItem("gstUser", phone);
 
-      if (!localStorage.getItem("gstin_data")) {
+      const data = await getDocs(login_CollectionRef);
+      const filteredData = data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+
+      const isShopkeeperExists = filteredData.find((x) => x.mobile === phone);
+
+      if (!isShopkeeperExists) {
         navigate("/gst/onboarding");
         return;
       }
+
+      //localStorage.setItem("gstin_data", finalData);
+      localStorage.setItem("tradeName", filteredData[0].tradeName);
+      localStorage.setItem("gstfilingfreq", filteredData[0].filingFrequency);
+      localStorage.setItem("turnoverRange", filteredData[0].turnoverRange);
+      localStorage.setItem("verified_gstin", filteredData[0].gstin);
+      localStorage.setItem("gstr1DueDate", filteredData[0].gstr1DueDate);
+      localStorage.setItem("gstr3bDueDate", filteredData[0].gstr3bDueDate);
+      localStorage.setItem("gstUser", phone);
+
       navigate("/gst/owndashboard");
       // 08AFLPR4165H1Z1
 

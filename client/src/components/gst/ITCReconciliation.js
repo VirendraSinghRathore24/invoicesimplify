@@ -11,16 +11,21 @@ import {
   TrendingDown,
 } from "lucide-react";
 import Header from "./Header";
+import { collection, doc, getDocs } from "firebase/firestore";
+import { db } from "../../config/firebase";
 
 const ITCReconciliation = () => {
-  const gstin = "27AAAAA0000A1Z5"; // Your GSTIN
-
+  const [reconData, setReconData] = useState([]);
+  const [loss, setLoss] = useState(0);
+  const [reportData, setReportData] = useState({ report: [], totalLoss: 0 });
   const [gstr2bData, setGstr2bData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isUserExists, setIsUserExists] = useState(
     localStorage.getItem("gstUser") ? true : false
   );
+
+  const gstin = localStorage.getItem("verified_gstin");
   const navigate = useNavigate();
 
   // Dropdown selection states
@@ -30,6 +35,8 @@ const ITCReconciliation = () => {
   // Display states (updates only after successful sync)
   const [displayMonth, setDisplayMonth] = useState("11");
   const [displayYear, setDisplayYear] = useState("2024");
+
+  const [purchaseRegister, setPurchaseRegister] = useState([]);
 
   const months = [
     { label: "January", value: "01" },
@@ -46,50 +53,104 @@ const ITCReconciliation = () => {
     { label: "December", value: "12" },
   ];
 
-  const years = ["2024", "2025", "2026"];
+  const years = ["2019", "2024", "2025", "2026"];
 
-  const purchaseRegister = [
-    {
-      invoiceNo: "INV-2024-001",
-      supplierGstin: "24ACRPP7935N1ZO",
-      taxableValue: 26250.0,
-      taxAmount: 4725.0,
-      date: "2024-12-05",
-      period: "112025",
-    },
-    {
-      invoiceNo: "GGL-99812",
-      supplierGstin: "06AACCG0527D1Z8",
-      taxableValue: 2208.0,
-      taxAmount: 397.44,
-      date: "2024-12-10",
-      period: "112024",
-    },
-    {
-      invoiceNo: "STATIONERY-44",
-      supplierGstin: "08ABCDE1234F1Z1",
-      taxableValue: 5000.0,
-      taxAmount: 900.0,
-      date: "2024-11-15",
-      period: "112025",
-    },
-    {
-      invoiceNo: "HARDWARE-99",
-      supplierGstin: "24AAAAA0000A1Z5",
-      taxableValue: 10000.0,
-      taxAmount: 1800.0,
-      date: "2025-11-20",
-      period: "112025",
-    },
-    {
-      invoiceNo: "HARDWARE-99",
-      supplierGstin: "24AAAAA0000A1Z5",
-      taxableValue: 10000.0,
-      taxAmount: 1800.0,
-      date: "2025-11-20",
-      period: "112024",
-    },
-  ];
+  const getAllPurchase = async () => {
+    const purchase_CollectionRef = collection(
+      doc(db, "GST", gstin),
+      "Purchase"
+    );
+    const data = await getDocs(purchase_CollectionRef);
+
+    const purchaseInfo = data.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+
+    const targetMonthYear = selectedMonth + selectedYear;
+    // Filter the array based on the passed monthYear
+    return purchaseInfo.filter((item) => item.monthYear === targetMonthYear);
+  };
+
+  const handleReconcile = (purchaseRegister, gstr2bData) => {
+    // 1. Aggregate BOOKS data by GSTIN
+    const booksSummary = new Map();
+    purchaseRegister.forEach((inv) => {
+      const existing = booksSummary.get(inv.vendorGstin) || {
+        totalTax: 0,
+        count: 0,
+      };
+      booksSummary.set(inv.vendorGstin, {
+        totalTax: existing.totalTax + inv.totalTax,
+        count: existing.count + 1,
+        vendorGstin: inv.vendorGstin,
+      });
+    });
+
+    // 2. Aggregate PORTAL data by GSTIN
+    const portalSummary = new Map();
+    gstr2bData.data.b2b.forEach((vendor) => {
+      const portalTax =
+        (vendor.cgst || 0) + (vendor.sgst || 0) + (vendor.igst || 0);
+      portalSummary.set(vendor.ctin, {
+        portalTax: portalTax,
+        vendorName: vendor.trdnm,
+        ctin: vendor.ctin,
+      });
+    });
+
+    const finalReport = [];
+    let totalPotentialLoss = 0;
+
+    // --- STEP 1: Check Books vs Portal ---
+    booksSummary.forEach((bookData, gstin) => {
+      const portalData = portalSummary.get(gstin);
+      let status = "MATCHED";
+      let creditGap = 0;
+      let pTax = 0;
+
+      if (!portalData) {
+        status = "MISSING_IN_PORTAL";
+        creditGap = bookData.totalTax;
+      } else {
+        pTax = portalData.portalTax;
+        const diff = bookData.totalTax - pTax;
+
+        if (Math.abs(diff) > 1) {
+          // 1 Rupee tolerance
+          status = "VALUE_MISMATCH";
+          creditGap = diff > 0 ? diff : 0;
+        }
+      }
+
+      if (creditGap > 0) totalPotentialLoss += parseFloat(creditGap);
+
+      finalReport.push({
+        vendorGstin: gstin,
+        vendorName: portalData?.vendorName || "Unknown Vendor",
+        booksTax: bookData.totalTax,
+        portalTax: pTax,
+        status: status,
+        creditGap: creditGap,
+      });
+    });
+
+    // --- STEP 2: Find Records ONLY in Portal ---
+    portalSummary.forEach((portalData, gstin) => {
+      if (!booksSummary.has(gstin)) {
+        finalReport.push({
+          vendorGstin: gstin,
+          vendorName: portalData.vendorName,
+          booksTax: 0,
+          portalTax: portalData.portalTax,
+          status: "MISSING_IN_BOOKS",
+          creditGap: 0,
+        });
+      }
+    });
+
+    return { finalReport, totalPotentialLoss };
+  };
 
   // 1. Reconciliation Logic
   const reconSummary = useMemo(() => {
@@ -163,6 +224,7 @@ const ITCReconciliation = () => {
         setError("No data found for the selected period.");
         setGstr2bData(null);
       }
+      return data;
     } catch (err) {
       setError("Failed to sync with GST Portal.");
       console.error(err);
@@ -171,6 +233,21 @@ const ITCReconciliation = () => {
     }
   };
 
+  const RunReconcialion = async () => {
+    // 1. get all purchase entries
+    const purchases = await getAllPurchase();
+    setPurchaseRegister(purchases);
+    const gstr2bData = await fetchGSTR2B();
+    const { finalReport, totalPotentialLoss } = handleReconcile(
+      purchases,
+      gstr2bData
+    );
+    setReportData(finalReport);
+    setLoss(totalPotentialLoss);
+    // 2. get gstr2b data
+
+    // 3. fill recon data
+  };
   // Initial fetch
   useEffect(() => {
     fetchGSTR2B();
@@ -226,7 +303,9 @@ const ITCReconciliation = () => {
               Total ITC At Risk
             </h3>
             <div className="mt-1">
-              <span className="text-4xl font-black text-red-600">₹42,850</span>
+              <span className="text-4xl font-black text-red-600">
+                ₹{parseFloat(loss).toFixed(2)}
+              </span>
             </div>
             <p className="mt-4 text-sm text-slate-500 font-medium flex items-center gap-1">
               <AlertCircle size={14} className="text-red-500" /> 8 Suppliers
@@ -266,7 +345,7 @@ const ITCReconciliation = () => {
             ITC Loss Dashboard
           </h1>
           <p className="text-red-600 font-semibold text-lg">
-            Total Potential ITC Loss: ₹{reconSummary.totalLoss.toLocaleString()}
+            Total Potential ITC Loss: ₹{loss}
           </p>
 
           <div className="flex justify-between items-center mt-4">
@@ -297,13 +376,13 @@ const ITCReconciliation = () => {
             </div>
 
             <button
-              onClick={fetchGSTR2B}
+              onClick={() => RunReconcialion()}
               disabled={loading}
               className={`px-6 py-2 font-bold text-white rounded shadow transition ${
                 loading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
               }`}
             >
-              {loading ? "Syncing..." : "Sync Portal"}
+              {loading ? "Syncing..." : "Run Reconciliation"}
             </button>
           </div>
         </header>
@@ -331,22 +410,15 @@ const ITCReconciliation = () => {
               </tr>
             </thead>
             <tbody>
-              {reconSummary.report.length > 0 ? (
-                reconSummary.report.map((item, idx) => (
+              {reportData.length > 0 ? (
+                reportData.map((item, idx) => (
                   <tr key={idx} className="border-b hover:bg-gray-50">
                     <td className="p-4 font-mono text-sm">
-                      {item.supplierGstin}
+                      {item.vendorGstin}
                     </td>
-                    <td className="p-4">₹{item.taxAmount.toFixed(2)}</td>
+                    <td className="p-4">₹{item.booksTax.toFixed(2)}</td>
                     <td className="p-4">
-                      ₹
-                      {item.portalMatch
-                        ? (
-                            item.portalMatch.cgst +
-                            item.portalMatch.sgst +
-                            item.portalMatch.igst
-                          ).toFixed(2)
-                        : "0.00"}
+                      ₹{item.portalTax ? item.portalTax.toFixed(2) : "0.00"}
                     </td>
                     <td className="p-4">
                       <span
@@ -363,10 +435,10 @@ const ITCReconciliation = () => {
                     </td>
                     <td
                       className={`p-4 font-bold ${
-                        item.diff > 0 ? "text-red-600" : "text-gray-400"
+                        item.creditGap > 0 ? "text-red-600" : "text-gray-400"
                       }`}
                     >
-                      ₹{item.diff.toFixed(2)}
+                      ₹{parseFloat(item.creditGap).toFixed(2)}
                     </td>
                   </tr>
                 ))

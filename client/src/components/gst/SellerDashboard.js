@@ -15,53 +15,76 @@ import GSTReturnModal from "./GSTReturnModal";
 import Loader from "../Loader";
 import { NavLink, useNavigate } from "react-router-dom";
 import Header from "./Header";
+import { collection, doc, getDocs } from "firebase/firestore";
+import { db } from "../../config/firebase";
 
 const API = BASE_URL + "/api/sellers";
 
 const Dashboard = () => {
-  const data = [
-    {
-      sellerName: "Rathore Traders",
-      gstin: "27AABCA2020Q2ZR",
-      status: "Not Checked",
-      returnType: "NA",
-      dof: "",
-      gstinstatus: "",
-      frequency: "",
-      ret_prd: "",
-    },
-    {
-      sellerName: "RATHORE GENERAL STORE",
-      gstin: "08AFLPR4165H1Z1",
-      status: "Not Checked",
-      returnType: "NA",
-      dof: "",
-      gstinstatus: "",
-      frequency: "",
-      ret_prd: "",
-    },
-    {
-      sellerName: "Gupta Electronics",
-      gstin: "36AAGCE2128N1ZH",
-      status: "Not Checked",
-      returnType: "NA",
-      dof: "",
-      gstinstatus: "",
-      frequency: "",
-      ret_prd: "",
-    },
-    {
-      sellerName: "Verma Textiles",
-      gstin: "29AADCF7875L1ZU",
-      status: "Not Checked",
-      returnType: "NA",
-      dof: "",
-      gstinstatus: "",
-      frequency: "",
-      ret_prd: "",
-    },
-  ];
-  const [sellers, setSellers] = useState(data);
+  const [data, setData] = useState([]);
+  // const data = [
+  //   {
+  //     sellerName: "Rathore Traders",
+  //     gstin: "27AABCA2020Q2ZR",
+  //     status: "Not Checked",
+  //     returnType: "NA",
+  //     dof: "",
+  //     gstinstatus: "",
+  //     frequency: "",
+  //     ret_prd: "",
+  //   },
+  //   {
+  //     sellerName: "RATHORE GENERAL STORE",
+  //     gstin: "08AFLPR4165H1Z1",
+  //     status: "Not Checked",
+  //     returnType: "NA",
+  //     dof: "",
+  //     gstinstatus: "",
+  //     frequency: "",
+  //     ret_prd: "",
+  //   },
+  //   {
+  //     sellerName: "MANOJ KIRANA STORE",
+  //     gstin: "08ADLPG4400A1Z8",
+  //     status: "Not Checked",
+  //     returnType: "NA",
+  //     dof: "",
+  //     gstinstatus: "",
+  //     frequency: "",
+  //     ret_prd: "",
+  //   },
+  //   {
+  //     sellerName: "Verma Textiles",
+  //     gstin: "29AADCF7875L1ZU",
+  //     status: "Not Checked",
+  //     returnType: "NA",
+  //     dof: "",
+  //     gstinstatus: "",
+  //     frequency: "",
+  //     ret_prd: "",
+  //   },
+  //   {
+  //     sellerName: "Verma Textiles",
+  //     gstin: "06AAGCI2941B1Z0",
+  //     status: "Not Checked",
+  //     returnType: "NA",
+  //     dof: "",
+  //     gstinstatus: "",
+  //     frequency: "",
+  //     ret_prd: "",
+  //   },
+  //   {
+  //     sellerName: "Verma Textiles",
+  //     gstin: "27ABDCS5022R1ZW",
+  //     status: "Not Checked",
+  //     returnType: "NA",
+  //     dof: "",
+  //     gstinstatus: "",
+  //     frequency: "",
+  //     ret_prd: "",
+  //   },
+  // ];
+  const [sellers, setSellers] = useState([]);
   const [seller, setSeller] = useState({});
   const [name, setName] = useState("");
   const [gstin, setGstin] = useState(localStorage.getItem("verified_gstin"));
@@ -74,6 +97,10 @@ const Dashboard = () => {
   const [isUserExists, setIsUserExists] = useState(
     localStorage.getItem("gstUser") ? true : false
   );
+  const [checkStatusTriggered, setCheckStatusTriggered] = useState(false);
+  const [filled, setFilled] = useState(0);
+  const [partiallyFilled, setPartiallyFilled] = useState(0);
+  const [notFilled, setNotFilled] = useState(0);
   const navigate = useNavigate();
   const processGstData = (data) => {
     // Helper to convert "DD-MM-YYYY" string to a Date object for comparison
@@ -111,9 +138,47 @@ const Dashboard = () => {
       });
   };
 
+  const handleGetStatus = () => {
+    setLoading(true);
+    setFilled(0);
+    setNotFilled(0);
+    setPartiallyFilled(0);
+    for (let i = 0; i < sellers.length; i++) {
+      checkStatus(sellers[i].gstin);
+    }
+    setLoading(false);
+  };
+
+  const getAllGstinForMonth = async () => {
+    const purchase_CollectionRef = collection(
+      doc(db, "GST", gstin),
+      "Purchase"
+    );
+
+    const data1 = await getDocs(purchase_CollectionRef);
+    const purchaseInfo = data1.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+
+    let info = [];
+    for (var i = 0; i < purchaseInfo.length; i++) {
+      info.push({
+        sellerName: "",
+        gstin: purchaseInfo[i].vendorGstin,
+        status: "Not Checked",
+        returnType: "NA",
+        dof: "",
+        gstinstatus: "",
+        frequency: "",
+        ret_prd: "",
+      });
+    }
+    setSellers(info);
+  };
+
   const checkStatus = async (id) => {
     try {
-      setLoading(true);
       const res = await axios.get(`${API}/check/${id}`, {
         params: { year: year },
       });
@@ -123,6 +188,7 @@ const Dashboard = () => {
         return;
       }
 
+      setCheckStatusTriggered(true);
       const data = JSON.parse(res.data.eFilingList).EFiledlist;
       const searchResult = JSON.parse(res.data.searchResult);
 
@@ -141,15 +207,18 @@ const Dashboard = () => {
       );
 
       let status = "Not Filed";
+
       if (hasGSTR1Filed && hasGSTR3Filed) {
         status = "Filed";
+        setFilled((prevCount) => prevCount + 1);
       } else if (hasGSTR1Filed && !hasGSTR3Filed) {
         status = "Partially Filed";
+        setPartiallyFilled((prevCount) => prevCount + 1);
       } else {
         status = "Not Filed";
+        setNotFilled((prevCount) => prevCount + 1);
       }
 
-      console.log("Processed GST Data for GSTIN", id, ":", resultByMonth);
       setSellers((prevSellers) =>
         prevSellers.map((seller) =>
           seller.gstin === id
@@ -178,8 +247,6 @@ const Dashboard = () => {
         ":",
         er.response.data.error.message
       );
-    } finally {
-      setLoading(false);
     }
   };
   const months = [
@@ -227,6 +294,9 @@ const Dashboard = () => {
       navigate("/gst/login");
     }
   }, []);
+  useEffect(() => {
+    getAllGstinForMonth();
+  }, []);
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans">
       {/* --- TOP BANNER (Sticky) --- */}
@@ -262,22 +332,19 @@ const Dashboard = () => {
           </div>
 
           {/* Stats Summary (Optional but adds 'Stunning' factor) */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             <StatCard
               label="Total Sellers"
               value={sellers.length}
               color="blue"
             />
+            <StatCard label="Filed" value={filled} color="green" />
             <StatCard
-              label="Filed Returns"
-              value={sellers.filter((s) => s.status === "Filed").length}
-              color="green"
+              label="Partially Filed"
+              value={partiallyFilled}
+              color="yellow"
             />
-            <StatCard
-              label="Pending Returns"
-              value={sellers.filter((s) => s.status !== "Filed").length}
-              color="red"
-            />
+            <StatCard label="Not Filed" value={notFilled} color="red" />
           </div>
           <div className="flex items-center justify-between">
             <p className="text-blue-600 font-medium mb-2">
@@ -334,7 +401,7 @@ const Dashboard = () => {
                 </select>
               </div>
               <button
-                //onClick={() => checkStatus(gstin)}
+                onClick={() => handleGetStatus()}
                 className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm flex items-center gap-2"
               >
                 Get Status
@@ -378,9 +445,9 @@ const Dashboard = () => {
                     <th className="px-6 py-4 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider">
                       History
                     </th>
-                    <th className="px-6 py-4 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                    {/* <th className="px-6 py-4 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider">
                       Actions
-                    </th>
+                    </th> */}
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
@@ -396,7 +463,7 @@ const Dashboard = () => {
                     </td> */}
                       {/* 1. Center Name/Vendor ID */}
                       <td className="px-6 py-4 text-center">
-                        <div className="font-semibold text-slate-800">
+                        <div className="font-semibold text-sm text-slate-800">
                           {s.name}
                         </div>
                       </td>
@@ -410,8 +477,8 @@ const Dashboard = () => {
 
                       {/* 3. Center Status Badge */}
                       <td className="px-6 py-4">
-                        <div className="flex justify-center">
-                          {renderStatusBadge(s)}
+                        <div className="flex text-sm justify-center">
+                          {renderStatusBadge(s, checkStatusTriggered)}
                         </div>
                       </td>
                       <td className=" text-center">
@@ -437,9 +504,7 @@ const Dashboard = () => {
                         </span>
                       </td>
                       <td className=" text-center">
-                        <span className="font-mono text-sm text-slate-600 bg-slate-100 px-2 py-1 rounded inline-block">
-                          {s.newData ? s.newData[0].data[0].rtntype : s.rtntype}
-                        </span>
+                        <span className="font-mono text-sm text-slate-600 bg-slate-100 px-2 py-1 rounded inline-block"></span>
                       </td>
 
                       <td className="px-6 py-4 text-center">
@@ -458,10 +523,10 @@ const Dashboard = () => {
                       </td>
 
                       {/* 4. Center Actions */}
-                      <td className="px-6 py-4">
+                      {/* <td className="px-6 py-4">
                         <div className="flex items-center justify-center gap-2">
                           {" "}
-                          {/* Changed justify-end to justify-center */}
+                         
                           <button
                             onClick={() => checkStatus(s.gstin)}
                             className="..."
@@ -469,7 +534,7 @@ const Dashboard = () => {
                             <RefreshCw size={18} />
                           </button>
                         </div>
-                      </td>
+                      </td> */}
                     </tr>
                   ))}
                 </tbody>
@@ -521,9 +586,16 @@ const StatCard = ({ label, value, color }) => {
   );
 };
 
-const renderStatusBadge = (seller) => {
+const renderStatusBadge = (seller, checkStatusTriggered) => {
   const status = seller.status?.toUpperCase();
 
+  if (!checkStatusTriggered) {
+    return (
+      <span className="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-black bg-gray-100 text-gray-700 border border-emerald-200 shadow-sm">
+        <ShieldCheck size={14} strokeWidth={3} /> Not Verified
+      </span>
+    );
+  }
   // 1. Success State: Fully Filed
   if (status === "FILED") {
     return (

@@ -11,6 +11,8 @@ import {
 import { NavLink, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../Constant";
 import axios from "axios";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "../../config/firebase";
 
 const GSTINOnboarding = ({ onComplete }) => {
   const [gstin, setGstin] = useState("");
@@ -118,10 +120,9 @@ const GSTINOnboarding = ({ onComplete }) => {
   // Usage
 
   // 2. Logic to save and move to dashboard
-  const handleConfirmAndSave = () => {
+  const handleConfirmAndSave = async () => {
     // Save to your DB/LocalStorage
-    const finalData = { gstin, ...shopDetails };
-    localStorage.setItem("gstin_data", finalData);
+
     localStorage.setItem("tradeName", shopDetails.tradeName);
     localStorage.setItem("gstfilingfreq", filingFrequency);
     localStorage.setItem("turnoverRange", turnoverRange);
@@ -133,6 +134,26 @@ const GSTINOnboarding = ({ onComplete }) => {
 
     localStorage.setItem("gstr1DueDate", gstr1DueDate);
     localStorage.setItem("gstr3bDueDate", gstr3bDueDate.dueDate);
+
+    // save to db
+    const shopkeeperGst = localStorage.getItem("verified_gstin");
+
+    const gst_CollectionRef = collection(db, "GST_Shopkeepers");
+    await addDoc(gst_CollectionRef, {
+      loginDate: new Date().toISOString().slice(0, 10),
+      gstin: shopkeeperGst,
+      tradeName: shopDetails.tradeName,
+      legalName: shopDetails.legalName,
+      address: shopDetails.address,
+      status: shopDetails.status,
+      state: shopDetails.state,
+      registrationDate: shopDetails.registrationDate,
+      filingFrequency: filingFrequency,
+      turnoverRange: turnoverRange,
+      gstr1DueDate: gstr1DueDate,
+      gstr3bDueDate: gstr3bDueDate.dueDate,
+      mobile: localStorage.getItem("gstUser"),
+    });
 
     navigate("/gst/owndashboard");
 

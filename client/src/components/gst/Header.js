@@ -2,12 +2,26 @@ import React, { useState } from "react";
 
 import { ShieldCheck } from "lucide-react";
 
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const Header = () => {
   const [isUserExists, setIsUserExists] = useState(
     localStorage.getItem("gstUser") ? true : false
   );
+
+  const navigate = useNavigate();
+  const handleLogin = () => {
+    navigate("/gst/login");
+  };
+
+  const handleLogout = () => {
+    var res = window.confirm("are you sure you want to logout?");
+    if (!res) return;
+    localStorage.clear();
+    setIsUserExists(false);
+    navigate("/gst/login");
+  };
+
   return (
     <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 px-6 py-4">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
@@ -38,15 +52,24 @@ const Header = () => {
           >
             ITC Reconciliation
           </NavLink>
-          <a href="#" className="hover:text-blue-600 transition-colors">
-            Vendor Tracking
-          </a>
+          <NavLink
+            to="/gst/purchasereg"
+            className="hover:text-blue-600 transition-colors"
+          >
+            Purchage
+          </NavLink>
           {!isUserExists ? (
-            <button className="bg-slate-900 text-white px-5 py-2.5 rounded-xl hover:bg-blue-600 transition-all shadow-md">
+            <button
+              onClick={() => handleLogin()}
+              className="bg-slate-900 text-white px-5 py-2.5 rounded-xl hover:bg-blue-600 transition-all shadow-md"
+            >
               Login to Portal
             </button>
           ) : (
-            <button className="bg-slate-900 text-white px-5 py-2.5 rounded-xl hover:bg-blue-600 transition-all shadow-md">
+            <button
+              onClick={() => handleLogout()}
+              className="bg-slate-900 text-white px-5 py-2.5 rounded-xl hover:bg-blue-600 transition-all shadow-md"
+            >
               Logout
             </button>
           )}

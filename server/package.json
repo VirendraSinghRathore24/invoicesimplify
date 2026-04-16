@@ -4,6 +4,7 @@
     "dev": "nodemon server.js"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "axios": "^1.9.0",
     "body-parser": "^2.2.0",
     "cors": "^2.8.5",
@@ -15,8 +16,10 @@
     "firebase-admin": "^13.4.0",
     "form-data": "^4.0.3",
     "html-pdf": "^3.0.1",
+    "multer": "^2.1.1",
     "node-cron": "^4.2.1",
     "nodemailer": "^7.0.5",
+    "openai": "^6.34.0",
     "pdfkit": "^0.17.1",
     "puppeteer": "^24.25.0",
     "qrcode": "^1.5.4",

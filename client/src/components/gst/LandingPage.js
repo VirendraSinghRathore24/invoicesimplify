@@ -114,17 +114,6 @@ const LandingPage = () => {
     setTrustScore(score);
   };
 
-  const handleLogin = () => {
-    navigate("/gst/login");
-  };
-
-  const handleLogout = () => {
-    var res = window.confirm("are you sure you want to logout?");
-    if (!res) return;
-    localStorage.removeItem("gstUser");
-    setIsUserExists(false);
-  };
-
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans">
       {/* --- TOP BANNER (Sticky) --- */}

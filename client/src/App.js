@@ -74,6 +74,8 @@ import LandingPage from "./components/gst/LandingPage";
 import ShopkeeperGSTRDashboard from "./components/gst/ShopkeeperGSTRDashboard";
 import LoginPage from "./components/gst/LoginPage";
 import GSTINOnboarding from "./components/gst/GSTINOnboarding";
+import ManualSalesEntry from "./components/gst/ManualSalesEntry";
+import PurchaseRegister from "./components/gst/PurchaseRegister";
 
 function App() {
   const location = useLocation();
@@ -96,6 +98,8 @@ function App() {
     "/gst/sellerdashboard",
     "/gst/itc",
     "/gst/pef",
+    "/gst/purchasereg",
+    "/gst/sales",
     "/gst/",
     "/gst",
     "/gst/owndashboard",
@@ -165,8 +169,10 @@ function App() {
             path="/gst/owndashboard"
             element={<ShopkeeperGSTRDashboard />}
           />
+          <Route path="/gst/purchasereg" element={<PurchaseRegister />} />
           <Route path="/gst/itc" element={<ITCReconciliation />} />
           <Route path="/gst/pef" element={<PurchaseEntryForm />} />
+          <Route path="/gst/sales" element={<ManualSalesEntry />} />
           <Route path="/success" element={<Success />} />
           <Route path="/paymenthistory" element={<PaymentHistory />} />
           <Route path="/ci/:id" element={<ViewInvoiceByCustomer />} />

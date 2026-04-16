@@ -7,6 +7,7 @@ const path = require("path");
 const axios = require("axios");
 const cors = require("cors");
 const app = express();
+const OpenAI = require("openai");
 const PDFDocument = require("pdfkit");
 const FormData = require("form-data");
 const ejs = require("ejs");
@@ -16,8 +17,9 @@ const cron = require("node-cron");
 const admin = require("firebase-admin");
 const serviceAccount = require("./firebaseServiceAccount.json");
 const bodyParser = require("body-parser");
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 dotenv.config();
-
+const multer = require("multer");
 app.use(bodyParser.json({ limit: "10mb" }));
 
 const Razorpay = require("razorpay");
@@ -406,13 +408,13 @@ app.get("/api/gst/gstr2b", async (req, res) => {
       success: true,
       gstr2bData: [
         {
-          gstin: "27AAAAA0000A1Z5",
+          gstin: gstin,
           fp: "112024",
           dt: "14-12-2024",
           data: {
             b2b: [
               {
-                ctin: "24ACRPP7935N1ZO",
+                ctin: "09AAECS1429B1ZP",
                 trdnm: "HITESHKUMAR DWARKADAS PATEL",
                 supfildt: "07-12-2024",
                 supprd: "112024",
@@ -424,25 +426,25 @@ app.get("/api/gst/gstr2b", async (req, res) => {
                 cess: 0.0,
               },
               {
-                ctin: "06AACCG0527D1Z8",
+                ctin: "09AAECS1429B1ZS",
                 trdnm: "GOOGLE INDIA PVT LTD",
                 supfildt: "11-11-2024",
                 supprd: "102024",
                 ttldocs: 1,
                 txval: 2208.0,
-                igst: 397.44,
+                igst: 4725,
                 cgst: 0.0,
                 sgst: 0.0,
                 cess: 0.0,
               },
               {
-                ctin: "24AAAAA0000A1Z5",
+                ctin: "08AFLPR4165H1Z1",
                 trdnm: "HARDWARE SUPPLIER LTD",
                 supfildt: "10-12-2024",
                 supprd: "112024",
                 ttldocs: 1,
-                txval: 8000.0, // Mismatch: Registered as 8000 instead of 10000
-                igst: 1440.0,
+                txval: 18000.0, // Mismatch: Registered as 8000 instead of 10000
+                igst: 14440.0,
                 cgst: 0.0,
                 sgst: 0.0,
                 cess: 0.0,
@@ -481,6 +483,79 @@ app.get("/api/sellers1/check/:id", async (req, res) => {
     ...seller,
     ...result,
   });
+});
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const dir = path.join(__dirname, "uploads");
+    cb(null, dir);
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10MB limit
+  },
+  fileFilter: (req, file, cb) => {
+    // Only allow common image formats
+    const allowedTypes = /jpeg|jpg|png|webp/;
+    const extName = allowedTypes.test(
+      path.extname(file.originalname).toLowerCase()
+    );
+    const mimeType = allowedTypes.test(file.mimetype);
+
+    if (extName && mimeType) {
+      return cb(null, true);
+    } else {
+      cb(new Error("Only image files (JPG, PNG, WEBP) are allowed!"));
+    }
+  },
+});
+
+// 2. Initialize Gemini
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+app.post("/api/extract-invoice", upload.single("invoice"), async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ error: "No file uploaded" });
+
+    // Read image and convert to Base64
+    const imageData = fs.readFileSync(req.file.path).toString("base64");
+    const base64Image = `data:${req.file.mimetype};base64,${imageData}`;
+
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o", // Use GPT-4o for best vision results
+      messages: [
+        {
+          role: "user",
+          content: [
+            {
+              type: "text",
+              text: "Extract data from this Indian GST invoice. Return ONLY a JSON object with: gstin, invoice_no, date (DD-MM-YYYY), taxable_value, total_tax, total, cgst, sgst, igst, and items (desc and total).",
+            },
+            {
+              type: "image_url",
+              image_url: { url: base64Image },
+            },
+          ],
+        },
+      ],
+      response_format: { type: "json_object" }, // Ensures valid JSON output
+    });
+
+    // Cleanup file from local storage
+    fs.unlinkSync(req.file.path);
+
+    const result = JSON.parse(response.choices[0].message.content);
+    res.json(result);
+  } catch (error) {
+    console.error("OpenAI Error:", error);
+    res.status(500).json({ error: "AI extraction failed." });
+  }
 });
 
 const transporter = nodemailer.createTransport({

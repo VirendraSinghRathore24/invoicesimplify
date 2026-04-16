@@ -21,7 +21,6 @@ const ShopkeeperGSTRDashboard = () => {
   const [seller, setSeller] = useState({});
   const [name, setName] = useState("");
   const [gstin, setGstin] = useState(localStorage.getItem("verified_gstin"));
-
   const [year, setYear] = useState("2025-26");
   const [selectedYear, setSelectedYear] = useState("");
   const yearOptions = ["2023-24", "2024-25", "2025-26", "2026-27"];
