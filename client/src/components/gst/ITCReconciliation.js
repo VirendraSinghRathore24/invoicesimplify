@@ -9,14 +9,18 @@ import {
   LayoutDashboard,
   ShieldCheck,
   TrendingDown,
+  TrendingUp,
 } from "lucide-react";
 import Header from "./Header";
 import { collection, doc, getDocs } from "firebase/firestore";
 import { db } from "../../config/firebase";
+import Loader from "../Loader";
 
 const ITCReconciliation = () => {
   const [reconData, setReconData] = useState([]);
   const [loss, setLoss] = useState(0);
+  const [totalBooksTax, setTotalBooksTax] = useState(0);
+  const [totalPortalTax, setTotalPortalTax] = useState(0);
   const [reportData, setReportData] = useState({ report: [], totalLoss: 0 });
   const [gstr2bData, setGstr2bData] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -26,14 +30,15 @@ const ITCReconciliation = () => {
   );
 
   const gstin = localStorage.getItem("verified_gstin");
+  const filingFrequency = localStorage.getItem("gstfilingfreq");
   const navigate = useNavigate();
 
   // Dropdown selection states
-  const [selectedMonth, setSelectedMonth] = useState("11");
+  const [selectedMonth, setSelectedMonth] = useState("03");
   const [selectedYear, setSelectedYear] = useState("2024");
 
   // Display states (updates only after successful sync)
-  const [displayMonth, setDisplayMonth] = useState("11");
+  const [displayMonth, setDisplayMonth] = useState("03");
   const [displayYear, setDisplayYear] = useState("2024");
 
   const [purchaseRegister, setPurchaseRegister] = useState([]);
@@ -53,6 +58,13 @@ const ITCReconciliation = () => {
     { label: "December", value: "12" },
   ];
 
+  const monthsForQuarterly = [
+    { label: "March", value: "03" },
+    { label: "June", value: "06" },
+    { label: "September", value: "09" },
+    { label: "December", value: "12" },
+  ];
+
   const years = ["2019", "2024", "2025", "2026"];
 
   const getAllPurchase = async () => {
@@ -67,67 +79,111 @@ const ITCReconciliation = () => {
       id: doc.id,
     }));
 
-    const targetMonthYear = selectedMonth + selectedYear;
+    if (filingFrequency === "monthly") {
+      const targetMonthYear = selectedMonth + selectedYear;
+      return purchaseInfo.filter((item) => item.monthYear === targetMonthYear);
+    }
+    return getThreeMonthData(purchaseInfo, selectedMonth, selectedYear);
     // Filter the array based on the passed monthYear
-    return purchaseInfo.filter((item) => item.monthYear === targetMonthYear);
   };
 
+  const getThreeMonthData = (purchaseInfo, selectedMonth, selectedYear) => {
+    // 1. Convert inputs to numbers
+    let month = parseInt(selectedMonth);
+    let year = parseInt(selectedYear);
+
+    const targetPeriods = [];
+
+    // 2. Generate target month and the 2 preceding months
+    for (let i = 0; i < 3; i++) {
+      // Format month to 2 digits (e.g., 4 -> "04")
+      const mm = month.toString().padStart(2, "0");
+      targetPeriods.push(`${mm}${year}`);
+
+      // Move to the previous month
+      month--;
+      if (month === 0) {
+        month = 12;
+        year--;
+      }
+    }
+
+    // targetPeriods now looks like ["042026", "032026", "022026"]
+
+    // 3. Filter the array
+    const result = purchaseInfo.filter((item) =>
+      targetPeriods.includes(item.monthYear)
+    );
+    return result;
+  };
   const handleReconcile = (purchaseRegister, gstr2bData) => {
-    // 1. Aggregate BOOKS data by GSTIN
     const booksSummary = new Map();
+    let totalBooksTaxCalculated = 0;
+
+    // 1. Group Books by GSTIN (The Source of Truth for your expenses)
     purchaseRegister.forEach((inv) => {
       const existing = booksSummary.get(inv.vendorGstin) || {
         totalTax: 0,
         count: 0,
       };
       booksSummary.set(inv.vendorGstin, {
-        totalTax: existing.totalTax + inv.totalTax,
+        totalTax: existing.totalTax + (inv.totalTax || 0),
         count: existing.count + 1,
-        vendorGstin: inv.vendorGstin,
       });
+      totalBooksTaxCalculated += inv.totalTax || 0;
     });
+    setTotalBooksTax(totalBooksTaxCalculated);
 
-    // 2. Aggregate PORTAL data by GSTIN
+    // 2. Group Portal by GSTIN
     const portalSummary = new Map();
-    gstr2bData.data.b2b.forEach((vendor) => {
-      const portalTax =
-        (vendor.cgst || 0) + (vendor.sgst || 0) + (vendor.igst || 0);
-      portalSummary.set(vendor.ctin, {
-        portalTax: portalTax,
-        vendorName: vendor.trdnm,
-        ctin: vendor.ctin,
+    let totalPortalTaxCalculated = 0;
+
+    if (gstr2bData?.b2b) {
+      gstr2bData.b2b.forEach((vendor) => {
+        const vendorTax = vendor.inv.reduce(
+          (sum, inv) =>
+            sum + (inv.cgst || 0) + (inv.sgst || 0) + (inv.igst || 0),
+          0
+        );
+        portalSummary.set(vendor.ctin, {
+          portalTax: vendorTax,
+          vendorName: vendor.trdnm,
+        });
+        totalPortalTaxCalculated += vendorTax;
       });
-    });
+    }
+    setTotalPortalTax(totalPortalTaxCalculated);
 
     const finalReport = [];
     let totalPotentialLoss = 0;
 
-    // --- STEP 1: Check Books vs Portal ---
+    // --- STEP 1: Loop through ALL Books (This finds MATCHED and MISSING_IN_PORTAL) ---
     booksSummary.forEach((bookData, gstin) => {
-      const portalData = portalSummary.get(gstin);
-      let status = "MATCHED";
+      const portalMatch = portalSummary.get(gstin);
+      let status = "";
       let creditGap = 0;
-      let pTax = 0;
+      let pTax = portalMatch ? portalMatch.portalTax : 0;
 
-      if (!portalData) {
+      if (!portalMatch) {
+        // MANDATORY: If it's in books but NOT in portal, it shows up here
         status = "MISSING_IN_PORTAL";
         creditGap = bookData.totalTax;
       } else {
-        pTax = portalData.portalTax;
         const diff = bookData.totalTax - pTax;
-
         if (Math.abs(diff) > 1) {
-          // 1 Rupee tolerance
           status = "VALUE_MISMATCH";
           creditGap = diff > 0 ? diff : 0;
+        } else {
+          status = "MATCHED";
+          creditGap = 0;
         }
       }
 
-      if (creditGap > 0) totalPotentialLoss += parseFloat(creditGap);
+      totalPotentialLoss += creditGap;
 
       finalReport.push({
         vendorGstin: gstin,
-        vendorName: portalData?.vendorName || "Unknown Vendor",
+        vendorName: portalMatch?.vendorName || "Not Found in Portal",
         booksTax: bookData.totalTax,
         portalTax: pTax,
         status: status,
@@ -135,7 +191,7 @@ const ITCReconciliation = () => {
       });
     });
 
-    // --- STEP 2: Find Records ONLY in Portal ---
+    // --- STEP 2: Loop through Portal (To find MISSING_IN_BOOKS) ---
     portalSummary.forEach((portalData, gstin) => {
       if (!booksSummary.has(gstin)) {
         finalReport.push({
@@ -149,9 +205,10 @@ const ITCReconciliation = () => {
       }
     });
 
+    // 3. Final State Update
+    setReportData(finalReport); // This updates your table rows
     return { finalReport, totalPotentialLoss };
   };
-
   // 1. Reconciliation Logic
   const reconSummary = useMemo(() => {
     // 1. Safety Check: Return early if portal data or selection is missing
@@ -214,7 +271,12 @@ const ITCReconciliation = () => {
         params: { gstin, fp },
       });
 
-      const data = response.data.gstr2bData[0];
+      console.log(
+        "GSTR-2B Response:",
+        response.data.data.data.data.docdata.b2b
+      );
+      //const data = response.data.gstr2bData[0];
+      const data = response.data.data.data.data.docdata;
 
       if (data) {
         setGstr2bData(data);
@@ -234,6 +296,7 @@ const ITCReconciliation = () => {
   };
 
   const RunReconcialion = async () => {
+    setLoading(true);
     // 1. get all purchase entries
     const purchases = await getAllPurchase();
     setPurchaseRegister(purchases);
@@ -244,6 +307,7 @@ const ITCReconciliation = () => {
     );
     setReportData(finalReport);
     setLoss(totalPotentialLoss);
+    setLoading(false);
     // 2. get gstr2b data
 
     // 3. fill recon data
@@ -268,24 +332,34 @@ const ITCReconciliation = () => {
       <section className="mt-10">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Trust Score Card */}
-          <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 hover:border-blue-200 transition-all">
+          <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 hover:border-red-200 transition-all">
             <div className="flex justify-between items-start">
-              <div className="p-3 bg-blue-50 rounded-2xl text-blue-600">
-                <LayoutDashboard size={28} />
+              <div className="p-3 bg-red-50 rounded-2xl text-red-600">
+                <TrendingUp size={28} color="green" />
               </div>
-              <span className="text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded-md">
-                HEALTHY
-              </span>
             </div>
             <h3 className="mt-6 text-slate-400 font-bold text-xs uppercase tracking-widest">
-              Supplier Trust Index
+              Total Books Tax
             </h3>
-            <div className="flex items-baseline gap-2 mt-1">
-              <span className="text-4xl font-black text-slate-800">84.5</span>
-              <span className="text-slate-400 font-medium">/ 100</span>
+            <div className="mt-1">
+              <span className="text-4xl font-black text-green-600">
+                ₹{parseFloat(totalBooksTax).toFixed(2)}
+              </span>
             </div>
-            <div className="mt-4 h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-              <div className="h-full bg-blue-600 w-[84%]"></div>
+          </div>
+          <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 hover:border-red-200 transition-all">
+            <div className="flex justify-between items-start">
+              <div className="p-3 bg-red-50 rounded-2xl text-red-600">
+                <TrendingUp size={28} color="blue" />
+              </div>
+            </div>
+            <h3 className="mt-6 text-slate-400 font-bold text-xs uppercase tracking-widest">
+              Total Portal Tax
+            </h3>
+            <div className="mt-1">
+              <span className="text-4xl font-black text-blue-600">
+                ₹{parseFloat(totalPortalTax).toFixed(2)}
+              </span>
             </div>
           </div>
 
@@ -307,14 +381,14 @@ const ITCReconciliation = () => {
                 ₹{parseFloat(loss).toFixed(2)}
               </span>
             </div>
-            <p className="mt-4 text-sm text-slate-500 font-medium flex items-center gap-1">
+            {/* <p className="mt-4 text-sm text-slate-500 font-medium flex items-center gap-1">
               <AlertCircle size={14} className="text-red-500" /> 8 Suppliers
               haven't filed GSTR-1
-            </p>
+            </p> */}
           </div>
 
           {/* Quick Reports */}
-          <div className="bg-slate-900 p-8 rounded-3xl shadow-xl text-white">
+          {/* <div className="bg-slate-900 p-8 rounded-3xl shadow-xl text-white">
             <div className="flex justify-between items-start">
               <div className="p-3 bg-slate-800 rounded-2xl text-blue-400">
                 <History size={28} />
@@ -336,44 +410,73 @@ const ITCReconciliation = () => {
             <button className="w-full mt-6 bg-blue-600 py-3 rounded-xl font-bold hover:bg-blue-500 transition-all flex justify-center items-center gap-2">
               <Download size={18} /> Download Report
             </button>
-          </div>
+          </div> */}
         </div>
       </section>
-      <div className="p-6 bg-gray-50 min-h-screen">
+
+      <div className="p-6 bg-gray-50 min-h-screen w-10/12 mx-auto mt-10 rounded-lg">
         <header className="mb-6">
           <h1 className="text-2xl font-bold text-gray-800">
             ITC Loss Dashboard
           </h1>
           <p className="text-red-600 font-semibold text-lg">
-            Total Potential ITC Loss: ₹{loss}
+            Total Potential ITC Loss: ₹{loss.toFixed(2)}
           </p>
-
-          <div className="flex justify-between items-center mt-4">
-            <div className="flex gap-2 bg-white p-2 rounded-lg shadow-sm border">
-              <select
-                value={selectedMonth}
-                onChange={(e) => setSelectedMonth(e.target.value)}
-                className="bg-transparent outline-none text-sm font-medium text-gray-600"
-              >
-                {months.map((m) => (
-                  <option key={m.value} value={m.value}>
-                    {m.label}
-                  </option>
-                ))}
-              </select>
-              <div className="border-l h-6 self-center"></div>
-              <select
-                value={selectedYear}
-                onChange={(e) => setSelectedYear(e.target.value)}
-                className="bg-transparent outline-none text-sm font-medium text-gray-600"
-              >
-                {years.map((y) => (
-                  <option key={y} value={y}>
-                    {y}
-                  </option>
-                ))}
-              </select>
-            </div>
+          <div className="mt-4">Select Filing Month & Year:</div>
+          <div className="flex justify-between items-center mt-1">
+            {filingFrequency === "monthly" ? (
+              <div className="flex gap-2 bg-white p-2 rounded-lg shadow-sm border">
+                <select
+                  value={selectedMonth}
+                  onChange={(e) => setSelectedMonth(e.target.value)}
+                  className="bg-transparent outline-none text-sm font-medium text-gray-600"
+                >
+                  {months.map((m) => (
+                    <option key={m.value} value={m.value}>
+                      {m.label}
+                    </option>
+                  ))}
+                </select>
+                <div className="border-l h-6 self-center"></div>
+                <select
+                  value={selectedYear}
+                  onChange={(e) => setSelectedYear(e.target.value)}
+                  className="bg-transparent outline-none text-sm font-medium text-gray-600"
+                >
+                  {years.map((y) => (
+                    <option key={y} value={y}>
+                      {y}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            ) : (
+              <div className="flex gap-2 bg-white p-2 rounded-lg shadow-sm border">
+                <select
+                  value={selectedMonth}
+                  onChange={(e) => setSelectedMonth(e.target.value)}
+                  className="bg-transparent outline-none text-sm font-medium text-gray-600"
+                >
+                  {monthsForQuarterly.map((m) => (
+                    <option key={m.value} value={m.value}>
+                      {m.label}
+                    </option>
+                  ))}
+                </select>
+                <div className="border-l h-6 self-center"></div>
+                <select
+                  value={selectedYear}
+                  onChange={(e) => setSelectedYear(e.target.value)}
+                  className="bg-transparent outline-none text-sm font-medium text-gray-600"
+                >
+                  {years.map((y) => (
+                    <option key={y} value={y}>
+                      {y}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
 
             <button
               onClick={() => RunReconcialion()}
@@ -393,15 +496,20 @@ const ITCReconciliation = () => {
           </div>
         )}
 
-        <p className="text-blue-600 font-medium mb-2">
-          Showing results for:{" "}
-          {months.find((m) => m.value === displayMonth)?.label} {displayYear}
-        </p>
+        <div className="flex justify-between items-center mb-1">
+          <p className="text-blue-600 font-medium mb-2">
+            Showing results for:{" "}
+            {months.find((m) => m.value === displayMonth)?.label} {displayYear}
+          </p>
+          <p className="text-blue-600 font-medium mb-2">
+            Total Records found: {reportData.length}
+          </p>
+        </div>
 
         <div className="overflow-x-auto bg-white rounded-lg shadow">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-gray-100 border-b">
+              <tr className="bg-gray-100 border-b text-center">
                 <th className="p-4">Supplier GSTIN</th>
                 <th className="p-4">Books Tax</th>
                 <th className="p-4">Portal Tax</th>
@@ -412,7 +520,10 @@ const ITCReconciliation = () => {
             <tbody>
               {reportData.length > 0 ? (
                 reportData.map((item, idx) => (
-                  <tr key={idx} className="border-b hover:bg-gray-50">
+                  <tr
+                    key={idx}
+                    className="border-b hover:bg-gray-50  text-center"
+                  >
                     <td className="p-4 font-mono text-sm">
                       {item.vendorGstin}
                     </td>
@@ -453,6 +564,7 @@ const ITCReconciliation = () => {
           </table>
         </div>
       </div>
+      {loading && <Loader />}
     </div>
   );
 };

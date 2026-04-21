@@ -48,6 +48,39 @@ const InvoiceScanner = () => {
   const addPurchaseToFirestore = async (purchaseData) => {
     try {
       setLoading(true);
+
+      if (
+        !purchaseData.gstin ||
+        !purchaseData.invoice_no ||
+        !purchaseData.date
+      ) {
+        alert(
+          "GSTIN, Invoice Number and Date are required fields. Please verify the extracted data."
+        );
+        setLoading(false);
+        return;
+      }
+
+      // validate gst
+      const gstRegex =
+        /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
+      if (!gstRegex.test(purchaseData.gstin.toUpperCase())) {
+        alert("Invalid GSTIN format. Please check and try again.");
+        setLoading(false);
+        return;
+      }
+
+      // check if gst is active or not - call search gst api
+      const gstStatusResponse = await fetch(
+        `${BASE_URL}/api/search-gst?gstin=${purchaseData.gstin.toUpperCase()}`
+      );
+      const gstStatusData = await gstStatusResponse.json();
+      if (gstStatusData.status !== "Active") {
+        alert("GSTIN is not active. Please verify the GSTIN and try again.");
+        setLoading(false);
+        return;
+      }
+
       // Calculate final totals before saving to ensure data integrity
       const finalData = {
         id: `${purchaseData.gstin.toUpperCase()}_${purchaseData.invoice_no.toUpperCase()}_${formatToGstPeriod(
@@ -75,6 +108,7 @@ const InvoiceScanner = () => {
         finalData
       );
       setLoading(false);
+      alert("Purchase saved successfully!");
       //console.log("Document written with ID: ", docRef.id);
       //return { success: true, id: docRef.id };
     } catch (e) {

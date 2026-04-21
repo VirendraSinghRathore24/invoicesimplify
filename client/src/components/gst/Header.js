@@ -8,6 +8,7 @@ const Header = () => {
   const [isUserExists, setIsUserExists] = useState(
     localStorage.getItem("gstUser") ? true : false
   );
+  const [isOpen, setIsOpen] = useState(false);
 
   const navigate = useNavigate();
   const handleLogin = () => {
@@ -52,12 +53,64 @@ const Header = () => {
           >
             ITC Reconciliation
           </NavLink>
-          <NavLink
+          <div
+            className="relative"
+            onMouseEnter={() => setIsOpen(true)}
+            onMouseLeave={() => setIsOpen(false)}
+          >
+            {/* Main Parent Link */}
+            <button className="flex items-center hover:text-blue-600 transition-colors py-2 focus:outline-none">
+              Purchase
+              <svg
+                className={`ml-1 w-4 h-4 transition-transform ${
+                  isOpen ? "rotate-180" : ""
+                }`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </button>
+
+            {/* Sub-options Dropdown */}
+            {isOpen && (
+              <div className="absolute left-0 w-48 bg-white border border-gray-200 rounded-lg shadow-xl z-50 py-2 mt-0">
+                <NavLink
+                  to="/gst/sales"
+                  className={({ isActive }) =>
+                    `block px-4 py-2 text-sm hover:bg-blue-50 hover:text-blue-600 ${
+                      isActive ? "text-blue-600 bg-blue-50" : "text-gray-700"
+                    }`
+                  }
+                >
+                  Entry
+                </NavLink>
+
+                <NavLink
+                  to="/gst/purchasereg"
+                  className={({ isActive }) =>
+                    `block px-4 py-2 text-sm hover:bg-blue-50 hover:text-blue-600 ${
+                      isActive ? "text-blue-600 bg-blue-50" : "text-gray-700"
+                    }`
+                  }
+                >
+                  Register
+                </NavLink>
+              </div>
+            )}
+          </div>
+          {/* <NavLink
             to="/gst/purchasereg"
             className="hover:text-blue-600 transition-colors"
           >
-            Purchage
-          </NavLink>
+            Sell
+          </NavLink> */}
           {!isUserExists ? (
             <button
               onClick={() => handleLogin()}

@@ -138,17 +138,22 @@ const Dashboard = () => {
       });
   };
 
-  const handleGetStatus = () => {
-    setLoading(true);
+  const handleGetStatus = async () => {
+    setLoading(true); // 1. Start loading
     setFilled(0);
     setNotFilled(0);
     setPartiallyFilled(0);
-    for (let i = 0; i < sellers.length; i++) {
-      checkStatus(sellers[i].gstin);
-    }
-    setLoading(false);
-  };
 
+    try {
+      // 2. Map every seller to a promise and WAIT for all of them
+      const promises = sellers.map((seller) => checkStatus(seller.gstin));
+      await Promise.all(promises);
+    } catch (error) {
+      console.error("One or more requests failed", error);
+    } finally {
+      setLoading(false); // 3. Stop loading only after ALL are done
+    }
+  };
   const getAllGstinForMonth = async () => {
     const purchase_CollectionRef = collection(
       doc(db, "GST", gstin),
@@ -307,7 +312,7 @@ const Dashboard = () => {
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
             <div>
               <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
-                GST Trust Dashboard - {gstin}
+                Trust Dashboard - {gstin}
               </h1>
               <p className="text-slate-500 text-sm mt-1">
                 {localStorage.getItem("tradeName")}

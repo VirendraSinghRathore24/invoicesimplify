@@ -126,7 +126,7 @@ const LandingPage = () => {
             Trusted by 500+ Businessmen in India
           </span>
           <h1 className="text-5xl md:text-6xl font-black mt-6 leading-[1.1] text-slate-900">
-            Stop Losing Your <span className="text-blue-600">Tax Credits.</span>
+            Stop Losing Your<span className="text-blue-600">Tax Credits.</span>
           </h1>
           <p className="mt-6 text-lg text-slate-500 max-w-2xl mx-auto leading-relaxed">
             Verify supplier filing history in seconds. Our **Trust Dashboard**
