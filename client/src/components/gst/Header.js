@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import { ShieldCheck } from "lucide-react";
 
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 
 const Header = () => {
   const [isUserExists, setIsUserExists] = useState(
@@ -23,6 +23,21 @@ const Header = () => {
     navigate("/gst/login");
   };
 
+  const location = useLocation();
+
+  // Helper to define active vs inactive styles for main links
+  const navLinkClasses = ({ isActive }) =>
+    `transition-colors relative py-1 ${
+      isActive
+        ? "text-blue-600 after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-0.5 after:bg-blue-600 after:rounded-full"
+        : "hover:text-blue-600 text-slate-600"
+    }`;
+
+  // Check if the current URL belongs to the Purchase group
+  const isPurchaseActive =
+    location.pathname.includes("/gst/sales") ||
+    location.pathname.includes("/gst/purchasereg");
+
   return (
     <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 px-6 py-4">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
@@ -34,32 +49,33 @@ const Header = () => {
             Invoice<span className="text-blue-600">Simplify</span>
           </span>
         </div>
-        <div className="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
-          <NavLink
-            to="/gst/owndashboard"
-            className="hover:text-blue-600 transition-colors"
-          >
+
+        <div className="hidden md:flex items-center gap-8 text-sm font-semibold">
+          <NavLink to="/gst/owndashboard" className={navLinkClasses}>
             Dashboard
           </NavLink>
-          <NavLink
-            to="/gst/sellerdashboard"
-            className="hover:text-blue-600 transition-colors"
-          >
+
+          <NavLink to="/gst/sellerdashboard" className={navLinkClasses}>
             Trust Dashboard
           </NavLink>
-          <NavLink
-            to="/gst/itc"
-            className="hover:text-blue-600 transition-colors"
-          >
+
+          <NavLink to="/gst/itc" className={navLinkClasses}>
             ITC Reconciliation
           </NavLink>
+
+          {/* Purchase Dropdown Group */}
           <div
             className="relative"
             onMouseEnter={() => setIsOpen(true)}
             onMouseLeave={() => setIsOpen(false)}
           >
-            {/* Main Parent Link */}
-            <button className="flex items-center hover:text-blue-600 transition-colors py-2 focus:outline-none">
+            <button
+              className={`flex items-center transition-colors py-2 focus:outline-none ${
+                isPurchaseActive
+                  ? "text-blue-600"
+                  : "text-slate-600 hover:text-blue-600"
+              }`}
+            >
               Purchase
               <svg
                 className={`ml-1 w-4 h-4 transition-transform ${
@@ -78,14 +94,15 @@ const Header = () => {
               </svg>
             </button>
 
-            {/* Sub-options Dropdown */}
             {isOpen && (
-              <div className="absolute left-0 w-48 bg-white border border-gray-200 rounded-lg shadow-xl z-50 py-2 mt-0">
+              <div className="absolute left-0 w-48 bg-white border border-gray-100 rounded-xl shadow-xl z-50 py-2 mt-0">
                 <NavLink
                   to="/gst/sales"
                   className={({ isActive }) =>
-                    `block px-4 py-2 text-sm hover:bg-blue-50 hover:text-blue-600 ${
-                      isActive ? "text-blue-600 bg-blue-50" : "text-gray-700"
+                    `block px-4 py-2 text-sm transition-colors ${
+                      isActive
+                        ? "text-blue-600 bg-blue-50 font-bold"
+                        : "text-slate-700 hover:bg-slate-50"
                     }`
                   }
                 >
@@ -95,8 +112,10 @@ const Header = () => {
                 <NavLink
                   to="/gst/purchasereg"
                   className={({ isActive }) =>
-                    `block px-4 py-2 text-sm hover:bg-blue-50 hover:text-blue-600 ${
-                      isActive ? "text-blue-600 bg-blue-50" : "text-gray-700"
+                    `block px-4 py-2 text-sm transition-colors ${
+                      isActive
+                        ? "text-blue-600 bg-blue-50 font-bold"
+                        : "text-slate-700 hover:bg-slate-50"
                     }`
                   }
                 >
@@ -105,22 +124,18 @@ const Header = () => {
               </div>
             )}
           </div>
-          {/* <NavLink
-            to="/gst/purchasereg"
-            className="hover:text-blue-600 transition-colors"
-          >
-            Sell
-          </NavLink> */}
+
+          {/* Auth Buttons */}
           {!isUserExists ? (
             <button
-              onClick={() => handleLogin()}
+              onClick={handleLogin}
               className="bg-slate-900 text-white px-5 py-2.5 rounded-xl hover:bg-blue-600 transition-all shadow-md"
             >
               Login to Portal
             </button>
           ) : (
             <button
-              onClick={() => handleLogout()}
+              onClick={handleLogout}
               className="bg-slate-900 text-white px-5 py-2.5 rounded-xl hover:bg-blue-600 transition-all shadow-md"
             >
               Logout

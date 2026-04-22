@@ -4,7 +4,9 @@ import axios from "axios";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
   AlertCircle,
+  Book,
   Download,
+  FileText,
   History,
   LayoutDashboard,
   ShieldCheck,
@@ -170,7 +172,9 @@ const ITCReconciliation = () => {
         creditGap = bookData.totalTax;
       } else {
         const diff = bookData.totalTax - pTax;
-        if (Math.abs(diff) > 1) {
+        if (Math.abs(diff) < 1) {
+          status = "PORTAL_HIGHER";
+        } else if (Math.abs(diff) > 1) {
           status = "VALUE_MISMATCH";
           creditGap = diff > 0 ? diff : 0;
         } else {
@@ -271,10 +275,6 @@ const ITCReconciliation = () => {
         params: { gstin, fp },
       });
 
-      console.log(
-        "GSTR-2B Response:",
-        response.data.data.data.data.docdata.b2b
-      );
       //const data = response.data.gstr2bData[0];
       const data = response.data.data.data.data.docdata;
 
@@ -329,19 +329,23 @@ const ITCReconciliation = () => {
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans">
       {/* --- TOP BANNER (Sticky) --- */}
       <Header />
-      <section className="mt-10">
+      <section className="mt-4">
+        <h1 className="text-2xl font-bold text-gray-800 max-w-7xl mx-auto mb-4">
+          ITC Loss Dashboard
+        </h1>
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Trust Score Card */}
           <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 hover:border-red-200 transition-all">
             <div className="flex justify-between items-start">
-              <div className="p-3 bg-red-50 rounded-2xl text-red-600">
-                <TrendingUp size={28} color="green" />
+              <div className="p-3 bg-green-50 rounded-2xl text-red-600">
+                <Book size={28} color="green" />
               </div>
+              <span className="text-lg font-bold text-green-600  px-2 py-1 rounded-md">
+                Total Books Tax (Purchase)
+              </span>
             </div>
-            <h3 className="mt-6 text-slate-400 font-bold text-xs uppercase tracking-widest">
-              Total Books Tax
-            </h3>
-            <div className="mt-1">
+
+            <div className="mt-10">
               <span className="text-4xl font-black text-green-600">
                 ₹{parseFloat(totalBooksTax).toFixed(2)}
               </span>
@@ -349,14 +353,17 @@ const ITCReconciliation = () => {
           </div>
           <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 hover:border-red-200 transition-all">
             <div className="flex justify-between items-start">
-              <div className="p-3 bg-red-50 rounded-2xl text-red-600">
-                <TrendingUp size={28} color="blue" />
+              <div className="p-3 bg-blue-50 rounded-2xl text-red-600">
+                <FileText size={28} color="blue" />
               </div>
+              <span className="text-lg font-bold text-blue-600  px-2 py-1 rounded-md">
+                Total Portal Tax (GSTR2B)
+              </span>
             </div>
-            <h3 className="mt-6 text-slate-400 font-bold text-xs uppercase tracking-widest">
-              Total Portal Tax
-            </h3>
-            <div className="mt-1">
+            {/* <h3 className="mt-6 text-slate-400 font-bold text-xs uppercase tracking-widest">
+              Total Portal Tax (GSTR2B)
+            </h3> */}
+            <div className="mt-10">
               <span className="text-4xl font-black text-blue-600">
                 ₹{parseFloat(totalPortalTax).toFixed(2)}
               </span>
@@ -414,15 +421,12 @@ const ITCReconciliation = () => {
         </div>
       </section>
 
-      <div className="p-6 bg-gray-50 min-h-screen w-10/12 mx-auto mt-10 rounded-lg">
+      <div className="pt-4 bg-gray-50 min-h-screen max-w-7xl mx-auto mt-2 rounded-lg">
         <header className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">
-            ITC Loss Dashboard
-          </h1>
-          <p className="text-red-600 font-semibold text-lg">
+          {/* <p className="text-red-600 font-semibold text-lg">
             Total Potential ITC Loss: ₹{loss.toFixed(2)}
-          </p>
-          <div className="mt-4">Select Filing Month & Year:</div>
+          </p> */}
+          <div className="">Select Filing Month & Year:</div>
           <div className="flex justify-between items-center mt-1">
             {filingFrequency === "monthly" ? (
               <div className="flex gap-2 bg-white p-2 rounded-lg shadow-sm border">
@@ -502,7 +506,7 @@ const ITCReconciliation = () => {
             {months.find((m) => m.value === displayMonth)?.label} {displayYear}
           </p>
           <p className="text-blue-600 font-medium mb-2">
-            Total Records found: {reportData.length}
+            Total Records found: {reportData.length > 0 ? reportData.length : 0}
           </p>
         </div>
 
@@ -556,7 +560,8 @@ const ITCReconciliation = () => {
               ) : (
                 <tr>
                   <td colSpan="5" className="p-10 text-center text-gray-500">
-                    No reconciliation data found. Sync to fetch.
+                    No reconciliation data found. Run Reconciliation to see
+                    results.
                   </td>
                 </tr>
               )}
