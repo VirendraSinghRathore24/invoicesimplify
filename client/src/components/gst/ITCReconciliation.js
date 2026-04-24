@@ -329,247 +329,201 @@ const ITCReconciliation = () => {
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans">
       {/* --- TOP BANNER (Sticky) --- */}
       <Header />
-      <section className="mt-4">
-        <h1 className="text-2xl font-bold text-gray-800 max-w-7xl mx-auto mb-4">
-          ITC Loss Dashboard
-        </h1>
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Trust Score Card */}
-          <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 hover:border-red-200 transition-all">
-            <div className="flex justify-between items-start">
-              <div className="p-3 bg-green-50 rounded-2xl text-red-600">
-                <Book size={28} color="green" />
-              </div>
-              <span className="text-lg font-bold text-green-600  px-2 py-1 rounded-md">
-                Total Books Tax (Purchase)
-              </span>
-            </div>
-
-            <div className="mt-10">
-              <span className="text-4xl font-black text-green-600">
-                ₹{parseFloat(totalBooksTax).toFixed(2)}
-              </span>
-            </div>
+      <div className="min-h-screen bg-[#F8FAFC] p-4 md:p-10 font-sans">
+        <section>
+          <div className="max-w-7xl mx-auto mb-4">
+            <h1 className="text-2xl font-bold text-slate-900 tracking-tight ">
+              ITC Loss Dashboard - {gstin}
+            </h1>
+            <p className="text-slate-500 text-sm mt-1">
+              {localStorage.getItem("tradeName")}
+            </p>
           </div>
-          <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 hover:border-red-200 transition-all">
-            <div className="flex justify-between items-start">
-              <div className="p-3 bg-blue-50 rounded-2xl text-red-600">
-                <FileText size={28} color="blue" />
-              </div>
-              <span className="text-lg font-bold text-blue-600  px-2 py-1 rounded-md">
-                Total Portal Tax (GSTR2B)
-              </span>
-            </div>
-            {/* <h3 className="mt-6 text-slate-400 font-bold text-xs uppercase tracking-widest">
-              Total Portal Tax (GSTR2B)
-            </h3> */}
-            <div className="mt-10">
-              <span className="text-4xl font-black text-blue-600">
-                ₹{parseFloat(totalPortalTax).toFixed(2)}
-              </span>
-            </div>
+          <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 my-8">
+            <StatCard
+              label="Total Purchase Tax (Books)"
+              value={`₹${parseFloat(totalBooksTax).toFixed(2)}`}
+              color="blue"
+            />
+            <StatCard
+              label="Total Portal Tax (GSTR2B)"
+              value={`₹${parseFloat(totalPortalTax).toFixed(2)}`}
+              color="green"
+            />
+            <StatCard
+              label="Loss at Risk (ITC Gap)"
+              value={`₹${parseFloat(loss).toFixed(2)}`}
+              color="red"
+            />
           </div>
+        </section>
 
-          {/* ITC Loss Alert */}
-          <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 hover:border-red-200 transition-all">
-            <div className="flex justify-between items-start">
-              <div className="p-3 bg-red-50 rounded-2xl text-red-600">
-                <TrendingDown size={28} />
-              </div>
-              <span className="text-xs font-bold text-red-600 bg-red-50 px-2 py-1 rounded-md">
-                ACTION REQUIRED
-              </span>
-            </div>
-            <h3 className="mt-6 text-slate-400 font-bold text-xs uppercase tracking-widest">
-              Total ITC At Risk
-            </h3>
-            <div className="mt-1">
-              <span className="text-4xl font-black text-red-600">
-                ₹{parseFloat(loss).toFixed(2)}
-              </span>
-            </div>
-            {/* <p className="mt-4 text-sm text-slate-500 font-medium flex items-center gap-1">
-              <AlertCircle size={14} className="text-red-500" /> 8 Suppliers
-              haven't filed GSTR-1
-            </p> */}
-          </div>
-
-          {/* Quick Reports */}
-          {/* <div className="bg-slate-900 p-8 rounded-3xl shadow-xl text-white">
-            <div className="flex justify-between items-start">
-              <div className="p-3 bg-slate-800 rounded-2xl text-blue-400">
-                <History size={28} />
-              </div>
-            </div>
-            <h3 className="mt-6 text-slate-400 font-bold text-xs uppercase tracking-widest">
-              Compliance Summary
-            </h3>
-            <div className="mt-4 space-y-3">
-              <div className="flex justify-between text-sm">
-                <span className="opacity-70">GSTR-2B Mismatches</span>
-                <span className="font-bold text-yellow-400">12 Found</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="opacity-70">Late Fees (Est)</span>
-                <span className="font-bold">₹1,200</span>
-              </div>
-            </div>
-            <button className="w-full mt-6 bg-blue-600 py-3 rounded-xl font-bold hover:bg-blue-500 transition-all flex justify-center items-center gap-2">
-              <Download size={18} /> Download Report
-            </button>
-          </div> */}
-        </div>
-      </section>
-
-      <div className="pt-4 bg-gray-50 min-h-screen max-w-7xl mx-auto mt-2 rounded-lg">
-        <header className="mb-6">
-          {/* <p className="text-red-600 font-semibold text-lg">
+        <div className="pt-4 bg-gray-50 min-h-screen max-w-7xl mx-auto mt-2 rounded-lg">
+          <header className="mb-6">
+            {/* <p className="text-red-600 font-semibold text-lg">
             Total Potential ITC Loss: ₹{loss.toFixed(2)}
           </p> */}
-          <div className="">Select Filing Month & Year:</div>
-          <div className="flex justify-between items-center mt-1">
-            {filingFrequency === "monthly" ? (
-              <div className="flex gap-2 bg-white p-2 rounded-lg shadow-sm border">
-                <select
-                  value={selectedMonth}
-                  onChange={(e) => setSelectedMonth(e.target.value)}
-                  className="bg-transparent outline-none text-sm font-medium text-gray-600"
-                >
-                  {months.map((m) => (
-                    <option key={m.value} value={m.value}>
-                      {m.label}
-                    </option>
-                  ))}
-                </select>
-                <div className="border-l h-6 self-center"></div>
-                <select
-                  value={selectedYear}
-                  onChange={(e) => setSelectedYear(e.target.value)}
-                  className="bg-transparent outline-none text-sm font-medium text-gray-600"
-                >
-                  {years.map((y) => (
-                    <option key={y} value={y}>
-                      {y}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            ) : (
-              <div className="flex gap-2 bg-white p-2 rounded-lg shadow-sm border">
-                <select
-                  value={selectedMonth}
-                  onChange={(e) => setSelectedMonth(e.target.value)}
-                  className="bg-transparent outline-none text-sm font-medium text-gray-600"
-                >
-                  {monthsForQuarterly.map((m) => (
-                    <option key={m.value} value={m.value}>
-                      {m.label}
-                    </option>
-                  ))}
-                </select>
-                <div className="border-l h-6 self-center"></div>
-                <select
-                  value={selectedYear}
-                  onChange={(e) => setSelectedYear(e.target.value)}
-                  className="bg-transparent outline-none text-sm font-medium text-gray-600"
-                >
-                  {years.map((y) => (
-                    <option key={y} value={y}>
-                      {y}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
-
-            <button
-              onClick={() => RunReconcialion()}
-              disabled={loading}
-              className={`px-6 py-2 font-bold text-white rounded shadow transition ${
-                loading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
-              }`}
-            >
-              {loading ? "Syncing..." : "Run Reconciliation"}
-            </button>
-          </div>
-        </header>
-
-        {error && (
-          <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">
-            {error}
-          </div>
-        )}
-
-        <div className="flex justify-between items-center mb-1">
-          <p className="text-blue-600 font-medium mb-2">
-            Showing results for:{" "}
-            {months.find((m) => m.value === displayMonth)?.label} {displayYear}
-          </p>
-          <p className="text-blue-600 font-medium mb-2">
-            Total Records found: {reportData.length > 0 ? reportData.length : 0}
-          </p>
-        </div>
-
-        <div className="overflow-x-auto bg-white rounded-lg shadow">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-gray-100 border-b text-center">
-                <th className="p-4">Supplier GSTIN</th>
-                <th className="p-4">Books Tax</th>
-                <th className="p-4">Portal Tax</th>
-                <th className="p-4">Status</th>
-                <th className="p-4">Credit Gap</th>
-              </tr>
-            </thead>
-            <tbody>
-              {reportData.length > 0 ? (
-                reportData.map((item, idx) => (
-                  <tr
-                    key={idx}
-                    className="border-b hover:bg-gray-50  text-center"
+            <div className="">Select Filing Month & Year:</div>
+            <div className="flex justify-between items-center mt-1">
+              {filingFrequency === "monthly" ? (
+                <div className="flex gap-2 bg-white p-2 rounded-lg shadow-sm border">
+                  <select
+                    value={selectedMonth}
+                    onChange={(e) => setSelectedMonth(e.target.value)}
+                    className="bg-transparent outline-none text-sm font-medium text-gray-600"
                   >
-                    <td className="p-4 font-mono text-sm">
-                      {item.vendorGstin}
-                    </td>
-                    <td className="p-4">₹{item.booksTax.toFixed(2)}</td>
-                    <td className="p-4">
-                      ₹{item.portalTax ? item.portalTax.toFixed(2) : "0.00"}
-                    </td>
-                    <td className="p-4">
-                      <span
-                        className={`px-2 py-1 rounded text-xs font-bold ${
-                          item.status === "MATCHED"
-                            ? "bg-green-100 text-green-700"
-                            : item.status === "MISSING_IN_PORTAL"
-                            ? "bg-red-100 text-red-700"
-                            : "bg-yellow-100 text-yellow-700"
+                    {months.map((m) => (
+                      <option key={m.value} value={m.value}>
+                        {m.label}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="border-l h-6 self-center"></div>
+                  <select
+                    value={selectedYear}
+                    onChange={(e) => setSelectedYear(e.target.value)}
+                    className="bg-transparent outline-none text-sm font-medium text-gray-600"
+                  >
+                    {years.map((y) => (
+                      <option key={y} value={y}>
+                        {y}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              ) : (
+                <div className="flex gap-2 bg-white p-2 rounded-lg shadow-sm border">
+                  <select
+                    value={selectedMonth}
+                    onChange={(e) => setSelectedMonth(e.target.value)}
+                    className="bg-transparent outline-none text-sm font-medium text-gray-600"
+                  >
+                    {monthsForQuarterly.map((m) => (
+                      <option key={m.value} value={m.value}>
+                        {m.label}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="border-l h-6 self-center"></div>
+                  <select
+                    value={selectedYear}
+                    onChange={(e) => setSelectedYear(e.target.value)}
+                    className="bg-transparent outline-none text-sm font-medium text-gray-600"
+                  >
+                    {years.map((y) => (
+                      <option key={y} value={y}>
+                        {y}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              <button
+                onClick={() => RunReconcialion()}
+                disabled={loading}
+                className={`px-6 py-2 font-bold text-white rounded shadow transition ${
+                  loading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
+                }`}
+              >
+                {loading ? "Syncing..." : "Run Reconciliation"}
+              </button>
+            </div>
+          </header>
+
+          {error && (
+            <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">
+              {error}
+            </div>
+          )}
+
+          <div className="flex justify-between items-center mb-1">
+            <p className="text-blue-600 font-medium mb-2">
+              Showing results for:{" "}
+              {months.find((m) => m.value === displayMonth)?.label}{" "}
+              {displayYear}
+            </p>
+            <p className="text-blue-600 font-medium mb-2">
+              Total Records found:{" "}
+              {reportData.length > 0 ? reportData.length : 0}
+            </p>
+          </div>
+
+          <div className="overflow-x-auto bg-white rounded-lg shadow">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-gray-100 border-b text-center">
+                  <th className="p-4">Supplier GSTIN</th>
+                  <th className="p-4">Books Tax</th>
+                  <th className="p-4">Portal Tax</th>
+                  <th className="p-4">Status</th>
+                  <th className="p-4">Credit Gap</th>
+                </tr>
+              </thead>
+              <tbody>
+                {reportData.length > 0 ? (
+                  reportData.map((item, idx) => (
+                    <tr
+                      key={idx}
+                      className="border-b hover:bg-gray-50  text-center"
+                    >
+                      <td className="p-4 font-mono text-sm">
+                        {item.vendorGstin}
+                      </td>
+                      <td className="p-4">₹{item.booksTax.toFixed(2)}</td>
+                      <td className="p-4">
+                        ₹{item.portalTax ? item.portalTax.toFixed(2) : "0.00"}
+                      </td>
+                      <td className="p-4">
+                        <span
+                          className={`px-2 py-1 rounded text-xs font-bold ${
+                            item.status === "MATCHED"
+                              ? "bg-green-100 text-green-700"
+                              : item.status === "MISSING_IN_PORTAL"
+                              ? "bg-red-100 text-red-700"
+                              : "bg-yellow-100 text-yellow-700"
+                          }`}
+                        >
+                          {item.status.replace(/_/g, " ")}
+                        </span>
+                      </td>
+                      <td
+                        className={`p-4 font-bold ${
+                          item.creditGap > 0 ? "text-red-600" : "text-gray-400"
                         }`}
                       >
-                        {item.status.replace(/_/g, " ")}
-                      </span>
-                    </td>
-                    <td
-                      className={`p-4 font-bold ${
-                        item.creditGap > 0 ? "text-red-600" : "text-gray-400"
-                      }`}
-                    >
-                      ₹{parseFloat(item.creditGap).toFixed(2)}
+                        ₹{parseFloat(item.creditGap).toFixed(2)}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="5" className="p-10 text-center text-gray-500">
+                      No reconciliation data found. Run Reconciliation to see
+                      results.
                     </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="5" className="p-10 text-center text-gray-500">
-                    No reconciliation data found. Run Reconciliation to see
-                    results.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
       {loading && <Loader />}
+    </div>
+  );
+};
+
+const StatCard = ({ label, value, color }) => {
+  const colors = {
+    blue: "text-blue-600 bg-blue-50 border-blue-100",
+    green: "text-emerald-600 bg-emerald-50 border-emerald-100",
+    red: "text-rose-600 bg-rose-50 border-rose-100",
+  };
+  return (
+    <div className={`p-5 rounded-2xl border shadow-sm ${colors[color]}`}>
+      <p className="text-sm font-medium text-slate-500">{label}</p>
+      <h3 className="text-2xl font-bold text-slate-900 mt-1">{value}</h3>
     </div>
   );
 };

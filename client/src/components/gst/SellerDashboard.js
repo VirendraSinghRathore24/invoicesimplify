@@ -438,9 +438,9 @@ const Dashboard = () => {
                     {/* <th className="px-6 py-4 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider">
                     GSTIN Status
                   </th> */}
-                    <th className="px-6 py-4 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                    {/* <th className="px-6 py-4 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider">
                       Return Type
-                    </th>
+                    </th> */}
                     <th className="px-6 py-4 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider">
                       Return Period
                     </th>
@@ -496,11 +496,11 @@ const Dashboard = () => {
                         {s.gstinstatus}
                       </span>
                     </td> */}
-                      <td className=" text-center">
+                      {/* <td className=" text-center">
                         <span className="font-mono text-sm text-slate-600 bg-slate-100 px-2 py-1 rounded inline-block">
                           {s.newData ? s.newData[0].data[0].rtntype : s.rtntype}
                         </span>
-                      </td>
+                      </td> */}
                       <td className=" text-center">
                         <span className="font-mono text-sm text-slate-600 ">
                           {s.newData
