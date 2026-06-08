@@ -530,7 +530,7 @@ const CreatorDashboard = () => {
         : new Date(b.invoiceInfo.date) - new Date(a.invoiceInfo.date)
     );
 
-    setDashboardInfo(JSON.stringify(data1));
+    setDashboardInfo(data1);
     return invoiceInfo;
   };
   //const invoiceInfo_CollectionRef = collection(db, "Invoice_Info");
