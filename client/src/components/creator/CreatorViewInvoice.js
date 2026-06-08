@@ -18,6 +18,7 @@ function CreatorViewInvoice() {
 
   const location = useLocation();
   const id = location.state.id;
+  const dashboardInfo = location.state.dashboardInfo;
 
   const isMediumScreen = window.innerWidth >= 768;
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 768);
@@ -247,11 +248,9 @@ function CreatorViewInvoice() {
   const getInvoiceData = async () => {
     try {
       setLoading(true);
-      const allBrandsInfo = JSON.parse(
-        localStorage.getItem("creator_dashboardInfo")
-      );
+      const invoiceData = dashboardInfo;
 
-      const invoiceData = allBrandsInfo.filter((x) => x.id === id)[0];
+      //const invoiceData = allBrandsInfo.filter((x) => x.id === id)[0];
 
       setLogoUrl(invoiceData?.logoUrl || "");
 

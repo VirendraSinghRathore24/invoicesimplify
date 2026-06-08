@@ -76,6 +76,10 @@ import LoginPage from "./components/gst/LoginPage";
 import GSTINOnboarding from "./components/gst/GSTINOnboarding";
 import ManualSalesEntry from "./components/gst/ManualSalesEntry";
 import PurchaseRegister from "./components/gst/PurchaseRegister";
+import GoogleFormSubmitter from "./components/GoogleFormSubmitter";
+import ReceiptParser from "./components/ReceiptParser";
+import ProfessionalReceiptScanner from "./components/ProfessionalReceiptScanner";
+import InvoiceExtractor from "./components/gst/InvoiceExtractor";
 
 function App() {
   const location = useLocation();
@@ -105,6 +109,9 @@ function App() {
     "/gst/owndashboard",
     "/gst/login",
     "/gst/onboarding",
+    "/pump",
+    "/rc",
+    "/rc1",
   ].includes(location.pathname);
 
   const showSidebar1 = !location.pathname.includes("/ci");
@@ -170,13 +177,16 @@ function App() {
             element={<ShopkeeperGSTRDashboard />}
           />
           <Route path="/gst/purchasereg" element={<PurchaseRegister />} />
+          <Route path="/pump" element={<GoogleFormSubmitter />} />
+          <Route path="/rc" element={<ReceiptParser />} />
+          <Route path="/rc1" element={<ProfessionalReceiptScanner />} />
           <Route path="/gst/itc" element={<ITCReconciliation />} />
           <Route path="/gst/pef" element={<PurchaseEntryForm />} />
           <Route path="/gst/sales" element={<ManualSalesEntry />} />
           <Route path="/success" element={<Success />} />
           <Route path="/paymenthistory" element={<PaymentHistory />} />
           <Route path="/ci/:id" element={<ViewInvoiceByCustomer />} />
-          <Route path="/test" element={<Test />} />
+          <Route path="/test" element={<InvoiceExtractor />} />
           {/* About Us */}
           <Route path="/aboutus" element={<AboutUs />} />
           <Route path="/contactus" element={<ContactUs />} />

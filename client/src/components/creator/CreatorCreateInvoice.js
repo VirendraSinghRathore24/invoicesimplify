@@ -716,11 +716,6 @@ const CreatorCreateInvoice = () => {
     }
   };
 
-  const brandInfo_CollectionRef = collection(
-    doc(db, CREATORS, uid),
-    "Brand_Info"
-  );
-
   const [openBrandListModal, setOpenBrandListModal] = useState(false);
   const [openAddBrandModal, setOpenAddBrandModal] = useState(false);
   const handleAddItem = (newItem) => {
@@ -757,6 +752,10 @@ const CreatorCreateInvoice = () => {
 
   const addBrand = async (newItem) => {
     // check if brand info already exist, yes-ignore
+    const brandInfo_CollectionRef = collection(
+      doc(db, CREATORS, uid),
+      "Brand_Info"
+    );
     const data = await getDocs(brandInfo_CollectionRef);
     const filteredData = data.docs.map((doc) => ({
       ...doc.data(),

@@ -3,6 +3,7 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
   updateDoc,
 } from "firebase/firestore";
@@ -24,7 +25,7 @@ const CreatorDashboard = () => {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const [dashboardInfo, setDashboardInfo] = useState([]);
   const [amount, setAmount] = useState(0);
   const [balance, setBalance] = useState(0);
   const [paid, setPaid] = useState(0);
@@ -52,17 +53,13 @@ const CreatorDashboard = () => {
     setOpenReminderModal(false);
   };
 
-  const origionalData = JSON.parse(
-    localStorage.getItem("creator_dashboardInfo")
-  );
+  const origionalData = dashboardInfo;
 
   const fetchData = async (from, to) => {
     try {
       setLoading(true);
 
-      const invoiceInfo = JSON.parse(
-        localStorage.getItem("creator_dashboardInfo")
-      );
+      const invoiceInfo = dashboardInfo;
       const result = invoiceInfo.filter(
         (item) =>
           new Date(item.invoiceInfo.date) >= from &&
@@ -219,10 +216,11 @@ const CreatorDashboard = () => {
     //setOpenSettlePopup(true);
   };
 
-  const handleView = (id) => {
+  const handleView = async (id) => {
     navigate("/creator/viewinvoice", {
       state: {
         id: id,
+        dashboardInfo: await getSingleInvoiceInfo(id),
       },
     });
   };
@@ -485,6 +483,36 @@ const CreatorDashboard = () => {
     return totalProfit;
   };
 
+  const getSingleInvoiceInfo = async (invoiceId) => {
+    // Guard clause to prevent null path segment crashes if uid or invoiceId isn't loaded yet
+    if (!uid || !CREATORS || !invoiceId) {
+      console.warn("Missing required parameters: uid, CREATORS, or invoiceId.");
+      return null;
+    }
+
+    try {
+      // 🎯 Point directly to the specific invoice document inside the subcollection
+      const invoiceDocRef = doc(db, CREATORS, uid, INVOICE_INFO, invoiceId);
+
+      // Fetch the document snippet from Firestore
+      const docSnap = await getDoc(invoiceDocRef);
+
+      if (docSnap.exists()) {
+        // Return the data object mapped cleanly with its Firestore document ID
+        return {
+          id: docSnap.id,
+          ...docSnap.data(),
+        };
+      } else {
+        console.log("No such invoice record found in database!");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error fetching single invoice info:", error);
+      throw error;
+    }
+  };
+
   const getAllInvoiceInfo = async () => {
     const invoiceInfo_CollectionRef = collection(
       doc(db, CREATORS, uid),
@@ -501,7 +529,8 @@ const CreatorDashboard = () => {
         ? b.invoiceInfo.invoiceNumber - a.invoiceInfo.invoiceNumber
         : new Date(b.invoiceInfo.date) - new Date(a.invoiceInfo.date)
     );
-    localStorage.setItem("creator_dashboardInfo", JSON.stringify(data1));
+
+    setDashboardInfo(JSON.stringify(data1));
     return invoiceInfo;
   };
   //const invoiceInfo_CollectionRef = collection(db, "Invoice_Info");
@@ -600,49 +629,57 @@ const CreatorDashboard = () => {
 
         <div className="p-4 lg:py-6 mt-10 ">
           <div className="hidden lg:block">
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-2 py-3 rounded-md">
-              <div className={`p-5 rounded-lg shadow bg-indigo-500 text-white`}>
-                <div className="flex items-center justify-between">
-                  <p className="text-md">Total Invoices</p>
-                  <FileDigit />
+            {filteredData && filteredData.length > 0 ? (
+              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-2 py-3 rounded-md">
+                <div
+                  className={`p-5 rounded-lg shadow bg-indigo-500 text-white`}
+                >
+                  <div className="flex items-center justify-between">
+                    <p className="text-md">Total Invoices</p>
+                    <FileDigit />
+                  </div>
+                  <h3 className="mt-2 text-2xl font-semibold">
+                    {filteredData ? filteredData.length : 0}
+                  </h3>
                 </div>
-                <h3 className="mt-2 text-2xl font-semibold">
-                  {filteredData ? filteredData.length : 0}
-                </h3>
-              </div>
 
-              <div className={`p-5 rounded-lg shadow bg-purple-500 text-white`}>
-                <div className="flex items-center justify-between">
-                  <p className="text-md">Paid</p>
-                  <BanknoteArrowUp />
+                <div
+                  className={`p-5 rounded-lg shadow bg-purple-500 text-white`}
+                >
+                  <div className="flex items-center justify-between">
+                    <p className="text-md">Paid</p>
+                    <BanknoteArrowUp />
+                  </div>
+                  <h3 className="mt-2 text-2xl font-semibold">
+                    {currencySymbol} {paid}
+                  </h3>
                 </div>
-                <h3 className="mt-2 text-2xl font-semibold">
-                  {currencySymbol} {paid}
-                </h3>
-              </div>
 
-              <div className={`p-5 rounded-lg shadow bg-red-400 text-white`}>
-                <div className="flex items-center justify-between">
-                  <p className="text-md">Due Amount</p>
-                  <BanknoteX />
+                <div className={`p-5 rounded-lg shadow bg-red-400 text-white`}>
+                  <div className="flex items-center justify-between">
+                    <p className="text-md">Due Amount</p>
+                    <BanknoteX />
+                  </div>
+                  <h3 className="mt-2 text-2xl font-semibold">
+                    {currencySymbol} {balance}
+                  </h3>
                 </div>
-                <h3 className="mt-2 text-2xl font-semibold">
-                  {currencySymbol} {balance}
-                </h3>
-              </div>
 
-              <div
-                className={`p-5 rounded-lg shadow bg-emerald-500 text-white`}
-              >
-                <div className="flex items-center justify-between">
-                  <p className="text-md">Total Earnings</p>
-                  <ArrowUp />
+                <div
+                  className={`p-5 rounded-lg shadow bg-emerald-500 text-white`}
+                >
+                  <div className="flex items-center justify-between">
+                    <p className="text-md">Total Earnings</p>
+                    <ArrowUp />
+                  </div>
+                  <h3 className="mt-2 text-2xl font-semibold">
+                    {currencySymbol} {amount}
+                  </h3>
                 </div>
-                <h3 className="mt-2 text-2xl font-semibold">
-                  {currencySymbol} {amount}
-                </h3>
               </div>
-            </div>
+            ) : (
+              <Loader />
+            )}
           </div>
 
           <main className="hidden max-lg:block">

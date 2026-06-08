@@ -28,12 +28,16 @@ const InvoiceExtractor = () => {
 
     try {
       // Replace with your actual backend endpoint
-      const response = await fetch("/api/extract-invoice", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        "http://localhost:5001/api/extract-invoice",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       const data = await response.json();
+      console.log("Extracted Data:", data);
       setExtractedData(data);
     } catch (error) {
       console.error("Extraction failed", error);
@@ -117,9 +121,7 @@ const InvoiceExtractor = () => {
                   <span className="text-[10px] font-black text-slate-400 uppercase">
                     Items Found
                   </span>
-                  <span className="text-xs font-bold text-blue-600">
-                    {extractedData.items.length} items
-                  </span>
+                  <span className="text-xs font-bold text-blue-600">items</span>
                 </div>
                 {extractedData.items.map((item, i) => (
                   <div

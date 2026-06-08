@@ -40,6 +40,14 @@ const BrandListModal = ({
   const getBrandsData = async () => {
     try {
       const uid = localStorage.getItem("uid");
+
+      if (!uid || !CREATORS) {
+        console.warn(
+          "Skipping fetch: uid or CREATORS constant is missing/null."
+        );
+        return;
+      }
+
       const brandInfo_CollectionRef = collection(
         doc(db, CREATORS, uid),
         "Brand_Info"
@@ -69,7 +77,7 @@ const BrandListModal = ({
   useEffect(() => {
     getBrands();
     setFiltered(
-      brands.filter((s) =>
+      brands?.filter((s) =>
         s.customerInfo?.customerName
           ?.toLowerCase()
           .includes(search?.toLowerCase())

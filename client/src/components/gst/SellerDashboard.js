@@ -269,6 +269,98 @@ const Dashboard = () => {
     { label: "December", value: "12" },
   ];
 
+  /**
+   * Determines the GST Due Date
+   * @param {number} year - e.g., 2026
+   * @param {number} month - 1 to 12 (Jan is 1)
+   * @param {string} type - 'GSTR1' or 'GSTR3B'
+   * @param {string} frequency - 'MONTHLY' or 'QUARTERLY'
+   * @param {string} state - Name of the state (for 3B staggering)
+   */
+  function getGstDueDate(year, month, type, frequency, state = "Rajasthan") {
+    // States that have the 22nd as the deadline (Category I)
+    const category1States = [
+      "Maharashtra",
+      "Karnataka",
+      "Gujarat",
+      "Tamil Nadu",
+      "Telangana",
+      "Andhra Pradesh",
+      "Madhya Pradesh",
+      "Kerala",
+    ];
+
+    let day;
+    let targetMonth = month + 1;
+    let targetYear = year;
+
+    if (targetMonth > 12) {
+      targetMonth = 1;
+      targetYear++;
+    }
+
+    if (frequency === "MONTHLY") {
+      day = type === "GSTR1" ? 11 : 20;
+    } else {
+      // Quarterly Filers (QRMP)
+      // Returns are only due after the quarter ends (Mar, Jun, Sep, Dec)
+      if (![3, 6, 9, 12].includes(month)) return null;
+
+      if (type === "GSTR1") {
+        day = 13;
+      } else {
+        // GSTR-3B Quarterly Staggering
+        day = category1States.includes(state) ? 22 : 24;
+      }
+    }
+
+    // Format to YYYY-MM-DD
+    return `${targetYear}-${String(targetMonth).padStart(2, "0")}-${String(
+      day
+    ).padStart(2, "0")}`;
+  }
+
+  function getFilingStats(
+    year,
+    month,
+    type,
+    frequency,
+    actualFilingDate,
+    state
+  ) {
+    const dueDateStr = getGstDueDate(year, month, type, frequency, state);
+    if (!dueDateStr) return { status: "No Filing Required" };
+
+    const dueDate = new Date(dueDateStr);
+    const filingDate = actualFilingDate
+      ? new Date(actualFilingDate)
+      : new Date(); // Use today if not filed
+
+    const diffTime = filingDate - dueDate;
+    const delayDays = Math.max(0, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
+
+    let score = 100;
+    let status = "On-Time";
+
+    if (delayDays > 0) {
+      status = actualFilingDate ? "Delayed" : "Pending";
+      // Penalty Logic: -2 points for first 10 days, -5 points after that
+      score = delayDays <= 10 ? 100 - delayDays * 2 : 80 - (delayDays - 10) * 5;
+    }
+
+    return {
+      dueDate: dueDateStr,
+      delayDays,
+      score: Math.max(0, score),
+      status,
+    };
+  }
+
+  // Example: Checking a supplier in Rajasthan for the Q4 (March 2026) deadline
+  //const stats = getFilingStats(2026, 3, 'GSTR3B', 'QUARTERLY', '2026-04-28', 'Rajasthan');
+  //console.log(stats);
+  // Output: { dueDate: '2026-04-24', delayDays: 4, score: 92, status: 'Delayed' }
+
   const formatGSTPeriod = (mmyyyy) => {
     if (!mmyyyy || mmyyyy.length !== 6) return "";
 

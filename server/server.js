@@ -1524,7 +1524,8 @@ app.post("/api/extract-invoice", upload.single("invoice"), async (req, res) => {
           content: [
             {
               type: "text",
-              text: "Extract data from this Indian GST invoice. Return ONLY a JSON object with: gstin, invoice_no, date (DD-MM-YYYY), taxable_value, total_tax, total, cgst, sgst, igst, and items (desc and total).",
+              text: `Extract data from this Indian Fuel Station Receipt. Return ONLY a JSON object with: pump serial number, pump sno, v, date and time, cumvolume`,
+              // text: "Extract data from this Indian GST invoice. Return ONLY a JSON object with: gstin, invoice_no, date (DD-MM-YYYY), taxable_value, total_tax, total, cgst, sgst, igst, and items (desc and total).",
             },
             {
               type: "image_url",
@@ -1590,6 +1591,56 @@ app.post("/send-reminderemail", async (req, res) => {
     return res
       .status(500)
       .json({ error: err.message || "Failed to create and send email" });
+  }
+});
+
+app.post("/api/extract-invoice", upload.single("invoice"), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: "No image file uploaded" });
+    }
+
+    // Convert the uploaded buffer to a Base64 string
+    const base64Image = req.file.buffer.toString("base64");
+
+    const response = await client.chat.completions.create({
+      model: "gpt-4o", // Use gpt-4o for best vision performance
+      messages: [
+        {
+          role: "user",
+          content: [
+            {
+              type: "text",
+              text: `Extract data from this Indian Fuel Station Receipt. 
+              Correct OCR noise (e.g., 'HH TIME' -> 'Time', 'ENo' -> 'SNo', '0/' -> '07').
+              Return ONLY a JSON object with this structure:
+              {
+                "pump_sno": "string",
+                "date": "DD-MM-YYYY",
+                "time": "HH:MM:SS",
+                "nozzles": [
+                  { "nozzle_id": number, "cum_volume": number, "cum_sale": number }
+                ]
+              }`,
+            },
+            {
+              type: "image_url",
+              image_url: {
+                url: `data:image/jpeg;base64,${base64Image}`,
+              },
+            },
+          ],
+        },
+      ],
+      response_format: { type: "json_object" },
+    });
+
+    // Parse the AI's response and send it back to the frontend
+    const extractedData = JSON.parse(response.choices[0].message.content);
+    res.json(extractedData);
+  } catch (error) {
+    console.error("GPT-4o Extraction Error:", error);
+    res.status(500).json({ error: "Failed to extract data from image" });
   }
 });
 

@@ -146,8 +146,6 @@ const Brands = () => {
       //const items = filteredData.filter((item) => item.id !== user.id);
       getBrands();
 
-      //localStorage.setItem("creator_dashboardInfo", JSON.stringify(items));
-
       // archive before deleting
       //await archiveInvoice(user);
 
