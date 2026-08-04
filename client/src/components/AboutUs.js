@@ -61,7 +61,7 @@ const AboutUs = () => {
           <h2 className="text-2xl font-bold mb-4 text-center">
             🤝 Meet the Team
           </h2>
-          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+          <div className="flex justify-center gap-6 flex-wrap">
             <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md text-center">
               <img
                 src="../images/viren1.png"
@@ -73,7 +73,7 @@ const AboutUs = () => {
                 Founder & Product Lead
               </p>
             </div>
-            <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md text-center">
+            {/* <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md text-center">
               <img
                 src="../images/sanju1.png"
                 alt="Team Member"
@@ -83,7 +83,7 @@ const AboutUs = () => {
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 Founder & Design Lead
               </p>
-            </div>
+            </div> */}
             {/* <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md text-center">
               <img
                 src="../images/sanju2.png"

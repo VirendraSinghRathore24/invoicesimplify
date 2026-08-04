@@ -62,6 +62,14 @@ const Footer1 = () => {
                 Privacy Policy
               </NavLink>
             </li>
+            <li>
+              <NavLink
+                to={"/aboutus"}
+                className="hover:underline text-gray-200"
+              >
+                About Us
+              </NavLink>
+            </li>
           </ul>
         </div>
 
