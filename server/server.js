@@ -7,7 +7,7 @@ const fs = require("fs");
 const path = require("path");
 const axios = require("axios");
 const cors = require("cors");
-const sharp = require("sharp");
+
 const app = express();
 const OpenAI = require("openai");
 const PDFDocument = require("pdfkit");
@@ -1575,10 +1575,6 @@ app.post("/api/accept-bill", upload1.single("billFile"), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ error: "No file uploaded" });
 
-    console.log("File Path:", req.file.path);
-    console.log("Original Mime Type:", req.file.mimetype);
-    console.log("Original Name:", req.file.originalname);
-
     let openaiMessages = [];
     const ext = path.extname(req.file.originalname).toLowerCase();
 
@@ -1586,11 +1582,13 @@ app.post("/api/accept-bill", upload1.single("billFile"), async (req, res) => {
 
     // 2. Handle Images: Normalize via Sharp to guarantee a 100% valid JPEG buffer for OpenAI
 
-    const processedImageBuffer = await sharp(req.file.path)
-      .jpeg({ quality: 90 }) // Normalize any PNG/JPG/WebP into clean standard JPEG
-      .toBuffer();
+    // const processedImageBuffer = await sharp(req.file.path)
+    //   .jpeg({ quality: 90 }) // Normalize any PNG/JPG/WebP into clean standard JPEG
+    //   .toBuffer();
 
-    const base64Image = `data:image/jpeg;base64,${processedImageBuffer.toString(
+    const imageData = fs.readFileSync(req.file.path).toString("base64");
+
+    const base64Image = `data:image/jpeg;base64,${imageData.toString(
       "base64"
     )}`;
 
