@@ -3,9 +3,11 @@ const twilio = require("twilio");
 const QRCode = require("qrcode");
 const puppeteer = require("puppeteer");
 const fs = require("fs");
+const pdfParse = require("pdf-parse");
 const path = require("path");
 const axios = require("axios");
 const cors = require("cors");
+const sharp = require("sharp");
 const app = express();
 const OpenAI = require("openai");
 const PDFDocument = require("pdfkit");
@@ -76,7 +78,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    //origin: "http://localhost:3000",
+    //origin: "http://localhost:3001",
     origin: "https://invoicesimplify.com",
     credentials: true,
   })
@@ -1505,6 +1507,27 @@ const upload = multer({
   },
 });
 
+const upload1 = multer({
+  storage: storage,
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10MB limit
+  },
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = /jpeg|jpg|png|webp|pdf/;
+    const extName = allowedTypes.test(
+      path.extname(file.originalname).toLowerCase()
+    );
+    const mimeTypeValid = /jpeg|jpg|png|webp|pdf|octet-stream/.test(
+      file.mimetype
+    );
+
+    if (extName && mimeTypeValid) {
+      return cb(null, true);
+    } else {
+      cb(new Error("Only image files (JPG, PNG, WEBP) or PDFs are allowed!"));
+    }
+  },
+});
 // 2. Initialize Gemini
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -1545,6 +1568,90 @@ app.post("/api/extract-invoice", upload.single("invoice"), async (req, res) => {
   } catch (error) {
     console.error("OpenAI Error:", error);
     res.status(500).json({ error: "AI extraction failed." });
+  }
+});
+
+app.post("/api/accept-bill", upload1.single("billFile"), async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ error: "No file uploaded" });
+
+    console.log("File Path:", req.file.path);
+    console.log("Original Mime Type:", req.file.mimetype);
+    console.log("Original Name:", req.file.originalname);
+
+    let openaiMessages = [];
+    const ext = path.extname(req.file.originalname).toLowerCase();
+
+    // 1. Handle PDF Documents using text extraction
+    if (req.file.mimetype === "application/pdf" || ext === ".pdf") {
+      const pdfBuffer = fs.readFileSync(req.file.path);
+      const pdfData = await pdfParse(pdfBuffer);
+      const pdfText = pdfData.text;
+
+      openaiMessages = [
+        {
+          role: "system",
+          content:
+            "You are an expert AI assistant specialized in parsing Indian wholesale GST purchase bills and invoices from extracted text. Return ONLY a valid JSON object with keys: gstin, invoice_no, date (YYYY-MM-DD), taxable_value, total_tax, total, cgst, sgst, igst, and items (array of desc and total).",
+        },
+        {
+          role: "user",
+          content: `Extract all GST purchase bill details from the following invoice text:\n\n${pdfText}`,
+        },
+      ];
+    }
+    // 2. Handle Images: Normalize via Sharp to guarantee a 100% valid JPEG buffer for OpenAI
+    else {
+      const processedImageBuffer = await sharp(req.file.path)
+        .jpeg({ quality: 90 }) // Normalize any PNG/JPG/WebP into clean standard JPEG
+        .toBuffer();
+
+      const base64Image = `data:image/jpeg;base64,${processedImageBuffer.toString(
+        "base64"
+      )}`;
+
+      openaiMessages = [
+        {
+          role: "system",
+          content:
+            "You are an expert AI assistant specialized in parsing Indian wholesale GST purchase bills and invoices. Return ONLY a valid JSON object with keys: gstin, invoice_no, date (YYYY-MM-DD), taxable_value, total_tax, total, cgst, sgst, igst, and items (array of desc and total).",
+        },
+        {
+          role: "user",
+          content: [
+            {
+              type: "text",
+              text: "Extract all GST purchase bill details from this Indian GST invoice image. Return ONLY a JSON object with: gstin, invoice_no, date (YYYY-MM-DD), supplier_name, taxable_value, total_tax, total, cgst, sgst, igst, and items, quantity, unit_price, tax (if available), total and add gst, cgst, sgst, igst if applicable.",
+            },
+            {
+              type: "image_url",
+              image_url: { url: base64Image },
+            },
+          ],
+        },
+      ];
+    }
+
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: openaiMessages,
+      response_format: { type: "json_object" },
+    });
+
+    // Clean up temporary local file safely
+    if (fs.existsSync(req.file.path)) {
+      fs.unlinkSync(req.file.path);
+    }
+    console.log("OpenAI Response:", response.choices[0].message.content);
+    const result = JSON.parse(response.choices[0].message.content);
+    res.json({ success: true, data: result });
+  } catch (error) {
+    console.error("OpenAI / Parsing Error:", error);
+    // Cleanup file even if an error occurs
+    if (req.file && req.file.path && fs.existsSync(req.file.path)) {
+      fs.unlinkSync(req.file.path);
+    }
+    res.status(500).json({ error: error.message || "AI extraction failed." });
   }
 });
 

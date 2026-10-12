@@ -80,6 +80,9 @@ import GoogleFormSubmitter from "./components/GoogleFormSubmitter";
 import ReceiptParser from "./components/ReceiptParser";
 import ProfessionalReceiptScanner from "./components/ProfessionalReceiptScanner";
 import InvoiceExtractor from "./components/gst/InvoiceExtractor";
+import UdharEntryApp from "./components/UdharEntryApp";
+import GSTBillScanner from "./components/purchase/GSTBillScanner";
+import PurchaseBillsDashboard from "./components/purchase/PurchaseBillsDashboard";
 
 function App() {
   const location = useLocation();
@@ -112,6 +115,8 @@ function App() {
     "/pump",
     "/rc",
     "/rc1",
+    "/purchase",
+    "/purchasedashboard",
   ].includes(location.pathname);
 
   const showSidebar1 = !location.pathname.includes("/ci");
@@ -130,6 +135,11 @@ function App() {
 
       <div className="flex-1 overflow-y-auto">
         <Routes>
+          <Route path="/purchase" element={<GSTBillScanner />} />
+          <Route
+            path="/purchasedashboard"
+            element={<PurchaseBillsDashboard />}
+          />
           <Route path="/" element={<Test />} />
           <Route path="/home" element={<Test />} />
           {/* Login and Signup routes */}
@@ -157,6 +167,7 @@ function App() {
           <Route path="/additionalinfo" element={<AdditionalInformation />} />
           {/* Invoice */}
           <Route path="/createinvoice" element={<AddInvoice />} />
+          <Route path="/udhar" element={<UdharEntryApp />} />
           <Route path="/editinvoice" element={<EditInvoice />} />
           <Route path="/viewinvoice" element={<ViewInvoice />} />
           <Route path="/invoice" element={<Invoice />} />
