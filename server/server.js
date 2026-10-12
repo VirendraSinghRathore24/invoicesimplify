@@ -3,7 +3,7 @@ const twilio = require("twilio");
 const QRCode = require("qrcode");
 const puppeteer = require("puppeteer");
 const fs = require("fs");
-const pdfParse = require("pdf-parse");
+
 const path = require("path");
 const axios = require("axios");
 const cors = require("cors");
@@ -1583,54 +1583,37 @@ app.post("/api/accept-bill", upload1.single("billFile"), async (req, res) => {
     const ext = path.extname(req.file.originalname).toLowerCase();
 
     // 1. Handle PDF Documents using text extraction
-    if (req.file.mimetype === "application/pdf" || ext === ".pdf") {
-      const pdfBuffer = fs.readFileSync(req.file.path);
-      const pdfData = await pdfParse(pdfBuffer);
-      const pdfText = pdfData.text;
 
-      openaiMessages = [
-        {
-          role: "system",
-          content:
-            "You are an expert AI assistant specialized in parsing Indian wholesale GST purchase bills and invoices from extracted text. Return ONLY a valid JSON object with keys: gstin, invoice_no, date (YYYY-MM-DD), taxable_value, total_tax, total, cgst, sgst, igst, and items (array of desc and total).",
-        },
-        {
-          role: "user",
-          content: `Extract all GST purchase bill details from the following invoice text:\n\n${pdfText}`,
-        },
-      ];
-    }
     // 2. Handle Images: Normalize via Sharp to guarantee a 100% valid JPEG buffer for OpenAI
-    else {
-      const processedImageBuffer = await sharp(req.file.path)
-        .jpeg({ quality: 90 }) // Normalize any PNG/JPG/WebP into clean standard JPEG
-        .toBuffer();
 
-      const base64Image = `data:image/jpeg;base64,${processedImageBuffer.toString(
-        "base64"
-      )}`;
+    const processedImageBuffer = await sharp(req.file.path)
+      .jpeg({ quality: 90 }) // Normalize any PNG/JPG/WebP into clean standard JPEG
+      .toBuffer();
 
-      openaiMessages = [
-        {
-          role: "system",
-          content:
-            "You are an expert AI assistant specialized in parsing Indian wholesale GST purchase bills and invoices. Return ONLY a valid JSON object with keys: gstin, invoice_no, date (YYYY-MM-DD), taxable_value, total_tax, total, cgst, sgst, igst, and items (array of desc and total).",
-        },
-        {
-          role: "user",
-          content: [
-            {
-              type: "text",
-              text: "Extract all GST purchase bill details from this Indian GST invoice image. Return ONLY a JSON object with: gstin, invoice_no, date (YYYY-MM-DD), supplier_name, taxable_value, total_tax, total, cgst, sgst, igst, and items, quantity, unit_price, tax (if available), total and add gst, cgst, sgst, igst if applicable.",
-            },
-            {
-              type: "image_url",
-              image_url: { url: base64Image },
-            },
-          ],
-        },
-      ];
-    }
+    const base64Image = `data:image/jpeg;base64,${processedImageBuffer.toString(
+      "base64"
+    )}`;
+
+    openaiMessages = [
+      {
+        role: "system",
+        content:
+          "You are an expert AI assistant specialized in parsing Indian wholesale GST purchase bills and invoices. Return ONLY a valid JSON object with keys: gstin, invoice_no, date (YYYY-MM-DD), taxable_value, total_tax, total, cgst, sgst, igst, and items (array of desc and total).",
+      },
+      {
+        role: "user",
+        content: [
+          {
+            type: "text",
+            text: "Extract all GST purchase bill details from this Indian GST invoice image. Return ONLY a JSON object with: gstin, invoice_no, date (YYYY-MM-DD), supplier_name, taxable_value, total_tax, total, cgst, sgst, igst, and items, quantity, unit_price, tax (if available), total and add gst, cgst, sgst, igst if applicable.",
+          },
+          {
+            type: "image_url",
+            image_url: { url: base64Image },
+          },
+        ],
+      },
+    ];
 
     const response = await openai.chat.completions.create({
       model: "gpt-4o",
